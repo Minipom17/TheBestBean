@@ -1,0 +1,70 @@
+@page
+@model TheBestBean.Pages.CoffeeBeans.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create Coffee Bean</h1>
+
+<h4>CoffeeBean</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="CoffeeBean.Name" class="control-label"></label>
+                <input asp-for="CoffeeBean.Name" class="form-control" />
+                <span asp-validation-for="CoffeeBean.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CoffeeBean.FlavorProfile" class="control-label"></label>
+                <textarea asp-for="CoffeeBean.FlavorProfile" class="form-control"></textarea>
+                <span asp-validation-for="CoffeeBean.FlavorProfile" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CoffeeBean.Rating" class="control-label"></label>
+                <input asp-for="CoffeeBean.Rating" class="form-control" />
+                <span asp-validation-for="CoffeeBean.Rating" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CoffeeBean.ProcessingMethod" class="control-label"></label>
+                <input asp-for="CoffeeBean.ProcessingMethod" class="form-control" />
+                <span asp-validation-for="CoffeeBean.ProcessingMethod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CoffeeBean.CoffeeFarmId" class="control-label">Coffee Farm</label>
+                <select asp-for="CoffeeBean.CoffeeFarmId" class="form-control" asp-items="@(ViewData["CoffeeFarmId"] as SelectList)">
+                    <option value="">-- Select Farm --</option>
+                </select>
+                <span asp-validation-for="CoffeeBean.CoffeeFarmId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CoffeeBean.CoffeeRegionId" class="control-label">Coffee Region</label>
+                <select asp-for="CoffeeBean.CoffeeRegionId" class="form-control" asp-items="@(ViewData["CoffeeRegionId"] as SelectList)">
+                    <option value="">-- Select Region --</option>
+                </select>
+                <span asp-validation-for="CoffeeBean.CoffeeRegionId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CoffeeBean.OriginCountryId" class="control-label">Origin Country</label>
+                <select asp-for="CoffeeBean.OriginCountryId" class="form-control" asp-items="@(ViewData["OriginCountryId"] as SelectList)">
+                    <option value="">-- Select Country --</option>
+                </select>
+                <span asp-validation-for="CoffeeBean.OriginCountryId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

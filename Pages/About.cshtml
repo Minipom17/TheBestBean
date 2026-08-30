@@ -1,0 +1,65 @@
+@page
+@model TheBestBean.Pages.AboutModel
+@{
+    ViewData["Title"] = "About";
+    ViewData["MetaDescription"] = "About Purple Bean Coffee — a specialty coffee roastery based in Cusco, Peru. We source directly from La Convención farmers and offer coffee experiences for travelers.";
+    ViewData["MetaImage"] = "https://purplebean.coffee/images/og-logo.png";
+}
+
+<div class="container-fluid px-0" style="max-width: 1400px; margin-left: auto; margin-right: auto; padding: 4rem 1.5rem;">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <h1 class="font-grotesk text-4xl font-bold mb-4 text-center" style="font-family: 'Space Grotesk', sans-serif; font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; text-align: center;" data-entity-id="About_Title" data-entity-type="SiteContent" data-editable="Value">@Html.Raw(Model.PageContent.GetValueOrDefault("About_Title", "About Purple Bean Coffee"))</h1>
+            
+            <div class="border border-gray-200 p-6 mb-5" style="border: 1px solid #e5e7eb; padding: 2rem; margin-bottom: 2rem;">
+                <h2 class="font-grotesk text-2xl font-bold mb-4" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;" data-entity-id="About_Story_Title" data-entity-type="SiteContent" data-editable="Value">@Html.Raw(Model.PageContent.GetValueOrDefault("About_Story_Title", "Our Story"))</h2>
+                <p class="text-gray-600 dark:text-gray-400 mb-4" style="font-family: 'Inter', sans-serif; color: #4b5563; line-height: 1.6; margin-bottom: 1rem;" data-entity-id="About_Story_P1" data-entity-type="SiteContent" data-editable="Value">
+                    @Html.Raw(Model.PageContent.GetValueOrDefault("About_Story_P1", "Based in the historic city of Cusco, Peru, Purple Bean Coffee is deeply connected to the rich coffee-growing regions of our homeland. We specialize in sourcing exceptional coffees from La Convención and other premier origins throughout Cusco, working directly with local producers to bring you the finest Peruvian coffee."))
+                </p>
+                <p class="text-gray-600 dark:text-gray-400 mb-4" style="font-family: 'Inter', sans-serif; color: #4b5563; line-height: 1.6; margin-bottom: 1rem;" data-entity-id="About_Story_P2" data-entity-type="SiteContent" data-editable="Value">
+                    @Html.Raw(Model.PageContent.GetValueOrDefault("About_Story_P2", "Our approach combines traditional cultivation methods with modern quality standards. Every coffee is carefully profiled by certified Q graders and roasted by SCA certified professionals, ensuring each cup meets our exacting standards."))
+                </p>
+            </div>
+
+            <div class="row g-4 mb-5">
+                <div class="col-md-6">
+                    <div class="border border-gray-200 p-4 h-100" style="border: 1px solid #e5e7eb; padding: 1.5rem; height: 100%;">
+                        <h3 class="font-grotesk text-xl font-bold mb-3" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem;" data-entity-id="About_Location_Title" data-entity-type="SiteContent" data-editable="Value">@Html.Raw(Model.PageContent.GetValueOrDefault("About_Location_Title", "Our Location"))</h3>
+                        <p class="text-gray-600 dark:text-gray-400" style="font-family: 'Inter', sans-serif; color: #4b5563; line-height: 1.6;" data-entity-id="About_Location_Desc" data-entity-type="SiteContent" data-editable="Value">
+                            @Html.Raw(Model.PageContent.GetValueOrDefault("About_Location_Desc", "Cusco, Cusco Province, Peru<br>The heart of the Andean coffee region"))
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="border border-gray-200 p-4 h-100" style="border: 1px solid #e5e7eb; padding: 1.5rem; height: 100%;">
+                        <h3 class="font-grotesk text-xl font-bold mb-3" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem;">Our Services</h3>
+                        <ul class="list-unstyled" style="list-style: none; padding: 0;">
+                            <li class="mb-2" style="margin-bottom: 0.5rem;">• Coffee Subscriptions</li>
+                            <li class="mb-2" style="margin-bottom: 0.5rem;">• Wholesale Green Beans</li>
+                            <li class="mb-2" style="margin-bottom: 0.5rem;">• Direct Trade Relationships</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border border-gray-200 p-6" style="border: 1px solid #e5e7eb; padding: 2rem;">
+                <h2 class="font-grotesk text-2xl font-bold mb-4" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;" data-entity-id="About_Commitment_Title" data-entity-type="SiteContent" data-editable="Value">@Html.Raw(Model.PageContent.GetValueOrDefault("About_Commitment_Title", "Our Commitment"))</h2>
+                <p class="text-gray-600 dark:text-gray-400 mb-4" style="font-family: 'Inter', sans-serif; color: #4b5563; line-height: 1.6; margin-bottom: 1rem;" data-entity-id="About_Commitment_P1" data-entity-type="SiteContent" data-editable="Value">
+                    @Html.Raw(Model.PageContent.GetValueOrDefault("About_Commitment_P1", "We offer coffee subscriptions for enthusiasts and wholesale green beans for roasters, all sourced with transparency and respect for the communities that grow our coffee. Our connection to La Convención and the broader Cusco region allows us to work directly with producers, ensuring fair compensation and sustainable practices."))
+                </p>
+                <p class="text-gray-600 dark:text-gray-400" style="font-family: 'Inter', sans-serif; color: #4b5563; line-height: 1.6;" data-entity-id="About_Commitment_P2" data-entity-type="SiteContent" data-editable="Value">
+                    @Html.Raw(Model.PageContent.GetValueOrDefault("About_Commitment_P2", "Every coffee we source reflects the unique terroir of the Andean-Amazon transition zone, where high-altitude cultivation and traditional methods create exceptional flavor profiles that tell the story of Peruvian coffee excellence."))
+                </p>
+            </div>
+
+            <div class="text-center mt-5">
+                <a href="/Subscriptions" class="btn btn-primary me-3" style="background-color: #0059ff; color: white; padding: 0.75rem 1.5rem; border-radius: 4px; text-decoration: none; display: inline-block; margin-right: 1rem;">
+                    View Subscriptions
+                </a>
+                <a href="/GreenBeans" class="btn btn-outline-primary" style="border: 1px solid #0059ff; color: #0059ff; padding: 0.75rem 1.5rem; border-radius: 4px; text-decoration: none; display: inline-block;">
+                    Wholesale Green Beans
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

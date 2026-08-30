@@ -1,0 +1,73 @@
+@model TheBestBean.Models.CoffeeBean
+
+<article class="coffee-product-card group cursor-pointer flex flex-col bg-white dark:bg-[#2F3A28] border border-gray-200 dark:border-[#445239] transition-all h-full" 
+     data-origin="@(Model.OriginCountry?.Name ?? "Peru")" 
+     data-process="@Model.ProcessingMethod"
+     data-type="@(Model.Name.Contains("Roast") || Model.Name.Contains("Roasted") ? "roasted" : "green")">
+    
+    <div class="aspect-square w-full overflow-hidden bg-transparent relative">
+        <div class="absolute top-0 left-0 bg-white dark:bg-[#FAF3DD] px-3 py-2 z-10 flex gap-2">
+            @if (!string.IsNullOrEmpty(Model.Altitude))
+            {
+                <span class="text-[8px] font-mono-jb uppercase tracking-widest text-black font-bold border-r border-gray-300 pr-2">@Model.Altitude</span>
+            }
+            @if (!string.IsNullOrEmpty(Model.ProcessingMethod))
+            {
+                <span class="text-[8px] font-mono-jb uppercase tracking-widest text-black font-bold border-r border-gray-300 pr-2">@Model.ProcessingMethod</span>
+            }
+            @if (!string.IsNullOrEmpty(Model.Variety))
+            {
+                <span class="text-[8px] font-mono-jb uppercase tracking-widest text-black font-bold">@Model.Variety</span>
+            }
+            @if (string.IsNullOrEmpty(Model.Altitude) && string.IsNullOrEmpty(Model.ProcessingMethod) && string.IsNullOrEmpty(Model.Variety))
+            {
+                <span class="text-[8px] font-mono-jb uppercase tracking-widest text-black font-bold">COFFEE</span>
+            }
+        </div>
+        
+        <div class="absolute top-2 right-2 text-white px-2 py-1 z-10 text-[10px] font-mono-jb font-bold drop-shadow-md shadow-black" style="text-shadow: 0px 2px 4px rgba(0,0,0,0.5);">
+            SCA @Model.ScaScore.ToString("0.##")
+        </div>
+        
+
+        <a asp-page="/Product" asp-route-id="@Model.Id" class="block w-full h-full text-decoration-none">
+            <img 
+                src="@Model.ImageUrl" 
+                alt="Peruvian specialty coffee beans: @Model.Name"
+                loading="lazy"
+                class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 mix-blend-multiply dark:mix-blend-normal"
+                data-entity-id="@Model.Id" data-entity-type="CoffeeBean" data-editable="ImageUrl"
+            />
+        </a>
+    </div>
+    
+    <div class="flex flex-col flex-grow p-4 md:p-6 gap-4 border-t border-gray-200 dark:border-[#445239]">
+        <div class="flex justify-between items-start gap-4">
+            <a asp-page="/Product" asp-route-id="@Model.Id" class="text-decoration-none hover:opacity-75 transition-opacity block w-full">
+                <h3 class="text-sm font-bold font-mono-jb uppercase tracking-wider m-0 text-[#111] dark:text-[#F2F5EB]" data-entity-id="@Model.Id" data-entity-type="CoffeeBean" data-editable="Name">
+                    @Model.Name
+                </h3>
+            </a>
+            <span class="text-sm font-bold font-mono-jb text-[#111] dark:text-[#F2F5EB] shrink-0 price-display" data-price-usd="@Model.BasePriceUSD" data-price-pen="@Model.BasePricePEN" data-from>From $@Model.BasePriceUSD.ToString("F2")</span>
+        </div>
+
+        <p class="text-gray-600 dark:text-[#B8C9A9] text-[11px] font-mono-tech leading-relaxed m-0 mt-2 mb-6" data-entity-id="@Model.Id" data-entity-type="CoffeeBean" data-editable="FlavorProfile">
+            @Model.FlavorProfile
+        </p>
+
+        <!-- Quick Add Form -->
+        <form method="post" asp-page="/Cart" asp-page-handler="AddToCart" class="mt-auto w-full">
+            <input type="hidden" name="productId" value="@Model.Id" />
+            <input type="hidden" name="productName" value="@Model.Name" />
+            <input type="hidden" name="productType" value="Bean" />
+            <input type="hidden" name="price" value="@Model.BasePriceUSD" />
+            <input type="hidden" name="weight" value="100g" />
+            <input type="hidden" name="imageUrl" value="@Model.ImageUrl" />
+            <input type="hidden" name="description" value="@Model.FlavorProfile" />
+            <input type="hidden" name="quantity" value="1" />
+            <button type="submit" class="btn-lab w-full py-3 block text-center">
+                Add to Cart
+            </button>
+        </form>
+    </div>
+</article>

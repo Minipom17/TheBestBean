@@ -1,0 +1,433 @@
+@page "{id:int}"
+@model TheBestBean.Pages.FarmProfiles.ProfileModel
+@{
+    ViewData["Title"] = Model.FarmProfile.FarmName + " - Micro-lot Profile";
+}
+
+<div class="container-fluid px-0">
+    <style>
+        .card { border-radius: 6px; }
+        .card-header { background: transparent; }
+        .profile-cta .card { border-style: solid; border-width: 1px; }
+        .profile-cta .btn { letter-spacing: .02em; }
+    </style>
+    <!-- Hero Section with Farm Photos Carousel -->
+    <div id="farmCarousel" class="carousel slide position-relative" data-bs-ride="carousel">
+        <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(180deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.30) 40%, rgba(0,0,0,0.10) 100%); z-index: 2;"></div>
+        <div class="carousel-inner">
+            @{
+                var photos = Model.ParseFarmPhotos();
+                if (photos.Count == 0 && Model.FarmProfile.RelatedSurvey != null && !string.IsNullOrEmpty(Model.FarmProfile.RelatedSurvey.SurveyPhotoPath))
+                {
+                    photos = new List<string> { Model.FarmProfile.RelatedSurvey.SurveyPhotoPath };
+                }
+                if (photos.Count > 0)
+                {
+                    for (int i = 0; i < photos.Count; i++)
+                    {
+                        <div class="carousel-item @(i == 0 ? "active" : "")">
+                            <img src="@photos[i]" class="d-block w-100" style="height: 50vh; object-fit: cover; filter: contrast(1.03) saturate(1.05);" alt="Farm photo @(i + 1)">
+                            <div class="carousel-caption d-none d-md-block" style="z-index:3;">
+                                <h1 class="display-4 fw-bold text-white" style="text-shadow:0 2px 10px rgba(0,0,0,.75)">@Model.FarmProfile.FarmName</h1>
+                                <p class="lead" style="text-shadow:0 1px 6px rgba(0,0,0,.7)">Micro-lot Origin Coffee Farm</p>
+                                <span class="badge bg-dark bg-opacity-75 fs-6">@Model.FarmProfile.Region</span>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="carousel-item active">
+                        <div class="bg-gradient" style="height: 50vh; background: linear-gradient(135deg, var(--fairtrade-green), var(--coffee-brown));">
+                            <div class="d-flex align-items-center justify-content-center h-100">
+                                <div class="text-center text-white">
+                                    <h1 class="display-4 fw-bold">@Model.FarmProfile.FarmName</h1>
+                                    <p class="lead">Micro-lot Origin Coffee Farm</p>
+                                    <p class="mb-0">@Model.FarmProfile.Region</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+        @if (photos.Count > 1)
+        {
+            <button class="carousel-control-prev" type="button" data-bs-target="#farmCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#farmCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        }
+    </div>
+
+    <!-- Farm Information Cards -->
+    <div class="container py-5">
+        <!-- Quick minimalist upload (single photo) -->
+        <div class="row mb-4">
+            <div class="col-12 text-end">
+                <form method="post" enctype="multipart/form-data" asp-page-handler="Upload" asp-route-id="@Model.FarmProfile.Id" class="d-inline">
+                    <input type="file" name="Upload" accept="image/*" class="form-control d-inline" style="max-width:260px; display:inline-block;" />
+                    <button type="submit" class="btn btn-outline-success ms-2"><i class="bi bi-upload"></i> Add Photo</button>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <!-- Farm Overview Card -->
+            <div class="col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header" style="background-color: transparent; border-bottom: 1px solid #E0E0E0;">
+                        <h3 class="card-title h5 mb-0 text-dark">
+                            <i class="bi bi-house me-2"></i>Farm Overview
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <strong>Farmer:</strong><br>
+                            <span class="text-muted">@Model.FarmProfile.FarmerName</span>
+                        </div>
+                        <div class="mb-3">
+                            <strong>Region:</strong><br>
+                            <span class="text-muted">@Model.FarmProfile.Region</span>
+                        </div>
+                        @if (!string.IsNullOrEmpty(Model.FarmProfile.GPSLatitude) && !string.IsNullOrEmpty(Model.FarmProfile.GPSLongitude))
+                        {
+                            <div class="mb-3">
+                                <strong>Coordinates:</strong><br>
+                                <span class="text-muted">@Model.FarmProfile.GPSLatitude, @Model.FarmProfile.GPSLongitude</span>
+                            </div>
+                        }
+                        @if (Model.FarmProfile.QualityRating.HasValue)
+                        {
+                            <div class="mb-3">
+                                <strong>Quality Rating:</strong><br>
+                                <div class="d-flex align-items-center">
+                                    @for (int i = 1; i <= 10; i++)
+                                    {
+                                        <i class="bi bi-star-fill @(i <= Model.FarmProfile.QualityRating.Value ? "text-warning" : "text-muted")"></i>
+                                    }
+                                    <span class="ms-2 fw-medium">@Model.FarmProfile.QualityRating.Value/10</span>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coffee Information -->
+            <div class="col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header" style="background-color: transparent; border-bottom: 1px solid #E0E0E0;">
+                        <h3 class="card-title h5 mb-0 text-dark">
+                            <i class="bi bi-cup-hot me-2"></i>Coffee Information
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        @if (!string.IsNullOrEmpty(Model.FarmProfile.CoffeeVarieties))
+                        {
+                            <div class="mb-3">
+                                <strong>Varieties:</strong><br>
+                                <span class="text-muted">@Model.FarmProfile.CoffeeVarieties</span>
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.FarmProfile.ProcessingMethod))
+                        {
+                            <div class="mb-3">
+                                <strong>Processing:</strong><br>
+                                <span class="text-muted">@Model.FarmProfile.ProcessingMethod</span>
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.FarmProfile.FarmingPhilosophy))
+                        {
+                            <div class="mb-3">
+                                <strong>Farming Philosophy:</strong><br>
+                                <span class="text-muted">@Model.FarmProfile.FarmingPhilosophy</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Site Conditions (minimalist, separate card) -->
+            @if (Model.FarmProfile.RelatedSurvey != null)
+            {
+                <div class="col-lg-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header" style="background-color: transparent; border-bottom: 1px solid #E0E0E0;">
+                            <h3 class="card-title h5 mb-0 text-dark">
+                                <i class="bi bi-compass me-2"></i>Site Conditions
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row small">
+                                <div class="col-6 mb-2"><strong>Aspect</strong><br><span class="text-muted">@(Model.FarmProfile.RelatedSurvey.Aspect ?? "-")</span></div>
+                                <div class="col-6 mb-2"><strong>Slope</strong><br><span class="text-muted">@(Model.FarmProfile.RelatedSurvey.SlopeType ?? "-")</span></div>
+                                <div class="col-6 mb-2"><strong>Temp.</strong><br><span class="text-muted">@(Model.FarmProfile.RelatedSurvey.TemperatureRange ?? "-")</span></div>
+                                <div class="col-6 mb-2"><strong>Rainfall</strong><br><span class="text-muted">@(Model.FarmProfile.RelatedSurvey.RainfallPatterns ?? "-")</span></div>
+                                <div class="col-12 mb-2"><strong>Water</strong><br><span class="text-muted">@(Model.FarmProfile.RelatedSurvey.WaterSource ?? "-")</span></div>
+                                @if (Model.FarmProfile.RelatedSurvey.ElevationMeters > 0)
+                                {
+                                    <div class="col-6 mb-2"><strong>Elevation</strong><br><span class="text-muted">@Model.FarmProfile.RelatedSurvey.ElevationMeters m</span></div>
+                                }
+                                @if (Model.FarmProfile.RelatedSurvey.TotalFarmSizeHa > 0)
+                                {
+                                    <div class="col-6 mb-2"><strong>Farm Size</strong><br><span class="text-muted">@Model.FarmProfile.RelatedSurvey.TotalFarmSizeHa ha</span></div>
+                                }
+                                @if (Model.FarmProfile.RelatedSurvey.CoffeePlantedAreaHa > 0)
+                                {
+                                    <div class="col-6 mb-2"><strong>Coffee Area</strong><br><span class="text-muted">@Model.FarmProfile.RelatedSurvey.CoffeePlantedAreaHa ha</span></div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Farm Story Section -->
+        @if (!string.IsNullOrEmpty(Model.FarmProfile.FarmStory))
+        {
+            <div class="row mb-5">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header" style="background-color: transparent; border-bottom: 1px solid #E0E0E0;">
+                            <h2 class="card-title h4 mb-0 text-dark">
+                                <i class="bi bi-book-open me-2"></i>Farm Story
+                            </h2>
+                        </div>
+                        <div class="card-body">
+                            <p class="lead">@Model.FarmProfile.FarmStory</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!-- Environmental Features -->
+        @if (!string.IsNullOrEmpty(Model.FarmProfile.EnvironmentalFeatures))
+        {
+            <div class="row mb-5">
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header" style="background-color: transparent; border-bottom: 1px solid #E0E0E0;">
+                            <h3 class="card-title h5 mb-0 text-dark">
+                                <i class="bi bi-tree me-2"></i>Environmental Features
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <p>@Model.FarmProfile.EnvironmentalFeatures</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6"></div>
+
+                                            </div>
+        }
+
+        <!-- Farming Practices and Quality -->
+        <div class="row mb-5">
+            <div class="col-md-6">
+                @if (!string.IsNullOrEmpty(Model.FarmProfile.SustainabilityPractices))
+                {
+                    <div class="card h-100 mb-4">
+                        <div class="card-header" style="background-color: transparent; border-bottom: 1px solid #E0E0E0;">
+                            <h3 class="card-title h5 mb-0 text-dark">
+                                <i class="bi bi-leaf me-2"></i>Sustainability Practices
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <p>@Model.FarmProfile.SustainabilityPractices</p>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="col-md-6"></div>
+        </div>
+
+        <!-- Community Impact -->
+        @if (!string.IsNullOrEmpty(Model.FarmProfile.CommunityImpact))
+        {
+            <div class="row mb-5">
+                <div class="col-md-6"></div>
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header" style="background-color: transparent; border-bottom: 1px solid #E0E0E0;">
+                            <h3 class="card-title h5 mb-0 text-dark">
+                                <i class="bi bi-people me-2"></i>Community Impact
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <p>@Model.FarmProfile.CommunityImpact</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!-- Quality Highlights -->
+        @if (!string.IsNullOrEmpty(Model.FarmProfile.QualityHighlights))
+        {
+            <div class="row mb-5">
+                <div class="col-12">
+                    <div class="card bg-light">
+                        <div class="card-header" style="background-color: transparent; border-bottom: 1px solid #E0E0E0;">
+                            <h2 class="card-title h4 mb-0 text-dark">
+                                <i class="bi bi-star-fill me-2"></i>Quality Highlights
+                            </h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <p class="lead">@Model.FarmProfile.QualityHighlights</p>
+                                </div>
+                                <div class="col-md-4"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!-- Detailed Survey Information (Collapsible) -->
+        @if (Model.FarmProfile.RelatedSurvey != null)
+        {
+            <div class="row mb-5">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title h4 mb-0">
+                                <button class="btn btn-link text-decoration-none fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#detailedSurvey" aria-expanded="false">
+                                    <i class="bi bi-clipboard-data me-2"></i>Detailed Survey Information
+                                    <i class="bi bi-chevron-down ms-2"></i>
+                                </button>
+                            </h2>
+                        </div>
+                        <div class="collapse" id="detailedSurvey">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h5 class="fw-bold">Environmental Conditions</h5>
+                                        <p><strong>Elevation:</strong> @Model.FarmProfile.RelatedSurvey.ElevationMeters m</p>
+                                        <p><strong>Slope:</strong> @(Model.FarmProfile.RelatedSurvey.SlopeType ?? "Not specified")</p>
+                                        <p><strong>Aspect:</strong> @(Model.FarmProfile.RelatedSurvey.Aspect ?? "Not specified")</p>
+                                        @if (!string.IsNullOrEmpty(Model.FarmProfile.RelatedSurvey.TemperatureRange))
+                                        {
+                                            <p><strong>Temperature:</strong> @Model.FarmProfile.RelatedSurvey.TemperatureRange</p>
+                                        }
+                                        @if (!string.IsNullOrEmpty(Model.FarmProfile.RelatedSurvey.RainfallPatterns))
+                                        {
+                                            <p><strong>Rainfall:</strong> @Model.FarmProfile.RelatedSurvey.RainfallPatterns</p>
+                                        }
+                                        <p><strong>Water Source:</strong> @(Model.FarmProfile.RelatedSurvey.WaterSource ?? "Not specified")</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h5 class="fw-bold">Coffee Management</h5>
+                                        @if (Model.FarmProfile.RelatedSurvey.CoffeePlantingYear.HasValue)
+                                        {
+                                            <p><strong>Planted:</strong> @Model.FarmProfile.RelatedSurvey.CoffeePlantingYear</p>
+                                        }
+                                        <p><strong>Pruning:</strong> @(Model.FarmProfile.RelatedSurvey.PruningMethod ?? "Not specified")</p>
+                                        <p><strong>Fertilization:</strong> @(Model.FarmProfile.RelatedSurvey.FertilizationType ?? "Not specified")</p>
+                                        <p><strong>Harvesting:</strong> @(Model.FarmProfile.RelatedSurvey.HarvestingMethod ?? "Not specified")</p>
+                                        <p><strong>Processing:</strong> <a href="/FarmerSurveys/Details/@Model.FarmProfile.RelatedSurvey.Id" class="btn btn-sm btn-outline-primary">View Full Survey</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!-- Actions -->
+        <div class="row">
+            <div class="col-12 text-center mb-4">
+                <a href="/FarmProfiles" class="btn btn-outline-primary me-3">
+                    <i class="bi bi-arrow-left me-2"></i>Back to All Farms
+                </a>
+                @if (Model.FarmProfile.RelatedSurvey != null)
+                {
+                    <a href="/FarmerSurveys/Details/@Model.FarmProfile.RelatedSurvey.Id" class="btn btn-primary me-3">
+                        <i class="bi bi-clipboard-data me-2"></i>View Survey
+                    </a>
+                }
+                <a asp-page="./Edit" asp-route-id="@Model.FarmProfile.Id" class="btn btn-outline-secondary me-2">
+                    <i class="bi bi-pencil me-2"></i>Edit Profile
+                </a>
+                <a asp-page="./Edit" asp-route-id="@Model.FarmProfile.Id" class="btn btn-outline-success">
+                    <i class="bi bi-upload me-2"></i>Upload Photo
+                </a>
+            </div>
+        </div>
+        <!-- Tours & Buy Coffee CTA -->
+        <div class="row profile-cta g-3 mb-5">
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div>
+                            <h5 class="fw-bold mb-2">Visit This Farm</h5>
+                            <p class="text-muted mb-3">Book a guided tour to @Model.FarmProfile.FarmName in @Model.FarmProfile.Region.</p>
+                        </div>
+                        <div>
+                            <a href="/Experiences#peru-tour" class="btn btn-dark">Book an Experience</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div>
+                            <h5 class="fw-bold mb-2">Buy Coffee from This Producer</h5>
+                            <p class="text-muted mb-3">Choose buying type to proceed.</p>
+                        </div>
+                        <div>
+                            <button class="btn btn-outline-dark me-2" data-bs-toggle="modal" data-bs-target="#buyModal">Buy Coffee</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Buyer Type Modal -->
+<div class="modal fade" id="buyModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Select Buyer Type</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p class="text-muted">Are you purchasing for personal use or commercial quantities?</p>
+        <div class="d-grid gap-2">
+            <a href="/GreenBeans" class="btn btn-dark">Personal Use</a>
+            <a href="/Contact?type=commercial" class="btn btn-outline-dark">Commercial / Wholesale</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Auto-play carousel
+        document.addEventListener('DOMContentLoaded', function() {
+            const carousel = document.getElementById('farmCarousel');
+            if (carousel) {
+                const bsCarousel = new bootstrap.Carousel(carousel, {
+                    interval: 4000,
+                    ride: 'carousel'
+                });
+            }
+        });
+    </script>
+}
+
+
+
+

@@ -1,0 +1,135 @@
+@page
+@model TheBestBean.Pages.FarmProfiles.IndexModel
+@{
+    ViewData["Title"] = "Farm Profiles";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 fw-bold mb-0">
+                        <i class="bi bi-house-heart me-2"></i>Micro-lot Farm Profiles
+                    </h1>
+                    <p class="text-muted mb-0">Discover exceptional small-scale coffee farms</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <a asp-page="/FarmerSurveys/Index" class="btn btn-outline-primary">
+                        <i class="bi bi-clipboard-data me-2"></i>Farm Survey
+                    </a>
+                    <a asp-page="Create" class="btn btn-primary">
+                        <i class="bi bi-plus-lg me-2"></i>Add Farm Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.FarmProfile.Any())
+    {
+        <div class="row">
+            @foreach (var profile in Model.FarmProfile)
+            {
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-img-top position-relative" style="height: 200px; background: linear-gradient(135deg, var(--fairtrade-green), var(--coffee-brown));">
+                            <div class="position-absolute top-0 start-0 p-3">
+                                @if (profile.QualityRating.HasValue)
+                                {
+                                    <span class="badge bg-warning text-dark">
+                                        <i class="bi bi-star-fill"></i> @profile.QualityRating.Value/10
+                                    </span>
+                                }
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center h-100 text-white">
+                                <div class="text-center">
+                                    <i class="bi bi-house display-4 mb-2"></i>
+                                    <h5 class="mb-0">@profile.FarmName</h5>
+                                    <small>@profile.Region</small>
+                                </div>
+                            </div>
+                            <!-- Minimalist inline upload: selects a file and auto-submits -->
+                            <form method="post" enctype="multipart/form-data" action="/FarmProfiles/Profile?handler=Upload" class="position-absolute top-0 end-0 m-2">
+                                <input type="hidden" name="id" value="@profile.Id" />
+                                <label class="btn btn-sm btn-outline-light" style="backdrop-filter: blur(2px);">
+                                    <i class="bi bi-upload"></i>
+                                    <input type="file" name="Upload" accept="image/*" class="d-none" onchange="this.form.submit()" />
+                                    Add Photo
+                                </label>
+                            </form>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="card-title fw-bold mb-2">@profile.FarmerName</h6>
+                            
+                            <div class="mb-3">
+                                @if (!string.IsNullOrEmpty(profile.CoffeeVarieties))
+                                {
+                                    <small class="text-muted d-block">Varieties</small>
+                                    <small class="fw-medium">@profile.CoffeeVarieties</small>
+                                }
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(profile.FarmingPhilosophy))
+                            {
+                                <div class="mb-3">
+                                    <small class="text-muted d-block">Philosophy</small>
+                                    <small class="fw-medium">@(profile.FarmingPhilosophy.Length > 100 ? profile.FarmingPhilosophy.Substring(0, 100) + "..." : profile.FarmingPhilosophy)</small>
+                                </div>
+                            }
+
+                            <div class="mb-3">
+                                <small class="text-muted d-block">Last Updated</small>
+                                <small class="fw-medium">@profile.LastUpdated.ToString("MMM dd, yyyy")</small>
+                            </div>
+
+                            @if (profile.RelatedSurvey != null)
+                            {
+                                <div class="mb-3">
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-check-circle me-1"></i>Survey Available
+                                    </span>
+                                </div>
+                            }
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <div class="d-flex justify-content-between">
+                                <a asp-page="./Profile" asp-route-id="@profile.Id" class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-eye me-1"></i>View Profile
+                                </a>
+                                <div class="btn-group">
+                                    @if (profile.RelatedSurvey != null)
+                                    {
+                                        <a href="/FarmerSurveys/Details/@profile.RelatedSurvey.Id" class="btn btn-outline-success btn-sm">
+                                            <i class="bi bi-clipboard-data me-1"></i>Survey
+                                        </a>
+                                    }
+                                    <a asp-page="./Edit" asp-route-id="@profile.Id" class="btn btn-outline-secondary btn-sm">
+                                        <i class="bi bi-pencil me-1"></i>Edit
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <div class="mb-4">
+                <i class="bi bi-house-x display-1 text-muted"></i>
+            </div>
+            <h3 class="h4 text-muted mb-3">No Farm Profiles Yet</h3>
+            <p class="text-muted mb-4">Create your first micro-lot farm profile to showcase exceptional coffee farms.</p>
+            <a asp-page="Create" class="btn btn-primary">
+                <i class="bi bi-plus-lg me-2"></i>Create First Profile
+            </a>
+        </div>
+    }
+</div>
+
+
+
+

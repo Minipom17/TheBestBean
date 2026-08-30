@@ -1,0 +1,173 @@
+@page
+@model WholesaleModel
+@{
+    ViewData["Title"] = "Wholesale";
+    ViewData["MetaDescription"] = "Wholesale specialty green coffee beans direct from Peru. Direct-trade lots from La Convención and Cajamarca for roasters and cafés. Full traceability and SCA scoring.";
+}
+
+<div class="min-h-screen bg-white dark:bg-v-black relative overflow-hidden flex flex-col font-sans pt-32 pb-20">
+    
+    <!-- Subtle gradient background effects -->
+    <div class="absolute -left-[10%] bottom-[0%] w-[600px] h-[600px] bg-rose-100/30 dark:bg-v-blue/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <main class="flex-grow max-w-[1400px] mx-auto w-full px-6 md:px-12 relative z-10">
+        
+        <!-- Main Content (Removed Glass Card background/border) -->
+        <div class="mt-4 md:mt-8">
+            
+            <!-- Header section -->
+            <div class="mb-12">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-2.5 h-2.5 rounded-full bg-slate-500"></div>
+                    <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 font-mono-jb">CUSTOM LOT COMMISSION</span>
+                </div>
+                
+                <h1 class="text-4xl md:text-[56px] font-bold tracking-tight text-slate-900 dark:text-[#FAF3DD] mb-6 leading-tight">
+                    Bespoke Processing Protocol
+                </h1>
+                
+                <p class="text-lg md:text-xl text-slate-500 max-w-3xl leading-relaxed">
+                    Design your exact flavor profile. We guarantee a cupping score of 86-88 points on all bespoke commissions. Select your varietal and manipulate the processing variables below.
+                </p>
+            </div>
+
+            <!-- Form section -->
+            <form method="post" class="flex flex-col gap-12">
+                
+                <!-- Dropdowns Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    
+                    <!-- Varietal -->
+                    <div class="flex flex-col gap-3">
+                        <label class="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500 font-mono-jb pl-1">1. VARIETAL</label>
+                        <div class="relative">
+                            <select name="varietal" class="w-full appearance-none bg-slate-50/50 border border-slate-200 rounded-2xl px-5 py-4 text-sm text-slate-700 font-medium focus:outline-none focus:ring-2 focus:ring-slate-900 focus:bg-white dark:bg-[#3C4A33] transition-all cursor-pointer">
+                                <option value="gesha">Gesha (Inkawasi)</option>
+                                <option value="bourbon">Red Bourbon</option>
+                                <option value="caturra">Caturra</option>
+                            </select>
+                            <div class="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Base Process -->
+                    <div class="flex flex-col gap-3">
+                        <label class="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500 font-mono-jb pl-1">2. BASE PROCESS</label>
+                        <div class="relative">
+                            <select name="baseProcess" class="w-full appearance-none bg-slate-50/50 border border-slate-200 rounded-2xl px-5 py-4 text-sm text-slate-700 font-medium focus:outline-none focus:ring-2 focus:ring-slate-900 focus:bg-white dark:bg-[#3C4A33] transition-all cursor-pointer">
+                                <option value="washed">Washed</option>
+                                <option value="natural">Natural</option>
+                                <option value="honey">Honey</option>
+                            </select>
+                            <div class="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fermentation Phase -->
+                    <div class="flex flex-col gap-3">
+                        <label class="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500 font-mono-jb pl-1">3. FERMENTATION PHASE</label>
+                        <div class="relative">
+                            <select name="fermentationPhase" class="w-full appearance-none bg-slate-50/50 border border-slate-200 rounded-2xl px-5 py-4 text-sm text-slate-700 font-medium focus:outline-none focus:ring-2 focus:ring-slate-900 focus:bg-white dark:bg-[#3C4A33] transition-all cursor-pointer">
+                                <option value="aerobic">Standard Aerobic</option>
+                                <option value="anaerobic">Anaerobic</option>
+                                <option value="carbonic">Carbonic Maceration</option>
+                            </select>
+                            <div class="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fermentation Time -->
+                    <div class="flex flex-col gap-3">
+                        <label class="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500 font-mono-jb pl-1">4. FERMENTATION TIME</label>
+                        <div class="relative">
+                            <select name="fermentationTime" class="w-full appearance-none bg-slate-50/50 border border-slate-200 rounded-2xl px-5 py-4 text-sm text-slate-700 font-medium focus:outline-none focus:ring-2 focus:ring-slate-900 focus:bg-white dark:bg-[#3C4A33] transition-all cursor-pointer">
+                                <option value="24">24 Hours</option>
+                                <option value="48">48 Hours</option>
+                                <option value="72">72 Hours</option>
+                            </select>
+                            <div class="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <!-- Slider & Button row -->
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-12 mt-8">
+                    
+                    <!-- Slider -->
+                    <div class="flex-grow max-w-[800px] flex flex-col">
+                        <label class="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500 font-mono-jb mb-6 pl-1">TARGET SWEETNESS (BRIX LEVEL)</label>
+                        
+                        <!-- Custom styled slider -->
+                        <div class="relative w-full h-2.5 bg-slate-200 rounded-full">
+                            <div class="absolute top-0 left-0 h-full w-[0%] bg-slate-400 rounded-full transition-all duration-150 ease-out" id="slider-fill"></div>
+                            <input type="range" min="15" max="30" value="15" class="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer z-20" id="brix-slider">
+                            
+                            <!-- Slider Thumb (visual) -->
+                            <div class="absolute top-1/2 -translate-y-1/2 -ml-3 w-6 h-6 bg-slate-500 rounded-full shadow-[0_2px_8px_rgb(0,0,0,0.15)] pointer-events-none transition-all duration-150 ease-out z-10" id="slider-thumb" style="left: 0%;"></div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center mt-6 text-[10px] font-mono-jb">
+                            <span class="text-slate-500">15&deg;Bx (Mild)</span>
+                            <span class="text-slate-900 dark:text-[#FAF3DD] font-bold text-sm text-[#0c4a6e]" id="brix-value">15&deg;Bx</span>
+                            <span class="text-slate-500">30&deg;Bx (Intense)</span>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="bg-[#101715] hover:bg-black text-white px-8 py-[18px] rounded-full font-medium transition-colors whitespace-nowrap shadow-md mb-3">
+                        Request Protocol Audit
+                    </button>
+                    
+                </div>
+                
+            </form>
+
+        </div>
+    </main>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slider = document.getElementById('brix-slider');
+            const fill = document.getElementById('slider-fill');
+            const thumb = document.getElementById('slider-thumb');
+            const valueDisplay = document.getElementById('brix-value');
+            
+            function updateSlider() {
+                const min = slider.min || 15;
+                const max = slider.max || 30;
+                const val = slider.value;
+                const percentage = ((val - min) / (max - min)) * 100;
+                
+                fill.style.width = percentage + '%';
+                thumb.style.left = percentage + '%';
+                valueDisplay.innerHTML = val + '&deg;Bx';
+                
+                if(percentage > 0) {
+                    fill.classList.add('bg-[#0c4a6e]');
+                    fill.classList.remove('bg-slate-400');
+                    thumb.classList.add('bg-[#0c4a6e]');
+                    thumb.classList.remove('bg-slate-500');
+                } else {
+                    fill.classList.remove('bg-[#0c4a6e]');
+                    fill.classList.add('bg-slate-400');
+                    thumb.classList.remove('bg-[#0c4a6e]');
+                    thumb.classList.add('bg-slate-500');
+                }
+            }
+            
+            slider.addEventListener('input', updateSlider);
+            updateSlider(); // Init
+        });
+    </script>
+}

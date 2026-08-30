@@ -1,0 +1,701 @@
+@page
+@model GreenBeansModel
+@{
+    ViewData["Title"] = "All Coffees";
+    ViewData["MetaDescription"] = "Shop specialty Peruvian coffee from Purple Bean Coffee. Single-origin beans from La Convención and Cajamarca, SCA scored, roasted in Cusco. Available roasted or as wholesale green beans.";
+}
+@Html.AntiForgeryToken()
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+
+        :root {
+            --brand-orange: #FF4D29;
+            --brand-blue: #0055FF;
+            --brand-green: #1D4C3A;
+            --text-main: #111111;
+            --text-muted: #666666;
+            --bg-main: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+            overscroll-behavior-y: none;
+        }
+
+        .font-mono-tech {
+            font-family: 'Space Mono', monospace;
+        }
+
+        .tracking-tightest { letter-spacing: -0.04em; }
+        .tracking-tech { letter-spacing: 0.08em; }
+        
+        #canvas-container {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            aspect-ratio: 1 / 1;
+            margin: 0 auto;
+            touch-action: none; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+        }
+
+        .flavor-label {
+            position: absolute;
+            font-family: 'Space Mono', monospace;
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            pointer-events: none;
+            text-align: center;
+            z-index: 20;
+            color: var(--text-muted);
+            transition: color 0.3s ease;
+            background: white;
+            padding: 2px 8px;
+        }
+
+        .flavor-label.active {
+            color: var(--text-main);
+            border-bottom: 2px solid var(--brand-orange);
+        }
+
+        .fade-transition {
+            transition: opacity 0.3s ease;
+        }
+
+        /* Scientific Range Sliders */
+        .range-track {
+            position: relative;
+            width: 100%;
+            height: 4px;
+            background-color: #F0F0F0;
+            border-radius: 4px;
+            margin: 8px 0;
+            overflow: hidden;
+        }
+
+        .range-bar {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            border-radius: 4px;
+            transition: left 0.3s ease, width 0.3s ease, background 0.3s ease;
+        }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #E5E5E5; }
+        
+        .flavor-triangle {
+            width: 100%;
+            max-width: 400px;
+            aspect-ratio: 1.15 / 1;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            position: relative;
+            margin: 0 auto;
+        }
+
+        .triangle-marker {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            cursor: pointer;
+        }
+    
+</style>
+
+
+<!-- Section: Flavor Explorer (Receipt Style & Paper Background) -->
+        <section class="w-full bg-[rgb(255,255,137)] border-y border-black flex items-center justify-center py-4 lg:py-6 min-h-[calc(100vh-64px)]">
+            <div class="max-w-[1400px] mx-auto px-4 lg:px-6 grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 items-center w-full">
+                
+                <!-- Left Col: Interactive Triangle -->
+                <div class="relative flex flex-col items-center">
+                    <div class="text-center border-b border-black pb-1 px-2 font-mono text-[10px] font-bold tracking-widest uppercase text-black mb-4">
+                        Bright & Fruity
+                    </div>
+                    
+                    <div class="w-full flex justify-center py-2 relative">
+                        <div class="flavor-triangle !max-w-[240px] md:!max-w-[280px]" style="background: linear-gradient(160deg, #FF5A36 0%, #ffcba4 50%, #e0e0d8 100%);">
+                            <div id="triangle-marker-0" class="triangle-marker" style="background: #FF5A36; top: 25%; left: 50%;"></div>
+                            <div id="triangle-marker-1" class="triangle-marker" style="background: #CCCCCC; top: 25%; left: 50%; display: none;"></div>
+                            <div id="triangle-marker-2" class="triangle-marker" style="background: #CCCCCC; top: 25%; left: 50%; display: none;"></div>
+                        </div>
+                    </div>
+
+                    <div class="w-full max-w-[320px] flex justify-between px-4 font-mono text-[9px] font-bold tracking-widest uppercase text-black mt-2 mb-6">
+                        <span>Rich & Chocolatey</span>
+                        <span>Funky & Boozy</span>
+                    </div>
+
+                    <div class="flex flex-wrap justify-center gap-3 font-mono text-[9px] tracking-widest uppercase text-black">
+                        <button id="legend-0" class="border border-black bg-transparent px-3 py-1.5 flex items-center gap-2 font-bold transition-colors rounded-none cursor-default">
+                            <span id="dot-0" class="w-2 h-2 bg-[#FF5A36] inline-block border border-black"></span> <span id="text-0">Primary</span>
+                        </button>
+                        <button id="legend-1" class="border border-black bg-transparent px-3 py-1.5 flex items-center gap-2 font-bold hover:bg-black hover:text-white transition-colors rounded-none">
+                            <span id="dot-1">+</span> <span id="text-1">Add Note</span>
+                        </button>
+                    </div>
+
+                    <!-- Specs Sliders -->
+                    <div class="w-full max-w-[320px] mt-4">
+                        <div class="font-mono text-[9px] font-bold tracking-widest uppercase text-black mb-3 flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 bg-[#FF5A36] inline-block" id="spec-indicator"></span> Sensory & Technical Specs
+                        </div>
+                        
+                        <style>
+                            input[type=range].custom-slider::-webkit-slider-thumb { -webkit-appearance: none; height: 12px; width: 12px; border-radius: 50%; background: var(--thumb-color, #FF5A36); cursor: pointer; margin-top: -5px; box-shadow: 0 2px 4px rgba(0,0,0,0.15); }
+                            input[type=range].custom-slider::-webkit-slider-runnable-track { width: 100%; height: 2px; cursor: pointer; background: #d1d1cc; }
+                            input[type=range].custom-slider { -webkit-appearance: none; width: 100%; background: transparent; }
+                            input[type=range].readonly-slider::-webkit-slider-thumb { cursor: default; }
+                            input[type=range].readonly-slider::-webkit-slider-runnable-track { cursor: default; }
+                        </style>
+
+                        <!-- Slider 1: Roast (Adjustable) -->
+                        <div class="relative mb-3">
+                            <div class="flex justify-between font-mono text-[9px] font-bold tracking-widest text-black mb-1 uppercase">
+                                <span>Light</span>
+                                <span class="text-[#FF5A36] border-b border-[#FF5A36] pb-0.5" id="label-roast">Roast Profile</span>
+                                <span>Dark</span>
+                            </div>
+                            <input type="range" min="1" max="100" value="20" id="flavor-slider" class="w-full outline-none custom-slider" style="--thumb-color: #FF5A36;">
+                            <div class="flex justify-between font-mono text-[8px] font-bold text-gray-500 mt-1 uppercase">
+                                <span>Agtron 95+</span>
+                                <span>Agtron 35</span>
+                            </div>
+                        </div>
+
+                        <!-- Slider 2: Body (Read Only) -->
+                        <div class="relative mb-3">
+                            <div class="flex justify-between font-mono text-[9px] font-bold tracking-widest text-black mb-1 uppercase">
+                                <span>Tea-like</span>
+                                <span class="text-gray-400">Body Profile</span>
+                                <span>Syrupy</span>
+                            </div>
+                            <input type="range" min="1" max="100" value="50" id="body-slider" class="w-full outline-none custom-slider readonly-slider" disabled style="--thumb-color: #111;">
+                        </div>
+
+                        <!-- Slider 3: Aftertaste (Read Only) -->
+                        <div class="relative">
+                            <div class="flex justify-between font-mono text-[9px] font-bold tracking-widest text-black mb-1 uppercase">
+                                <span>Short/Clean</span>
+                                <span class="text-gray-400">Aftertaste</span>
+                                <span>Lingering</span>
+                            </div>
+                            <input type="range" min="1" max="100" value="50" id="aftertaste-slider" class="w-full outline-none custom-slider readonly-slider" disabled style="--thumb-color: #111;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Col: Description Block -->
+                <div id="active-profile-details" class="flex flex-col justify-center fade-transition">
+                    <div class="font-mono text-[10px] font-bold text-[#FF5A36] tracking-widest uppercase mb-2" data-entity-id="GreenBeans_Subtitle" data-entity-type="SiteContent" data-editable="Value">
+                        @Html.Raw(Model.PageContent.GetValueOrDefault("GreenBeans_Subtitle", "04 // ROAST"))
+                    </div>
+                    
+                    <h1 class="text-3xl md:text-4xl font-bold tracking-tight text-black mb-4 leading-[1.05]" data-entity-id="GreenBeans_Title" data-entity-type="SiteContent" data-editable="Value">
+                        @Html.Raw(Model.PageContent.GetValueOrDefault("GreenBeans_Title", "Flavor <br><span class=\"text-gray-400 font-normal\">Explorer.</span>"))
+                    </h1>
+                    
+                    <div class="mb-4">
+                        <div class="flex items-center gap-2 font-mono text-[8px] font-bold tracking-widest uppercase text-black mb-2">
+                            <span id="zone-indicator" class="w-2 h-2 bg-[#FF5A36]"></span> <span id="category-label">Bright & Fruity</span>
+                        </div>
+                        <h3 id="profile-title" class="text-xl font-bold text-black mb-1 tracking-tight">Citrus & Berries</h3>
+                        <p id="profile-desc" class="text-xs text-gray-600 leading-relaxed max-w-md">
+                            Driven by organic acids and vibrant fruit notes. Characterized by crisp brightness and delicate sweetness.
+                        </p>
+                    </div>
+
+                    <div class="border-t border-gray-300 pt-3 mb-4">
+                        <div class="font-mono text-[8px] font-bold tracking-widest uppercase text-gray-500 mb-1">
+                            Identified Olfactory Markers
+                        </div>
+                        <p id="tags-container" class="font-mono text-[9px] font-bold uppercase tracking-widest text-black leading-relaxed">
+                            Citric Acid // Pineapple // Orange // Apple // Floral
+                        </p>
+                    </div>
+                    
+                    <!-- NEW RECEIPT STYLE CARD -->
+                    <div class="bg-white border border-gray-300 p-4 relative group hover:border-[#FF5A36] transition-colors cursor-pointer w-full max-w-[400px]">
+                        
+                        <!-- Top Metadata Grid (Inspired by the label reference) -->
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-2 font-mono text-[7px] uppercase tracking-widest text-gray-500 border-b border-gray-200 pb-2 mb-3">
+                            <div>
+                                <span class="block text-black font-bold mb-1">Origin</span>
+                                <span id="rec-origin" class="text-black">Yirgacheffe</span>
+                            </div>
+                            <div>
+                                <span class="block text-black font-bold mb-1">Process</span>
+                                <span id="rec-process" class="text-black">Washed</span>
+                            </div>
+                            <div>
+                                <span class="block text-black font-bold mb-1">Altitude</span>
+                                <span id="rec-altitude" class="text-black">1950 MASL</span>
+                            </div>
+                            <div>
+                                <span class="block text-black font-bold mb-1">Roast</span>
+                                <span id="rec-roast" class="text-black">Light</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Massive Coral Title -->
+                        <h4 id="rec-title" class="text-2xl font-bold text-[#FF5A36] tracking-tight leading-none mb-2">
+                            YIRGACHEFFE
+                        </h4>
+                        
+                        <p id="rec-desc" class="font-mono text-[8px] text-gray-600 leading-relaxed uppercase mb-3 max-w-sm">
+                            A brilliantly bright washed coffee featuring sparkling acidity, bergamot, and crisp peach. Driven by organic acids and vibrant fruit notes.
+                        </p>
+                        
+                        <button class="inline-flex items-center gap-2 font-mono text-[8px] font-bold tracking-widest uppercase text-black group-hover:text-[#FF5A36] transition-colors border-b border-black group-hover:border-[#FF5A36] pb-1">
+                            View Expedition / Shop &rarr;
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+        <!-- END FLAVOR EXPLORER -->
+
+        <section aria-label="Coffee Products" class="container mx-auto px-4 md:px-8 py-16">
+            <!-- Simple Filters -->
+            <div class="flex flex-wrap justify-center gap-4 mb-16">
+            @{
+                var initialFilter = !string.IsNullOrEmpty(Model.Type) ? Model.Type.ToLower() : (!string.IsNullOrEmpty(Model.Filter) ? Model.Filter : "All");
+                var filters = new Dictionary<string, string> 
+                { 
+                    { "All", "All" }, 
+                    { "green", "Green Coffee" },
+                    { "roasted", "Roasted Coffee" },
+                    { "Peru", "Peru" }, 
+                    { "Colombia", "Colombia (Coming Soon)" }, 
+                    { "Washed", "Washed" }, 
+                    { "Natural", "Natural" } 
+                };
+                foreach (var filter in filters)
+                {
+                    var isSelected = filter.Key.Equals(initialFilter, StringComparison.OrdinalIgnoreCase);
+                    <button type="button" data-filter="@filter.Key"
+                       class="filter-btn px-6 py-2 border rounded-full text-xs font-bold font-mono-jb uppercase tracking-widest transition-all @(isSelected ? "bg-black text-white border-black" : "bg-transparent text-gray-600 border-gray-200 hover:border-gray-400 hover:text-black dark:text-[#B8C9A9] dark:border-[#445239] dark:hover:border-[#F2F5EB]")">
+                        @filter.Value
+                    </button>
+                }
+            }
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const buttons = document.querySelectorAll('.filter-btn');
+                const cards = document.querySelectorAll('.product-card-container');
+
+                function applyFilter(filter) {
+                    const lowerFilter = filter.toLowerCase();
+                    // Update button styles
+                    buttons.forEach(b => {
+                        if (b.getAttribute('data-filter').toLowerCase() === lowerFilter) {
+                            b.classList.remove('bg-white dark:bg-[#3C4A33]', 'hover:bg-gray-100 dark:bg-[#2F3A28]');
+                            b.classList.add('bg-black', 'text-white');
+                        } else {
+                            b.classList.remove('bg-black', 'text-white');
+                            b.classList.add('bg-white dark:bg-[#3C4A33]', 'hover:bg-gray-100 dark:bg-[#2F3A28]');
+                        }
+                    });
+
+                    // Filter cards
+                    cards.forEach(card => {
+                        const origin = (card.getAttribute('data-origin') || '').toLowerCase();
+                        const process = (card.getAttribute('data-process') || '').toLowerCase();
+                        const coffeeType = (card.getAttribute('data-type') || '').toLowerCase();
+                        
+                        if (lowerFilter === 'all' || origin === lowerFilter || process === lowerFilter || coffeeType === lowerFilter) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                }
+
+                buttons.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const filter = this.getAttribute('data-filter');
+                        applyFilter(filter);
+                    });
+                });
+
+                // Apply initial filter if set in query
+                const urlParams = new URLSearchParams(window.location.search);
+                const typeParam = urlParams.get('type') || urlParams.get('filter');
+                if (typeParam) {
+                    applyFilter(typeParam);
+                }
+            });
+        </script>
+        
+        <style>
+            .add-coffee-card { display: none; }
+            body.edit-mode .add-coffee-card { display: flex; }
+            .edit-mode-only { display: none !important; }
+            body.edit-mode .edit-mode-only { display: block !important; }
+        </style>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <a href="/Admin/Coffees/Create" class="add-coffee-card flex-col justify-center items-center border-2 border-dashed border-gray-300 dark:border-[#445239] rounded-2xl md:rounded-3xl hover:border-black dark:hover:border-white transition-colors h-full min-h-[400px] text-gray-400 hover:text-black dark:hover:text-white text-decoration-none group cursor-pointer bg-white/50 dark:bg-[#313A29]/50 backdrop-blur-sm">
+                    <div class="flex flex-col items-center justify-center gap-4 transition-transform duration-300 group-hover:scale-110">
+                        <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                        <span class="font-mono text-sm font-bold tracking-widest uppercase">Add Coffee</span>
+                    </div>
+                </a>
+            }
+            @foreach (var product in Model.Products)
+            {
+                <partial name="_ProductCard" model="product" />
+            }
+        </div>
+    </section>
+
+
+
+
+
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // UI Elements
+        const profileDetails = document.getElementById('active-profile-details');
+        const categoryLabel = document.getElementById('category-label');
+        const profileTitle = document.getElementById('profile-title');
+        const profileDesc = document.getElementById('profile-desc');
+        const tagsContainer = document.getElementById('tags-container');
+        const zoneIndicator = document.getElementById('zone-indicator');
+
+        const recTitle = document.getElementById('rec-title');
+        const recOrigin = document.getElementById('rec-origin');
+        const recProcess = document.getElementById('rec-process');
+        const recAltitude = document.getElementById('rec-altitude');
+        const recRoast = document.getElementById('rec-roast');
+        const recDesc = document.getElementById('rec-desc');
+        
+        const rangeRoast = document.getElementById('flavor-slider');
+
+        // Nodes data
+        let nodes = [
+            { id: 0, active: true, color: '#FF5A36', x: 50, y: 25 },
+            { id: 1, active: false, color: '#CCCCCC', x: 40, y: 35 },
+            { id: 2, active: false, color: '#CCCCCC', x: 60, y: 35 }
+        ];
+
+        // Flavor Zones from Backend
+        const rawFlavorZones = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.FlavorZones));
+        const flavorZones = rawFlavorZones.map(z => ({
+            id: z.Id,
+            name: z.Name,
+            category: z.Category,
+            description: z.Description,
+            markers: z.Markers || [],
+            color: z.Color || '#FF5A36',
+            baryTarget: JSON.parse(z.BaryTargetJson || '{"t": 0.33, "br": 0.33, "bl": 0.33}'),
+            specs: JSON.parse(z.SpecsJson || '{"roast": [45, 55], "body": [45, 55], "aftertaste": [45, 55]}'),
+            recommendation: { 
+                title: z.RecommendationTitle, 
+                origin: z.RecommendationOrigin, 
+                roast: z.RecommendationRoast, 
+                desc: z.RecommendationDesc 
+            }
+        }));
+
+        // Math Helpers (using percentage coords 0-100)
+        function getBarycentric(px, py) {
+            const ax = 50, ay = 0;
+            const bx = 100, by = 100;
+            const cx = 0, cy = 100;
+            
+            const v0x = bx - ax, v0y = by - ay;
+            const v1x = cx - ax, v1y = cy - ay;
+            const v2x = px - ax, v2y = py - ay;
+
+            const d00 = v0x * v0x + v0y * v0y;
+            const d01 = v0x * v1x + v0y * v1y;
+            const d11 = v1x * v1x + v1y * v1y;
+            const d20 = v2x * v0x + v2y * v0y;
+            const d21 = v2x * v1x + v2y * v1y;
+
+            const denom = d00 * d11 - d01 * d01;
+            if (Math.abs(denom) < 1e-10) return { t: 0.33, br: 0.33, bl: 0.33 };
+            
+            const v = (d11 * d20 - d01 * d21) / denom;
+            const w = (d00 * d21 - d01 * d20) / denom;
+            const u = 1.0 - v - w;
+            
+            return { t: u, br: v, bl: w };
+        }
+
+        function clampToTriangle(px, py) {
+            let bary = getBarycentric(px, py);
+            if (bary.t >= 0 && bary.br >= 0 && bary.bl >= 0) return {x: px, y: py};
+            
+            let t = Math.max(0, Math.min(1, bary.t));
+            let br = Math.max(0, Math.min(1, bary.br));
+            let bl = Math.max(0, Math.min(1, bary.bl));
+            const sum = t + br + bl;
+            
+            t /= sum; br /= sum; bl /= sum;
+            
+            const ax = 50, ay = 0;
+            const bx = 100, by = 100;
+            const cx = 0, cy = 100;
+            
+            return {
+                x: t * ax + br * bx + bl * cx,
+                y: t * ay + br * by + bl * cy
+            };
+        }
+
+        function getClosestFlavorZone(bary) {
+            let closestZone = flavorZones[0];
+            let minDistance = Infinity;
+            flavorZones.forEach(zone => {
+                const dist = Math.sqrt(
+                    Math.pow(bary.t - zone.baryTarget.t, 2) +
+                    Math.pow(bary.br - zone.baryTarget.br, 2) +
+                    Math.pow(bary.bl - zone.baryTarget.bl, 2)
+                );
+                if (dist < minDistance) {
+                    minDistance = dist;
+                    closestZone = zone;
+                }
+            });
+            return closestZone;
+        }
+
+        // DOM Update Logic
+        function updateUI(zones, activeNodes) {
+            const uniqueZones = [];
+            const seen = new Set();
+            zones.forEach(z => {
+                if (z && !seen.has(z.id)) {
+                    seen.add(z.id);
+                    uniqueZones.push(z);
+                }
+            });
+
+            if (uniqueZones.length === 0) return;
+
+            profileDetails.style.opacity = '0';
+            
+            setTimeout(() => {
+                let activeColorStyle = '';
+                
+                let minRoast = 0, maxRoast = 0;
+                let minBody = 0, maxBody = 0;
+                let minAftertaste = 0, maxAftertaste = 0;
+                
+                zones.forEach(z => {
+                    minRoast += z.specs.roast[0]; 
+                    maxRoast += z.specs.roast[1];
+                    minBody += z.specs.body[0]; 
+                    maxBody += z.specs.body[1];
+                    minAftertaste += z.specs.aftertaste[0]; 
+                    maxAftertaste += z.specs.aftertaste[1];
+                });
+                const len = zones.length || 1;
+                const blendRoast = (minRoast + maxRoast) / (2 * len);
+                const blendBody = (minBody + maxBody) / (2 * len);
+                const blendAftertaste = (minAftertaste + maxAftertaste) / (2 * len);
+                
+                if (rangeRoast) {
+                    rangeRoast.value = blendRoast;
+                }
+                const bodySlider = document.getElementById('body-slider');
+                if (bodySlider) {
+                    bodySlider.value = blendBody;
+                }
+                const aftertasteSlider = document.getElementById('aftertaste-slider');
+                if (aftertasteSlider) {
+                    aftertasteSlider.value = blendAftertaste;
+                }
+                const specIndicator = document.getElementById('spec-indicator');
+
+                if (uniqueZones.length === 1) {
+                    const z = uniqueZones[0];
+                    activeColorStyle = z.color;
+                    zoneIndicator.style.background = activeColorStyle;
+                    if (specIndicator) specIndicator.style.background = activeColorStyle;
+                    
+                    const roastLabel = document.getElementById('label-roast');
+                    if (roastLabel) {
+                        roastLabel.style.color = activeColorStyle;
+                        roastLabel.style.borderColor = activeColorStyle;
+                    }
+                    if (rangeRoast) rangeRoast.style.setProperty('--thumb-color', activeColorStyle);
+                    categoryLabel.textContent = z.category;
+                    profileTitle.textContent = z.name;
+                    profileDesc.textContent = z.description;
+                    tagsContainer.textContent = (z.markers || []).join(' // ');
+                    
+                    if (z.recommendation) {
+                        recTitle.textContent = z.recommendation.title || '';
+                        const splitOrigin = (z.recommendation.origin || '').split('//');
+                        if (recOrigin) recOrigin.textContent = splitOrigin.length > 1 ? splitOrigin[1].trim() : splitOrigin[0];
+                        if (recProcess) recProcess.textContent = splitOrigin.length > 1 ? splitOrigin[0].trim() : 'Washed';
+                        if (recRoast) recRoast.textContent = z.recommendation.roast || '';
+                        if (recDesc) recDesc.textContent = z.recommendation.desc || '';
+                    }
+
+                    // Re-enable inline editing if the script is globally available
+                    if (window.initInlineEditing) window.initInlineEditing();
+                    
+                } else {
+                    // Blended State
+                    const z1 = uniqueZones[0], z2 = uniqueZones[1];
+                    activeColorStyle = `linear-gradient(90deg, ${z1.color} 0%, ${z2.color} 100%)`;
+                    zoneIndicator.style.background = activeColorStyle;
+                    
+                    categoryLabel.textContent = `Custom Blend`;
+                    profileTitle.textContent = `${z1.name} & ${z2.name}`;
+                    profileDesc.textContent = `A complex profile balancing ${z1.category.toLowerCase()} notes with ${z2.category.toLowerCase()} characteristics.`;
+                    
+                    const mergedMarkers = [];
+                    for(let i=0; i<3; i++) {
+                        if (z1.markers && z1.markers[i]) mergedMarkers.push(z1.markers[i]);
+                        if (z2.markers && z2.markers[i]) mergedMarkers.push(z2.markers[i]);
+                    }
+                    tagsContainer.textContent = mergedMarkers.join(' // ');
+
+                    recTitle.textContent = 'Curated Field Blend';
+                    if(recOrigin) recOrigin.textContent = 'Post-Harvest Blend';
+                    if(recProcess) recProcess.textContent = 'Mixed Process';
+                    if(recRoast) recRoast.textContent = 'Omni-Roast';
+                    if(recDesc) recDesc.textContent = `A tailored coffee experience designed to bridge the gap between ${z1.markers[0].toLowerCase()} and ${z2.markers[0].toLowerCase()}.`;
+                }
+                
+                profileDetails.style.opacity = '1';
+            }, 300);
+        }
+
+        function processCurrentPosition() {
+            const activeNodes = nodes.filter(n => n.active);
+            const activeZones = activeNodes.map(n => {
+                const bary = getBarycentric(n.x, n.y);
+                return getClosestFlavorZone(bary);
+            });
+            updateUI(activeZones, activeNodes);
+        }
+
+        // Toggling Nodes
+        document.getElementById('legend-1')?.addEventListener('click', () => toggleNode(1));
+        
+        function toggleNode(index) {
+            const node = nodes[index];
+            node.active = !node.active;
+            
+            const legendEl = document.getElementById(`legend-${index}`);
+            const dotEl = document.getElementById(`dot-${index}`);
+            const textEl = document.getElementById(`text-${index}`);
+            const markerEl = document.getElementById(`triangle-marker-${index}`);
+
+            if (node.active) {
+                // place near primary node
+                node.x = Math.max(0, Math.min(100, nodes[0].x + (index === 1 ? -15 : 15)));
+                node.y = Math.max(0, Math.min(100, nodes[0].y + 15));
+                markerEl.style.left = `${node.x}%`;
+                markerEl.style.top = `${node.y}%`;
+                
+                legendEl.classList.remove('text-black', 'bg-transparent');
+                legendEl.classList.add('bg-black', 'text-white');
+                dotEl.innerHTML = '';
+                dotEl.classList.remove('bg-transparent');
+                dotEl.classList.add('bg-white');
+                textEl.textContent = 'Secondary';
+                markerEl.style.display = 'block';
+            } else {
+                legendEl.classList.add('text-black', 'bg-transparent');
+                legendEl.classList.remove('bg-black', 'text-white');
+                dotEl.innerHTML = '+';
+                dotEl.classList.remove('bg-white');
+                dotEl.classList.add('bg-transparent');
+                textEl.textContent = 'Add Note';
+                markerEl.style.display = 'none';
+            }
+            processCurrentPosition();
+        }
+
+        // Drag functionality
+        const triangleEl = document.querySelector('.flavor-triangle');
+        let draggingIdx = -1;
+
+        function startDrag(e, idx) {
+            e.preventDefault();
+            draggingIdx = idx;
+        }
+
+        nodes.forEach((n, idx) => {
+            const marker = document.getElementById(`triangle-marker-${idx}`);
+            if (marker) {
+                marker.addEventListener('mousedown', (e) => startDrag(e, idx));
+                marker.addEventListener('touchstart', (e) => startDrag(e, idx), {passive: false});
+            }
+        });
+
+        function updateDrag(clientX, clientY) {
+            if (draggingIdx === -1) return;
+            const rect = triangleEl.getBoundingClientRect();
+            // Get percentage
+            let px = ((clientX - rect.left) / rect.width) * 100;
+            let py = ((clientY - rect.top) / rect.height) * 100;
+            
+            const clamped = clampToTriangle(px, py);
+            
+            nodes[draggingIdx].x = clamped.x;
+            nodes[draggingIdx].y = clamped.y;
+            
+            const marker = document.getElementById(`triangle-marker-${draggingIdx}`);
+            marker.style.left = `${clamped.x}%`;
+            marker.style.top = `${clamped.y}%`;
+            
+            processCurrentPosition();
+        }
+
+        window.addEventListener('mousemove', (e) => updateDrag(e.clientX, e.clientY));
+        window.addEventListener('touchmove', (e) => {
+            if (draggingIdx !== -1) {
+                e.preventDefault();
+                updateDrag(e.touches[0].clientX, e.touches[0].clientY);
+            }
+        }, {passive: false});
+
+        window.addEventListener('mouseup', () => { draggingIdx = -1; });
+        window.addEventListener('touchend', () => { draggingIdx = -1; });
+
+        // Initial setup
+        if (flavorZones.length > 0) {
+            processCurrentPosition();
+        }
+    });
+</script>

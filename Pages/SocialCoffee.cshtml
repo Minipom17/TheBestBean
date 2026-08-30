@@ -1,0 +1,464 @@
+@page
+@model TheBestBean.Pages.SocialCoffeeModel
+@{
+    ViewData["Title"] = "Cafe Social - Coffee Events & Community";
+    ViewData["MetaDescription"] = "Join the Cusco coffee community. Coffee events, tastings, meetups, and social gatherings organized by Purple Bean Coffee. Connect with fellow coffee enthusiasts in Peru.";
+}
+
+<!-- Import SUSE Mono Font -->
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    /* SUSE Mono Font Implementation */
+    .social-coffee-page {
+        font-family: 'JetBrains Mono', 'SUSE Mono', 'Courier New', monospace;
+    }
+    
+    .social-coffee-page h1, .social-coffee-page h2, .social-coffee-page h3, .social-coffee-page h4, .social-coffee-page h5 {
+        font-family: 'JetBrains Mono', 'SUSE Mono', 'Courier New', monospace;
+        font-weight: 600;
+    }
+    
+    .social-coffee-page .btn {
+        font-family: 'JetBrains Mono', 'SUSE Mono', 'Courier New', monospace;
+        font-weight: 500;
+    }
+    
+    /* Hero Banner Section */
+    .hero-banner {
+        height: 70vh;
+        background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                    url('/Media/Green_bean.svg') center/cover;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        text-align: center;
+        position: relative;
+        margin: 0;
+        width: 100%;
+        margin-top: -80px;
+        padding-top: 80px;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+    
+    .hero-content h1 {
+        font-size: 4rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: #fefdfd !important;
+    }
+    
+    .hero-content p {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        max-width: 700px;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+    }
+    
+    @@media (max-width: 768px) {
+        .hero-banner {
+            height: 50vh;
+            margin-left: 0;
+            margin-right: 0;
+            width: 100%;
+        }
+        
+        .hero-content h1 {
+            font-size: 2rem;
+        }
+        
+        .hero-content p {
+            font-size: 1rem;
+            padding: 0 1rem;
+        }
+        
+        .social-header {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+        }
+        
+        h1.font-grotesk {
+            font-size: 2rem !important;
+        }
+        
+        .container-fluid {
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
+        }
+        
+        .social-grid {
+            grid-template-columns: 1fr !important;
+        }
+    }
+    
+    /* Event Cards Grid - Hybrid Theme */
+    .event-card {
+        border: 1px solid #e5e7eb;
+        border-radius: 0;
+        overflow: hidden;
+        transition: background-color 0.3s ease, border-color 0.3s ease;
+        background: white;
+        height: 100%;
+        box-shadow: none;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .dark .event-card {
+        background: #111111;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .event-card:hover {
+        background: #F9F9F9;
+        border-color: #d1d5db;
+        transform: none;
+    }
+    
+    .dark .event-card:hover {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+    
+    .event-card-header {
+        background: #0059ff;
+        color: white;
+        padding: 1.5rem 1.5rem;
+        text-align: center;
+        position: relative;
+        border-radius: 0;
+    }
+    
+    .event-card-header::after {
+        display: none;
+    }
+    
+    .event-card-header h4 {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin: 0;
+        color: white;
+        font-family: 'Space Grotesk', 'Inter', sans-serif;
+        letter-spacing: 0.3px;
+    }
+    
+    .event-card-body {
+        padding: 1.75rem 1.5rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        background: white;
+    }
+    
+    .dark .event-card-body {
+        background: #111111;
+    }
+    
+    .event-card-body p {
+        color: #374151;
+        font-size: 0.95rem;
+        margin-bottom: 1.25rem;
+        line-height: 1.7;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .dark .event-card-body p {
+        color: #d1d5db;
+    }
+    
+    .event-features {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 1.5rem 0;
+    }
+    
+    .event-features li {
+        padding: 0.4rem 0;
+        color: #4b5563;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .dark .event-features li {
+        color: #9ca3af;
+    }
+    
+    .event-features li:before {
+        content: "☕ ";
+        margin-right: 0.5rem;
+        color: #8B4513;
+    }
+    
+    .event-card-body .btn {
+        margin-top: auto;
+        border: 1px solid #0059ff;
+        color: #0059ff;
+        background: white;
+        font-weight: 600;
+        padding: 0.6rem 1.5rem;
+        transition: all 0.3s ease;
+        border-radius: 4px;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .dark .event-card-body .btn {
+        background: #111111;
+        color: #0059ff;
+        border-color: #0059ff;
+    }
+    
+    .event-card-body .btn:hover {
+        background: #0059ff;
+        color: white;
+        border-color: #0059ff;
+    }
+    
+    .dark .event-card-body .btn:hover {
+        background: #0059ff;
+        color: white;
+    }
+    
+    /* Section Styling */
+    .section-header {
+        text-align: center;
+        margin: 4rem 0 3rem;
+    }
+    
+    .section-header h2 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #111111;
+        margin-bottom: 1rem;
+        font-family: 'Space Grotesk', 'Inter', sans-serif;
+    }
+    
+    .dark .section-header h2 {
+        color: #ffffff;
+    }
+    
+    .section-header p {
+        font-size: 1.1rem;
+        color: #4b5563;
+        max-width: 800px;
+        margin: 0 auto;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .dark .section-header p {
+        color: #9ca3af;
+    }
+    
+    /* Custom Button Styles */
+    .btn-custom {
+        background: #ff6b35;
+        border: none;
+        color: white;
+        padding: 12px 30px;
+        font-size: 1rem;
+        border-radius: 4px;
+        transition: background 0.3s ease;
+    }
+    
+    .btn-custom:hover {
+        background: #e55a2b;
+        color: white;
+    }
+    
+    /* Introduction Section */
+    .intro-section {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 3rem 2rem 2rem;
+        text-align: center;
+    }
+    
+    .intro-section p {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #374151;
+        margin-bottom: 1rem;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .dark .intro-section p {
+        color: #d1d5db;
+    }
+    
+    /* Dark mode background support */
+    .dark .bg-white dark:bg-[#3C4A33] {
+        background-color: #0a0a0a !important;
+    }
+    
+    .dark .bg-dark-bg {
+        background-color: #0a0a0a !important;
+    }
+    
+    .dark .section-header h2 {
+        color: #ffffff !important;
+    }
+    
+    .dark .section-header p {
+        color: #9ca3af !important;
+    }
+    
+    /* Responsive Design */
+    @@media (max-width: 768px) {
+        .hero-content h1 {
+            font-size: 2.5rem;
+        }
+        
+        .section-header h2 {
+            font-size: 2rem;
+        }
+        
+        .hero-banner {
+            height: 50vh;
+        }
+        
+        .intro-section {
+            padding: 2rem 1.5rem 1.5rem;
+        }
+    }
+</style>
+
+<div class="social-coffee-page">
+    <!-- Hero Banner Section -->
+    <div class="hero-banner">
+        <div class="hero-content">
+            <h1>CAFE SOCIAL</h1>
+            <p>Connect, learn, and share your passion for coffee through events, meetups, classes, and workshops.</p>
+            <button class="btn btn-custom">JOIN OUR COMMUNITY</button>
+        </div>
+    </div>
+
+    <!-- Introduction Section -->
+    <div class="intro-section">
+        <p>
+            Welcome to <strong>Cafe Social</strong>—your hub for coffee community, education, and connection. Whether you're a curious beginner 
+            or a seasoned coffee enthusiast, we offer a variety of social experiences designed to deepen your appreciation for coffee while 
+            connecting you with like-minded people.
+        </p>
+        <p>
+            From hands-on brewing workshops to casual coffee meetups, educational classes to festive coffee parties, our events bring together 
+            the coffee community to share knowledge, stories, and of course, great coffee. Join us to explore the world of coffee together!
+        </p>
+    </div>
+
+    <!-- Events Section - Matching Shared HTML -->
+    <div class="container py-5">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-12 border-b border-gray-200 dark:border-dark-border pb-8 social-header" style="display: flex; flex-direction: row; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; border-bottom: 1px solid #e5e7eb; padding-bottom: 2rem;">
+            <div>
+                <span class="inline-block px-3 py-1 bg-black dark:bg-white text-white dark:text-black text-xs font-bold font-mono mb-6" style="display: inline-block; padding: 0.25rem 0.75rem; background: #111111; color: white; font-size: 0.75rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; margin-bottom: 1.5rem;">COMMUNITY</span>
+                <h1 class="font-grotesk text-5xl md:text-8xl tracking-tight leading-none" style="font-family: 'Space Grotesk', sans-serif; font-size: 4rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1;">Events & Culture</h1>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-0 border-t border-l border-gray-200 dark:border-dark-border social-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 1px solid #e5e7eb; border-left: 1px solid #e5e7eb;">
+            <!-- Event 1 -->
+            <div class="border-r border-b border-gray-200 dark:border-dark-border p-10 hover:bg-off-white dark:hover:bg-white/5 transition-colors group cursor-pointer h-full relative overflow-hidden" style="border-right: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb; padding: 2.5rem; transition: background-color 0.3s; cursor: pointer; position: relative; overflow: hidden;">
+                <div class="absolute top-0 right-0 p-4 font-mono text-xs opacity-30" style="position: absolute; top: 0; right: 0; padding: 1rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; opacity: 0.3;">WEEKLY</div>
+                <h3 class="font-grotesk text-3xl font-bold mb-4 group-hover:text-swiss-red transition-colors" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.875rem; font-weight: 700; margin-bottom: 1rem; transition: color 0.3s;">Latte Art<br>Throwdown</h3>
+                <p class="font-sans text-sm text-gray-600 dark:text-gray-400 mb-8 leading-relaxed" style="font-family: 'Inter', sans-serif; font-size: 0.875rem; color: #4b5563; margin-bottom: 2rem; line-height: 1.75;">
+                    Baristas face off in a bracket-style competition. Free pour only. Winner takes the cash pot and bragging rights.
+                </p>
+                <div class="flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-widest" style="display: flex; align-items: center; gap: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;">
+                    Every Thursday • 7PM
+                </div>
+            </div>
+            
+            <!-- Event 2 -->
+            <div class="border-r border-b border-gray-200 dark:border-dark-border p-10 hover:bg-off-white dark:hover:bg-white/5 transition-colors group cursor-pointer h-full relative" style="border-right: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb; padding: 2.5rem; transition: background-color 0.3s; cursor: pointer; position: relative;">
+                <div class="absolute top-0 right-0 p-4 font-mono text-xs opacity-30" style="position: absolute; top: 0; right: 0; padding: 1rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; opacity: 0.3;">MONTHLY</div>
+                <h3 class="font-grotesk text-3xl font-bold mb-4 group-hover:text-swiss-red transition-colors" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.875rem; font-weight: 700; margin-bottom: 1rem; transition: color 0.3s;">Open Mic<br>Night</h3>
+                <p class="font-sans text-sm text-gray-600 dark:text-gray-400 mb-8 leading-relaxed" style="font-family: 'Inter', sans-serif; font-size: 0.875rem; color: #4b5563; margin-bottom: 2rem; line-height: 1.75;">
+                    Poetry, acoustic music, and storytelling. A safe space for local creatives to share their work over coffee.
+                </p>
+                <div class="flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-widest" style="display: flex; align-items: center; gap: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;">
+                    1st Friday • 8PM
+                </div>
+            </div>
+            
+            <!-- Event 3 -->
+            <div class="border-r border-b border-gray-200 dark:border-dark-border p-10 hover:bg-off-white dark:hover:bg-white/5 transition-colors group cursor-pointer h-full relative" style="border-right: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb; padding: 2.5rem; transition: background-color 0.3s; cursor: pointer; position: relative;">
+                <div class="absolute top-0 right-0 p-4 font-mono text-xs opacity-30" style="position: absolute; top: 0; right: 0; padding: 1rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; opacity: 0.3;">WORKSHOP</div>
+                <h3 class="font-grotesk text-3xl font-bold mb-4 group-hover:text-swiss-red transition-colors" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.875rem; font-weight: 700; margin-bottom: 1rem; transition: color 0.3s;">Sensory<br>Calibrations</h3>
+                <p class="font-sans text-sm text-gray-600 dark:text-gray-400 mb-8 leading-relaxed" style="font-family: 'Inter', sans-serif; font-size: 0.875rem; color: #4b5563; margin-bottom: 2rem; line-height: 1.75;">
+                    Train your palate. Taste 5 distinct Peruvian coffees and learn to identify acidity, body, and sweetness.
+                </p>
+                <div class="flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-widest" style="display: flex; align-items: center; gap: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;">
+                    Saturdays • 10AM
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Coffee Runs Section -->
+    <div class="container py-5">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-12 border-b border-gray-200 dark:border-dark-border pb-8 social-header" style="display: flex; flex-direction: row; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; border-bottom: 1px solid #e5e7eb; padding-bottom: 2rem;">
+            <div>
+                <span class="inline-block px-3 py-1 bg-black dark:bg-white text-white dark:text-black text-xs font-bold font-mono mb-6" style="display: inline-block; padding: 0.25rem 0.75rem; background: #111111; color: white; font-size: 0.75rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; margin-bottom: 1.5rem;">COMMUNITY</span>
+                <h1 class="font-grotesk text-5xl md:text-7xl tracking-tight leading-none" style="font-family: 'Space Grotesk', sans-serif; font-size: 3.5rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1;">Coffee Runs</h1>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-5">
+            <div class="col-lg-8 mx-auto">
+                <p class="text-center mb-5" style="font-size: 1.1rem; color: #4b5563; max-width: 800px; margin: 0 auto 3rem; font-family: 'Inter', sans-serif;">
+                    Join us for organized group outings to local coffee shops, roasteries, and cafes. Discover new spots, meet fellow coffee enthusiasts, and explore the local coffee scene together.
+                </p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 border-l border-t border-gray-200 dark:border-dark-border social-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-left: 1px solid #e5e7eb; border-top: 1px solid #e5e7eb;">
+            <!-- Coffee Run 1 -->
+            <div class="border-r border-b border-gray-200 dark:border-dark-border p-8 hover:bg-off-white dark:hover:bg-white/5 transition-colors group cursor-pointer flex flex-col" style="border-right: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb; padding: 2rem; transition: background-color 0.3s; cursor: pointer; display: flex; flex-direction: column;">
+                <div class="absolute top-0 right-0 p-4 font-mono text-xs opacity-30" style="position: absolute; top: 0; right: 0; padding: 1rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; opacity: 0.3;">WEEKLY</div>
+                <h3 class="font-grotesk text-2xl font-bold mb-3 group-hover:text-swiss-red transition-colors" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 0.75rem; transition: color 0.3s;">Saturday<br>Morning Run</h3>
+                <p class="font-sans text-sm text-gray-600 dark:text-gray-400 mb-6 leading-relaxed" style="font-family: 'Inter', sans-serif; font-size: 0.875rem; color: #4b5563; margin-bottom: 1.5rem; line-height: 1.75;">
+                    Explore a different local cafe each week. We meet at 9AM, visit a featured roastery or cafe, and discuss what we're tasting.
+                </p>
+                <div class="flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-widest mb-4" style="display: flex; align-items: center; gap: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem;">
+                    Every Saturday • 9AM
+                </div>
+                <div class="mt-auto">
+                    <span class="font-mono text-xs text-gray-500" style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #6b7280;">Free • RSVP Required</span>
+                </div>
+            </div>
+            
+            <!-- Coffee Run 2 -->
+            <div class="border-r border-b border-gray-200 dark:border-dark-border p-8 hover:bg-off-white dark:hover:bg-white/5 transition-colors group cursor-pointer flex flex-col" style="border-right: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb; padding: 2rem; transition: background-color 0.3s; cursor: pointer; display: flex; flex-direction: column;">
+                <div class="absolute top-0 right-0 p-4 font-mono text-xs opacity-30" style="position: absolute; top: 0; right: 0; padding: 1rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; opacity: 0.3;">MONTHLY</div>
+                <h3 class="font-grotesk text-2xl font-bold mb-3 group-hover:text-swiss-red transition-colors" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 0.75rem; transition: color 0.3s;">Roastery<br>Tour Series</h3>
+                <p class="font-sans text-sm text-gray-600 dark:text-gray-400 mb-6 leading-relaxed" style="font-family: 'Inter', sans-serif; font-size: 0.875rem; color: #4b5563; margin-bottom: 1.5rem; line-height: 1.75;">
+                    Behind-the-scenes tours of local roasteries. See the roasting process, meet the roasters, and taste fresh batches.
+                </p>
+                <div class="flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-widest mb-4" style="display: flex; align-items: center; gap: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem;">
+                    2nd Sunday • 2PM
+                </div>
+                <div class="mt-auto">
+                    <span class="font-mono text-xs text-gray-500" style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #6b7280;">$15 • Limited Spots</span>
+                </div>
+            </div>
+            
+            <!-- Coffee Run 3 -->
+            <div class="border-r border-b border-gray-200 dark:border-dark-border p-8 hover:bg-off-white dark:hover:bg-white/5 transition-colors group cursor-pointer flex flex-col" style="border-right: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb; padding: 2rem; transition: background-color 0.3s; cursor: pointer; display: flex; flex-direction: column;">
+                <div class="absolute top-0 right-0 p-4 font-mono text-xs opacity-30" style="position: absolute; top: 0; right: 0; padding: 1rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; opacity: 0.3;">SEASONAL</div>
+                <h3 class="font-grotesk text-2xl font-bold mb-3 group-hover:text-swiss-red transition-colors" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 0.75rem; transition: color 0.3s;">Coffee<br>Crawl</h3>
+                <p class="font-sans text-sm text-gray-600 dark:text-gray-400 mb-6 leading-relaxed" style="font-family: 'Inter', sans-serif; font-size: 0.875rem; color: #4b5563; margin-bottom: 1.5rem; line-height: 1.75;">
+                    A full-day adventure visiting 4-5 cafes in one neighborhood. Compare brewing methods, chat with baristas, and discover hidden gems.
+                </p>
+                <div class="flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-widest mb-4" style="display: flex; align-items: center; gap: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem;">
+                    Quarterly • 10AM-4PM
+                </div>
+                <div class="mt-auto">
+                    <span class="font-mono text-xs text-gray-500" style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #6b7280;">$25 • Full Day Event</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+

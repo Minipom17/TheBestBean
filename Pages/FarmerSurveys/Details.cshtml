@@ -1,0 +1,460 @@
+@page
+@model TheBestBean.Pages.FarmerSurveys.DetailsModel
+@{
+    ViewData["Title"] = "Survey Details";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-page="./Index">Farmer Surveys</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">@Model.FarmerSurvey.FarmName</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header" style="background-color: transparent; border-bottom: 1px solid #E0E0E0;">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h1 class="card-title h3 mb-1 text-dark">
+                                <i class="bi bi-clipboard-data me-2"></i>@Model.FarmerSurvey.FarmName
+                            </h1>
+                            <p class="mb-0">Survey conducted on @Model.FarmerSurvey.SurveyDate.ToString("MMMM dd, yyyy")</p>
+                        </div>
+                        <div class="text-end">
+                            @if (Model.FarmerSurvey.QualityRating.HasValue)
+                            {
+                                <div class="mb-2">
+                                    <small class="text-light d-block">Quality Rating</small>
+                                    <div class="d-flex justify-content-end">
+                                        @for (int i = 1; i <= 10; i++)
+                                        {
+                                            <i class="bi bi-star-fill @(i <= Model.FarmerSurvey.QualityRating.Value ? "text-warning" : "text-light opacity-50")"></i>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                            @if (Model.FarmerSurvey.FollowUpRequired)
+                            {
+                                <span class="badge bg-warning text-dark">Follow-up Required</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(Model.FarmerSurvey.SurveyPhotoPath))
+                    {
+                        <div class="mb-4 text-center">
+                            <img src="@Model.FarmerSurvey.SurveyPhotoPath" alt="Survey photo" class="img-fluid" style="max-height:320px; object-fit:cover; border:1px solid #eee;" />
+                        </div>
+                    }
+                    <!-- Farmer Information -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="bg-light p-3 rounded">
+                                <h5 class="fw-bold mb-3 text-primary">
+                                    <i class="bi bi-person me-2"></i>Farmer Information
+                                </h5>
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <strong>Farmer/Contact:</strong><br>
+                                        <span class="text-muted">@Model.FarmerSurvey.FarmerName</span>
+                                    </div>
+                                    <div class="col-12">
+                                        <strong>Region:</strong><br>
+                                        <span class="text-muted">@Model.FarmerSurvey.Region</span>
+                                    </div>
+                                    <div class="col-12">
+                                        <strong>GPS Coordinates:</strong><br>
+                                        <span class="text-muted">@Model.FarmerSurvey.GpsCoordinates</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="bg-light p-3 rounded">
+                                <h5 class="fw-bold mb-3 text-success">
+                                    <i class="bi bi-globe me-2"></i>Site Conditions
+                                </h5>
+                                <div class="row g-3">
+                                    <div class="col-6">
+                                        <strong>Elevation:</strong><br>
+                                        <span class="text-muted">@Model.FarmerSurvey.ElevationMeters m a.s.l.</span>
+                                    </div>
+                                    <div class="col-6">
+                                        <strong>Slope:</strong><br>
+                                        <span class="text-muted">@(Model.FarmerSurvey.SlopeType ?? "Not specified")</span>
+                                    </div>
+                                    <div class="col-6">
+                                        <strong>Aspect:</strong><br>
+                                        <span class="text-muted">@(Model.FarmerSurvey.Aspect ?? "Not specified")</span>
+                                    </div>
+                                    <div class="col-6">
+                                        <strong>Water Source:</strong><br>
+                                        <span class="text-muted">@(Model.FarmerSurvey.WaterSource ?? "Not specified")</span>
+                                    </div>
+                                    @if (!string.IsNullOrEmpty(Model.FarmerSurvey.TemperatureRange))
+                                    {
+                                        <div class="col-12">
+                                            <strong>Temperature:</strong><br>
+                                            <span class="text-muted">@Model.FarmerSurvey.TemperatureRange</span>
+                                        </div>
+                                    }
+                                    @if (!string.IsNullOrEmpty(Model.FarmerSurvey.RainfallPatterns))
+                                    {
+                                        <div class="col-12">
+                                            <strong>Rainfall:</strong><br>
+                                            <span class="text-muted">@Model.FarmerSurvey.RainfallPatterns</span>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Farm Characteristics -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h5 class="fw-bold mb-3 text-info">
+                                <i class="bi bi-leaf me-2"></i>Farm Characteristics
+                            </h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="border p-3 rounded">
+                                        <strong>Farm Size:</strong><br>
+                                        <span class="text-muted">Total: @Model.FarmerSurvey.TotalFarmSizeHa ha | Coffee: @Model.FarmerSurvey.CoffeePlantedAreaHa ha</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="border p-3 rounded">
+                                        <strong>Coffee Varieties:</strong><br>
+                                        <span class="text-muted">@(Model.FarmerSurvey.VarietiesGrown ?? "Not specified")</span>
+                                    </div>
+                                </div>
+                                @if (Model.FarmerSurvey.PlantingDensityTreesHa.HasValue)
+                                {
+                                    <div class="col-md-6 mb-3">
+                                        <div class="border p-3 rounded">
+                                            <strong>Planting Density:</strong><br>
+                                            <span class="text-muted">@Model.FarmerSurvey.PlantingDensityTreesHa trees/ha</span>
+                                        </div>
+                                    </div>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.FarmerSurvey.ShadeTrees))
+                                {
+                                    <div class="col-md-6 mb-3">
+                                        <div class="border p-3 rounded">
+                                            <strong>Shade Trees:</strong><br>
+                                            <span class="text-muted">@Model.FarmerSurvey.ShadeTrees</span>
+                                        </div>
+                                    </div>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.FarmerSurvey.OtherCrops))
+                                {
+                                    <div class="col-md-6 mb-3">
+                                        <div class="border p-3 rounded">
+                                            <strong>Other Crops:</strong><br>
+                                            <span class="text-muted">@Model.FarmerSurvey.OtherCrops</span>
+                                        </div>
+                                    </div>
+                                }
+                                @if (Model.FarmerSurvey.HasIntercropping && !string.IsNullOrEmpty(Model.FarmerSurvey.IntercroppingDetails))
+                                {
+                                    <div class="col-md-6 mb-3">
+                                        <div class="border p-3 rounded">
+                                            <strong>Intercropping Details:</strong><br>
+                                            <span class="text-muted">@Model.FarmerSurvey.IntercroppingDetails</span>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+
+                        <!-- Soil Conditions -->
+                        <div class="col-12 mb-4">
+                            <h5 class="fw-bold mb-3" style="color: var(--coffee-brown);">
+                                <i class="bi bi-tree me-2"></i>Soil & Ground Conditions
+                            </h5>
+                            <div class="row">
+                                @if (!string.IsNullOrEmpty(Model.FarmerSurvey.SoilType))
+                                {
+                                    <div class="col-md-6 mb-3">
+                                        <div class="border p-3 rounded">
+                                            <strong>Soil Type:</strong><br>
+                                            <span class="text-muted">@Model.FarmerSurvey.SoilType</span>
+                                        </div>
+                                    </div>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.FarmerSurvey.SoilDepth))
+                                {
+                                    <div class="col-md-6 mb-3">
+                                        <div class="border p-3 rounded">
+                                            <strong>Soil Depth:</strong><br>
+                                            <span class="text-muted">@Model.FarmerSurvey.SoilDepth</span>
+                                        </div>
+                                    </div>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.FarmerSurvey.DrainageConditions))
+                                {
+                                    <div class="col-md-6 mb-3">
+                                        <div class="border p-3 rounded">
+                                            <strong>Drainage:</strong><br>
+                                            <span class="text-muted">@Model.FarmerSurvey.DrainageConditions</span>
+                                        </div>
+                                    </div>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.FarmerSurvey.ErosionRisks))
+                                {
+                                    <div class="col-md-6 mb-3">
+                                        <div class="border p-3 rounded">
+                                            <strong>Erosion Risks:</strong><br>
+                                            <span class="text-muted">@Model.FarmerSurvey.ErosionRisks</span>
+                                        </div>
+                                    </div>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.FarmerSurvey.SoilFertilityManagement))
+                                {
+                                    <div class="col-12 mb-3">
+                                        <div class="border p-3 rounded">
+                                            <strong>Soil Fertility Management:</strong><br>
+                                            <span class="text-muted">@Model.FarmerSurvey.SoilFertilityManagement</span>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+
+                        <!-- Coffee Management -->
+                        <div class="col-12 mb-4">
+                            <h5 class="fw-bold mb-3" style="color: var(--coffee-brown);">
+                                <i class="bi bi-cup-hot me-2"></i>Coffee Management Practices
+                            </h5>
+                            <div class="row">
+                                @if (Model.FarmerSurvey.CoffeePlantingYear.HasValue)
+                                {
+                                    <div class="col-md-4 mb-3">
+                                        <div class="border p-3 rounded">
+                                            <strong>Year Planted:</strong><br>
+                                            <span class="text-muted">@Model.FarmerSurvey.CoffeePlantingYear</span>
+                                        </div>
+                                    </div>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.FarmerSurvey.PruningMethod))
+                                {
+                                    <div class="col-md-4 mb-3">
+                                        <div class="border p-3 rounded">
+                                            <strong>Pruning:</strong><br>
+                                            <span class="text-muted">@Model.FarmerSurvey.PruningMethod</span>
+                                        </div>
+                                    </div>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.FarmerSurvey.FertilizationType))
+                                {
+                                    <div class="col-md-4 mb-3">
+                                        <div class="border p-3 rounded">
+                                            <strong>Fertilization:</strong><br>
+                                            <span class="text-muted">@Model.FarmerSurvey.FertilizationType</span>
+                                        </div>
+                                    </div>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.FarmerSurvey.HarvestingMethod))
+                                {
+                                    <div class="col-md-4 mb-3">
+                                        <div class="border p-3 rounded">
+                                            <strong>Harvesting:</strong><br>
+                                            <span class="text-muted">@Model.FarmerSurvey.HarvestingMethod</span>
+                                        </div>
+                                    </div>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.FarmerSurvey.ProcessingMethod))
+                                {
+                                    <div class="col-md-5 mb-3">
+                                        <div class="border p-3 rounded">
+                                            <strong>Processing:</strong><br>
+                                            <span class="text-muted">@Model.FarmerSurvey.ProcessingMethod</span>
+                                        </div>
+                                    </div>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.FarmerSurvey.PestDiseasePresence))
+                                {
+                                    <div class="col-md-6 mb-3">
+                                        <div class="border p-3 rounded">
+                                            <strong>Pests & Diseases:</strong><br>
+                                            <span class="text-muted">@Model.FarmerSurvey.PestDiseasePresence</span>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Post-Harvest & Storage -->
+                        <div class="col-12 mb-4">
+                            <h5 class="fw-bold mb-3 text-secondary">
+                                <i class="bi bi-box-seam me-2"></i>Post-Harvest & Storage
+                            </h5>
+                            <div class="row">
+                                @if (!string.IsNullOrEmpty(Model.FarmerSurvey.FermentationType))
+                                {
+                                    <div class="col-md-6 mb-3">
+                                        <div class="border p-3 rounded">
+                                            <strong>Fermentation:</strong><br>                            <span class="text-muted">@Model.FarmerSurvey.FermentationType</span>
+                                        </div>
+                                    </div>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.FarmerSurvey.DryingMethod))
+                                {
+                                    <div class="col-md-6 mb-3">
+                                        <div class="border p-3 rounded">
+                                            <strong>Drying Method:</strong><br>
+                                            <span class="text-muted">@Model.FarmerSurvey.DryingMethod</span>
+                                        </div>
+                                    </div>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.FarmerSurvey.DryingTime))
+                                {
+                                    <div class="col-md-6 mb-3">
+                                        <div class="border p-3 rounded">
+                                            <strong>Drying Time:</strong><br>
+                                            <span class="text-muted">@Model.FarmerSurvey.DryingTime</span>
+                                        </div>
+                                    </div>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.FarmerSurvey.StorageConditions))
+                                {
+                                    <div class="col-md-6 mb-3">
+                                        <div class="border p-3 rounded">
+                                            <strong>Storage:</strong><br>
+                                            <span class="text-muted">@Model.FarmerSurvey.StorageConditions</span>
+                                        </div>
+                                    </div>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.FarmerSurvey.TraceabilitySystem))
+                                {
+                                    <div class="col-12 mb-3">
+                                        <div class="border p-3 rounded">
+                                            <strong>Traceability:</strong><br>
+                                            <span class="text-muted">@Model.FarmerSurvey.TraceabilitySystem</span>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Socio-Economic Info -->
+                        <div class="col-12 mb-4">
+                            <h5 class="fw-bold mb-3 text-primary">
+                                <i class="bi bi-people me-2"></i>Socio-Economic Information
+                            </h5>
+                            <div class="row">
+                                @if (!string.IsNullOrEmpty(Model.FarmerSurvey.LaborSystem))
+                                {
+                                    <div class="col-md-6 mb-3">
+                                        <div class="border p-3 rounded">
+                                            <strong>Labor System:</strong><br>
+                                            <span class="text-muted">@Model.FarmerSurvey.LaborSystem</span>
+                                        </div>
+                                    </div>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.FarmerSurvey.CooperativeMembership))
+                                {
+                                    <div class="col-md-6 mb-3">
+                                        <div class="border p-3 rounded">
+                                            <strong>Cooperative:</strong><br>
+                                            <span class="text-muted">@Model.FarmerSurvey.CooperativeMembership</span>
+                                        </div>
+                                    </div>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.FarmerSurvey.Certifications))
+                                {
+                                    <div class="col-md-6 mb-3">
+                                        <div class="border p-3 rounded">
+                                            <strong>Certifications:</strong><br>
+                                            <span class="text-muted">@Model.FarmerSurvey.Certifications</span>
+                                        </div>
+                                    </div>
+                                }
+                                @if (Model.FarmerSurvey.AnnualProductionKg.HasValue && Model.FarmerSurvey.AnnualProductionKg > 0)
+                                {
+                                    <div class="col-md-6 mb-3">
+                                        <div class="border p-3 rounded">
+                                            <strong>Annual Production:</strong><br>
+                                            <span class="text-muted">@Model.FarmerSurvey.AnnualProductionKg?.ToString("N0") kg</span>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Notes & Observations -->
+                        <div class="col-12">
+                            <h5 class="fw-bold mb-3 text-success">
+                                <i class="bi bi-file-text me-2"></i>Notes & Observations
+                            </h5>
+                            <div class="row">
+                                @if (!string.IsNullOrEmpty(Model.FarmerSurvey.UniqueQualities))
+                                {
+                                    <div class="col-12 mb-3">
+                                        <div class="border p-3 rounded">
+                                            <strong>Unique Qualities:</strong><br>
+                                            <span class="text-muted">@Model.FarmerSurvey.UniqueQualities</span>
+                                        </div>
+                                    </div>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.FarmerSurvey.ChallengesMentioned))
+                                {
+                                    <div class="col-12 mb-3">
+                                        <div class="border p-3 rounded">
+                                            <strong>Challenges:</strong><br>
+                                            <span class="text-muted">@Model.FarmerSurvey.ChallengesMentioned</span>
+                                        </div>
+                                    </div>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.FarmerSurvey.PhotographsTaken))
+                                {
+                                    <div class="col-md-6 mb-3">
+                                        <div class="border p-3 rounded">
+                                            <strong>Photographs:</strong><br>
+                                            <span class="text-muted">@Model.FarmerSurvey.PhotographsTaken</span>
+                                        </div>
+                                    </div>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.FarmerSurvey.SurveyNotes))
+                                {
+                                    <div class="col-md-6 mb-3">
+                                        <div class="border p-3 rounded">
+                                            <strong>Survey Notes:</strong><br>
+                                            <span class="text-muted">@Model.FarmerSurvey.SurveyNotes</span>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="row mt-4">
+                        <div class="col-12 text-center">
+                            <a asp-page="./Edit" asp-route-id="@Model.FarmerSurvey.Id" class="btn btn-primary me-2">
+                                <i class="bi bi-pencil me-2"></i>Edit Survey
+                            </a>
+                            <a asp-page="./Index" class="btn btn-outline-primary me-2">
+                                <i class="bi bi-list me-2"></i>Back to List
+                            </a>
+                            <a asp-page="./Delete" asp-route-id="@Model.FarmerSurvey.Id" class="btn btn-outline-danger">
+                                <i class="bi bi-trash me-2"></i>Delete
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

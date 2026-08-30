@@ -1,0 +1,81 @@
+@page
+@model TheBestBean.Pages.BlogModel
+@{
+    ViewData["Title"] = "Blog";
+    ViewData["MetaDescription"] = "Purple Bean Coffee blog — stories from Cusco's coffee farms, brew guides, origin reports, and specialty coffee education from Peru's Andean highlands.";
+    Layout = "_Layout";
+}
+
+<div class="relative bg-white dark:bg-v-black py-32 overflow-hidden border-b border-v-black/10 dark:border-[#4F6044]">
+    <div class="relative max-w-[1600px] mx-auto px-6 md:px-12 text-left">
+        <h1 class="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter text-v-black dark:text-[#FAF3DD] uppercase mb-6">
+            The Bean Chronicles
+        </h1>
+        <p class="text-xl text-v-gray font-mono-jb max-w-2xl leading-relaxed">
+            Weekly dispatches on origin trips, roasting science, and the relentless pursuit of the perfect cup.
+        </p>
+    </div>
+</div>
+
+<div class="bg-white dark:bg-v-black py-16 sm:py-24">
+    <div class="max-w-[1600px] mx-auto px-6 md:px-12">
+        
+        @if (!Model.BlogPosts.Any())
+        {
+            <div class="text-left py-12">
+                <p class="text-v-black dark:text-[#FAF3DD] text-xl font-mono-jb uppercase font-bold tracking-widest">NO TRANSMISSIONS YET</p>
+                <p class="text-v-gray mt-2 font-mono-jb">Awaiting laboratory declassification.</p>
+            </div>
+        }
+        else
+        {
+            <div class="mx-auto mt-16 grid grid-cols-1 gap-x-12 gap-y-24 lg:mx-0 lg:max-w-none lg:grid-cols-3">
+                @foreach (var post in Model.BlogPosts)
+                {
+                    <article class="flex flex-col items-start justify-between group">
+                        <div class="relative w-full overflow-hidden mb-6">
+                            @if (!string.IsNullOrEmpty(post.ImageUrl))
+                            {
+                                <img src="@post.ImageUrl" alt="@post.Title" class="aspect-[4/3] w-full bg-gray-100 object-cover img-stark group-hover:scale-105 transition-transform duration-700">
+                            }
+                            else
+                            {
+                                <div class="aspect-[4/3] w-full bg-gray-100 dark:bg-white/5 flex items-center justify-center">
+                                    <span class="text-v-black dark:text-white uppercase tracking-widest text-[10px] font-bold">NO IMAGE</span>
+                                </div>
+                            }
+                        </div>
+                        <div class="w-full">
+                            <div class="flex items-center gap-x-4 text-[10px] font-bold uppercase tracking-widest mb-4 border-b border-v-black/10 dark:border-white/10 pb-4">
+                                <time datetime="@post.PublishedAt?.ToString("yyyy-MM-dd")" class="text-v-red">@post.PublishedAt?.ToString("MMM dd, yyyy")</time>
+                            </div>
+                            <div class="group relative">
+                                <h3 class="mt-4 text-2xl font-bold tracking-tight text-v-black dark:text-white leading-tight uppercase group-hover:text-v-red transition-colors">
+                                    <a asp-page="/Post" asp-route-slug="@post.Slug" class="text-decoration-none text-inherit">
+                                        <span class="absolute inset-0"></span>
+                                        @post.Title
+                                    </a>
+                                </h3>
+                                @{
+                                    var plainText = System.Text.RegularExpressions.Regex.Replace(post.Content, "<.*?>", String.Empty);
+                                    var excerptText = plainText.Length > 150 ? plainText.Substring(0, 150) + "..." : plainText;
+                                }
+                                <p class="mt-4 line-clamp-3 text-sm leading-relaxed text-v-gray font-normal">
+                                    @excerptText
+                                </p>
+                            </div>
+                            <div class="relative mt-8 flex items-center gap-x-4">
+                                <div class="text-sm leading-6">
+                                    <p class="font-semibold text-v-black dark:text-white">
+                                        <span class="absolute inset-0"></span>
+                                        @post.Author
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                }
+            </div>
+        }
+    </div>
+</div>

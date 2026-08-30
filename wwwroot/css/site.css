@@ -1,0 +1,143 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
+  color: var(--bs-secondary-color);
+  text-align: end;
+}
+
+.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
+  text-align: start;
+}
+
+/* Hide registration link */
+a[href*="/Identity/Account/Register"] {
+    display: none !important;
+}
+
+/* Inline Edit Mode Styles */
+body.edit-mode [data-editable] {
+    outline: 2px dashed #facc15 !important;
+    outline-offset: 4px;
+    cursor: text;
+    transition: outline 0.2s;
+}
+body.edit-mode img[data-editable] {
+    cursor: pointer;
+}
+body.edit-mode [data-editable]:hover {
+    outline-color: #22c55e !important;
+    background-color: rgba(250, 204, 21, 0.1);
+}
+
+/* Laboratory Aesthetic Styles */
+.btn-lab {
+    background-color: transparent;
+    border: 1px solid #111111;
+    color: #111111;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: none; /* Sentence case preferred */
+}
+.btn-lab:hover {
+    background-color: #111111;
+    color: #FFFFFF;
+}
+.dark .btn-lab {
+    border-color: #FAF3DD;
+    color: #FAF3DD;
+}
+.dark .btn-lab:hover {
+    background-color: #FAF3DD;
+    color: #111111;
+}
+
+/* Custom Range Slider for Lab Aesthetic */
+.range-lab {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 1px;
+    background: #111111;
+    outline: none;
+    padding: 0;
+    margin: 0;
+}
+.dark .range-lab {
+    background: #FAF3DD;
+}
+.range-lab::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #FF6464; /* Pinkish-red accent */
+    border: 2px solid #111111;
+    cursor: pointer;
+}
+.dark .range-lab::-webkit-slider-thumb {
+    border: 2px solid #FAF3DD;
+}
+.range-lab::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #FF6464;
+    border: 2px solid #111111;
+    cursor: pointer;
+}
+.dark .range-lab::-moz-range-thumb {
+    border: 2px solid #FAF3DD;
+}
+
+/* Lab Title / Section Header */
+.lab-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #111111;
+    display: inline-block;
+    border-bottom: 2px solid #FF6464;
+    padding-bottom: 4px;
+    margin-bottom: 16px;
+}
+.dark .lab-title {
+    color: #FAF3DD;
+}
+
+/* Lab Card */
+.lab-card {
+    background-color: #E6E9D8; /* Light greenish-beige from reference */
+    border-left: 4px solid #FF6464;
+    padding: 24px;
+    color: #111111;
+}
+.dark .lab-card {
+    background-color: #2F3A28; /* Adjust for dark mode */
+}

@@ -1,0 +1,876 @@
+@page
+@model TheBestBean.Pages.LearnModel
+@{
+    ViewData["Title"] = "Learn";
+}
+
+@await Html.PartialAsync("_PageHeader")
+
+<style>
+/* Minimalist Coffee Learning Styles */
+.learn-container {
+    background: white;
+    color: #000;
+    font-family: 'Quicksand', 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+}
+
+.flavor-section {
+    background: white;
+    text-align: center;
+}
+
+.flavor-title {
+    font-size: 4rem;
+    font-weight: 900;
+    color: #000;
+    margin: 0;
+    letter-spacing: -0.02em;
+}
+
+.flavor-subtitle {
+    font-size: 1.2rem;
+    color: #666;
+    margin: 20px 0 60px 0;
+    font-weight: 300;
+}
+
+.flavor-intro {
+    text-align: center;
+    font-size: 1.1rem;
+    color: #555;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.origin-text {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: #000;
+    margin-top: 40px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+}
+
+.full-flavor-wheel {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+    position: relative;
+}
+
+.flavor-blobs {
+    display: flex;
+    justify-content: center;
+    gap: 65px;
+    padding-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.flavor-blob {
+    width: 65px;
+    height: 65px;
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    transform: rotate(0deg);
+    margin-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.flavor-blob:hover {
+    transform: scale(1.1) rotate(5deg);
+    border-radius: 50% 60% 40% 80% / 40% 50% 60% 70%;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.flavor-blob-1 { background: #DA1D23; } /* Fruity - rgb(218, 29, 35) */
+.flavor-blob-2 { background: #DA0D68; } /* Floral - rgb(218, 13, 104) */
+.flavor-blob-3 { background: #A87B64; } /* Nutty/Cacao - rgb(168, 123, 100) */
+        .flavor-blob-6 { background: #E65832; } /* Sweet - rgb(230, 88, 50) */
+.flavor-blob-7 { background: #197A2F; } /* Green/Vegetative - rgb(25, 122, 47) */
+.flavor-blob-8 { background: #C94930; } /* Roasted - rgb(201, 73, 48) */
+.flavor-blob-9 { background: #AD213E; } /* Spices - rgb(173, 33, 62) */
+.flavor-blob-10 { background: #EBB40D; } /* Sour/Fermented - rgb(235, 180, 13) */
+.flavor-blob-11 { background: #0AA3B5; } /* Other - rgb(10, 163, 181) */
+
+.flavor-blob-label {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 8px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+    white-space: nowrap;
+    line-height: 1.2;
+}
+
+/* Sub Flavours */
+.sub-flavor-title,
+.outer-flavor-title {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #000;
+    margin-top: 6rem;
+    margin-bottom: 4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.sub-flavor-blobs,
+.outer-flavor-blobs {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 30px 0;
+    padding-bottom: 2rem;
+}
+
+.sub-flavor-blob {
+    width: 48px;  /* Doubled from 24px */
+    height: 48px;
+    border-radius: 40% 60% 30% 70% / 50% 40% 60% 50%;
+    background: #C38B76; /* Default rosy brown for sweet aromatics */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6rem;
+    font-weight: 600;
+    color: white;
+    padding: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    line-height: 1.1;
+}
+
+.sub-flavor-blob:hover {
+    transform: scale(1.2) rotate(5deg);
+    border-radius: 50% 60% 40% 80% / 40% 50% 60% 70%;
+}
+
+.outer-flavor-blob {
+    width: 35px;  /* 25% of 80px */
+    height: 35px;
+    border-radius: 40% 60% 30% 70% / 50% 40% 60% 50%;
+    background: #3E2723;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.4rem;
+    font-weight: 600;
+    color: white;
+    padding: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.outer-flavor-blob:hover {
+    transform: scale(1.2) rotate(5deg);
+    border-radius: 50% 60% 40% 80% / 40% 50% 60% 70%;
+}
+
+/* Sub-flavor blob specific colors based on SCAA wheel */
+.sub-blob-1, .sub-blob-2, .sub-blob-3, .sub-blob-4 { background: #DD7FA8; } /* Berry, Citrus, Stone Fruit, Tropical - pink-purple */
+.sub-blob-5, .sub-blob-6, .sub-blob-7 { background: #DD7FA8; } /* Jasmine, Rose, Chamomile - pink-purple */
+.sub-blob-8, .sub-blob-9, .sub-blob-10, .sub-blob-11 { background: #B27C6C; } /* Almond, Hazelnut, Peanut, Walnut - reddish brown */
+.sub-blob-12, .sub-blob-13, .sub-blob-14, .sub-blob-15 { background: #C38B76; } /* Honey, Caramel, Maple, Vanilla - rosy brown */
+.sub-blob-16, .sub-blob-17, .sub-blob-18 { background: #008400; } /* Herbal, Vegetal, Grass - dark green */
+.sub-blob-19, .sub-blob-20, .sub-blob-21 { background: #8B6E67; } /* Smoky, Tobacco, Burnt - dark brown */
+.sub-blob-22, .sub-blob-23, .sub-blob-24 { background: #B27C6C; } /* Cinnamon, Nutmeg, Clove - reddish brown */
+
+.flavor-blob-label {
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: #000;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: pre-line;
+    text-align: center;
+}
+
+.knowledge-grid {
+    padding: 80px 0;
+}
+
+.grid-item {
+    background: white;
+    padding: 60px 40px;
+    margin: 20px 0;
+    border: 1px solid #e0e0e0;
+    transition: all 0.3s ease;
+}
+
+.grid-item:hover {
+    border-color: #8D6E63;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.grid-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 20px;
+}
+
+.grid-content {
+    color: #333;
+    font-size: 1rem;
+    line-height: 1.8;
+}
+
+.grid-blob {
+    width: 60px;
+    height: 60px;
+    border-radius: 40% 60% 30% 70% / 50% 40% 60% 50%;
+    margin: 20px 0;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.grid-blob:hover {
+    transform: rotate(10deg) scale(1.1);
+    border-radius: 60% 40% 70% 30% / 40% 60% 50% 70%;
+}
+
+.blob-brown { background: #8D6E63; }
+.blob-dark { background: #424242; }
+.blob-light { background: #D7CCC8; }
+
+.minimal-button {
+    background: #000;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 20px 0;
+}
+
+.minimal-button:hover {
+    background: #8D6E63;
+    transform: translateY(-2px);
+}
+
+/* Fruity Section Styles */
+.fruity-section {
+    margin: 40px 0;
+    padding: 30px 0;
+}
+
+.fruity-container {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+.fruity-left {
+    flex: 0 0 70%;
+}
+
+.fruity-right {
+    flex: 0 0 30%;
+}
+
+.fruity-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.fruity-header-blob {
+    width: 40px; /* 50% of original 80px */
+    height: 40px; /* 50% of original 80px */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.fruity-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #000;
+    margin: 0;
+}
+
+.fruity-main-row {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+}
+
+.fruity-category {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    min-width: 120px;
+}
+
+.fruity-main-blob {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.fruity-sub-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 120px;
+}
+
+.fruity-sub-blob {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.4rem;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.fruity-main-blob:hover,
+.fruity-sub-blob:hover {
+    transform: scale(1.1);
+    border-color: rgba(255, 255, 255, 0.8);
+}
+
+/* Fruity Main Blob Colors */
+.fruity-blob-berry { background: #DD4C51; } /* Berry - rgb(221, 76, 81) */
+.fruity-blob-dried { background: #C94A44; } /* Dried Fruit - rgb(201, 74, 68) */
+.fruity-blob-other { background: #F2684C; } /* Other Fruit - rgb(242, 104, 76) */
+.fruity-blob-citrus { background: #F7A129; } /* Citrus - rgb(247, 161, 41) */
+
+/* Berry Sub-flavors */
+.berry-sub-1 { background: #3E0317; } /* Blackberry - rgb(62, 3, 23) */
+.berry-sub-2 { background: #EF2D36; } /* Strawberry - rgb(239, 45, 54) */
+.berry-sub-3 { background: #6469B0; } /* Blueberry - rgb(100, 105, 176) */
+.berry-sub-4 { background: #E52968; } /* Raspberry - rgb(229, 41, 104) */
+
+/* Dried Fruit Sub-flavors */
+.dried-sub-1 { background: #B53B54; } /* Raisin - rgb(181, 59, 84) */
+.dried-sub-2 { background: #A5446F; } /* Prune - rgb(165, 68, 111) */
+
+/* Other Fruit Sub-flavors */
+.other-sub-1 { background: #D07C36; } /* Coconut - rgb(208, 124, 54) */
+.other-sub-2 { background: #E73451; } /* Cherry - rgb(231, 52, 81) */
+.other-sub-3 { background: #E65656; } /* Pomegranate - rgb(230, 86, 86) */
+.other-sub-4 { background: #F89A1C; } /* Pineapple - rgb(248, 154, 28) */
+.other-sub-5 { background: #AEB92C; } /* Grape - rgb(174, 185, 44) */
+.other-sub-6 { background: #4EB947; } /* Apple - rgb(78, 185, 71) */
+.other-sub-7 { background: #F68A5C; } /* Peach - rgb(246, 138, 92) */
+.other-sub-8 { background: #BAA635; } /* Pear - rgb(186, 166, 53) */
+
+/* Citrus Sub-flavors */
+.citrus-sub-1 { background: #F26355; } /* Grapefruit - rgb(242, 99, 85) */
+.citrus-sub-2 { background: #E2631E; } /* Orange - rgb(226, 99, 30) */
+.citrus-sub-3 { background: #FDE402; } /* Lemon - rgb(253, 228, 2) */
+.citrus-sub-4 { background: #7EB138; } /* Lime - rgb(126, 177, 56) */
+
+/* Fruity Explanation Styles */
+.fruity-explanation {
+    padding: 30px;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.explanation-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #000;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.explanation-text {
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 16px;
+    text-align: left;
+}
+
+.explanation-text:last-child {
+    margin-bottom: 0;
+}
+
+.explanation-text strong {
+    color: #000;
+    font-weight: 600;
+}
+
+/* Main Flavor Explanation */
+.main-flavor-explanation {
+    text-align: center;
+    font-size: 1rem;
+    color: #333;
+    margin: 40px auto 60px auto;
+    max-width: 800px;
+    line-height: 1.8;
+}
+
+/* Sub-Fruity Explanation */
+.sub-fruity-explanation {
+    padding: 25px;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+    margin-top: 30px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.sub-explanation-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #000;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.sub-explanation-text {
+    font-size: 0.9rem;
+    color: #444;
+    line-height: 1.6;
+}
+
+@@media (max-width: 768px) {
+    .flavor-title { font-size: 2.5rem; }
+    .flavor-blobs { 
+        flex-wrap: wrap; 
+        gap: 15px; 
+        justify-content: center;
+        padding: 0 20px;
+    }
+    
+    /* Fix flavor wheel container for mobile */
+    .full-flavor-wheel {
+        padding: 0 20px;
+        margin: 0;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .full-flavor-wheel img {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto;
+        margin: 20px auto !important;
+        padding: 0 10px;
+        box-sizing: border-box;
+    }
+    
+    .fruity-container {
+        flex-direction: column;
+        gap: 30px;
+    }
+    
+    .fruity-left,
+    .fruity-right {
+        flex: 1;
+    }
+    
+    .fruity-header {
+        justify-content: center;
+    }
+    .flavor-blob { 
+        width: 60px; 
+        height: 60px; 
+        margin: 5px 0 50px 0;
+        flex-shrink: 0;
+    }
+    .flavor-blob-label {
+        font-size: 0.6rem;
+        margin-top: 6px;
+        max-width: 80px;
+        word-wrap: break-word;
+        white-space: normal;
+        line-height: 1.1;
+    }
+    .sub-flavor-blobs {
+        gap: 12px;
+        justify-content: center;
+        padding: 0 20px;
+        flex-wrap: wrap;
+    }
+    .sub-flavor-blob {
+        width: 40px;
+        height: 40px;
+        font-size: 0.5rem;
+        margin: 3px;
+        flex-shrink: 0;
+    }
+    .outer-flavor-blobs {
+        gap: 8px;
+        justify-content: center;
+        padding: 0 20px;
+        flex-wrap: wrap;
+    }
+    .outer-flavor-blob {
+        width: 18px;
+        height: 18px;
+        font-size: 0.35rem;
+        margin: 2px;
+        flex-shrink: 0;
+    }
+    .grid-item { padding: 40px 20px; }
+}
+
+@@media (max-width: 480px) {
+    .flavor-blobs { 
+        gap: 10px; 
+        padding: 0 10px;
+    }
+    .flavor-blob { 
+        width: 50px; 
+        height: 50px; 
+        margin: 3px 0 45px 0;
+    }
+    .flavor-blob-label {
+        font-size: 0.55rem;
+        margin-top: 5px;
+        max-width: 70px;
+        word-wrap: break-word;
+        white-space: normal;
+        line-height: 1.0;
+    }
+    
+    /* Enhanced mobile flavor wheel fixes */
+    .full-flavor-wheel {
+        padding: 0 10px;
+        margin: 0;
+        width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+    
+    .full-flavor-wheel img {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto;
+        margin: 15px auto !important;
+        padding: 0 5px;
+        box-sizing: border-box;
+        display: block;
+    }
+    
+    .flavor-title {
+        font-size: 2rem;
+    }
+    
+    .sub-flavor-blobs {
+        gap: 8px;
+        padding: 0 10px;
+    }
+    .sub-flavor-blob {
+        width: 35px;
+        height: 35px;
+        font-size: 0.45rem;
+        margin: 2px;
+    }
+    .outer-flavor-blobs {
+        gap: 6px;
+        padding: 0 10px;
+    }
+    .outer-flavor-blob {
+        width: 16px;
+        height: 16px;
+        font-size: 0.3rem;
+        margin: 1px;
+    }
+}
+</style>
+
+<div class="learn-container">
+    <!-- Flavor Wheel Section -->
+    <div class="flavor-section">
+        <h1 class="flavor-title">FLAVOURS</h1>
+        <p class="flavor-subtitle">Understand the </p>
+        
+        <!-- Main Flavours Row -->
+        <p class="flavor-intro">Explore the diverse world of coffee flavors</p>
+        <div class="flavor-blobs">
+            <div class="flavor-blob flavor-blob-1" data-flavor="fruity">
+                <div class="flavor-blob-label">Fruity</div>
+            </div>
+            <div class="flavor-blob flavor-blob-2" data-flavor="floral">
+                <div class="flavor-blob-label">Floral</div>
+            </div>
+            <div class="flavor-blob flavor-blob-3" data-flavor="nutty">
+                <div class="flavor-blob-label">Nutty\nCacao</div>
+            </div>
+            <div class="flavor-blob flavor-blob-6" data-flavor="sweet">
+                <div class="flavor-blob-label">Sweet</div>
+            </div>
+            <div class="flavor-blob flavor-blob-7" data-flavor="green">
+                <div class="flavor-blob-label">Green\nVegetative</div>
+            </div>
+            <div class="flavor-blob flavor-blob-8" data-flavor="roasted">
+                <div class="flavor-blob-label">Roasted</div>
+                    </div>
+            <div class="flavor-blob flavor-blob-9" data-flavor="spices">
+                <div class="flavor-blob-label">Spices</div>
+                    </div>
+            <div class="flavor-blob flavor-blob-10" data-flavor="sour">
+                <div class="flavor-blob-label">Sour\nFermented</div>
+                </div>
+            <div class="flavor-blob flavor-blob-11" data-flavor="other">
+                <div class="flavor-blob-label">Other</div>
+            </div>
+        </div>
+        
+        <!-- Main Flavors Explanation -->
+        <p class="main-flavor-explanation">Coffee flavors are broadly categorized into these main profiles, each representing a distinct sensory experience. Fruity notes often bring brightness and acidity, Floral offers delicate aromatics, Nutty/Cacao provides rich, earthy undertones, Sweet adds caramel or honey-like qualities, Green/Vegetative hints at fresh herbs or grass, Roasted delivers smoky and bold characteristics, Spices introduce warmth and complexity, Sour/Fermented can range from tangy to wine-like, and Other encompasses unique or less common profiles.</p>
+        
+        <!-- Fruity Section -->
+        <div class="fruity-section">
+            <div class="fruity-container">
+                <!-- Left Side - Fruity Blobs (70%) -->
+                <div class="fruity-left">
+                    <div class="fruity-header">
+                        <div class="fruity-header-blob flavor-blob-1" data-flavor="fruity">
+                            <!-- No text label -->
+                        </div>
+                        <h3 class="fruity-title">Fruity</h3>
+                    </div>
+                    
+                    <!-- Main Fruity Categories -->
+                    <div class="fruity-main-row">
+                        <div class="fruity-category">
+                            <div class="fruity-main-blob fruity-blob-berry" data-flavor="berry">
+                                <div class="fruity-blob-label">Berry</div>
+                            </div>
+                            <!-- Berry Sub-flavors -->
+                            <div class="fruity-sub-row">
+                                <div class="fruity-sub-blob berry-sub-1" data-flavor="blackberry">Blackberry</div>
+                                <div class="fruity-sub-blob berry-sub-2" data-flavor="strawberry">Strawberry</div>
+                                <div class="fruity-sub-blob berry-sub-3" data-flavor="blueberry">Blueberry</div>
+                                <div class="fruity-sub-blob berry-sub-4" data-flavor="raspberry">Raspberry</div>
+                            </div>
+                        </div>
+                        
+                        <div class="fruity-category">
+                            <div class="fruity-main-blob fruity-blob-dried" data-flavor="dried-fruit">
+                                <div class="fruity-blob-label">Dried Fruit</div>
+                            </div>
+                            <!-- Dried Fruit Sub-flavors -->
+                            <div class="fruity-sub-row">
+                                <div class="fruity-sub-blob dried-sub-1" data-flavor="raisin">Raisin</div>
+                                <div class="fruity-sub-blob dried-sub-2" data-flavor="prune">Prune</div>
+                            </div>
+                        </div>
+                        
+                        <div class="fruity-category">
+                            <div class="fruity-main-blob fruity-blob-other" data-flavor="other-fruit">
+                                <div class="fruity-blob-label">Other Fruit</div>
+                            </div>
+                            <!-- Other Fruit Sub-flavors -->
+                            <div class="fruity-sub-row">
+                                <div class="fruity-sub-blob other-sub-1" data-flavor="coconut">Coconut</div>
+                                <div class="fruity-sub-blob other-sub-2" data-flavor="cherry">Cherry</div>
+                                <div class="fruity-sub-blob other-sub-3" data-flavor="pomegranate">Pomegranate</div>
+                                <div class="fruity-sub-blob other-sub-4" data-flavor="pineapple">Pineapple</div>
+                                <div class="fruity-sub-blob other-sub-5" data-flavor="grape">Grape</div>
+                                <div class="fruity-sub-blob other-sub-6" data-flavor="apple">Apple</div>
+                                <div class="fruity-sub-blob other-sub-7" data-flavor="peach">Peach</div>
+                                <div class="fruity-sub-blob other-sub-8" data-flavor="pear">Pear</div>
+                            </div>
+                        </div>
+                        
+                        <div class="fruity-category">
+                            <div class="fruity-main-blob fruity-blob-citrus" data-flavor="citrus">
+                                <div class="fruity-blob-label">Citrus</div>
+                            </div>
+                            <!-- Citrus Sub-flavors -->
+                            <div class="fruity-sub-row">
+                                <div class="fruity-sub-blob citrus-sub-1" data-flavor="grapefruit">Grapefruit</div>
+                                <div class="fruity-sub-blob citrus-sub-2" data-flavor="orange">Orange</div>
+                                <div class="fruity-sub-blob citrus-sub-3" data-flavor="lemon">Lemon</div>
+                                <div class="fruity-sub-blob citrus-sub-4" data-flavor="lime">Lime</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Sub-Fruity Flavors Explanation -->
+                    <div class="sub-fruity-explanation">
+                        <h4 class="sub-explanation-title">Exploring Sub-Fruity Flavors</h4>
+                        <p class="sub-explanation-text">Delving deeper into fruity notes reveals a spectrum of specific tastes. Berry flavors, like blackberry and raspberry, often present as juicy and tart. Dried fruits, such as raisin and prune, offer concentrated sweetness and a chewy texture. The 'Other Fruit' category includes a wide array from tropical pineapple to stone fruits like peach and cherry, each contributing unique sweetness and acidity. Citrus notes, including lemon and orange, provide a bright, zesty, and refreshing acidity.</p>
+                    </div>
+                </div>
+                
+                <!-- Right Side - Explanation Text (30%) -->
+                <div class="fruity-right">
+                    <div class="fruity-explanation">
+                        <h4 class="explanation-title">Understanding Fruity Flavors</h4>
+                        <p class="explanation-text">
+                            Fruity flavors in coffee come from the natural compounds in coffee cherries and are influenced by processing methods, terroir, and roast level.
+                        </p>
+                        <p class="explanation-text">
+                            <strong>Berry flavors</strong> often appear in natural or honey-processed coffees, while <strong>citrus notes</strong> are common in bright, high-altitude beans.
+                        </p>
+                        <p class="explanation-text">
+                            <strong>Dried fruit</strong> characteristics develop through longer fermentation or specific drying processes, creating complex, wine-like flavors.
+                        </p>
+                        <p class="explanation-text">
+                            The <strong>other fruit</strong> category includes tropical and stone fruit notes that add sweetness and complexity to your cup.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <p class="origin-text">TASTE THE ORIGIN</p>
+        
+        <!-- Full Screen Flavor Wheel -->
+        <div class="full-flavor-wheel">
+            <img src="~/Media/coffee-flavor-wheel.webp" alt="Complete Coffee Flavor Wheel" style="width: 100%; max-width: 1200px; margin: 40px auto; display: block;">
+        </div>
+</div>
+
+    <!-- Knowledge Grid -->
+    <div class="knowledge-grid">
+        <div class="container">
+<div class="row">
+                <div class="col-md-6">
+                    <div class="grid-item">
+                        <h3 class="grid-title">Bean Basics</h3>
+                        <div class="grid-content">
+                            <p><strong>Arabica vs Robusta</strong></p>
+                            <p>Arabica beans offer complex flavors with higher acidity and sweetness. Robusta provides bold, earthy notes with more caffeine.</p>
+                            <p><strong>Processing Methods</strong></p>
+                            <p>Washed processing creates clean, bright flavors. Natural processing enhances fruity characteristics. Honey processing balances sweetness and acidity.</p>
+            </div>
+        </div>
+    </div>
+                
+                <div class="col-md-6">
+                    <div class="grid-item">
+                        <h3 class="grid-title">Brewing Science</h3>
+                        <div class="grid-content">
+                            <p><strong>Extraction Principles</strong></p>
+                            <p>Water temperature, contact time, and grind size determine extraction quality. Balance these variables for optimal flavor.</p>
+                            <p><strong>Grind Size Impact</strong></p>
+                            <p>Coarse grinds for longer extraction. Fine grinds for quick brewing. Match grind to your brewing method for best results.</p>
+            </div>
+        </div>
+    </div>
+                
+                <div class="col-md-6">
+                    <div class="grid-item">
+                        <h3 class="grid-title">Flavor Profiles</h3>
+                        <div class="grid-content">
+                            <p><strong>Tasting Notes</strong></p>
+                            <p>Acidity provides brightness and liveliness. Body gives weight and texture. Sweetness balances other flavor elements.</p>
+                            <p><strong>Origin Characteristics</strong></p>
+                            <p>Peruvian coffees often show floral and citrus notes depending on the region. Colombian beans (Coming Soon) typically offer chocolate and nutty flavors.</p>
+        </div>
+    </div>
+</div>
+
+                <div class="col-md-6">
+                    <div class="grid-item">
+                        <h3 class="grid-title">Quality Indicators</h3>
+                        <div class="grid-content">
+                            <p><strong>Certifications</strong></p>
+                            <p>Fair Trade ensures farmer welfare. Organic certification guarantees chemical-free growing. Cup of Excellence marks exceptional quality.</p>
+                            <p><strong>Freshness Factors</strong></p>
+                            <p>Roast date matters most. Store in airtight containers. Grind just before brewing for maximum flavor.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Interactive Flavor Wheel -->
+    <div class="flavor-section">
+        <div class="container">
+            <h2 class="grid-title text-center mb-5">Interactive Flavor Wheel</h2>
+            <div class="text-center mt-4">
+                <button class="minimal-button" onclick="window.open('~/Media/The-2016-SCAA-and-WCR-Coffee-Tasters-Flavor-Wheel.webp', '_blank')">
+                    View Full Size
+                </button>
+        </div>
+    </div>
+</div>
+
+<!-- Call to Action -->
+    <div class="flavor-section">
+        <div class="container text-center">
+            <h2 class="grid-title mb-4">Ready to Begin?</h2>
+            <p class="flavor-subtitle">Start your coffee journey with our beginner's guide</p>
+            <a href="/Newbie" class="minimal-button">
+                Start Here
+            </a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const flavorBlobs = document.querySelectorAll('.flavor-blob');
+    
+    flavorBlobs.forEach(blob => {
+        blob.addEventListener('click', function() {
+            const flavor = this.getAttribute('data-flavor');
+            // Add interactive behavior here
+            console.log('Selected flavor:', flavor);
+            
+            // Visual feedback
+            this.style.transform = 'scale(1.2)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 200);
+        });
+    });
+});
+</script>
+}

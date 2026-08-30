@@ -1,0 +1,250 @@
+@page
+@model BrewMethodsModel
+@{
+    ViewData["Title"] = "Brew Guides";
+    ViewData["MetaDescription"] = "Learn how to brew specialty coffee at home. Pour-over, French press, AeroPress, espresso guides with grind size charts and brew ratios from Purple Bean Coffee in Cusco, Peru.";
+}
+<div class="flex-grow max-w-[1600px] mx-auto w-full px-6 md:px-12 relative pb-40 md:pb-24 font-sans text-v-black dark:text-[#FAF3DD] bg-v-white dark:bg-[#3C4A33]">
+
+    <main class="flex flex-col font-sans mb-32">
+        
+        <!-- EMIL RUDER SWISS TYPOGRAPHY HEADER -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 border-b border-v-black/10 dark:border-[#4F6044] pb-12 mb-12 lg:mb-16">
+            <div class="lg:col-span-12 flex flex-col items-start px-4 md:px-0 mt-12">
+                <h1 class="text-4xl md:text-6xl font-bold tracking-tighter text-v-black dark:text-[#FAF3DD] leading-[0.9] mb-6 uppercase">
+                    BREW<br>GUIDES
+                </h1>
+                <div class="grid grid-cols-2 md:grid-cols-4 w-full gap-4 md:gap-8 mt-6">
+                    <div class="col-span-1 border-t border-v-black/20 dark:border-[#4F6044] pt-4">
+                        <span class="text-xs md:text-[10px] font-bold uppercase tracking-widest text-v-black dark:text-[#FAF3DD] font-mono-jb block mb-4"><span class="text-[#FF3B1F]">01.</span> VARIABLES</span>
+                    </div>
+                    <div class="col-span-1 border-t border-v-black/20 dark:border-[#4F6044] pt-4">
+                        <span class="text-xs md:text-[10px] font-bold uppercase tracking-widest text-v-black dark:text-[#FAF3DD] font-mono-jb block mb-4"><span class="text-[#0055FF]">02.</span> PHYSICS</span>
+                    </div>
+                    <div class="col-span-1 border-t border-v-black/20 dark:border-[#4F6044] pt-4">
+                        <span class="text-xs md:text-[10px] font-bold uppercase tracking-widest text-v-black dark:text-[#FAF3DD] font-mono-jb block mb-4"><span class="text-[#16A34A]">03.</span> CHEMISTRY</span>
+                    </div>
+                    <div class="col-span-1 border-t border-v-black/20 dark:border-[#4F6044] pt-4">
+                        <span class="text-xs md:text-[10px] font-bold uppercase tracking-widest text-v-black dark:text-[#FAF3DD] font-mono-jb block mb-4"><span class="text-[#FFB800]">04.</span> TECHNIQUE</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- EMIL RUDER CONTENT GRID -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 relative px-4 md:px-0 mb-32">
+            
+            <!-- Left Grid: Typographic Anchor -->
+            <div class="lg:col-span-4 flex flex-col items-start lg:sticky lg:top-32 h-max z-10">
+                <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-v-black dark:text-[#FAF3DD] leading-none mb-4 uppercase">
+                    THE<br>VARIABLES
+                </h2>
+                <span class="text-xs md:text-[10px] font-bold uppercase tracking-[0.2em] text-v-gray font-mono-jb">EXTRACTION PHYSICS</span>
+                <p class="text-v-gray text-sm mt-8 max-w-xs leading-relaxed">
+                    Calibration relies on the systematic isolation and control of extraction variables.
+                </p>
+            </div>
+
+            <!-- Right Grid: Variables List -->
+            <div class="lg:col-span-8 flex flex-col gap-12">
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 border-b border-v-black/10 dark:border-[#4F6044] pb-12">
+                    <!-- Ratio -->
+                    <article class="flex flex-col group relative border border-[#FF3B1F]/30 hover:border-[#FF3B1F] p-6 transition-colors bg-white dark:bg-[#3C4A33]">
+                        <div class="absolute -top-[3px] -left-[3px] w-1.5 h-1.5 bg-[#FF3B1F] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="absolute -top-[3px] -right-[3px] w-1.5 h-1.5 bg-[#FF3B1F] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="absolute -bottom-[3px] -left-[3px] w-1.5 h-1.5 bg-[#FF3B1F] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="absolute -bottom-[3px] -right-[3px] w-1.5 h-1.5 bg-[#FF3B1F] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        
+                        <div class="flex justify-between items-baseline mb-6">
+                            <h3 class="text-xl font-bold uppercase tracking-tight text-v-black dark:text-[#FAF3DD] m-0 font-sans group-hover:text-[#FF3B1F] transition-colors">RATIO</h3>
+                            <span class="text-2xl font-bold uppercase tracking-widest text-[#FF3B1F] font-mono-jb">01</span>
+                        </div>
+                        <p class="text-v-gray text-sm md:text-base leading-relaxed font-normal mb-6">
+                            Consistency demands precision mass measurement. Our volumetric baseline dictates a rigid 1:16 ratio (1g dry mass to 16g solvent).
+                        </p>
+                        <div class="mt-auto text-xs md:text-[10px] font-bold uppercase tracking-widest text-[#FF3B1F] font-mono-jb bg-[#FF3B1F]/10 px-2 py-1 self-start">
+                            INPUT VS OUTPUT YIELD
+                        </div>
+                    </article>
+
+                    <!-- Temp -->
+                    <article class="flex flex-col group relative border border-[#0055FF]/30 hover:border-[#0055FF] p-6 transition-colors bg-white dark:bg-[#3C4A33]">
+                        <div class="absolute -top-[3px] -left-[3px] w-1.5 h-1.5 bg-[#0055FF] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="absolute -top-[3px] -right-[3px] w-1.5 h-1.5 bg-[#0055FF] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="absolute -bottom-[3px] -left-[3px] w-1.5 h-1.5 bg-[#0055FF] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="absolute -bottom-[3px] -right-[3px] w-1.5 h-1.5 bg-[#0055FF] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        
+                        <div class="flex justify-between items-baseline mb-6">
+                            <h3 class="text-xl font-bold uppercase tracking-tight text-v-black dark:text-[#FAF3DD] m-0 font-sans group-hover:text-[#0055FF] transition-colors">HEAT</h3>
+                            <span class="text-2xl font-bold uppercase tracking-widest text-[#0055FF] font-mono-jb">02</span>
+                        </div>
+                        <p class="text-v-gray text-sm md:text-base leading-relaxed font-normal mb-6">
+                            Thermal kinetic energy dictates solubility. High-density light roasts require elevated temperatures (96°C). Darker molecular profiles require cooling (90°C).
+                        </p>
+                        <div class="mt-auto text-xs md:text-[10px] font-bold uppercase tracking-widest text-[#0055FF] font-mono-jb bg-[#0055FF]/10 px-2 py-1 self-start">
+                            THERMAL DYNAMICS
+                        </div>
+                    </article>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <!-- Water -->
+                    <article class="flex flex-col group relative border border-[#16A34A]/30 hover:border-[#16A34A] p-6 transition-colors bg-white dark:bg-[#3C4A33]">
+                        <div class="absolute -top-[3px] -left-[3px] w-1.5 h-1.5 bg-[#16A34A] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="absolute -top-[3px] -right-[3px] w-1.5 h-1.5 bg-[#16A34A] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="absolute -bottom-[3px] -left-[3px] w-1.5 h-1.5 bg-[#16A34A] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="absolute -bottom-[3px] -right-[3px] w-1.5 h-1.5 bg-[#16A34A] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        
+                        <div class="flex justify-between items-baseline mb-6">
+                            <h3 class="text-xl font-bold uppercase tracking-tight text-v-black dark:text-[#FAF3DD] m-0 font-sans group-hover:text-[#16A34A] transition-colors">SOLVENT</h3>
+                            <span class="text-2xl font-bold uppercase tracking-widest text-[#16A34A] font-mono-jb">03</span>
+                        </div>
+                        <p class="text-v-gray text-sm md:text-base leading-relaxed font-normal mb-6">
+                            Solvent composition (H2O) comprises 98% of the final yield. Utilize filtered water with controlled mineral content (magnesium/calcium).
+                        </p>
+                        <div class="mt-auto text-xs md:text-[10px] font-bold uppercase tracking-widest text-[#16A34A] font-mono-jb bg-[#16A34A]/10 px-2 py-1 self-start">
+                            100-150 PPM TDS
+                        </div>
+                    </article>
+
+                    <!-- Time -->
+                    <article class="flex flex-col group relative border border-[#FFB800]/30 hover:border-[#FFB800] p-6 transition-colors bg-white dark:bg-[#3C4A33]">
+                        <div class="absolute -top-[3px] -left-[3px] w-1.5 h-1.5 bg-[#FFB800] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="absolute -top-[3px] -right-[3px] w-1.5 h-1.5 bg-[#FFB800] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="absolute -bottom-[3px] -left-[3px] w-1.5 h-1.5 bg-[#FFB800] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="absolute -bottom-[3px] -right-[3px] w-1.5 h-1.5 bg-[#FFB800] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        
+                        <div class="flex justify-between items-baseline mb-6">
+                            <h3 class="text-xl font-bold uppercase tracking-tight text-v-black dark:text-[#FAF3DD] m-0 font-sans group-hover:text-[#FFB800] transition-colors">KINEMATICS</h3>
+                            <span class="text-2xl font-bold uppercase tracking-widest text-[#FFB800] font-mono-jb">04</span>
+                        </div>
+                        <p class="text-v-gray text-sm md:text-base leading-relaxed font-normal mb-6">
+                            Particle surface area regulates flow resistance. Excessive acidity necessitates finer micron distribution. Excessive bitterness requires coarser particles.
+                        </p>
+                        <div class="mt-auto text-xs md:text-[10px] font-bold uppercase tracking-widest text-[#FFB800] font-mono-jb bg-[#FFB800]/10 px-2 py-1 self-start">
+                            CONTACT TIME CALIBRATION
+                        </div>
+                    </article>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- METHODS GRID -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 relative px-4 md:px-0">
+            
+            <!-- Left Grid: Typographic Anchor -->
+            <div class="lg:col-span-4 flex flex-col items-start lg:sticky lg:top-32 h-max z-10">
+                <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-v-black dark:text-[#FAF3DD] leading-none mb-4 uppercase">
+                    CLINICAL<br>METHODS
+                </h2>
+                <span class="text-xs md:text-[10px] font-bold uppercase tracking-[0.2em] text-v-gray font-mono-jb">STANDARD OPERATING PROCEDURES</span>
+            </div>
+
+            <!-- Right Grid: Methods List -->
+            <div class="lg:col-span-8 flex flex-col w-full">
+                <div class="flex flex-col gap-16 mt-8">
+                    
+                    <!-- Method V60 -->
+                    <div class="relative border border-[#FF3B1F] p-8 md:p-10 bg-white/50 dark:bg-v-black/20">
+                        <!-- Corner Nodes -->
+                        <div class="absolute -top-[3px] -left-[3px] w-1.5 h-1.5 bg-[#FF3B1F]"></div>
+                        <div class="absolute -top-[3px] -right-[3px] w-1.5 h-1.5 bg-[#FF3B1F]"></div>
+                        <div class="absolute -bottom-[3px] -left-[3px] w-1.5 h-1.5 bg-[#FF3B1F]"></div>
+                        <div class="absolute -bottom-[3px] -right-[3px] w-1.5 h-1.5 bg-[#FF3B1F]"></div>
+                        
+                        <!-- Top Label -->
+                        <div class="absolute -top-3 left-6 bg-[#FF3B1F] text-white font-mono-jb text-xs md:text-[10px] font-bold tracking-widest px-3 py-1 uppercase">
+                            V60 / HARIO
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 font-mono-jb text-sm text-v-black dark:text-[#FAF3DD] mt-2">
+                            <div class="md:col-span-4 flex flex-col justify-between border-b md:border-b-0 md:border-r border-v-black/10 dark:border-[#4F6044] pb-6 md:pb-0 md:pr-6">
+                                <span class="text-xs md:text-[10px] font-bold uppercase tracking-widest text-v-gray mb-4 block">PERCOLATION</span>
+                                <div class="grid grid-cols-3 gap-2 text-xs">
+                                    <div><span class="text-v-gray block text-[11px] md:text-[9px] mb-1">DOSE</span>15G</div>
+                                    <div><span class="text-v-gray block text-[11px] md:text-[9px] mb-1">YIELD</span>250G</div>
+                                    <div><span class="text-v-gray block text-[11px] md:text-[9px] mb-1">TIME</span>2:45</div>
+                                </div>
+                            </div>
+                            <div class="md:col-span-8">
+                                <p class="leading-relaxed m-0 text-sm">
+                                    1. Clean, articulate, and unforgiving. The 60-degree conical geometry produces a pristine cup highlighting floral and citrus notes.<br><br>
+                                    2. Pre-wet the filter. Bloom with 45g of water for 45 seconds.<br><br>
+                                    3. Pour in concentric circles until reaching target mass.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Method AeroPress -->
+                    <div class="relative border border-[#FF3B1F] p-8 md:p-10 bg-white/50 dark:bg-v-black/20">
+                        <!-- Corner Nodes -->
+                        <div class="absolute -top-[3px] -left-[3px] w-1.5 h-1.5 bg-[#FF3B1F]"></div>
+                        <div class="absolute -top-[3px] -right-[3px] w-1.5 h-1.5 bg-[#FF3B1F]"></div>
+                        <div class="absolute -bottom-[3px] -left-[3px] w-1.5 h-1.5 bg-[#FF3B1F]"></div>
+                        <div class="absolute -bottom-[3px] -right-[3px] w-1.5 h-1.5 bg-[#FF3B1F]"></div>
+                        
+                        <!-- Top Label -->
+                        <div class="absolute -top-3 left-6 bg-[#FF3B1F] text-white font-mono-jb text-xs md:text-[10px] font-bold tracking-widest px-3 py-1 uppercase">
+                            AEROPRESS
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 font-mono-jb text-sm text-v-black dark:text-[#FAF3DD] mt-2">
+                            <div class="md:col-span-4 flex flex-col justify-between border-b md:border-b-0 md:border-r border-v-black/10 dark:border-[#4F6044] pb-6 md:pb-0 md:pr-6">
+                                <span class="text-xs md:text-[10px] font-bold uppercase tracking-widest text-v-gray mb-4 block">IMMERSION / PRESSURE</span>
+                                <div class="grid grid-cols-3 gap-2 text-xs">
+                                    <div><span class="text-v-gray block text-[11px] md:text-[9px] mb-1">DOSE</span>18G</div>
+                                    <div><span class="text-v-gray block text-[11px] md:text-[9px] mb-1">YIELD</span>200G</div>
+                                    <div><span class="text-v-gray block text-[11px] md:text-[9px] mb-1">TIME</span>2:00</div>
+                                </div>
+                            </div>
+                            <div class="md:col-span-8">
+                                <p class="leading-relaxed m-0 text-sm">
+                                    1. Hybrid immersion with pneumatic filtration. Inverted method: Add medium-fine grounds.<br><br>
+                                    2. Pour 200g water. Agitate aggressively. Steep 90s.<br><br>
+                                    3. Cap, flip, and press steadily for 30s. Produces high body and robust extraction.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Method French Press -->
+                    <div class="relative border border-[#FF3B1F] p-8 md:p-10 bg-white/50 dark:bg-v-black/20">
+                        <!-- Corner Nodes -->
+                        <div class="absolute -top-[3px] -left-[3px] w-1.5 h-1.5 bg-[#FF3B1F]"></div>
+                        <div class="absolute -top-[3px] -right-[3px] w-1.5 h-1.5 bg-[#FF3B1F]"></div>
+                        <div class="absolute -bottom-[3px] -left-[3px] w-1.5 h-1.5 bg-[#FF3B1F]"></div>
+                        <div class="absolute -bottom-[3px] -right-[3px] w-1.5 h-1.5 bg-[#FF3B1F]"></div>
+                        
+                        <!-- Top Label -->
+                        <div class="absolute -top-3 left-6 bg-[#FF3B1F] text-white font-mono-jb text-xs md:text-[10px] font-bold tracking-widest px-3 py-1 uppercase">
+                            FRENCH PRESS
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 font-mono-jb text-sm text-v-black dark:text-[#FAF3DD] mt-2">
+                            <div class="md:col-span-4 flex flex-col justify-between border-b md:border-b-0 md:border-r border-v-black/10 dark:border-[#4F6044] pb-6 md:pb-0 md:pr-6">
+                                <span class="text-xs md:text-[10px] font-bold uppercase tracking-widest text-v-gray mb-4 block">FULL IMMERSION</span>
+                                <div class="grid grid-cols-3 gap-2 text-xs">
+                                    <div><span class="text-v-gray block text-[11px] md:text-[9px] mb-1">DOSE</span>30G</div>
+                                    <div><span class="text-v-gray block text-[11px] md:text-[9px] mb-1">YIELD</span>500G</div>
+                                    <div><span class="text-v-gray block text-[11px] md:text-[9px] mb-1">TIME</span>4:00</div>
+                                </div>
+                            </div>
+                            <div class="md:col-span-8">
+                                <p class="leading-relaxed m-0 text-sm">
+                                    1. Heavy, textured, and maximalist. Coarse grind.<br><br>
+                                    2. Add all water simultaneously. Break the crust at 4:00.<br><br>
+                                    3. Scoop remaining foam and floating particles, and let steep an additional 5 minutes for suspended solids to settle. Do not plunge fully.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+</div>

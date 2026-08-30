@@ -1,0 +1,895 @@
+@page
+@model TheBestBean.Pages.NewbieModel
+@{
+    ViewData["Title"] = "Newbie Guide";
+}
+
+@await Html.PartialAsync("_PageHeader")
+
+<style>
+/* Newbie Guide Styles - Minimalist Black/White/Brown Theme */
+.newbie-container {
+    background: white;
+    color: #000;
+    font-family: 'Quicksand', 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+}
+
+.step-section {
+    padding: 80px 0;
+    background: white;
+}
+
+.step-number {
+    font-size: 4rem;
+    font-weight: 900;
+    color: #8D6E63;
+    margin: 0;
+    line-height: 1;
+}
+
+.step-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #000;
+    margin: 20px 0;
+    letter-spacing: -0.01em;
+}
+
+.step-content {
+    font-size: 1.1rem;
+    color: #333;
+    line-height: 1.8;
+    margin-bottom: 40px;
+}
+
+.step-link {
+    color: #8D6E63;
+    text-decoration: underline;
+    font-weight: 600;
+}
+
+.step-link:hover {
+    color: #000;
+    text-decoration: none;
+}
+
+.brewer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin: 40px 0;
+}
+
+.brewer-card {
+    background: white;
+    border: 2px solid #e0e0e0;
+    padding: 30px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.brewer-card:hover {
+    border-color: #8D6E63;
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.brewer-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: #8D6E63;
+}
+
+.brewer-image {
+    width: 120px;
+    height: 80px;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.brewer-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.brewer-info {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.roast-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    margin: 40px 0;
+}
+
+.roast-card {
+    background: white;
+    border: 1px solid #e0e0e0;
+    padding: 25px;
+    transition: all 0.3s ease;
+}
+
+.roast-card:hover {
+    border-color: #8D6E63;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.roast-color {
+    width: 100%;
+    height: 40px;
+    margin-bottom: 20px;
+    border-radius: 30% 70% 40% 60% / 50% 30% 70% 50%;
+    transition: all 0.3s ease;
+}
+
+.roast-color:hover {
+    transform: scale(1.05);
+    border-radius: 60% 40% 70% 30% / 40% 60% 50% 70%;
+}
+
+.roast-light { background: #D7CCC8; }
+.roast-medium { background: #8D6E63; }
+.roast-dark { background: #424242; }
+.roast-french { background: #212121; }
+
+.roast-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 15px;
+}
+
+.roast-description {
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.6;
+}
+
+.guide-section {
+    padding: 60px 0;
+}
+
+.guide-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #000;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.instruction-list {
+    list-style: none;
+    padding: 0;
+}
+
+.instruction-list li {
+    background: white;
+    margin: 15px 0;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    font-size: 1rem;
+    color: #333;
+    position: relative;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+}
+
+.instruction-list li:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.instruction-list li::before {
+    content: '';
+    position: absolute;
+    left: -2px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    background: #8D6E63;
+    border-radius: 50% 40% 60% 30% / 60% 50% 40% 70%;
+    transition: all 0.3s ease;
+}
+
+.instruction-list li:hover::before {
+    transform: translateY(-50%) rotate(45deg) scale(1.2);
+    border-radius: 40% 60% 70% 30% / 50% 40% 60% 50%;
+}
+
+.image-showcase {
+    text-align: center;
+    margin: 40px 0;
+}
+
+.image-showcase img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #e0e0e0;
+    filter: grayscale(100%) contrast(1.1);
+}
+
+.image-caption {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 15px;
+    font-style: italic;
+}
+
+.sketch-section {
+    margin: 60px 0;
+    text-align: center;
+    padding: 40px 20px;
+    border-radius: 8px;
+}
+
+.sketch-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.sketch-showcase {
+    margin: 30px 0;
+}
+
+.sketch-caption {
+    font-size: 0.95rem;
+    color: #666;
+    margin-top: 20px;
+    font-style: italic;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Roast Level Guide */
+.roast-guide {
+    padding: 40px;
+    border-radius: 8px;
+    margin: 40px 0;
+    text-align: center;
+}
+
+.roast-guide-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 20px;
+}
+
+.roast-explanation p {
+    margin: 10px 0;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+/* Brewer Categories */
+.brewer-category {
+    margin: 60px 0;
+}
+
+.category-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.category-description {
+    text-align: center;
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 40px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Brewer Detail Items */
+.brewer-detail-item {
+    display: flex;
+    align-items: center;
+    margin: 40px 0;
+    padding: 30px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
+
+.brewer-detail-item.reverse {
+    flex-direction: row-reverse;
+}
+
+.brewer-image-left,
+.brewer-image-right {
+    flex: 0 0 30%;
+    text-align: center;
+}
+
+.brewer-info-left,
+.brewer-info-right {
+    flex: 0 0 70%;
+    padding: 0 30px;
+}
+
+.brewer-name {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 15px;
+}
+
+.roast-recommendation {
+    margin-bottom: 20px;
+}
+
+.roast-tag {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.45rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-left: 8px;
+}
+
+.roast-tag.light {
+    background: #E8F5E8;
+    color: #2E7D32;
+}
+
+.roast-tag.medium {
+    background: #FFF3E0;
+    color: #F57C00;
+}
+
+.roast-tag.dark {
+    background: #F3E5F5;
+    color: #7B1FA2;
+}
+
+.brewer-description {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #333;
+}
+
+@@media (max-width: 768px) {
+    .newbie-container {
+        padding: 20px 10px;
+    }
+    
+    .step-number { 
+        font-size: 3rem; 
+        margin-bottom: 10px;
+    }
+    
+    .step-title { 
+        font-size: 2rem; 
+        margin-bottom: 20px;
+    }
+    
+    .brewer-grid { 
+        grid-template-columns: 1fr; 
+        gap: 30px;
+    }
+    
+    .roast-grid { 
+        grid-template-columns: 1fr; 
+        gap: 20px;
+    }
+    
+    .brewer-detail-item {
+        flex-direction: column;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .brewer-detail-item.reverse {
+        flex-direction: column;
+    }
+    
+    .brewer-info-left,
+    .brewer-info-right {
+        padding: 20px 10px;
+        width: 100%;
+    }
+    
+    .brewer-image {
+        max-width: 200px;
+        margin: 0 auto 20px auto;
+    }
+    
+    .roast-tag {
+        font-size: 0.7rem;
+        padding: 3px 8px;
+    }
+}
+
+@@media (max-width: 480px) {
+    .newbie-container {
+        padding: 15px 5px;
+    }
+    
+    .step-number { 
+        font-size: 2.5rem; 
+    }
+    
+    .step-title { 
+        font-size: 1.5rem; 
+    }
+    
+    .brewer-detail-item {
+        margin-bottom: 20px;
+        padding: 15px;
+    }
+    
+    .brewer-info-left,
+    .brewer-info-right {
+        padding: 15px 5px;
+    }
+    
+    .brewer-image {
+        max-width: 150px;
+    }
+    
+    .roast-tag {
+        font-size: 0.6rem;
+        padding: 2px 6px;
+    }
+}
+</style>
+
+<div class="newbie-container">
+    <!-- Step 1: Choose Your Coffee -->
+    <div class="step-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="text-center">
+                        <div class="step-number">1</div>
+                        <h2 class="step-title">Choose Your Coffee</h2>
+                        <p class="step-content">
+                            Start by discovering your taste preferences. Use our interactive 
+                            <a href="/Learn" class="step-link">coffee flavor wheel</a> to identify 
+                            the flavors that appeal to you most.
+                        </p>
+                        <p class="step-content">
+                            Once you know your preferences, <strong>Google your local area to find 
+                            specialty coffee shops and roasters</strong> that carry those flavor profiles. 
+                            Look for shops that source beans from specific regions and offer tasting notes.
+                        </p>
+                        
+                        <div class="image-showcase">
+                            <img src="~/Media/coffee_flavor_wheel-1.webp" alt="Coffee Flavor Wheel" style="max-width: 400px;">
+                            <p class="image-caption">Use the flavor wheel to identify your taste preferences</p>
+                        </div>
+                        
+                        <!-- Sketch Style Taste Guide -->
+                        <div class="sketch-section">
+                            <h3 class="sketch-title">Discover Your Taste Profile</h3>
+                            <div class="sketch-showcase">
+                                <img src="~/Media/coffee-flavor-wheel.webp" alt="Coffee Flavor Wheel Sketch" style="max-width: 500px;">
+                                <p class="sketch-caption">Explore the spectrum of coffee flavors - from fruity to earthy</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 2: Understanding Brew Methods -->
+    <div class="guide-section">
+        <div class="container">
+            <h2 class="guide-title">Understanding Brew Methods</h2>
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <p class="step-content text-center">
+                        Different brewing methods extract different compounds from coffee beans, 
+                        creating distinct flavor profiles. Choose your method based on the flavors you want to highlight.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Roast Level Guide -->
+            <div class="roast-guide">
+                <h3 class="roast-guide-title">Roast Level & Brewer Pairing</h3>
+                <div class="roast-explanation">
+                    <p><strong>Light roasts</strong> highlight fruity and bright flavors and pair well with pour-over and drip brewers.</p>
+                    <p><strong>Medium roasts</strong> offer balanced profiles and are versatile enough for almost any brewing method.</p>
+                    <p><strong>Dark roasts</strong> with bold, smoky notes are excellent for espresso, French press, and cold brew.</p>
+                </div>
+            </div>
+
+            <!-- Detailed Brewer Sections -->
+            <div class="brewer-sections">
+                
+                <!-- Conical Drippers Section -->
+                <div class="brewer-category">
+                    <h3 class="category-title">Conical Drippers</h3>
+                    <p class="category-description">These brewers have a cone shape, allowing for a deeper bed of grounds and more controlled flow rate, often leading to complex and clean cups.</p>
+                    
+                    <!-- Hario V60 -->
+                    <div class="brewer-detail-item">
+                        <div class="brewer-image-left">
+                            <img src="~/Media/hario60.webp" alt="Hario V60" style="width: 200px; height: auto; filter: grayscale(100%) contrast(1.2);">
+                        </div>
+                        <div class="brewer-info-right">
+                            <h4 class="brewer-name">Hario V60 <span class="roast-tag light">Light</span></h4>
+                            <div class="roast-recommendation">
+                                <span class="fw-bold" style="color: var(--coffee-brown);">Best for:</span> Light Roasts
+                            </div>
+                            <p class="brewer-description">
+                                A widely used, iconic conical brewer known for its large drainage hole and ribbed interior walls. 
+                                Allows for fast flow rate and produces bright, clean cups. Available in ceramic, glass, plastic, and metal.
+                                <br><strong>Why Light Roasts:</strong> The fast flow rate and clean extraction highlight the nuanced, fruity flavors and acidity of light roasts.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Chemex -->
+                    <div class="brewer-detail-item reverse">
+                        <div class="brewer-info-left">
+                            <h4 class="brewer-name">Chemex <span class="roast-tag light">Light</span></h4>
+                            <div class="roast-recommendation">
+                                <span class="fw-bold" style="color: var(--coffee-brown);">Best for:</span> Light Roasts
+                            </div>
+                            <p class="brewer-description">
+                                This elegant, carafe-style brewer combines the filter holder and carafe into one unit. 
+                                Uses proprietary, extra-thick paper filters to produce very clean, sediment-free, and smooth cups. 
+                                Ideal for brewing larger batches.
+                                <br><strong>Why Light Roasts:</strong> The thick filters and clean extraction method showcase the delicate flavors and bright acidity of light roasts.
+                            </p>
+                        </div>
+                        <div class="brewer-image-right">
+                            <img src="~/Media/chemex.webp" alt="Chemex" style="width: 200px; height: auto; filter: grayscale(100%) contrast(1.2);">
+                        </div>
+                    </div>
+                    
+                    <!-- Chemex Funnex -->
+                    <div class="brewer-detail-item">
+                        <div class="brewer-image-left">
+                            <img src="~/Media/chemex.webp" alt="Chemex Funnex" style="width: 200px; height: auto; filter: grayscale(100%) contrast(1.2);">
+                        </div>
+                        <div class="brewer-info-right">
+                            <h4 class="brewer-name">Chemex Funnex <span class="roast-tag light">Light</span></h4>
+                            <div class="roast-recommendation">
+                                <span class="fw-bold" style="color: var(--coffee-brown);">Best for:</span> Light Roasts
+                            </div>
+                            <p class="brewer-description">
+                                A smaller, more portable version of the classic Chemex that sits directly on top of your mug. 
+                                Perfect for single servings while maintaining the clean extraction characteristics of the original.
+                                <br><strong>Why Light Roasts:</strong> Same clean extraction as the full Chemex, ideal for highlighting light roast nuances in smaller batches.
+                            </p>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+                <!-- Flat-bottom Drippers Section -->
+                <div class="brewer-category">
+                    <h3 class="category-title">Flat-bottom Drippers</h3>
+                    <p class="category-description">These brewers have a flat-bottomed filter basket with several small drainage holes, promoting more consistent and even extraction. Often more forgiving for beginners.</p>
+                    
+                    <!-- Kalita Wave -->
+                    <div class="brewer-detail-item reverse">
+                        <div class="brewer-info-left">
+                            <h4 class="brewer-name">Kalita Wave <span class="roast-tag medium">All</span></h4>
+                            <div class="roast-recommendation">
+                                <span class="fw-bold" style="color: var(--coffee-brown);">Best for:</span> All Roast Levels
+                            </div>
+                            <p class="brewer-description">
+                                Recognized for its consistent and reliable results, the Kalita Wave's flat-bottomed design and signature wavy filters 
+                                create consistent brews by minimizing water contact with the filter. Great for beginners.
+                                <br><strong>Why Versatile:</strong> The even extraction and forgiving nature make it excellent for all roast levels.
+                            </p>
+                        </div>
+                        <div class="brewer-image-right">
+                            <img src="~/Media/kalita_wave.webp" alt="Kalita Wave" style="width: 200px; height: auto; filter: grayscale(100%) contrast(1.2);">
+                        </div>
+                    </div>
+                    
+                </div>
+                
+                <!-- Immersion and Hybrid Brewers Section -->
+                <div class="brewer-category">
+                    <h3 class="category-title">Immersion and Hybrid Brewers</h3>
+                    <p class="category-description">These devices combine immersion and pour-over techniques, allowing grounds to steep in water before draining.</p>
+                    
+                    
+                    <!-- AeroPress -->
+                    <div class="brewer-detail-item">
+                        <div class="brewer-image-left">
+                            <img src="~/Media/aeropress.webp" alt="AeroPress" style="width: 200px; height: auto; filter: grayscale(100%) contrast(1.2);">
+                        </div>
+                        <div class="brewer-info-right">
+                            <h4 class="brewer-name">AeroPress <span class="roast-tag medium">All</span></h4>
+                            <div class="roast-recommendation">
+                                <span class="fw-bold" style="color: var(--coffee-brown);">Best for:</span> All Roast Levels
+                            </div>
+                            <p class="brewer-description">
+                                Though not a traditional pour-over, this brewer often falls into the manual brewing category. 
+                                Uses immersion and pressure to create clean, robust cups. Extremely versatile for experimentation.
+                                <br><strong>Why Versatile:</strong> Can produce everything from clean filter coffee to espresso-like shots, working well with all roast levels.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Travel Brewers Section -->
+                <div class="brewer-category">
+                    <h3 class="category-title">Travel Brewers</h3>
+                    <p class="category-description">These are designed for portability and durability, perfect for coffee on the go.</p>
+                    
+                    <!-- MiiR Pourigami -->
+                    <div class="brewer-detail-item reverse">
+                        <div class="brewer-info-left">
+                            <h4 class="brewer-name">MiiR Pourigami <span class="roast-tag light">Light</span></h4>
+                            <div class="roast-recommendation">
+                                <span class="fw-bold" style="color: var(--coffee-brown);">Best for:</span> Light Roasts
+                            </div>
+                            <p class="brewer-description">
+                                A collapsible, lightweight travel dripper made from stainless steel. 
+                                Perfect for backpacking and travel while maintaining pour-over quality.
+                                <br><strong>Why Light Roasts:</strong> The clean pour-over method highlights the bright, fruity characteristics of light roasts.
+                            </p>
+                        </div>
+                        <div class="brewer-image-right">
+                            <img src="~/Media/drip.webp" alt="MiiR Pourigami" style="width: 200px; height: auto; filter: grayscale(100%) contrast(1.2);">
+                        </div>
+                    </div>
+                    
+                    <!-- Yeti Rambler Pour-Over -->
+                    <div class="brewer-detail-item">
+                        <div class="brewer-image-left">
+                            <img src="~/Media/drip.webp" alt="Yeti Rambler Pour-Over" style="width: 200px; height: auto; filter: grayscale(100%) contrast(1.2);">
+                        </div>
+                        <div class="brewer-info-right">
+                            <h4 class="brewer-name">Yeti Rambler Pour-Over <span class="roast-tag medium">All</span></h4>
+                            <div class="roast-recommendation">
+                                <span class="fw-bold" style="color: var(--coffee-brown);">Best for:</span> All Roast Levels
+                            </div>
+                            <p class="brewer-description">
+                                A durable, stainless-steel dripper designed to fit securely on top of most travel mugs. 
+                                Built to last with Yeti's signature durability.
+                                <br><strong>Why Versatile:</strong> Robust construction and reliable design work well with all roast levels.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Stanley Perfect Brew -->
+                    <div class="brewer-detail-item reverse">
+                        <div class="brewer-info-left">
+                            <h4 class="brewer-name">Stanley Perfect Brew Pour-Over <span class="roast-tag dark">Dark</span></h4>
+                            <div class="roast-recommendation">
+                                <span class="fw-bold" style="color: var(--coffee-brown);">Best for:</span> Dark Roasts
+                            </div>
+                            <p class="brewer-description">
+                                A rugged, reusable stainless-steel filter system suitable for camping and outdoor adventures. 
+                                Built for extreme conditions and durability.
+                                <br><strong>Why Dark Roasts:</strong> The robust extraction method and durability make it ideal for bold, dark roast flavors.
+                            </p>
+                        </div>
+                        <div class="brewer-image-right">
+                            <img src="~/Media/drip.webp" alt="Stanley Perfect Brew" style="width: 200px; height: auto; filter: grayscale(100%) contrast(1.2);">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Other Unique Brewers Section -->
+                <div class="brewer-category">
+                    <h3 class="category-title">Other Unique Brewers</h3>
+                    <p class="category-description">Specialty brewers that offer unique brewing experiences and methods.</p>
+                    
+                    <!-- Hario Woodneck -->
+                    <div class="brewer-detail-item">
+                        <div class="brewer-image-left">
+                            <img src="~/Media/drip.webp" alt="Hario Woodneck" style="width: 200px; height: auto; filter: grayscale(100%) contrast(1.2);">
+                        </div>
+                        <div class="brewer-info-right">
+                            <h4 class="brewer-name">Hario Woodneck Drip Pot <span class="roast-tag medium">All</span></h4>
+                            <div class="roast-recommendation">
+                                <span class="fw-bold" style="color: var(--coffee-brown);">Best for:</span> All Roast Levels
+                            </div>
+                            <p class="brewer-description">
+                                A classic device that uses a reusable flannel filter, which provides a clean and smooth cup with heavier body. 
+                                Traditional Japanese brewing method.
+                                <br><strong>Why Versatile:</strong> The flannel filter adds body while maintaining clean extraction, working well with all roast levels.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+            </div>
+            
+            <div class="image-showcase">
+                <img src="~/Media/brew_time_1.webp" alt="Brew Time Chart" style="max-width: 500px;">
+                <p class="image-caption">Brew time and coffee ratio guide for different methods</p>
+            </div>
+            
+            <!-- Sketch Style Brewing Methods Guide -->
+            <div class="sketch-section">
+                <h3 class="sketch-title">Brewing Methods & Grind Sizes</h3>
+                <div class="sketch-showcase">
+                    <img src="~/Media/grind_size_chart.svg" alt="Grind Size Chart" style="max-width: 700px;">
+                    <p class="sketch-caption">Visual guide to matching grind size with brewing method</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 3: Grind Size Guide -->
+    <div class="step-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="text-center">
+                        <div class="step-number">2</div>
+                        <h2 class="step-title">Choose Your Grind Size</h2>
+                        <p class="step-content">
+                            Grind size dramatically affects extraction and flavor. Match your grind 
+                            to your brewing method for optimal results.
+                        </p>
+                        
+                        <div class="image-showcase">
+                            <img src="~/Media/grind_size_chart.svg" alt="Grind Size Chart" style="max-width: 600px;">
+                            <p class="image-caption">Grind size guide for different brewing methods</p>
+                        </div>
+                        
+                        <ul class="instruction-list">
+                            <li><strong>Coarse (French Press, Cold Brew):</strong> Like sea salt - allows long extraction without over-extraction</li>
+                            <li><strong>Medium-Coarse (Chemex):</strong> Like coarse sand - balanced extraction for pour over</li>
+                            <li><strong>Medium (Drip Coffee):</strong> Like table salt - standard for most drip machines</li>
+                            <li><strong>Medium-Fine (V60, AeroPress):</strong> Like fine sand - faster extraction for pour over</li>
+                            <li><strong>Fine (Espresso):</strong> Like powdered sugar - quick extraction under pressure</li>
+                            <li><strong>Extra Fine (Turkish):</strong> Like flour - ultra-fine for traditional brewing</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 4: Understanding Roasts -->
+    <div class="guide-section">
+        <div class="container">
+            <h2 class="guide-title">Understanding Coffee Roasts</h2>
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <p class="step-content text-center">
+                        The same green coffee bean can taste completely different depending on how it's roasted. 
+                        Roasting transforms the bean's chemical composition, creating different flavor profiles.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="roast-grid">
+                <div class="roast-card">
+                    <div class="roast-color roast-light"></div>
+                    <h3 class="roast-title">Light Roast</h3>
+                    <p class="roast-description">
+                        Preserves origin characteristics with bright acidity and fruity flavors. 
+                        Beans are light brown with no oil on surface. Best for single-origin coffees.
+                    </p>
+                </div>
+                
+                <div class="roast-card">
+                    <div class="roast-color roast-medium"></div>
+                    <h3 class="roast-title">Medium Roast</h3>
+                    <p class="roast-description">
+                        Balanced acidity and body with caramelized sweetness. Beans are medium brown 
+                        with slight oil sheen. Most versatile roast level.
+                    </p>
+                </div>
+                
+                <div class="roast-card">
+                    <div class="roast-color roast-dark"></div>
+                    <h3 class="roast-title">Dark Roast</h3>
+                    <p class="roast-description">
+                        Bold, smoky flavors with reduced acidity. Beans are dark brown with oily surface. 
+                        Roast characteristics dominate over origin flavors.
+                    </p>
+                </div>
+                
+                <div class="roast-card">
+                    <div class="roast-color roast-french"></div>
+                    <h3 class="roast-title">French Roast</h3>
+                    <p class="roast-description">
+                        Very dark with intense smoky, charred flavors. Beans are nearly black and very oily. 
+                        Origin flavors are completely masked by roast characteristics.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="image-showcase">
+                <img src="~/Media/Roast_profile.svg.webp" alt="Roast Profile Chart" style="max-width: 500px;">
+                <p class="image-caption">How roasting transforms coffee beans at different stages</p>
+            </div>
+            
+            <!-- Coffee Bean Journey Sketch -->
+            <div class="sketch-section">
+                <h3 class="sketch-title">From Green Bean to Coffee</h3>
+                <div class="sketch-showcase">
+                    <img src="~/Media/Green_bean.svg" alt="Green Coffee Bean" style="max-width: 400px;">
+                    <p class="sketch-caption">Green coffee beans before roasting - the starting point of your coffee journey</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 5: Brewing Process -->
+    <div class="step-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="text-center">
+                        <div class="step-number">3</div>
+                        <h2 class="step-title">Master the Brewing Process</h2>
+                        <p class="step-content">
+                            Follow these fundamental steps for consistent, great-tasting coffee every time.
+                        </p>
+                        
+                        <ul class="instruction-list">
+                            <li><strong>Use fresh, filtered water</strong> heated to 195-205°F (90-96°C)</li>
+                            <li><strong>Grind your beans immediately</strong> before brewing for maximum freshness</li>
+                            <li><strong>Use the right coffee-to-water ratio:</strong> Start with 1:16 (1g coffee to 16g water)</li>
+                            <li><strong>Pre-wet your filter</strong> to remove paper taste and preheat your equipment</li>
+                            <li><strong>Bloom your coffee</strong> with 2x the coffee weight in water, wait 30-45 seconds</li>
+                            <li><strong>Pour slowly and evenly</strong> in a circular motion for consistent extraction</li>
+                            <li><strong>Adjust variables</strong> based on taste: grind finer for more extraction, coarser for less</li>
+                        </ul>
+                        
+                        <div class="image-showcase">
+                            <img src="~/Media/drip.webp" alt="V60 Pour Over Setup" style="max-width: 400px;">
+                            <p class="image-caption">Proper V60 pour over setup and technique</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Final Step -->
+    <div class="guide-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h2 class="guide-title">You're Ready to Brew!</h2>
+                    <p class="step-content">
+                        Now that you understand the basics, it's time to experiment and find your perfect cup. 
+                        Remember: great coffee is about finding what you enjoy most.
+                    </p>
+                    <div style="margin-top: 40px;">
+                        <a href="/CoffeeBeans" class="btn" style="background: #000; color: white; padding: 15px 30px; text-decoration: none; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em;">
+                            Explore Our Coffee Collection
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

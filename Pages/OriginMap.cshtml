@@ -1,0 +1,202 @@
+@page
+@model TheBestBean.Pages.OriginMapModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Origin Map";
+}
+@Html.AntiForgeryToken()
+
+<div class="fixed inset-0 w-full h-full z-[100] overflow-hidden bg-white dark:bg-[#1A2315] py-4" id="map-wrapper">
+    
+    <!-- EXIT BUTTON -->
+    <a href="/Experiences" class="absolute top-6 right-6 z-50 w-10 h-10 bg-v-black text-v-white border-none flex items-center justify-center hover:bg-v-red transition-colors cursor-pointer text-xl font-mono-jb no-underline">
+        &times;
+    </a>
+
+    <!-- FLOATING LEGEND -->
+    <div class="absolute top-6 left-6 z-50 bg-white/90 dark:bg-[#111111]/90 text-black dark:text-white backdrop-blur-md shadow-sm p-6 w-[280px] md:w-[240px] rounded-lg border border-gray-200 dark:border-none">
+        <h3 class="font-mono-jb text-[11px] uppercase tracking-widest font-bold mb-4 border-b border-gray-300 dark:border-gray-600 pb-2">Legend</h3>
+        
+        <ul class="flex flex-col gap-2 font-mono-jb text-[11px] md:text-[9px] uppercase tracking-wider m-0 p-0 list-none overflow-y-auto max-h-[60vh] pr-2" id="map-legend">
+            <li class="flex items-center gap-4 cursor-pointer hover:text-v-red transition-colors" data-target="megantoni">
+                <div class="w-3 h-3 rounded-full bg-[#82C341]"></div>
+                <span>Megantoni</span>
+            </li>
+            <li class="flex items-center gap-4 cursor-pointer hover:text-v-red transition-colors" data-target="echarati">
+                <div class="w-3 h-3 rounded-full bg-[#00B4D8]"></div>
+                <span>Echarati</span>
+            </li>
+            <li class="flex items-center gap-4 cursor-pointer hover:text-v-red transition-colors" data-target="quellouno">
+                <div class="w-3 h-3 rounded-full bg-[#C2F970]"></div>
+                <span>Quellouno</span>
+            </li>
+            <li class="flex items-center gap-4 cursor-pointer hover:text-v-red transition-colors" data-target="pichari">
+                <div class="w-3 h-3 rounded-full bg-[#E5F5A1]"></div>
+                <span>Pichari</span>
+            </li>
+            <li class="flex items-center gap-4 cursor-pointer hover:text-v-red transition-colors" data-target="kimbiri">
+                <div class="w-3 h-3 rounded-full bg-[#B5E48C]"></div>
+                <span>Kimbiri</span>
+            </li>
+            <li class="flex items-center gap-4 cursor-pointer hover:text-v-red transition-colors" data-target="villa-virgen">
+                <div class="w-3 h-3 rounded-full bg-[#52796F]"></div>
+                <span>Villa Virgen</span>
+            </li>
+            <li class="flex items-center gap-4 cursor-pointer hover:text-v-red transition-colors" data-target="vilcabamba">
+                <div class="w-3 h-3 rounded-full bg-[#F4A261]"></div>
+                <span>Vilcabamba</span>
+            </li>
+            <li class="flex items-center gap-4 cursor-pointer hover:text-v-red transition-colors" data-target="santa-ana">
+                <div class="w-3 h-3 rounded-full bg-[#E76F51]"></div>
+                <span>Santa Ana</span>
+            </li>
+            <li class="flex items-center gap-4 cursor-pointer hover:text-v-red transition-colors" data-target="huayopata">
+                <div class="w-3 h-3 rounded-full bg-[#D62828]"></div>
+                <span>Huayopata</span>
+            </li>
+            <li class="flex items-center gap-4 cursor-pointer hover:text-v-red transition-colors" data-target="ocobamba">
+                <div class="w-3 h-3 rounded-full bg-[#4EA8DE]"></div>
+                <span>Ocobamba</span>
+            </li>
+        </ul>
+        
+        <div class="mt-6 pt-3 border-t border-gray-300 dark:border-gray-600">
+            <button id="reset-map" class="w-full bg-transparent border-none text-left p-0 font-mono-jb text-[11px] md:text-[10px] uppercase tracking-widest font-bold text-black dark:text-white hover:text-v-red transition-colors cursor-pointer">
+                Reveal All
+            </button>
+        </div>
+    </div>
+    
+    <!-- PANZOOM CONTAINER -->
+    <div class="w-full h-full relative overflow-hidden flex items-center justify-center">
+        <div id="panzoom-element" class="flex items-center justify-center origin-center">
+            <!-- SVG Map Image -->
+            <img src="/Media/LaConvencionMap.svg" class="max-w-none w-[2000px] h-auto object-contain opacity-80 dark:opacity-60 mix-blend-multiply dark:mix-blend-screen pointer-events-none" alt="Map of La Convencion" id="svg-map" />
+        </div>
+    </div>
+    
+    <!-- MAP CONTROLS -->
+    <div class="absolute bottom-6 right-6 z-50 flex flex-col gap-2">
+        <button id="zoom-in" class="w-10 h-10 bg-v-black text-v-white border-none flex items-center justify-center hover:bg-v-red transition-colors cursor-pointer text-lg font-mono-jb">+</button>
+        <button id="zoom-out" class="w-10 h-10 bg-v-black text-v-white border-none flex items-center justify-center hover:bg-v-red transition-colors cursor-pointer text-lg font-mono-jb">-</button>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        @@keyframes pulse-ring {
+            0% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(var(--pulse-color), 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(var(--pulse-color), 0); }
+            100% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(var(--pulse-color), 0); }
+        }
+        
+        .pulse-ring {
+            animation: pulse-ring 2s infinite;
+        }
+        
+        #marker-san-blas { --pulse-color: 250, 204, 21; } /* yellow */
+        #marker-quillabamba { --pulse-color: 37, 99, 235; } /* blue */
+        #marker-finca-bella { --pulse-color: 22, 163, 74; } /* green */
+        #marker-peak-espresso { --pulse-color: 220, 38, 38; } /* red */
+        
+        .active-legend {
+            color: #DC2626 !important;
+        }
+    </style>
+}
+
+@section Scripts {
+    <!-- Panzoom JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@@panzoom/panzoom/dist/panzoom.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const elem = document.getElementById('panzoom-element');
+            
+            // Calculate optimal fit scale
+            const availableHeight = window.innerHeight - 32; // 1rem (16px) top/bottom padding
+            const availableWidth = window.innerWidth;
+            const imgWidth = 2000;
+            const imgHeight = 1125; // 2000 * (720/1280)
+            
+            const fitScale = window.innerWidth < 768 
+                ? (availableHeight / imgHeight) 
+                : Math.min(availableWidth / imgWidth, availableHeight / imgHeight);
+            
+            // Initialize Panzoom
+            const pz = Panzoom(elem, {
+                maxScale: 4,
+                minScale: fitScale * 0.5,
+                startScale: fitScale * 1.2, // Make it 20% larger by default
+                startX: window.innerWidth >= 768 ? 300 : 0 // Shift right visually to clear the legend
+            });
+            
+            // Allow mouse wheel zooming
+            elem.parentElement.addEventListener('wheel', pz.zoomWithWheel);
+            
+            // Controls
+            document.getElementById('zoom-in').addEventListener('click', pz.zoomIn);
+            document.getElementById('zoom-out').addEventListener('click', pz.zoomOut);
+            
+            // Coordinates for zooming
+            const locations = {
+                'megantoni': { x: 50, y: 30, scale: 2 },
+                'echarati': { x: 45, y: 55, scale: 2 },
+                'quellouno': { x: 65, y: 55, scale: 2 },
+                'pichari': { x: 25, y: 50, scale: 2.5 },
+                'kimbiri': { x: 30, y: 60, scale: 2.5 },
+                'villa-virgen': { x: 35, y: 70, scale: 3 },
+                'vilcabamba': { x: 45, y: 80, scale: 2 },
+                'santa-ana': { x: 55, y: 75, scale: 3 },
+                'huayopata': { x: 65, y: 85, scale: 2.5 },
+                'ocobamba': { x: 65, y: 75, scale: 2.5 }
+            };
+            
+            // Legend Click Handlers
+            const legendItems = document.querySelectorAll('#map-legend li');
+            
+            legendItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    // Update active state
+                    legendItems.forEach(li => li.classList.remove('active-legend'));
+                    item.classList.add('active-legend');
+                    
+                    const targetId = item.getAttribute('data-target');
+                    
+                    // Zoom and pan to target
+                    const loc = locations[targetId];
+                    if (loc) {
+                        // Calculate pixel coordinates based on the 2000px image inside the container
+                        const img = document.getElementById('svg-map');
+                        const imgWidth = 2000;
+                        const imgHeight = img.offsetHeight || 2000; // SVG height might vary, we estimate
+                        
+                        // Wait, Panzoom handles focal point panning differently.
+                        // We can pan to the specific X/Y if we calculate the offset.
+                        // A simpler way: since we know the percentages, let's just zoom to the center of the container and rely on CSS translations if needed.
+                        // Actually, pz.pan(x, y) works with pixel offsets.
+                        // For a clean UX, we'll just center the container.
+                        
+                        // Let's use simple pan to coordinates relative to origin
+                        const containerRect = elem.parentElement.getBoundingClientRect();
+                        
+                        const targetX = (imgWidth * (loc.x / 100));
+                        const targetY = (imgHeight * (loc.y / 100));
+                        
+                        const centerX = containerRect.width / 2;
+                        const centerY = containerRect.height / 2;
+                        
+                        pz.zoom(loc.scale, { animate: true });
+                        setTimeout(() => {
+                            pz.pan(centerX - targetX, centerY - targetY, { animate: true });
+                        }, 100);
+                    }
+                });
+            });
+            
+            document.getElementById('reset-map').addEventListener('click', () => {
+                legendItems.forEach(li => li.classList.remove('active-legend'));
+                pz.reset({ animate: true });
+            });
+        });
+    </script>
+}

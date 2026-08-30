@@ -1,0 +1,102 @@
+@page
+@model TheBestBean.Pages_Admin_Coffees.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CoffeeBean[0].Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CoffeeBean[0].FlavorProfile)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CoffeeBean[0].Rating)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CoffeeBean[0].ProcessingMethod)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CoffeeBean[0].Producer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CoffeeBean[0].Variety)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CoffeeBean[0].Altitude)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CoffeeBean[0].ImageUrl)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CoffeeBean[0].CoffeeFarm)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CoffeeBean[0].CoffeeRegion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CoffeeBean[0].OriginCountry)
+            </th>
+            <th>QR Code</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.CoffeeBean) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FlavorProfile)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Rating)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProcessingMethod)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Producer)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Variety)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Altitude)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ImageUrl)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CoffeeFarm.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CoffeeRegion.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OriginCountry.Name)
+            </td>
+            <td>
+                <a href="https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=@System.Net.WebUtility.UrlEncode($"{Request.Scheme}://{Request.Host}{Url.Page("/Product", new { id = item.Id })}")" target="_blank" title="Click for high-res">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=@System.Net.WebUtility.UrlEncode($"{Request.Scheme}://{Request.Host}{Url.Page("/Product", new { id = item.Id })}")" alt="QR Code" style="width: 50px; height: 50px; object-fit: contain;" />
+                </a>
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

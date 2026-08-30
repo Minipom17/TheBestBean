@@ -1,0 +1,55 @@
+@model int
+
+<style>
+    .cart-icon-container {
+        position: relative;
+        display: inline-block;
+        margin-left: 15px;
+    }
+
+    .cart-icon-link {
+        color: var(--charcoal);
+        text-decoration: none;
+        font-size: 1.5rem;
+        position: relative;
+        transition: color 0.2s;
+    }
+
+    .cart-icon-link:hover {
+        color: #0059ff;
+    }
+
+    .cart-count-badge {
+        position: absolute;
+        top: -8px;
+        right: -10px;
+        background: #ff6b35;
+        color: white;
+        border-radius: 50%;
+        min-width: 20px;
+        height: 20px;
+        padding: 0 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        font-weight: 700;
+        border: 2px solid white;
+        z-index: 1000;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .dark .cart-count-badge {
+        border: 2px solid #0a0a0a;
+    }
+</style>
+
+<div class="cart-icon-container">
+    <a asp-page="/Cart" class="cart-icon-link" title="View Cart">
+        <i class="bi bi-cart3"></i>
+        @if (Model > 0)
+        {
+            <span class="cart-count-badge">@Model</span>
+        }
+    </a>
+</div>

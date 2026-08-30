@@ -1,0 +1,403 @@
+<style>
+    /* Custom styles for the textarea lines and range input */
+    .lined-textarea {
+        background-image: repeating-linear-gradient(transparent, transparent 23px, #e5e5e5 24px);
+        line-height: 24px;
+        padding-top: 2px;
+    }
+    
+    /* Hide standard range thumb to replace with custom */
+    input[type=range]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        opacity: 0;
+    }
+    input[type=range]::-moz-range-thumb {
+        border: none;
+        opacity: 0;
+    }
+    
+    /* Scoped brutalist UI for roast lab */
+    #roast-lab-app {
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    }
+</style>
+
+<div id="roast-lab-app" class="font-sans text-black dark:text-[#FAF3DD]"></div>
+
+<script>
+    const rl_apiKey = ""; // Runtime provides the key
+
+    // --- STATE MANAGEMENT ---
+    let rl_state = {
+        selectedRoast: null,
+        isAnalyzing: false,
+        analysisResult: null
+    };
+
+    // --- UTILS & LOGIC ---
+    const rl_calculateDTR = (total, dev) => {
+        const toSeconds = (timeStr) => {
+            if (!timeStr || !timeStr.includes(':')) return 0;
+            const [m, s] = timeStr.split(':').map(Number);
+            return (m * 60) + s;
+        };
+        const t = toSeconds(total);
+        const d = toSeconds(dev);
+        if (t === 0) return "0.0";
+        return ((d / t) * 100).toFixed(1);
+    };
+
+    const rl_generateRadarChartSVG = (data) => {
+        const size = 180;
+        const center = size / 2;
+        const radius = size * 0.35;
+        const points = [
+            { label: 'AROMATICS', value: data.aromatics || 0 },
+            { label: 'ACIDITY', value: data.acidity || 0 },
+            { label: 'SWEETNESS', value: data.sweetness || 0 },
+            { label: 'AFTERTASTE', value: data.aftertaste || 0 },
+            { label: 'BODY', value: data.body || 0 },
+        ];
+
+        const getCoords = (val, i, total) => {
+            const factor = (val / 5) * radius;
+            const angle = (Math.PI * 2 * i) / total - Math.PI / 2;
+            return [center + factor * Math.cos(angle), center + factor * Math.sin(angle)];
+        };
+
+        let svg = `<svg width="${size}" height="${size}" class="overflow-visible font-mono font-bold text-[8px]">`;
+        
+        // Grid
+        [1, 2, 3, 4, 5].forEach(v => {
+            svg += `<circle cx="${center}" cy="${center}" r="${(v/5) * radius}" fill="none" stroke="#000" stroke-width="0.5" stroke-dasharray="2 2" />`;
+        });
+
+        // Axis & Labels
+        points.forEach((p, i) => {
+            const [x, y] = getCoords(5, i, points.length);
+            const [lx, ly] = getCoords(6.5, i, points.length);
+            let angleDeg = ((i / points.length) * 360) - 90;
+            if (angleDeg > 90 && angleDeg < 270) angleDeg += 180; 
+            
+            svg += `<g>
+                <line x1="${center}" y1="${center}" x2="${x}" y2="${y}" stroke="#000" stroke-width="0.5" />
+                <text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="middle" transform="rotate(${angleDeg}, ${lx}, ${ly})" fill="black">${p.label}</text>
+            </g>`;
+        });
+
+        // Data Polygon
+        const polyPoints = points.map((p, i) => getCoords(p.value, i, points.length).join(',')).join(' ');
+        svg += `<polygon points="${polyPoints}" fill="none" stroke="#000" stroke-width="2" />`;
+        
+        points.forEach((p, i) => {
+            const [px, py] = getCoords(p.value, i, points.length);
+            svg += `<circle cx="${px}" cy="${py}" r="2" fill="#000" />`;
+        });
+
+        svg += `</svg>`;
+        return svg;
+    };
+
+    // --- GLOBAL EVENT HANDLERS ---
+    window.rl_openRoast = (id) => {
+        // Find the roast from the .NET OS roasts array!
+        const r = roasts.find(x => x.id == id);
+        if (r) {
+            const bean = inventory.find(b => b.id == r.beanId) || {};
+            
+            let dtr = r.dTRPercent || '0.0';
+            
+            rl_state.selectedRoast = {
+                id: r.id, 
+                origin: bean.country || '', 
+                roastery: 'Purple Bean Coffee', 
+                batchNum: r.id.toString(), 
+                roastLevel: 'MEDIUM', 
+                process: bean.process || '', 
+                time: r.roastTime ? formatTime(r.roastTime) : '', 
+                devTime: '', 
+                dtr: dtr, 
+                rating: 0, body: 0, acidity: 0, aromatics: 0, sweetness: 0, aftertaste: 0, 
+                spectrum: 50, 
+                notes: r.notes || '', 
+                intendedFor: [], 
+                price: ''
+            };
+        } else {
+            // New Roast Template
+            rl_state.selectedRoast = {
+                id: null, origin: '', roastery: 'Purple Bean Coffee', batchNum: '', roastLevel: 'MEDIUM', process: '', time: '', devTime: '', dtr: '0.0', rating: 0, body: 0, acidity: 0, aromatics: 0, sweetness: 0, aftertaste: 0, spectrum: 50, notes: '', intendedFor: [], price: ''
+            };
+        }
+        rl_state.analysisResult = null;
+        
+        // Hide other views and show the Roast Lab wrapper inside OS
+        document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+        document.getElementById('view-roast-lab').classList.add('active');
+        
+        rl_renderApp();
+    };
+
+    window.rl_closeRoast = () => {
+        rl_state.selectedRoast = null;
+        rl_renderApp();
+        // Go back to history tab
+        switchTab('history');
+    };
+
+    window.rl_updateField = (field, value) => {
+        if(!rl_state.selectedRoast) return;
+        rl_state.selectedRoast[field] = value;
+        if (field === 'time' || field === 'devTime') {
+            rl_state.selectedRoast.dtr = rl_calculateDTR(rl_state.selectedRoast.time, rl_state.selectedRoast.devTime);
+            const dtrDisplay = document.getElementById('dtr-display');
+            if(dtrDisplay) dtrDisplay.innerText = rl_state.selectedRoast.dtr;
+        }
+    };
+
+    window.rl_updateAttribute = (field, value) => {
+        if(!rl_state.selectedRoast) return;
+        rl_state.selectedRoast[field] = value;
+        rl_renderApp();
+    };
+
+    window.rl_toggleIntendedFor = (value) => {
+        if(!rl_state.selectedRoast) return;
+        const current = rl_state.selectedRoast.intendedFor || [];
+        if (current.includes(value)) {
+            rl_state.selectedRoast.intendedFor = current.filter(item => item !== value);
+        } else {
+            rl_state.selectedRoast.intendedFor.push(value);
+        }
+        rl_renderApp();
+    };
+
+    window.rl_updateSpectrum = (value) => {
+        if(!rl_state.selectedRoast) return;
+        rl_state.selectedRoast.spectrum = parseInt(value);
+        const thumb = document.getElementById('spectrum-thumb');
+        if(thumb) thumb.style.left = `calc(${value}% - 4px)`;
+    };
+
+    window.rl_triggerFileInput = () => {
+        const fileInput = document.getElementById('file-upload');
+        if(fileInput) fileInput.click();
+    };
+
+    window.rl_handleImageUpload = (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+            const base64Data = e.target.result.split(',')[1];
+            await rl_analyzeImage(base64Data);
+        };
+        reader.readAsDataURL(file);
+    };
+
+    const rl_analyzeImage = async (base64Image) => {
+        rl_state.isAnalyzing = true;
+        rl_renderApp(); 
+
+        const systemPrompt = `Analyze the coffee beans. Provide Agtron estimation, uniformity, and predicted acidity/sugars based on roast degree. Be concise.`;
+        
+        try {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${rl_apiKey}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ role: "user", parts: [{ text: "Analyze this roast profile." }, { inlineData: { mimeType: "image/png", data: base64Image } }] }],
+                    systemInstruction: { parts: [{ text: systemPrompt }] }
+                })
+            });
+            const result = await response.json();
+            rl_state.analysisResult = result.candidates?.[0]?.content?.parts?.[0]?.text || "No analysis returned.";
+        } catch (err) {
+            rl_state.analysisResult = "Analysis failed. Please check your connection or API Key.";
+            console.error(err);
+        } finally {
+            rl_state.isAnalyzing = false;
+            rl_renderApp();
+        }
+    };
+
+    const rl_renderDetail = () => {
+        const sr = rl_state.selectedRoast;
+        if (!sr) return '';
+        
+        const renderRatingButtons = (field) => {
+            return [1,2,3,4,5].map(num => `
+                <button onclick="rl_updateAttribute('${field}', ${num})" class="w-5 h-5 flex items-center justify-center border-2 border-black p-0 cursor-pointer ${sr[field] >= num ? 'bg-black text-white' : 'bg-transparent text-black dark:text-[#FAF3DD]'}">
+                    ${num}
+                </button>
+            `).join('');
+        };
+
+        const rulerTicks = Array.from({length: 51}).map((_, i) => {
+            let height = i % 10 === 0 ? 'h-3 w-0.5' : i % 5 === 0 ? 'h-2 w-[1px]' : 'h-1 w-[1px]';
+            return `<div class="absolute bottom-0 bg-black ${height}" style="left: ${i * 2}%"></div>`;
+        }).join('');
+
+        return `
+        <div class="max-w-4xl mx-auto bg-[#f8f6f2] p-8 shadow-2xl rounded-sm text-black dark:text-[#FAF3DD] pb-20 mt-8">
+            <button onclick="rl_closeRoast()" class="flex items-center gap-2 text-xs font-mono font-bold mb-6 hover:text-red-500 uppercase tracking-widest bg-transparent border-none p-0 cursor-pointer text-black dark:text-[#FAF3DD]">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to History
+            </button>
+
+            <div class="bg-[#fcfbf9] border-[3px] border-black p-6 relative">
+                <div class="flex justify-between items-end mb-4">
+                    <h2 class="text-3xl font-black text-red-500 uppercase tracking-widest m-0">ROAST INDEX</h2>
+                    <button class="text-xs font-mono font-bold border-2 border-black px-4 py-1 hover:bg-black hover:text-white transition-colors bg-white dark:bg-[#3C4A33] text-black dark:text-[#FAF3DD] cursor-pointer">
+                        UPDATE LOG
+                    </button>
+                </div>
+
+                <div class="border-[3px] border-black flex flex-col font-mono text-xs font-bold uppercase">
+                    <div class="flex border-b-[3px] border-black">
+                        <div class="flex-[2] border-r-[3px] border-black p-2 flex flex-col">
+                            <span class="text-[10px] mb-1">COFFEE</span>
+                            <input type="text" oninput="rl_updateField('origin', this.value)" value="${sr.origin || ''}" class="w-full bg-transparent border-none outline-none text-sm font-black text-black dark:text-[#FAF3DD] p-0 m-0 shadow-none" />
+                        </div>
+                        <div class="flex-[1] border-r-[3px] border-black p-2 flex flex-col">
+                            <span class="text-[10px] mb-1">ROASTERY</span>
+                            <input type="text" oninput="rl_updateField('roastery', this.value)" value="${sr.roastery || ''}" class="w-full bg-transparent border-none outline-none text-sm font-black text-black dark:text-[#FAF3DD] p-0 m-0 shadow-none" />
+                        </div>
+                        <div class="w-16 p-2 flex flex-col items-center justify-center">
+                            <span class="text-[10px] mb-1">#</span>
+                            <input type="text" oninput="rl_updateField('batchNum', this.value)" value="${sr.batchNum || ''}" class="w-full bg-transparent border-none outline-none text-center font-black text-black dark:text-[#FAF3DD] p-0 m-0 shadow-none" />
+                        </div>
+                    </div>
+
+                    <div class="flex border-b-[3px] border-black">
+                        <div class="flex-[1.5] border-r-[3px] border-black p-2 flex flex-col">
+                            <span class="text-[10px] mb-2">ROAST</span>
+                            <div class="flex justify-between items-center text-[10px]">
+                                ${['LIGHT', 'MEDIUM', 'DARK'].map(level => `
+                                    <label class="flex items-center gap-1 cursor-pointer m-0 p-0 text-black dark:text-[#FAF3DD]">
+                                        <div class="w-3 h-3 rounded-full border-2 border-black flex items-center justify-center" onclick="rl_updateAttribute('roastLevel', '${level}')">
+                                            ${sr.roastLevel === level ? '<div class="w-1.5 h-1.5 bg-black rounded-full"></div>' : ''}
+                                        </div>
+                                        ${level}
+                                    </label>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <div class="flex-[1] border-r-[3px] border-black p-2 flex flex-col">
+                            <span class="text-[10px] mb-1">PROCESS</span>
+                            <input type="text" oninput="rl_updateField('process', this.value)" value="${sr.process || ''}" class="w-full bg-transparent border-none outline-none font-black text-black dark:text-[#FAF3DD] p-0 m-0 shadow-none" />
+                        </div>
+                        <div class="flex-[1.5] p-2 flex flex-col">
+                            <span class="text-[10px] mb-1">ORIGIN</span>
+                            <input type="text" oninput="rl_updateField('origin', this.value)" value="${sr.origin || ''}" class="w-full bg-transparent border-none outline-none font-black text-black dark:text-[#FAF3DD] p-0 m-0 shadow-none" />
+                        </div>
+                    </div>
+
+                    <div class="flex border-b-[3px] border-black">
+                        <div class="flex-1 border-r-[3px] border-black p-2 flex flex-col">
+                            <span class="text-[10px] mb-1">TOTAL TIME</span>
+                            <input type="text" oninput="rl_updateField('time', this.value)" value="${sr.time || ''}" class="w-full bg-transparent border-none outline-none font-black text-center text-black dark:text-[#FAF3DD] p-0 m-0 shadow-none" />
+                        </div>
+                        <div class="flex-1 border-r-[3px] border-black p-2 flex flex-col">
+                            <span class="text-[10px] mb-1">DEV TIME</span>
+                            <input type="text" oninput="rl_updateField('devTime', this.value)" value="${sr.devTime || ''}" class="w-full bg-transparent border-none outline-none font-black text-center text-black dark:text-[#FAF3DD] p-0 m-0 shadow-none" />
+                        </div>
+                        <div class="flex-1 border-r-[3px] border-black p-2 flex flex-col bg-stone-100">
+                            <span class="text-[10px] mb-1 text-black dark:text-[#FAF3DD]">DTR %</span>
+                            <div id="dtr-display" class="w-full bg-transparent outline-none font-black text-center text-black dark:text-[#FAF3DD]">${sr.dtr || '0.0'}</div>
+                        </div>
+                        <div class="flex-[1.5] flex">
+                            <div class="flex-1 border-r-[3px] border-black p-2 flex flex-col items-center justify-center">
+                                <span class="text-[10px] mb-1">RATING</span>
+                            </div>
+                            <div class="flex-[2] flex items-center justify-around px-2">
+                                ${renderRatingButtons('rating')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 mb-8 px-4">
+                    <div class="w-full relative py-4">
+                        <div class="w-full h-4 border-b-2 border-l-2 border-r-2 border-black relative">
+                            ${rulerTicks}
+                            <input type="range" min="0" max="100" value="${sr.spectrum || 50}" oninput="rl_updateSpectrum(this.value)" class="absolute top-0 w-full h-full opacity-0 cursor-ew-resize z-10 m-0 p-0" />
+                            <div id="spectrum-thumb" class="absolute top-[-4px] w-2 h-6 bg-black pointer-events-none transition-all duration-75" style="left: calc(${sr.spectrum || 50}% - 4px)"></div>
+                        </div>
+                        <div class="flex justify-between mt-1 text-[10px] font-mono font-bold tracking-widest text-black dark:text-[#FAF3DD] uppercase">
+                            <span>Roasted</span><span>Spices</span><span>Nutty</span><span>Sweet</span><span>Floral</span><span>Fruity</span><span>Sour</span><span>Earthy</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-4">
+                    <div class="flex justify-center items-center">
+                        ${rl_generateRadarChartSVG(sr)}
+                    </div>
+                    <div class="col-span-2 flex flex-col font-mono text-xs font-bold uppercase">
+                        <div class="flex gap-8 mb-6 mt-4">
+                            <div class="space-y-3">
+                                ${['ESP', 'POUR-OVER'].map(type => `
+                                    <label class="flex items-center gap-3 cursor-pointer m-0 p-0 text-black dark:text-[#FAF3DD]">
+                                        <div class="w-5 h-5 border-2 border-black p-0.5" onclick="rl_toggleIntendedFor('${type}')">
+                                            ${(sr.intendedFor || []).includes(type) ? '<div class="w-full h-full bg-black"></div>' : ''}
+                                        </div>
+                                        ${type}
+                                    </label>
+                                `).join('')}
+                            </div>
+                            <div class="space-y-3">
+                                ${['MILK', 'WATER'].map(type => `
+                                    <label class="flex items-center gap-3 cursor-pointer m-0 p-0 text-black dark:text-[#FAF3DD]">
+                                        <div class="w-5 h-5 border-2 border-black p-0.5" onclick="rl_toggleIntendedFor('${type}')">
+                                            ${(sr.intendedFor || []).includes(type) ? '<div class="w-full h-full bg-black"></div>' : ''}
+                                        </div>
+                                        ${type}
+                                    </label>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <div class="flex-1 flex flex-col">
+                            <span class="mb-2">NOTES:</span>
+                            <textarea oninput="rl_updateField('notes', this.value)" class="flex-1 bg-transparent border-none outline-none resize-none lined-textarea text-sm w-full text-black dark:text-[#FAF3DD] m-0 p-0 shadow-none h-24">${sr.notes || ''}</textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 pt-6 border-t-[3px] border-black border-dashed flex flex-col md:flex-row gap-6">
+                    <div class="flex-1 font-mono uppercase text-xs">
+                        <span class="font-black mb-2 block">AI VISUAL ANALYSIS LAB</span>
+                        <div onclick="rl_triggerFileInput()" class="w-full h-24 border-2 border-black flex items-center justify-center cursor-pointer hover:bg-black hover:text-white transition-colors bg-white dark:bg-[#3C4A33] text-black dark:text-[#FAF3DD]">
+                            <input type="file" id="file-upload" onchange="rl_handleImageUpload(event)" class="hidden" accept="image/*" />
+                            ${rl_state.isAnalyzing 
+                                ? '<span class="animate-pulse">PROCESSING...</span>' 
+                                : '<span class="flex items-center gap-2"><i data-lucide="camera" class="w-4 h-4"></i> UPLOAD SAMPLE</span>'
+                            }
+                        </div>
+                    </div>
+                    ${rl_state.analysisResult ? `
+                        <div class="flex-[2] font-mono text-[10px] uppercase border-2 border-black p-3 bg-white dark:bg-[#3C4A33] h-32 overflow-y-auto text-black dark:text-[#FAF3DD]">
+                            <strong class="block mb-2 text-red-500 border-b border-black pb-1">RESULT:</strong>
+                            <div class="leading-tight">${rl_state.analysisResult}</div>
+                        </div>
+                    ` : ''}
+                </div>
+            </div>
+            <div class="text-right mt-2 text-[10px] font-mono font-bold text-stone-400">Purple Bean Coffee_ROAST_LAB_V2</div>
+        </div>
+        `;
+    };
+
+    const rl_renderApp = () => {
+        const app = document.getElementById('roast-lab-app');
+        if (rl_state.selectedRoast) {
+            app.innerHTML = '<main class="bg-white dark:bg-[#3C4A33] min-h-screen pb-12">' + rl_renderDetail() + '</main>';
+        } else {
+            app.innerHTML = '';
+        }
+        
+        if (window.lucide) {
+            lucide.createIcons();
+        }
+    };
+</script>

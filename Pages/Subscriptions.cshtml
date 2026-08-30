@@ -1,0 +1,83 @@
+@page
+@model SubscriptionsModel
+@{
+    ViewData["Title"] = "Coffee Subscription";
+    ViewData["MetaDescription"] = "Subscribe to Purple Bean Coffee. Receive freshly roasted specialty Peruvian coffee delivered to your door. Single-origin beans from Cusco's finest farms, curated monthly.";
+}
+
+<div class="pt-32 pb-20 bg-[#FAFAFA]">
+    <div class="container mx-auto px-4 md:px-8 max-w-6xl">
+        <div class="text-center mb-20">
+            <h1 class="text-5xl md:text-7xl font-grotesk font-bold tracking-tighter mb-6">THE SUBSCRIPTION</h1>
+            <p class="text-xl font-light text-gray-600 max-w-2xl mx-auto">
+                The best way to drink our coffee. Set it, forget it, and let us handle the rest.
+            </p>
+        </div>
+
+        <!-- Steps - Sketch Style -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24">
+            <div class="relative bg-white dark:bg-[#3C4A33] p-8 border-2 border-black group hover:-translate-y-1 transition-transform">
+                <div class="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 bg-black text-white rounded-full flex items-center justify-center font-mono-jb font-bold text-lg border-4 border-white">1</div>
+                <div class="mt-6 text-center">
+                    <div class="mb-4 flex justify-center"><i class="bi bi-box fs-1"></i></div>
+                    <h3 class="font-grotesk font-bold text-xl mb-2">Select Volume</h3>
+                    <p class="font-marker text-gray-500 text-lg">How much coffee do you drink?</p>
+                </div>
+            </div>
+            
+            <div class="relative bg-white dark:bg-[#3C4A33] p-8 border-2 border-black group hover:-translate-y-1 transition-transform">
+                <div class="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 bg-black text-white rounded-full flex items-center justify-center font-mono-jb font-bold text-lg border-4 border-white">2</div>
+                <div class="mt-6 text-center">
+                    <div class="mb-4 flex justify-center"><i class="bi bi-calendar3 fs-1"></i></div>
+                    <h3 class="font-grotesk font-bold text-xl mb-2">Frequency</h3>
+                    <p class="font-marker text-gray-500 text-lg">How often do you need a refill?</p>
+                </div>
+            </div>
+
+            <div class="relative bg-white dark:bg-[#3C4A33] p-8 border-2 border-black group hover:-translate-y-1 transition-transform">
+                <div class="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 bg-black text-white rounded-full flex items-center justify-center font-mono-jb font-bold text-lg border-4 border-white">3</div>
+                <div class="mt-6 text-center">
+                    <div class="mb-4 flex justify-center"><i class="bi bi-clock-history fs-1"></i></div>
+                    <h3 class="font-grotesk font-bold text-xl mb-2">We Roast & Ship</h3>
+                    <p class="font-marker text-gray-500 text-lg">Freshly roasted and sent to your door.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pricing Table -->
+        <div class="bg-white dark:bg-[#3C4A33] border border-gray-200 p-8 md:p-12">
+            <h2 class="text-3xl font-grotesk font-bold mb-8 text-center">Choose Your Plan</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Prepaid -->
+                <div class="border border-dashed border-gray-300 p-6 hover:border-black transition-colors">
+                    <h3 class="font-mono-jb font-bold text-lg mb-2">PREPAID</h3>
+                    <p class="text-sm text-gray-500 mb-6">Pay upfront for 3, 6, or 12 months. Perfect for gifts.</p>
+                    <div class="text-4xl font-grotesk font-bold mb-4">$22 <span class="text-sm font-normal text-gray-400">/ bag</span></div>
+                    <form method="post" asp-page-handler="AddToCart">
+                        <input type="hidden" name="productId" value="901" />
+                        <input type="hidden" name="productName" value="Prepaid Subscription" />
+                        <input type="hidden" name="productType" value="Subscription" />
+                        <input type="hidden" name="price" value="22.00" />
+                        <input type="hidden" name="description" value="Prepaid coffee subscription (3, 6, or 12 months)." />
+                        <button type="submit" class="w-full bg-black text-white py-3 font-mono-jb font-bold text-xs uppercase tracking-widest hover:bg-gray-800 border-0 transition-colors">Select Prepaid</button>
+                    </form>
+                </div>
+                <!-- Pay as you go -->
+                <div class="border-2 border-black p-6 relative">
+                    <div class="absolute top-0 right-0 bg-yellow-300 text-black dark:text-[#FAF3DD] text-[10px] font-bold px-2 py-1 uppercase tracking-widest font-mono-jb">Most Popular</div>
+                    <h3 class="font-mono-jb font-bold text-lg mb-2">PAY AS YOU GO</h3>
+                    <p class="text-sm text-gray-500 mb-6">Billed per shipment. Cancel or pause anytime.</p>
+                    <div class="text-4xl font-grotesk font-bold mb-4">$24 <span class="text-sm font-normal text-gray-400">/ bag</span></div>
+                    <form method="post" asp-page-handler="AddToCart">
+                        <input type="hidden" name="productId" value="902" />
+                        <input type="hidden" name="productName" value="Monthly Subscription" />
+                        <input type="hidden" name="productType" value="Subscription" />
+                        <input type="hidden" name="price" value="24.00" />
+                        <input type="hidden" name="description" value="Flexible monthly coffee subscription." />
+                        <button type="submit" class="w-full bg-black text-white py-3 font-mono-jb font-bold text-xs uppercase tracking-widest hover:bg-gray-800 border-0 transition-colors">Select Monthly</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

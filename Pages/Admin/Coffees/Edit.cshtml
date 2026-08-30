@@ -1,0 +1,95 @@
+@page
+@model TheBestBean.Pages_Admin_Coffees.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>CoffeeBean</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="CoffeeBean.Id" />
+            <div class="form-group">
+                <span class="text-danger">*</span>
+                <label asp-for="CoffeeBean.Name" class="control-label"></label>
+                <input asp-for="CoffeeBean.Name" class="form-control" />
+                <span asp-validation-for="CoffeeBean.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                
+                <label asp-for="CoffeeBean.FlavorProfile" class="control-label"></label>
+                <input asp-for="CoffeeBean.FlavorProfile" class="form-control" />
+                <span asp-validation-for="CoffeeBean.FlavorProfile" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                
+                <label asp-for="CoffeeBean.Rating" class="control-label"></label>
+                <input asp-for="CoffeeBean.Rating" class="form-control" />
+                <span asp-validation-for="CoffeeBean.Rating" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                
+                <label asp-for="CoffeeBean.ProcessingMethod" class="control-label"></label>
+                <input asp-for="CoffeeBean.ProcessingMethod" class="form-control" />
+                <span asp-validation-for="CoffeeBean.ProcessingMethod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                
+                <label asp-for="CoffeeBean.Producer" class="control-label"></label>
+                <input asp-for="CoffeeBean.Producer" class="form-control" />
+                <span asp-validation-for="CoffeeBean.Producer" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                
+                <label asp-for="CoffeeBean.Variety" class="control-label"></label>
+                <input asp-for="CoffeeBean.Variety" class="form-control" />
+                <span asp-validation-for="CoffeeBean.Variety" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                
+                <label asp-for="CoffeeBean.Altitude" class="control-label"></label>
+                <input asp-for="CoffeeBean.Altitude" class="form-control" />
+                <span asp-validation-for="CoffeeBean.Altitude" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label class="control-label">Upload Image</label>
+                <input type="file" name="ImageUpload" class="form-control" accept="image/*" />
+                <span class="text-muted small">Leave blank to keep the current image (if any).</span>
+            </div>
+            <div class="form-group">
+                
+                <label asp-for="CoffeeBean.CoffeeFarmId" class="control-label"></label>
+                <select asp-for="CoffeeBean.CoffeeFarmId" class="form-control" asp-items="ViewBag.CoffeeFarmId"></select>
+                <span asp-validation-for="CoffeeBean.CoffeeFarmId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                
+                <label asp-for="CoffeeBean.CoffeeRegionId" class="control-label"></label>
+                <select asp-for="CoffeeBean.CoffeeRegionId" class="form-control" asp-items="ViewBag.CoffeeRegionId"></select>
+                <span asp-validation-for="CoffeeBean.CoffeeRegionId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                
+                <label asp-for="CoffeeBean.OriginCountryId" class="control-label"></label>
+                <select asp-for="CoffeeBean.OriginCountryId" class="form-control" asp-items="ViewBag.OriginCountryId"></select>
+                <span asp-validation-for="CoffeeBean.OriginCountryId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

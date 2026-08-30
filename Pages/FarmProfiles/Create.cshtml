@@ -1,0 +1,238 @@
+@page
+@model TheBestBean.Pages.FarmProfiles.CreateModel
+@{
+    ViewData["Title"] = "Create Farm Profile";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header" style="background-color: var(--fairtrade-green); color: var(--white);">
+                    <h1 class="card-title h3 mb-0">
+                        <i class="bi bi-house-heart me-2"></i>Create Micro-lot Farm Profile
+                    </h1>
+                    <p class="mb-0 mt-2">Showcase exceptional small-scale coffee farms</p>
+                </div>
+                <div class="card-body">
+                    <!-- Auto-populate from Survey -->
+                    <div class="alert alert-info mb-4">
+                        <h5 class="alert-heading">
+                            <i class="bi bi-lightning me-2"></i>Auto-populate from Survey
+                        </h5>
+                        @if (Model.AvailableSurveys.Any())
+                        {
+                            <p class="mb-3">Select a completed survey to automatically populate most fields:</p>
+                            <select id="surveySelect" class="form-select mb-3">
+                                <option value="">Choose a survey...</option>
+                                @foreach (var survey in Model.AvailableSurveys)
+                                {
+                                    <option value="@survey.Id">@survey.FarmName - @survey.Region (@survey.SurveyDate.ToString("MMM dd, yyyy"))</option>
+                                }
+                            </select>
+                            <button type="button" id="populateBtn" class="btn btn-outline-primary">
+                                <i class="bi bi-arrow-down-circle me-2"></i>Populate Profile
+                            </button>
+                        }
+                        else
+                        {
+                            <p class="mb-0">No surveys available. Complete a farmer survey first to auto-populate fields.</p>
+                        }
+                    </div>
+
+                    <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
+
+                        <!-- Basic Information -->
+                        <div class="border-bottom pb-4 mb-4">
+                            <h2 class="h4 fw-bold mb-3 text-primary">
+                                <i class="bi bi-info-circle me-2"></i>Basic Information
+                            </h2>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FarmProfile.FarmName" class="form-label">Farm Name *</label>
+                                    <input asp-for="FarmProfile.FarmName" class="form-control" placeholder="e.g. Finca San Pedro" required />
+                                    <span asp-validation-for="FarmProfile.FarmName" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FarmProfile.FarmerName" class="form-label">Farmer Name *</label>
+                                    <input asp-for="FarmProfile.FarmerName" class="form-control" placeholder="Farmer's full name" required />
+                                    <span asp-validation-for="FarmProfile.FarmerName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FarmProfile.Region" class="form-label">Region *</label>
+                                    <input asp-for="FarmProfile.Region" class="form-control" placeholder="e.g. Cajamarca, Peru" required />
+                                    <span asp-validation-for="FarmProfile.Region" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label asp-for="FarmProfile.GPSLatitude" class="form-label">GPS Latitude</label>
+                                    <input asp-for="FarmProfile.GPSLatitude" class="form-control" placeholder="e.g. -7.1234" />
+                                    <span asp-validation-for="FarmProfile.GPSLatitude" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label asp-for="FarmProfile.GPSLongitude" class="form-label">GPS Longitude</label>
+                                    <input asp-for="FarmProfile.GPSLongitude" class="form-control" placeholder="e.g. 77.5678" />
+                                    <span asp-validation-for="FarmProfile.GPSLongitude" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FarmProfile.QualityRating" class="form-label">Quality Rating (1-10)</label>
+                                    <input asp-for="FarmProfile.QualityRating" class="form-control" type="number" min="1" max="10" placeholder="1-10" />
+                                    <span asp-validation-for="FarmProfile.QualityRating" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FarmProfile.RelatedSurveyId" class="form-label">Related Survey</label>
+                                    <select asp-for="FarmProfile.RelatedSurveyId" asp-items="Model.SurveySelectList" class="form-select">
+                                        <option value="">None</option>
+                                    </select>
+                                    <span asp-validation-for="FarmProfile.RelatedSurveyId" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Coffee Information -->
+                        <div class="border-bottom pb-4 mb-4">
+                            <h2 class="h4 fw-bold mb-3 text-success">
+                                <i class="bi bi-cup-hot me-2"></i>Coffee Information
+                            </h2>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FarmProfile.CoffeeVarieties" class="form-label">Coffee Varieties</label>
+                                    <input asp-for="FarmProfile.CoffeeVarieties" class="form-control" placeholder="Typica, Bourbon, Caturra..." />
+                                    <span asp-validation-for="FarmProfile.CoffeeVarieties" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FarmProfile.ProcessingMethod" class="form-label">Processing Method</label>
+                                    <input asp-for="FarmProfile.ProcessingMethod" class="form-control" placeholder="Washed, Natural, Honey..." />
+                                    <span asp-validation-for="FarmProfile.ProcessingMethod" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 mb-3">
+                                    <label asp-for="FarmProfile.FarmingPhilosophy" class="form-label">Farming Philosophy</label>
+                                    <textarea asp-for="FarmProfile.FarmingPhilosophy" class="form-control" rows="3" placeholder="Describe the farmer's approach to coffee cultivation..."></textarea>
+                                    <span asp-validation-for="FarmProfile.FarmingPhilosophy" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Farm Story -->
+                        <div class="border-bottom pb-4 mb-4">
+                            <h2 class="h4 fw-bold mb-3 text-info">
+                                <i class="bi bi-book-open me-2"></i>Farm Story
+                            </h2>
+                            <div class="row">
+                                <div class="col-12 mb-3">
+                                    <label asp-for="FarmProfile.FarmStory" class="form-label">Farm Story</label>
+                                    <textarea asp-for="FarmProfile.FarmStory" class="form-control" rows="4" placeholder="Tell the story of the farm, its history, family traditions..."></textarea>
+                                    <span asp-validation-for="FarmProfile.FarmStory" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Environmental Features -->
+                        <div class="border-bottom pb-4 mb-4">
+                            <h2 class="h4 fw-bold mb-3" style="color: #28a745;">
+                                <i class="bi bi-tree me-2"></i>Environmental Features
+                            </h2>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FarmProfile.EnvironmentalFeatures" class="form-label">Environmental Features</label>
+                                    <textarea asp-for="FarmProfile.EnvironmentalFeatures" class="form-control" rows="3" placeholder="Shade trees, biodiversity, soil health..."></textarea>
+                                    <span asp-validation-for="FarmProfile.EnvironmentalFeatures" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FarmProfile.ClimateNotes" class="form-label">Climate Notes</label>
+                                    <textarea asp-for="FarmProfile.ClimateNotes" class="form-control" rows="3" placeholder="Altitude, rainfall patterns, weather..."></textarea>
+                                    <span asp-validation-for="FarmProfile.ClimateNotes" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quality & Sustainability -->
+                        <div class="border-bottom pb-4 mb-4">
+                            <h2 class="h4 fw-bold mb-3" style="color: var(--coffee-brown);">
+                                <i class="bi bi-star-fill me-2"></i>Quality & Sustainability
+                            </h2>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FarmProfile.QualityHighlights" class="form-label">Quality Highlights</label>
+                                    <textarea asp-for="FarmProfile.QualityHighlights" class="form-control" rows="3" placeholder="What makes this farm's coffee exceptional?"></textarea>
+                                    <span asp-validation-for="FarmProfile.QualityHighlights" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FarmProfile.SustainabilityPractices" class="form-label">Sustainability Practices</label>
+                                    <textarea asp-for="FarmProfile.SustainabilityPractices" class="form-control" rows="3" placeholder="Organic practices, eco-friendly methods..."></textarea>
+                                    <span asp-validation-for="FarmProfile.SustainabilityPractices" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 mb-3">
+                                    <label asp-for="FarmProfile.CommunityImpact" class="form-label">Community Impact</label>
+                                    <textarea asp-for="FarmProfile.CommunityImpact" class="form-control" rows="3" placeholder="How does this farm benefit the local community?"></textarea>
+                                    <span asp-validation-for="FarmProfile.CommunityImpact" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Farm Photos -->
+                        <div class="border-bottom pb-4 mb-4">
+                            <h2 class="h4 fw-bold mb-3 text-secondary">
+                                <i class="bi bi-images me-2"></i>Farm Photos
+                            </h2>
+                            <div class="row">
+                                <div class="col-12 mb-3">
+                                    <label class="form-label">Upload Photos</label>
+                                    <input type="file" name="Uploads" multiple accept="image/*" class="form-control" />
+                                    <small class="form-text text-muted">Select multiple images (JPG/PNG/WebP). We'll store them and build the carousel automatically.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                <button type="submit" class="btn btn-primary btn-lg me-3">
+                                    <i class="bi bi-check-lg me-2"></i>Create Profile
+                                </button>
+                                <a asp-page="./Index" class="btn btn-outline-primary btn-lg">
+                                    <i class="bi bi-list me-2"></i>Back to Profiles
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const surveySelect = document.getElementById('surveySelect');
+            const populateBtn = document.getElementById('populateBtn');
+
+            // Auto-populate from selected survey
+            populateBtn?.addEventListener('click', function() {
+                const surveyId = surveySelect.value;
+                if (!surveyId) return;
+
+                // This would typically be an AJAX call to get survey data
+                // For now, we'll just populate the RelatedSurveyId field
+                document.querySelector('select[name="FarmProfile.RelatedSurveyId"]').value = surveyId;
+                
+                // In a real implementation, you'd fetch the survey data and populate all fields
+                // For demo purposes, we'll just show an alert
+                alert('Survey selected! In a full implementation, this would populate all fields with survey data.');
+            });
+
+            // No need to copy JSON; uploads handled server-side
+        });
+    </script>
+}

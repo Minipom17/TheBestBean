@@ -1,0 +1,243 @@
+@page
+@model TheBestBean.Pages.OrderConfirmationModel
+@{
+    ViewData["Title"] = "Order Confirmation";
+}
+
+<style>
+    .confirmation-hero {
+        background: #28a745;
+        color: white;
+        padding: 80px 0;
+        margin-bottom: 40px;
+        border-radius: 15px;
+        text-align: center;
+    }
+
+    .success-icon {
+        font-size: 5rem;
+        margin-bottom: 20px;
+        animation: scaleIn 0.5s ease-out;
+    }
+
+    @@keyframes scaleIn {
+        0% {
+            transform: scale(0);
+            opacity: 0;
+        }
+        50% {
+            transform: scale(1.1);
+        }
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    .confirmation-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .info-card {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .order-number {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #0059ff;
+        margin: 20px 0;
+    }
+
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px 0;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .info-row:last-child {
+        border-bottom: none;
+    }
+
+    .info-label {
+        font-weight: 600;
+        color: #6c757d;
+    }
+
+    .info-value {
+        color: var(--charcoal);
+        font-weight: 600;
+    }
+
+    .order-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px 0;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .order-item:last-child {
+        border-bottom: none;
+    }
+
+    .item-name {
+        font-weight: 600;
+        color: var(--charcoal);
+    }
+
+    .item-qty {
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+
+    .next-steps {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 30px;
+        margin-top: 30px;
+    }
+
+    .step-item {
+        display: flex;
+        align-items: start;
+        margin-bottom: 20px;
+    }
+
+    .step-icon {
+        width: 40px;
+        height: 40px;
+        background: #0059ff;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        margin-right: 15px;
+        flex-shrink: 0;
+    }
+
+    .step-content h4 {
+        margin: 0 0 5px 0;
+        color: var(--charcoal);
+    }
+
+    .step-content p {
+        margin: 0;
+        color: #6c757d;
+    }
+</style>
+
+<div class="confirmation-hero">
+    <div class="container">
+        <div class="success-icon">
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+        <h1>Order Confirmed!</h1>
+        <p class="lead">Thank you for your order, @Model.CustomerName</p>
+        <div class="order-number">@Model.OrderNumber</div>
+    </div>
+</div>
+
+<div class="container confirmation-container">
+    <!-- Order Details -->
+    <div class="info-card">
+        <h2 style="margin-bottom: 20px;"><i class="bi bi-receipt"></i> Order Details</h2>
+        
+        <div class="info-row">
+            <span class="info-label">Order Number</span>
+            <span class="info-value">@Model.OrderNumber</span>
+        </div>
+        
+        <div class="info-row">
+            <span class="info-label">Order Date</span>
+            <span class="info-value">@DateTime.Now.ToString("MMMM dd, yyyy")</span>
+        </div>
+        
+        <div class="info-row">
+            <span class="info-label">Email</span>
+            <span class="info-value">@Model.CustomerEmail</span>
+        </div>
+        
+        <div class="info-row">
+            <span class="info-label">Total Amount</span>
+            <span class="info-value" style="color: #0059ff; font-size: 1.25rem;">S/ @((Model.OrderTotal * 3.8m).ToString("F2"))</span>
+        </div>
+    </div>
+
+    <!-- Order Items -->
+    <div class="info-card">
+        <h2 style="margin-bottom: 20px;"><i class="bi bi-box-seam"></i> Order Items</h2>
+        
+        @foreach (var item in Model.OrderItems)
+        {
+            <div class="order-item">
+                <div>
+                    <div class="item-name">@item.ProductName</div>
+                    <div class="item-qty">Qty: @item.Quantity × S/ @((item.Price * 3.8m).ToString("F2"))</div>
+                </div>
+                <div style="font-weight: 600; color: var(--charcoal);">
+                    S/ @((item.Subtotal * 3.8m).ToString("F2"))
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Next Steps -->
+    <div class="next-steps">
+        <h2 style="margin-bottom: 25px;"><i class="bi bi-list-check"></i> What Happens Next?</h2>
+        
+        <div class="step-item">
+            <div class="step-icon">1</div>
+            <div class="step-content">
+                <h4>Order Confirmation Email</h4>
+                <p>You'll receive a confirmation email at <strong>@Model.CustomerEmail</strong> with your order details.</p>
+            </div>
+        </div>
+
+        <div class="step-item">
+            <div class="step-icon">2</div>
+            <div class="step-content">
+                <h4>Payment Instructions</h4>
+                <p>We'll send you payment instructions via email. We accept Venmo, Zelle, or bank transfer.</p>
+            </div>
+        </div>
+
+        <div class="step-item">
+            <div class="step-icon">3</div>
+            <div class="step-content">
+                <h4>Processing & Shipping</h4>
+                <p>Once payment is received, we'll process your order and ship it within 2-3 business days.</p>
+            </div>
+        </div>
+
+        <div class="step-item">
+            <div class="step-icon">4</div>
+            <div class="step-content">
+                <h4>Enjoy Your Coffee!</h4>
+                <p>Your premium coffee will arrive fresh and ready to brew. Enjoy!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="text-center mt-4 mb-5">
+        <a asp-page="/GreenBeans" class="btn btn-primary btn-lg me-2">
+            <i class="bi bi-shop"></i> Continue Shopping
+        </a>
+        <a asp-page="/Index" class="btn btn-outline-primary btn-lg">
+            <i class="bi bi-house"></i> Back to Home
+        </a>
+    </div>
+
+    <!-- Contact Info -->
+    <div class="text-center text-muted mb-5">
+        <p>Questions about your order? Contact us at <strong>info@12dsur.com</strong></p>
+    </div>
+</div>

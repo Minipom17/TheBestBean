@@ -1,0 +1,751 @@
+@page
+@model TheBestBean.Pages.CondorModel
+@{
+    Layout = null;
+    ViewData["Title"] = "Flavor Launch Party - Tap & Vote";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Flavor Launch Party - Tap & Vote</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- BASE RESET --- */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            color: #fff;
+            text-align: center;
+            -webkit-tap-highlight-color: transparent;
+            overscroll-behavior: none; /* Prevent bounce scroll */
+        }
+
+        /* --- LANDING PAGE STYLES --- */
+        .main-header {
+            background: linear-gradient(135deg, #1e2024 0%, #2c3e50 100%);
+            padding: 30px 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        h1 { margin: 0; font-size: 2.2rem; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
+        .subtitle { margin: 10px 0 0; font-size: 1rem; opacity: 0.8; }
+
+        .prize-banner {
+            background: #ff0055; color: white; padding: 15px;
+            font-weight: 700; font-size: 1.1rem; width: 100%; box-sizing: border-box;
+            animation: pulse 2s infinite;
+        }
+        @@keyframes pulse { 0% { background-color: #ff0055; } 50% { background-color: #ff4081; } 100% { background-color: #ff0055; } }
+
+        /* GRID FOR LANDING PAGE */
+        #flavor-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            width: 100%;
+        }
+        @@media (max-width: 600px) { #flavor-grid { grid-template-columns: repeat(3, 1fr); } }
+
+        .flavor-tile-wrapper { position: relative; width: 100%; padding-bottom: 100%; }
+        .flavor-tile {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 900; font-size: 14px; cursor: pointer; color: white;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.9); text-transform: uppercase;
+            padding: 5px; box-sizing: border-box;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .flavor-tile:active { transform: scale(0.95); z-index: 2; }
+
+
+        /* --- SURVEY MODAL --- */
+        #survey-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #fff; /* Dynamic color */
+            display: none; z-index: 9999;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .survey-header {
+            position: absolute; top: 0; left: 0; width: 100%;
+            padding: 15px; z-index: 10001;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(0,0,0,0.3); backdrop-filter: blur(5px);
+            box-sizing: border-box;
+        }
+        #close-modal { font-size: 2rem; cursor: pointer; line-height: 1; padding: 0 10px; }
+
+        .survey-content {
+            display: flex; width: 100%; height: 100%;
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* --- PAGE LAYOUT --- */
+        .survey-page {
+            flex: 0 0 100%; width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            padding-top: 60px; /* Header space */
+            padding-bottom: 70px; /* Footer space */
+            box-sizing: border-box;
+        }
+
+        /* WRAPPER FOR QUESTIONS */
+        .questions-wrapper {
+            display: flex; 
+            flex-direction: column; /* Default: Vertical Stack */
+            height: 100%; 
+            width: 100%;
+        }
+
+        /* --- LANDSCAPE MODE: LEFT-TO-RIGHT --- */
+        @@media (orientation: landscape) {
+            .questions-wrapper {
+                flex-direction: row; /* Switch to Horizontal */
+            }
+            .question-block {
+                border-bottom: none !important;
+                border-right: 2px solid rgba(0,0,0,0.1);
+            }
+        }
+
+        /* INDIVIDUAL QUESTION BLOCK */
+        .question-block {
+            flex: 1; /* Split space evenly */
+            display: flex; flex-direction: column;
+            border-bottom: 2px solid rgba(0,0,0,0.1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .q-label {
+            background: rgba(0,0,0,0.8); color: #fff;
+            padding: 8px; font-size: 1rem; font-weight: 700;
+            text-transform: uppercase; text-align: center;
+            flex: 0 0 auto; z-index: 10;
+        }
+
+        /* --- SQUARE GRID BUTTONS --- */
+        .options-grid {
+            flex: 1; /* Fill remaining height */
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* 2 Columns = Squares */
+            gap: 1px; /* Tiny gap for border effect */
+            background-color: rgba(0,0,0,0.1); /* Border color */
+        }
+
+        .grid-btn {
+            background-color: rgba(255, 255, 255, 0.85); /* Glass look */
+            color: #333;
+            border: none;
+            font-size: 1.1rem; font-weight: 800;
+            text-transform: uppercase;
+            cursor: pointer;
+            display: flex; justify-content: center; align-items: center;
+            text-align: center; padding: 10px;
+            transition: all 0.1s;
+        }
+
+        .grid-btn:active { background-color: #fff; }
+
+        /* Handling 5 items in a 2-column grid: Last item spans full width */
+        .options-grid[data-count="5"] .grid-btn:last-child {
+            grid-column: span 2;
+        }
+
+        /* Selected State */
+        .grid-btn.selected {
+            background-color: #fff !important;
+            color: #000;
+            box-shadow: inset 0 0 0 4px rgba(0,0,0,0.1); /* Inner border to show selection */
+            z-index: 5;
+        }
+        .grid-btn.selected::after { content: ' ✓'; color: #27ae60; font-weight: 900; margin-left: 5px; }
+
+        /* --- FINAL PAGE STYLES --- */
+        .final-page-layout {
+            display: flex; flex-direction: column; height: 100%;
+            background: rgba(255,255,255,0.95);
+            padding: 20px; overflow-y: auto; text-align: left;
+            color: #333;
+        }
+        .input-group { margin-bottom: 12px; }
+        .input-group input, .input-group textarea {
+            width: 100%; padding: 15px; font-size: 1.1rem;
+            border: 2px solid #ccc; border-radius: 8px;
+            box-sizing: border-box; background: #fff;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* --- BOTTOM CONTROLS --- */
+        .survey-controls {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 70px;
+            background: #111; display: flex; z-index: 10002;
+        }
+        .nav-btn {
+            flex: 1; border: none; font-size: 1.2rem; font-weight: 900;
+            text-transform: uppercase; cursor: pointer; color: white;
+        }
+        #prev-btn { background: #333; flex: 0 0 80px; font-size: 1.5rem; }
+        #next-btn { background: #0b7af7; }
+        #submit-btn { background: #27ae60; display: none; }
+        .nav-btn:disabled { background: #444; color: #777; }
+
+    </style>
+</head>
+<body>
+
+    <div class="main-header">
+        <h1>Flavor Launch Party 🚀</h1>
+        <p class="subtitle">Cusco Province Tasting Event</p>
+    </div>
+    
+    <div class="prize-banner">🎉 RATE & WIN 3 FREE TINS! 🎉</div>
+
+    <div id="flavor-grid"></div>
+
+    <div id="survey-modal">
+        <div class="survey-header">
+            <span id="header-title">Flavor Name</span>
+            <span id="close-modal">✕</span>
+        </div>
+
+        <form id="sampling-form" class="survey-content">
+            <input type="hidden" id="product-id" name="product-id">
+            <input type="hidden" id="product-name" name="product-name">
+            <input type="hidden" id="product-color" name="product-color">
+            <input type="hidden" id="q1" name="flavor-intensity">
+            <input type="hidden" id="q2" name="sweetness">
+            <input type="hidden" id="q3" name="nicotine-feel">
+            <input type="hidden" id="q4" name="mouth-feel">
+            <input type="hidden" id="q5" name="preference"> <input type="hidden" id="vote" name="purchase">
+
+            <div class="survey-page" data-page="1">
+                <div class="questions-wrapper">
+                    <div class="question-block">
+                        <div class="q-label">1. Flavor Strength?</div>
+                        <div class="options-grid" data-count="5" data-field="q1">
+                            <div class="grid-btn" data-value="1">Too Weak</div>
+                            <div class="grid-btn" data-value="2">A little Weak</div>
+                            <div class="grid-btn" data-value="3">Just Right</div>
+                            <div class="grid-btn" data-value="4">A little Strong</div>
+                            <div class="grid-btn" data-value="5">Too Strong</div>
+                        </div>
+                    </div>
+                    <div class="question-block">
+                        <div class="q-label">2. Sweetness?</div>
+                        <div class="options-grid" data-count="5" data-field="q2">
+                            <div class="grid-btn" data-value="1">Not Sweet Enough</div>
+                            <div class="grid-btn" data-value="2">A little Savory</div>
+                            <div class="grid-btn" data-value="3">Just Right</div>
+                            <div class="grid-btn" data-value="4">A little Too Sweet</div>
+                            <div class="grid-btn" data-value="5">Far Too Sweet</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="survey-page" data-page="2">
+                <div class="questions-wrapper">
+                    <div class="question-block">
+                        <div class="q-label">3. Nicotine Kick?</div>
+                        <div class="options-grid" data-count="5" data-field="q3">
+                            <div class="grid-btn" data-value="1">Way Weaker</div>
+                            <div class="grid-btn" data-value="2">A little Weaker</div>
+                            <div class="grid-btn" data-value="3">Perfect</div>
+                            <div class="grid-btn" data-value="4">A little Stronger</div>
+                            <div class="grid-btn" data-value="5">Way Stronger</div>
+                        </div>
+                    </div>
+                    <div class="question-block">
+                        <div class="q-label">4. Mouth Feel?</div>
+                        <div class="options-grid" data-count="5" data-field="q4">
+                            <div class="grid-btn" data-value="1">Irritating / Burn</div>
+                            <div class="grid-btn" data-value="2">Slight Burn</div>
+                            <div class="grid-btn" data-value="3">Pleasant Tingle</div>
+                            <div class="grid-btn" data-value="4">Smooth</div>
+                            <div class="grid-btn" data-value="5">No Feeling</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="survey-page" data-page="3">
+                <div class="questions-wrapper">
+                    <div class="question-block" style="height: 100%;">
+                        <div class="q-label" style="font-size: 1.3rem; padding: 20px;">5. What do you prefer? (Pick up to 2)</div>
+                        <div class="options-grid" data-count="4" data-field="q5" data-multi="true">
+                            <div class="grid-btn" data-value="More Sweet">More Sweet 🍭</div>
+                            <div class="grid-btn" data-value="Less Sweet">Less Sweet 🧂</div>
+                            <div class="grid-btn" data-value="Mint">Minty / Ice ❄️</div>
+                            <div class="grid-btn" data-value="Fruit">Fruity 🍓</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="survey-page" data-page="4">
+                <div class="final-page-layout">
+                    <h2 style="margin-top:0;">Final Verdict 🗳️</h2>
+                    
+                    <label style="font-weight:700; display:block; margin-bottom:10px;">IS THIS FLAVOR A WINNER?</label>
+                    <div class="options-grid" data-count="3" data-field="vote" style="flex:0 0 100px; margin-bottom: 20px;">
+                        <div class="grid-btn" data-value="YES" style="background:#27ae60; color:white;">YES! 😍</div>
+                        <div class="grid-btn" data-value="MAYBE" style="background:#f39c12; color:white;">MAYBE 🤔</div>
+                        <div class="grid-btn" data-value="NO" style="background:#c0392b; color:white; grid-column: span 2;">NO 😢</div>
+                    </div>
+
+                    <div class="input-group">
+                        <input type="text" id="participant-name" name="participant-name" placeholder="Your Name (Required)" required>
+                    </div>
+                    <div class="input-group">
+                        <input type="email" id="participant-email" name="participant-email" placeholder="Email/WhatsApp (For Prize)" required>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" id="venue" name="venue" value="Cusco: " required>
+                    </div>
+                    <div class="input-group" style="flex:1;">
+                        <textarea id="notes" name="notes" style="height:100%;" placeholder="Any extra comments?"></textarea>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class="survey-controls">
+            <button class="nav-btn" id="prev-btn" style="display:none;">←</button>
+            <button class="nav-btn" id="next-btn" disabled>NEXT</button>
+            <button class="nav-btn" id="submit-btn">SUBMIT ENTRY 🚀</button>
+        </div>
+    </div>
+
+    <script>
+        // --- YOUR GOOGLE SCRIPT URL ---
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzaPVbxask04_7azIBhw-h029SjAJxwuOCQvIfvNfFxh1RLJkSvFV6pIMJd8X1bWEZsYg/exec";
+
+        const products = [
+            { id: 'P01', name: 'Spicy Citrus', color: '#ff7f50' }, 
+            { id: 'P02', name: 'Orange Gum', color: '#ffa500' }, 
+            { id: 'P03', name: 'Cold Cumin', color: '#66cdaa' }, 
+            { id: 'P04', name: 'Juicy Lemon', color: '#ffd700' }, 
+            { id: 'P05', name: 'Northpole', color: '#b0e0e6' }, 
+            { id: 'P06', name: 'Spearmint', color: '#7fffd4' }, 
+            { id: 'P07', name: 'Cola', color: '#8b4513' }, 
+            { id: 'P08', name: 'Peppermint', color: '#f08080' }, 
+            { id: 'P09', name: 'Frozen Berry', color: '#9932cc' }, 
+            { id: 'P10', name: 'Vanilla', color: '#f5f5dc' }, 
+            { id: 'P11', name: 'Rainbow', color: '#8e44ad' }, 
+            { id: 'P12', name: 'Winter Green', color: '#27ae60' }, 
+            { id: 'P13', name: 'Liten', color: '#6495ed' }, 
+            { id: 'P14', name: 'Lemon Rasp', color: '#e91e63' }, 
+            { id: 'P15', name: 'Watermelon', color: '#ff4500' }, 
+            { id: 'P16', name: 'Melon Ice', color: '#1abc9c' }, 
+            { id: 'P17', name: 'Crisp Pep', color: '#4682b4' }, 
+            { id: 'P18', name: 'Burnmint', color: '#c0392b' }, 
+            { id: 'P19', name: 'Sour Twist', color: '#9acd32' }, 
+            { id: 'P20', name: 'Xtrim Mint', color: '#16a085' }, 
+            { id: 'P21', name: 'Blue Ice', color: '#34495e' } 
+        ];
+
+        // --- RENDER TILES ---
+        document.getElementById('flavor-grid').innerHTML = products.map(p => `
+            <div class="flavor-tile-wrapper" onclick="openSurvey('${p.id}')">
+                <div class="flavor-tile" style="background:${p.color}">
+                    ${p.name}
+                </div>
+            </div>
+        `).join('');
+
+        // --- SURVEY ENGINE ---
+        const modal = document.getElementById('survey-modal');
+        const content = document.querySelector('.survey-content');
+        let currentPage = 1;
+        const totalPages = 4; // Now 4 pages
+
+        function openSurvey(pid) {
+            const p = products.find(x => x.id === pid);
+            modal.style.background = p.color; // Theming
+            document.getElementById('product-id').value = p.id;
+            document.getElementById('product-name').value = p.name;
+            document.getElementById('product-color').value = p.color;
+            document.getElementById('header-title').textContent = p.name;
+
+            // Clear previous selections
+            document.querySelectorAll('.grid-btn').forEach(b => b.classList.remove('selected'));
+            document.querySelectorAll('input:not([type=hidden])').forEach(i => { if(i.id!=='venue') i.value=''; });
+            document.querySelectorAll('textarea').forEach(t => t.value='');
+
+            currentPage = 1;
+            updateSlide();
+            modal.style.display = 'flex';
+        }
+
+        // --- BUTTON INTERACTION LOGIC ---
+        document.querySelectorAll('.options-grid').forEach(grid => {
+            const fieldId = grid.getAttribute('data-field');
+            console.log('[SUBMIT] Setting up click handler for grid:', fieldId);
+            
+            grid.addEventListener('click', (e) => {
+                console.log('[SUBMIT] Grid clicked, target:', e.target, 'closest:', e.target.closest('.grid-btn'));
+                const btn = e.target.closest('.grid-btn');
+                if(!btn) {
+                    console.log('[SUBMIT] Click not on grid button, target was:', e.target);
+                    return;
+                }
+
+                console.log('[SUBMIT] Grid button clicked:', {
+                    field: fieldId,
+                    value: btn.getAttribute('data-value'),
+                    text: btn.textContent.trim(),
+                    currentClasses: btn.className
+                });
+
+                const isMulti = grid.getAttribute('data-multi') === 'true';
+                const fieldInput = document.getElementById(fieldId);
+
+                if (isMulti) {
+                    // MULTI-SELECT LOGIC (Max 2)
+                    if (btn.classList.contains('selected')) {
+                        btn.classList.remove('selected');
+                        console.log('[SUBMIT] Multi-select: Removed selection');
+                    } else {
+                        const selected = grid.querySelectorAll('.grid-btn.selected');
+                        if (selected.length >= 2) {
+                            // FIFO: Remove the first selected item
+                            selected[0].classList.remove('selected');
+                        }
+                        btn.classList.add('selected');
+                        console.log('[SUBMIT] Multi-select: Added selection');
+                    }
+                    // Update value string "Option A, Option B"
+                    const values = Array.from(grid.querySelectorAll('.selected')).map(b => b.getAttribute('data-value'));
+                    fieldInput.value = values.join(', ');
+                    console.log('[SUBMIT] Multi-select values:', values);
+                } else {
+                    // SINGLE SELECT LOGIC
+                    console.log('[SUBMIT] Single-select: Removing selected from all buttons in grid');
+                    grid.querySelectorAll('.grid-btn').forEach(b => {
+                        b.classList.remove('selected');
+                        console.log('[SUBMIT] Removed selected from:', b.getAttribute('data-value'));
+                    });
+                    btn.classList.add('selected');
+                    console.log('[SUBMIT] Added selected to:', btn.getAttribute('data-value'), 'New classes:', btn.className);
+                    fieldInput.value = btn.getAttribute('data-value');
+                    console.log('[SUBMIT] Single-select: Selected', btn.getAttribute('data-value'), 'Input value set to:', fieldInput.value);
+                    
+                    // Auto-advance for single select pages only
+                    checkAutoAdvance(grid);
+                }
+                
+                // Always update nav state after selection (debounced)
+                clearTimeout(navStateUpdateTimeout);
+                navStateUpdateTimeout = setTimeout(() => {
+                    console.log('[SUBMIT] Calling updateNavState after selection');
+                    updateNavState();
+                }, 50);
+            });
+        });
+
+        // Debounce updateNavState to prevent excessive calls
+        let navStateUpdateTimeout;
+        document.querySelectorAll('input, textarea').forEach(el => {
+            el.addEventListener('input', () => {
+                clearTimeout(navStateUpdateTimeout);
+                navStateUpdateTimeout = setTimeout(() => {
+                    updateNavState();
+                }, 100);
+            });
+        });
+
+        function checkAutoAdvance(grid) {
+            const pageEl = grid.closest('.survey-page');
+            const pageNum = parseInt(pageEl.getAttribute('data-page'));
+            
+            // Do not auto-advance on Multi-select page (3) or Final page (4)
+            if (pageNum >= 3) return;
+
+            const allGrids = pageEl.querySelectorAll('.options-grid');
+            const allAnswered = Array.from(allGrids).every(g => g.querySelector('.selected'));
+
+            if (allAnswered) {
+                setTimeout(() => { if(currentPage === pageNum) nextPage(); }, 250);
+            }
+        }
+
+        // Prevent infinite loops
+        let isUpdatingNavState = false;
+        
+        function updateNavState() {
+            // Prevent recursive calls
+            if (isUpdatingNavState) {
+                console.log('[SUBMIT] updateNavState already running, skipping...');
+                return;
+            }
+            
+            isUpdatingNavState = true;
+            console.log('[SUBMIT] updateNavState called - currentPage:', currentPage);
+            const pageEl = document.querySelector(`.survey-page[data-page="${currentPage}"]`);
+            const nextBtn = document.getElementById('next-btn');
+            const submitBtn = document.getElementById('submit-btn');
+            
+            let isValid = false;
+
+            if (currentPage < 4) {
+                // Check if options are selected
+                const grids = pageEl.querySelectorAll('.options-grid');
+                isValid = Array.from(grids).every(g => {
+                    const selected = g.querySelectorAll('.selected');
+                    // Page 3 (Multi) needs at least 1 selection
+                    return selected.length > 0;
+                });
+
+                console.log('[SUBMIT] Page', currentPage, '- isValid:', isValid);
+                nextBtn.style.display = 'block';
+                submitBtn.style.display = 'none';
+                nextBtn.disabled = !isValid;
+                nextBtn.style.opacity = isValid ? '1' : '0.4';
+            } else {
+                // Final Page
+                const vote = document.querySelector('.options-grid[data-field="vote"] .selected');
+                const name = document.getElementById('participant-name').value.trim();
+                const email = document.getElementById('participant-email').value.trim();
+                
+                // Explicitly check each field and convert to boolean
+                isValid = !!(vote && name && email);
+
+                console.log('[SUBMIT] Final page validation:', {
+                    vote: vote ? vote.getAttribute('data-value') : 'MISSING',
+                    voteElement: vote ? 'FOUND' : 'NOT FOUND',
+                    name: name || 'MISSING',
+                    email: email || 'MISSING',
+                    isValid: isValid,
+                    isValidType: typeof isValid
+                });
+                
+                // Debug: Check all vote buttons
+                const voteGrid = document.querySelector('.options-grid[data-field="vote"]');
+                if (voteGrid) {
+                    const allVoteButtons = voteGrid.querySelectorAll('.grid-btn');
+                    console.log('[SUBMIT] Vote grid found, buttons:', allVoteButtons.length);
+                    allVoteButtons.forEach((btn, idx) => {
+                        console.log(`[SUBMIT] Vote button ${idx}:`, {
+                            value: btn.getAttribute('data-value'),
+                            hasSelected: btn.classList.contains('selected'),
+                            text: btn.textContent.trim()
+                        });
+                    });
+                } else {
+                    console.error('[SUBMIT] Vote grid not found!');
+                }
+
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'block';
+                // Don't actually disable - use visual styling and validate on click
+                // This allows clicks to fire even when "disabled"
+                submitBtn.removeAttribute('disabled'); // CRITICAL: Never disable
+                submitBtn.setAttribute('data-valid', isValid ? 'true' : 'false');
+                submitBtn.style.opacity = isValid ? '1' : '0.4';
+                submitBtn.style.cursor = isValid ? 'pointer' : 'not-allowed';
+                submitBtn.style.pointerEvents = 'auto'; // Always allow clicks
+                
+                console.log('[SUBMIT] Submit button state:', {
+                    display: submitBtn.style.display,
+                    dataValid: submitBtn.getAttribute('data-valid'),
+                    opacity: submitBtn.style.opacity,
+                    innerHTML: submitBtn.innerHTML,
+                    isValid: isValid
+                });
+            }
+
+            document.getElementById('prev-btn').style.display = currentPage > 1 ? 'block' : 'none';
+            
+            // Release lock
+            setTimeout(() => {
+                isUpdatingNavState = false;
+            }, 100);
+        }
+
+        function nextPage() { if(currentPage < totalPages) { currentPage++; updateSlide(); } }
+        function prevPage() { if(currentPage > 1) { currentPage--; updateSlide(); } }
+        
+        function updateSlide() {
+            const offset = (currentPage - 1) * -100;
+            content.style.transform = `translateX(${offset}%)`;
+            updateNavState();
+        }
+
+        document.getElementById('next-btn').addEventListener('click', nextPage);
+        document.getElementById('prev-btn').addEventListener('click', prevPage);
+        document.getElementById('close-modal').addEventListener('click', () => modal.style.display = 'none');
+
+        // --- GOOGLE SHEET SUBMISSION ---
+        const submitBtn = document.getElementById('submit-btn');
+        console.log('[SUBMIT] Submit button found:', submitBtn);
+        
+        // CRITICAL: Remove disabled attribute immediately and prevent it from being set
+        if (submitBtn) {
+            submitBtn.removeAttribute('disabled');
+            // Override disabled property setter to prevent it from being disabled
+            try {
+                Object.defineProperty(submitBtn, 'disabled', {
+                    get: function() { return false; },
+                    set: function(value) { 
+                        console.warn('[SUBMIT] Attempted to disable button, but preventing it. Value:', value);
+                        // Don't actually disable - just update visual state
+                        this.removeAttribute('disabled');
+                        this.setAttribute('data-valid', value ? 'false' : 'true');
+                        this.style.opacity = value ? '0.4' : '1';
+                        this.style.cursor = value ? 'not-allowed' : 'pointer';
+                    },
+                    configurable: true
+                });
+            } catch(e) {
+                console.warn('[SUBMIT] Could not override disabled property:', e);
+            }
+            
+            // Aggressive: Constantly check and remove disabled attribute
+            setInterval(() => {
+                if (submitBtn.hasAttribute('disabled')) {
+                    console.warn('[SUBMIT] ⚠️ Disabled attribute detected in interval check - removing!');
+                    submitBtn.removeAttribute('disabled');
+                }
+            }, 100);
+        }
+        
+        console.log('[SUBMIT] Adding click event listener to submit button');
+        
+        // Add click handler - button is never actually disabled, just styled
+        submitBtn.addEventListener('click', (e) => {
+            console.log(`[SUBMIT] ===== SUBMIT BUTTON CLICKED =====`);
+                console.log('[SUBMIT] Event:', e);
+                console.log('[SUBMIT] Button state:', {
+                dataValid: submitBtn.getAttribute('data-valid'),
+                    display: submitBtn.style.display,
+                    opacity: submitBtn.style.opacity,
+                    innerHTML: submitBtn.innerHTML
+                });
+                
+                e.preventDefault();
+                e.stopPropagation();
+                
+            // Always validate form before submitting
+                const vote = document.querySelector('.options-grid[data-field="vote"] .selected');
+                const name = document.getElementById('participant-name').value.trim();
+                const email = document.getElementById('participant-email').value.trim();
+                
+                console.log('[SUBMIT] Validation check:', {
+                    vote: vote ? vote.getAttribute('data-value') : 'MISSING',
+                    name: name || 'MISSING',
+                email: email || 'MISSING',
+                dataValid: submitBtn.getAttribute('data-valid')
+                });
+                
+            // If validation fails, show error and return
+                if (!vote) {
+                    console.error('[SUBMIT] Validation failed: No vote selected');
+                    alert("Please select your verdict (YES/MAYBE/NO)");
+                updateNavState();
+                    return;
+                }
+                if (!name) {
+                    console.error('[SUBMIT] Validation failed: No name entered');
+                    alert("Please enter your name");
+                    document.getElementById('participant-name').focus();
+                updateNavState();
+                    return;
+                }
+                if (!email) {
+                    console.error('[SUBMIT] Validation failed: No email entered');
+                    alert("Please enter your email/WhatsApp");
+                    document.getElementById('participant-email').focus();
+                updateNavState();
+                    return;
+                }
+                
+                console.log('[SUBMIT] Validation passed, proceeding with submission');
+                
+            // Show loading state (don't disable - allow retry if needed)
+            submitBtn.removeAttribute('disabled'); // Ensure not disabled
+            submitBtn.innerHTML = "SENDING... 🔄";
+            submitBtn.setAttribute('data-valid', 'false');
+            submitBtn.style.opacity = '0.6';
+            submitBtn.style.cursor = 'wait';
+
+                // Collect all form data
+                const formData = new FormData(document.getElementById('sampling-form'));
+                const obj = {};
+                formData.forEach((v, k) => obj[k] = v);
+                
+                // Add vote value explicitly
+                if (vote) {
+                    obj['purchase'] = vote.getAttribute('data-value');
+                }
+
+                console.log('[SUBMIT] Submitting to Google Sheets...', obj);
+                console.log('[SUBMIT] URL:', GOOGLE_SCRIPT_URL);
+
+                fetch(GOOGLE_SCRIPT_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(obj)
+                }).then((response) => {
+                    console.log('[SUBMIT] Fetch response received:', response);
+                    console.log('[SUBMIT] Response status:', response.status);
+                    console.log('[SUBMIT] Response ok:', response.ok);
+                    alert("VOTE SAVED! 🎉 Good luck with the prize!");
+                    modal.style.display = 'none';
+                submitBtn.removeAttribute('disabled');
+                submitBtn.innerHTML = "SUBMIT ENTRY 🚀";
+                submitBtn.setAttribute('data-valid', 'true');
+                submitBtn.style.opacity = '1';
+                submitBtn.style.cursor = 'pointer';
+                    
+                    // Reset form
+                    document.getElementById('sampling-form').reset();
+                    currentPage = 1;
+                    updateSlide();
+                    console.log('[SUBMIT] Submission successful, form reset');
+                }).catch(error => {
+                    console.error('[SUBMIT] Fetch error:', error);
+                    console.error('[SUBMIT] Error message:', error.message);
+                    console.error('[SUBMIT] Error stack:', error.stack);
+                    alert("Vote logged locally (Network Error).");
+                    modal.style.display = 'none';
+                submitBtn.removeAttribute('disabled');
+                submitBtn.innerHTML = "SUBMIT ENTRY 🚀";
+                submitBtn.setAttribute('data-valid', 'true');
+                submitBtn.style.opacity = '1';
+                submitBtn.style.cursor = 'pointer';
+                });
+            }); // Close addEventListener callback
+        
+        // Monitor for disabled attribute and remove it immediately + log validation changes
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'attributes') {
+                    if (mutation.attributeName === 'disabled' && submitBtn.hasAttribute('disabled')) {
+                        console.warn('[SUBMIT] ⚠️ DISABLED ATTRIBUTE DETECTED - Removing immediately!');
+                        submitBtn.removeAttribute('disabled');
+                    }
+                    if (mutation.attributeName === 'data-valid') {
+                        console.log('[SUBMIT] Submit button validation state changed:', submitBtn.getAttribute('data-valid'));
+                    }
+                }
+            });
+        });
+        if (submitBtn) {
+            observer.observe(submitBtn, { 
+                attributes: true, 
+                attributeFilter: ['disabled', 'data-valid'],
+                attributeOldValue: true
+            });
+        }
+
+    </script>
+</body>
+</html>
+

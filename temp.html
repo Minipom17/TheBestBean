@@ -1,0 +1,833 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>12&#xB0; SUR - Master Architecture | Experiences - 12° Sur</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'v-white': '#FFFFFF',
+                        'v-black': '#000000',
+                        'v-gray': '#737373',
+                        'v-light-gray': '#E5E5E5',
+                        'v-yellow': '#FACC15', // Accent
+                        'v-blue': '#2563EB',   // Accent
+                        'v-green': '#16A34A',  // Accent
+                        'v-red': '#DC2626',    // JMB Structural Red
+                        'v-magenta': '#DB2777', // Accent
+                        'ink-black': '#000000',
+                        'paper-white': '#FFFFFF',
+                        'brand-red': '#DC2626'
+                    },
+                    fontFamily: {
+                        'sans': ['"Inter"', 'sans-serif'],
+                        'mono': ['"JetBrains Mono"', 'monospace'],
+                        'grotesk': ['"Space Grotesk"', 'sans-serif'],
+                        'mono-jb': ['"JetBrains Mono"', 'monospace'],
+                    },
+                    letterSpacing: {
+                        'tighter': '-0.04em',
+                        'tight': '-0.02em',
+                        'widest': '0.15em',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap Icons for UI elements -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        body {
+            background-color: #FFFFFF;
+            color: #000000;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+        .font-grotesk { font-family: 'Space Grotesk', sans-serif; }
+        .font-mono-jb, .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .font-marker { font-family: 'Patrick Hand', cursive; }
+        
+        .rule-thin {
+            border-bottom: 1px solid #E5E5E5;
+        }
+
+        /* Minimalist structural scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #E5E5E5; }
+        ::-webkit-scrollbar-thumb:hover { background: #000000; }
+
+        /* JMB Image Treatment: High contrast, stark grayscale on desktop, full color on mobile */
+        .img-stark {
+            transition: filter 0.5s ease;
+        }
+
+        body.is-scrolling .img-stark {
+            filter: grayscale(100%) contrast(1.15) brightness(0.95) !important;
+        }
+        
+        @media (hover: hover) {
+            .img-stark {
+                filter: grayscale(100%) contrast(1.15) brightness(0.95);
+            }
+            .img-stark:hover, .group:hover .img-stark {
+                filter: grayscale(0%) contrast(1.0) brightness(1.0);
+            }
+        }
+
+        /* Delivery & WhatsApp Float Button */
+        .delivery-float {
+            position: fixed;
+            height: 48px;
+            padding: 0 20px;
+            bottom: 24px;
+            right: 24px;
+            background-color: #FACC15; /* Yellow Accent */
+            color: #111111;
+            border: 2px solid #FACC15;
+            border-radius: 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            box-shadow: none;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+        .delivery-float:hover {
+            background-color: #111111;
+            border-color: #111111;
+            color: #FFFFFF;
+            transform: none;
+        }
+    </style>
+    
+    
+</head>
+<body class="min-h-screen flex flex-col font-sans text-sm selection:bg-v-black selection:text-v-white relative bg-v-white text-v-black">
+
+    
+<!-- TOP STICKY BAR (Swiss Master Architecture) -->
+<header class="px-6 md:px-12 py-3 flex flex-col lg:flex-row justify-between items-start lg:items-center text-[10px] font-bold uppercase tracking-widest rule-thin sticky top-0 bg-v-white/95 backdrop-blur-sm z-50 gap-4 lg:gap-0 text-v-black font-mono-jb">
+    <!-- Left Side Utility Data & Branding -->
+    <div class="flex flex-wrap items-center gap-6 text-v-gray w-full lg:w-auto">
+        <a class="flex flex-col text-decoration-none group mr-2" href="/">
+            <span class="font-bold text-v-black tracking-tighter text-base md:text-lg font-sans leading-none group-hover:text-v-red transition-colors">12° SUR</span>
+            <span class="text-[7px] text-v-gray uppercase tracking-widest font-mono-jb mt-[2px] leading-none">Andean Coffee Experiences</span>
+        </a>
+        <span class="hidden sm:inline">LA CONVENCIÓN 1700-2300M</span>
+        <button type="button" id="cmarket-toggle" class="group flex items-center gap-1.5 px-2 py-0.5 border border-v-black/20 hover:border-v-black hover:bg-v-black hover:text-v-white transition-all cursor-pointer text-[10px] font-mono-jb uppercase tracking-widest text-v-black" title="Click to toggle between Kilograms and Pounds">
+            <span>C-MARKET:</span>
+            <span id="cmarket-price" class="text-v-blue group-hover:text-v-yellow font-bold transition-colors">$5.56/KG</span>
+            <span id="cmarket-unit-hint" class="text-[8px] text-v-gray group-hover:text-v-white/70 ml-0.5">[⇄ LB]</span>
+        </button>
+    </div>
+
+    <!-- Right Side Navigation & Cart/Bookings Stack -->
+    <nav class="flex flex-wrap items-center gap-6 lg:gap-8 text-v-gray mt-1 lg:mt-0 w-full lg:w-auto justify-between lg:justify-end">
+        <div class="flex flex-wrap items-center gap-6 lg:gap-8">
+            <a class="hover:text-v-black transition-colors text-decoration-none" href="/GreenBeans">COFFEE</a>
+            <a class="hover:text-v-black transition-colors hidden sm:block text-decoration-none" href="/BrewMethods">BREW GUIDES</a>
+            <a class="hover:text-v-black transition-colors text-decoration-none" href="/Experiences">EXPERIENCES</a>
+            <a class="hover:text-v-black transition-colors hidden md:block text-decoration-none" href="/Wholesale">WHOLESALE</a>
+            <a class="hover:text-v-blue text-v-black transition-colors text-decoration-none font-bold" href="/OS">OS</a>
+        </div>
+        <!-- Far Right: Cart & Bookings Open Stack (+2px spacing -> 3px gap) -->
+        <div class="flex flex-col items-end gap-[3px] ml-0 lg:ml-4">
+            <a class="hover:text-v-red transition-colors text-decoration-none font-bold text-v-black leading-none py-[1px] block" href="/Cart">[ CART: 0 ]</a>
+            <a class="text-v-black flex items-center gap-1.5 leading-none py-[1px] block text-[9px] hover:text-v-green transition-colors text-decoration-none" href="/Experiences">
+                <span class="w-1.5 h-1.5 rounded-full bg-v-green animate-pulse inline-block"></span>
+                <span>BOOKINGS OPEN</span>
+            </a>
+        </div>
+    </nav>
+</header>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggleBtn = document.getElementById('cmarket-toggle');
+        const priceSpan = document.getElementById('cmarket-price');
+        const hintSpan = document.getElementById('cmarket-unit-hint');
+        
+        if (!toggleBtn || !priceSpan || !hintSpan) return;
+
+        // Base price in USD per Pound (KC=F C-Market reference)
+        const basePriceLb = 2.52;
+        const kgFactor = 2.20462;
+        const basePriceKg = (basePriceLb * kgFactor).toFixed(2); // 5.56
+
+        function setUnit(unit) {
+            if (unit === 'LB') {
+                priceSpan.textContent = `$${basePriceLb.toFixed(2)}/LB`;
+                hintSpan.textContent = '[⇄ KG]';
+                toggleBtn.setAttribute('title', 'Click to toggle between Pounds and Kilograms');
+                localStorage.setItem('cmarket_unit', 'LB');
+            } else {
+                priceSpan.textContent = `$${basePriceKg}/KG`;
+                hintSpan.textContent = '[⇄ LB]';
+                toggleBtn.setAttribute('title', 'Click to toggle between Kilograms and Pounds');
+                localStorage.setItem('cmarket_unit', 'KG');
+            }
+        }
+
+        // Initialize from storage or default to KG (international standard)
+        const savedUnit = localStorage.getItem('cmarket_unit') || 'KG';
+        setUnit(savedUnit);
+
+        toggleBtn.addEventListener('click', function() {
+            const currentUnit = localStorage.getItem('cmarket_unit') || 'KG';
+            setUnit(currentUnit === 'KG' ? 'LB' : 'KG');
+        });
+    });
+</script>
+
+    
+    <main b-67zt61eedp class="flex-1">
+        
+<!-- MAIN CONTENT CONTAINER (Swiss Master Architecture) -->
+<div class="flex-grow max-w-[1600px] mx-auto w-full px-6 md:px-12 relative pb-24 font-sans text-v-black">
+    
+    <!-- HEADER -->
+    <header class="pt-16 md:pt-24 mb-20 md:mb-32 flex flex-col items-start w-full">
+        <div class="inline-flex flex-col max-w-full">
+            <h1 class="text-[clamp(4.5rem,12vw,10rem)] font-bold tracking-tighter text-v-black leading-[0.85] mb-4">
+                EXPERIENCES
+            </h1>
+            <div class="flex justify-between w-full text-[9px] sm:text-[11px] md:text-[13px] font-bold uppercase text-v-gray tracking-widest sm:tracking-[0.2em] font-mono-jb">
+                <span>Specialty</span>
+                <span class="hidden sm:inline">Coffee</span>
+                <span>Laboratory</span>
+                <span class="text-v-red">&amp;</span>
+                <span>Field</span>
+                <span>Expeditions</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT GRID -->
+    <main class="flex flex-col gap-32 md:gap-48">
+        
+        <!-- SECTION: URBAN LABS -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 relative">
+            
+            <!-- Sticky Left Title & Filters (4 Columns) -->
+            <div class="lg:col-span-4 flex flex-col items-start lg:sticky lg:top-32 h-max z-10">
+                <div class="w-16 h-4 bg-v-yellow mb-8"></div>
+                <h2 class="text-5xl md:text-6xl font-bold tracking-tighter text-v-black leading-[0.9]">URBAN<br>LABS</h2>
+                
+                <div class="mt-8 flex flex-col gap-6 w-full pr-8">
+                    <!-- Location Filter -->
+                    <div class="flex flex-col gap-3">
+                        <span class="text-[9px] font-bold uppercase tracking-widest text-v-gray font-mono-jb">LOCATION</span>
+                        <div class="flex flex-wrap gap-2" id="urban-location-filters">
+                            <button class="filter-btn active px-3 py-1.5 border border-v-black text-[10px] font-bold font-mono-jb uppercase tracking-widest bg-v-black text-v-white transition-colors" data-filter="all">All</button>
+                            <button class="filter-btn px-3 py-1.5 border border-v-black text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-black hover:bg-v-light-gray transition-colors" data-filter="cusco">Cusco</button>
+                            <button class="filter-btn px-3 py-1.5 border border-v-black text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-black hover:bg-v-light-gray transition-colors" data-filter="lima">Lima</button>
+                            <button class="filter-btn px-3 py-1.5 border border-v-black text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-black hover:bg-v-light-gray transition-colors" data-filter="calca">Calca</button>
+                            <button class="filter-btn px-3 py-1.5 border border-v-black text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-black hover:bg-v-light-gray transition-colors" data-filter="special">Special Events</button>
+                        </div>
+                    </div>
+
+                    <!-- Difficulty Filter -->
+                    <div class="flex flex-col gap-3">
+                        <span class="text-[9px] font-bold uppercase tracking-widest text-v-gray font-mono-jb">DIFFICULTY</span>
+                        <div class="flex flex-wrap gap-2" id="urban-difficulty-filters">
+                            <button class="filter-btn active px-3 py-1.5 border border-v-black text-[10px] font-bold font-mono-jb uppercase tracking-widest bg-v-black text-v-white transition-colors" data-filter="all">All Levels</button>
+                            <button class="filter-btn px-3 py-1.5 border border-v-black text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-black hover:bg-v-light-gray transition-colors" data-filter="beginner">Beginner</button>
+                            <button class="filter-btn px-3 py-1.5 border border-v-black text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-black hover:bg-v-light-gray transition-colors" data-filter="intermediate">Intermediate</button>
+                            <button class="filter-btn px-3 py-1.5 border border-v-black text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-black hover:bg-v-light-gray transition-colors" data-filter="advanced">Advanced</button>
+                        </div>
+                    </div>
+
+                    <!-- Frequency Filter -->
+                    <div class="flex flex-col gap-3 mt-4">
+                        <span class="text-[9px] font-bold uppercase tracking-widest text-v-gray font-mono-jb">FREQUENCY</span>
+                        <div class="flex flex-wrap gap-2" id="urban-frequency-filters">
+                            <button class="filter-btn active px-3 py-1.5 border border-v-black text-[10px] font-bold font-mono-jb uppercase tracking-widest bg-v-black text-v-white transition-colors" data-filter="all">All</button>
+                            <button class="filter-btn px-3 py-1.5 border border-v-black text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-black hover:bg-v-light-gray transition-colors" data-filter="every-week">Every Week</button>
+                            <button class="filter-btn px-3 py-1.5 border border-v-black text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-black hover:bg-v-light-gray transition-colors" data-filter="august">August</button>
+                            <button class="filter-btn px-3 py-1.5 border border-v-black text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-black hover:bg-v-light-gray transition-colors" data-filter="september">September</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Content Grid (8 Columns split into 2) -->
+            <div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16" id="urban-labs-grid">
+                
+                <!-- Featured Workshop Item: The Coffee Project (Crash Course) -->
+                <article class="lab-item flex flex-col group md:col-span-2 bg-white rounded-3xl p-6 shadow-sm border border-gray-100 mb-2 hover:shadow-md transition-shadow" data-location="cusco" data-difficulty="beginner">
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                        <a class="md:col-span-5 aspect-[16/9] bg-gray-100 rounded-2xl overflow-hidden relative block text-decoration-none" href="/Tour/1">
+                            <img src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&w=1200&q=80" alt="The Coffee Project" class="img-stark absolute inset-0 w-full h-full object-cover" />
+                            <div class="absolute top-3 left-3 bg-white text-slate-900 rounded-full px-3 py-1 text-[9px] font-mono-jb font-bold uppercase tracking-widest shadow-sm">SEED TO CUP</div>
+                        </a>
+                        <div class="md:col-span-7 flex flex-col justify-between h-full">
+                            <div>
+                                <div class="flex justify-between items-start mb-2">
+                                    <h3 class="text-2xl md:text-3xl font-bold tracking-tight text-v-black m-0 font-sans uppercase">THE COFFEE PROJECT</h3>
+                                    <div class="flex gap-2 shrink-0">
+                                        <span class="px-3 py-1 bg-slate-100 text-slate-800 rounded-full text-[10px] font-bold tracking-widest uppercase font-mono-jb">AUG 24</span>
+                                        <span class="px-3 py-1 bg-red-50 text-red-800 rounded-full text-[10px] font-bold tracking-widest uppercase font-mono-jb">60 MIN</span>
+                                    </div>
+                                </div>
+                                <p class="text-v-gray text-sm leading-relaxed mb-6 font-normal">
+                                    An introduction to altitude, origins, and the technical journey from seed to cup. Includes our complete interactive crash course slides for roastery & clinical study.
+                                </p>
+                            </div>
+                            <div class="flex flex-wrap items-center justify-between border-t border-v-black pt-4 gap-4 font-mono-jb">
+                                <span class="text-2xl font-semibold text-v-black">$45 USD</span>
+                                <div class="flex flex-wrap items-center gap-4">
+                                    <a href="/presentations/coffee-presentation.html" target="_blank" class="px-4 py-2 bg-v-black text-v-white text-[10px] font-bold uppercase tracking-widest hover:bg-v-red transition-colors text-decoration-none border border-v-black">
+                                        [ 💻 LAUNCH WORKSHOP SLIDES → ]
+                                    </a>
+                                    <a class="text-[10px] font-bold uppercase tracking-widest text-v-black hover:text-v-blue transition-colors text-decoration-none" href="/Tour/1">
+                                        VIEW DOSSIER →
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- NEW: Introduction to Sensory & Smells -->
+                <article class="lab-item flex flex-col group" data-location="lima" data-difficulty="beginner">
+                    <a class="text-decoration-none text-slate-900 flex flex-col h-full bg-white rounded-3xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow" href="/Tour/7">
+                        <div class="w-full aspect-[4/3] bg-gray-100 mb-6 overflow-hidden rounded-2xl relative">
+                            <img src="https://images.unsplash.com/photo-1559525839-b184a4d698c7?auto=format&fit=crop&w=1200&q=80" alt="Sensory Smells" class="img-stark absolute inset-0 w-full h-full object-cover" />
+                        </div>
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-2xl md:text-3xl font-semibold tracking-tight text-v-black m-0">Sensory Basics</h3>
+                            <div class="flex gap-2 shrink-0">
+                                <span class="px-3 py-1 bg-slate-100 text-slate-800 rounded-full text-[10px] font-bold tracking-widest uppercase font-mono-jb">AUG 28</span>
+                                <span class="px-3 py-1 bg-slate-900 text-white rounded-full text-[10px] font-bold tracking-widest uppercase font-mono-jb">90 MIN</span>
+                            </div>
+                        </div>
+                        <p class="text-v-gray text-sm md:text-base leading-relaxed mb-10 font-normal pr-4 flex-grow">
+                            A foundational introduction to sensory smells, the SCA Flavor Wheel, and basics of TDS measurement.
+                        </p>
+                        <div class="flex items-center justify-between mt-auto border-t border-v-light-gray pt-4 font-mono-jb">
+                            <span class="text-2xl font-semibold text-v-black">$35 USD</span>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-slate-900 bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full transition-colors flex items-center">
+                                LIMA HQ <span class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
+                            </span>
+                        </div>
+                    </a>
+                </article>
+
+                <!-- Lab Item 1 -->
+                <article class="lab-item flex flex-col group" data-location="cusco" data-difficulty="intermediate">
+                    <a class="text-decoration-none text-slate-900 flex flex-col h-full bg-white rounded-3xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow" href="/Tour/3">
+                        <div class="w-full aspect-[4/3] bg-gray-100 mb-6 overflow-hidden rounded-2xl relative">
+                            <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1200&q=80" alt="Extraction Lab" class="img-stark absolute inset-0 w-full h-full object-cover" />
+                        </div>
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-2xl md:text-3xl font-semibold tracking-tight text-v-black m-0">Extraction Science</h3>
+                            <span class="px-3 py-1 bg-red-50 text-red-800 rounded-full text-[10px] font-bold tracking-widest uppercase font-mono-jb shrink-0">60 Min</span>
+                        </div>
+                        <p class="text-v-gray text-sm md:text-base leading-relaxed mb-10 font-normal pr-4 flex-grow">
+                            A clinical, hands-on workshop treating brewing as a precise chemical process. Measure yield, manipulate extraction variables, and analyze the results.
+                        </p>
+                        <div class="flex items-center justify-between mt-auto border-t border-v-light-gray pt-4 font-mono-jb">
+                            <span class="text-2xl font-semibold text-v-black">$45 USD</span>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-slate-900 bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full transition-colors flex items-center">
+                                VIEW DOSSIER <span class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
+                            </span>
+                        </div>
+                    </a>
+                </article>
+
+                <!-- NEW: In-Depth Cupping Session -->
+                <article class="lab-item flex flex-col group" data-location="calca" data-difficulty="intermediate">
+                    <a class="text-decoration-none text-slate-900 flex flex-col h-full bg-white rounded-3xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow" href="/Tour/8">
+                        <div class="w-full aspect-[4/3] bg-gray-100 mb-6 overflow-hidden rounded-2xl relative">
+                            <img src="https://images.unsplash.com/photo-1611162458324-aae1eb4129a4?auto=format&fit=crop&w=1200&q=80" alt="In-Depth Cupping" class="img-stark absolute inset-0 w-full h-full object-cover" />
+                        </div>
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-2xl md:text-3xl font-semibold tracking-tight text-v-black m-0">Advanced Cupping</h3>
+                            <div class="flex gap-2 shrink-0">
+                                <span class="px-3 py-1 bg-slate-100 text-slate-800 rounded-full text-[10px] font-bold tracking-widest uppercase font-mono-jb">SEP 05</span>
+                                <span class="px-3 py-1 bg-slate-900 text-white rounded-full text-[10px] font-bold tracking-widest uppercase font-mono-jb">120 MIN</span>
+                            </div>
+                        </div>
+                        <p class="text-v-gray text-sm md:text-base leading-relaxed mb-10 font-normal pr-4 flex-grow">
+                            Detailed cupping sessions comparing rare lots. Discuss senses, share notes, and calibrate your palate alongside professionals.
+                        </p>
+                        <div class="flex items-center justify-between mt-auto border-t border-v-light-gray pt-4 font-mono-jb">
+                            <span class="text-2xl font-semibold text-v-black">$55 USD</span>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-slate-900 bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full transition-colors flex items-center">
+                                CALCA FARM <span class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
+                            </span>
+                        </div>
+                    </a>
+                </article>
+
+                <!-- Lab Item 2 -->
+                <article class="lab-item flex flex-col group" data-location="cusco" data-difficulty="intermediate">
+                    <a class="text-decoration-none text-slate-900 flex flex-col h-full bg-white rounded-3xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow" href="/Tour/2">
+                        <div class="w-full aspect-[4/3] bg-gray-100 mb-6 overflow-hidden rounded-2xl relative">
+                            <img src="https://images.unsplash.com/photo-1581007871115-f14bc016e0a4?auto=format&fit=crop&w=1200&q=80" alt="Sensory Cupping" class="img-stark absolute inset-0 w-full h-full object-cover" />
+                        </div>
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-2xl md:text-3xl font-semibold tracking-tight text-v-black m-0">SCA Flavor Profiling</h3>
+                            <div class="flex gap-2 shrink-0">
+                                <span class="px-3 py-1 bg-slate-100 text-slate-800 rounded-full text-[10px] font-bold tracking-widest uppercase font-mono-jb">SEP 12</span>
+                                <span class="px-3 py-1 bg-slate-900 text-white rounded-full text-[10px] font-bold tracking-widest uppercase font-mono-jb">120 MIN</span>
+                            </div>
+                        </div>
+                        <p class="text-v-gray text-sm md:text-base leading-relaxed mb-10 font-normal pr-4 flex-grow">
+                            Train your palate using industry-standard protocols. Blind-taste, score, and chart acidity, body, and tasting notes of exotic Peruvian varietals.
+                        </p>
+                        <div class="flex items-center justify-between mt-auto border-t border-v-light-gray pt-4 font-mono-jb">
+                            <span class="text-2xl font-semibold text-v-black">$75 USD</span>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-slate-900 bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full transition-colors flex items-center">
+                                VIEW DOSSIER <span class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
+                            </span>
+                        </div>
+                    </a>
+                </article>
+
+                <!-- Lab Item 3 -->
+                <article class="lab-item flex flex-col group" data-location="cusco" data-difficulty="advanced">
+                    <a class="text-decoration-none text-slate-900 flex flex-col h-full bg-white rounded-3xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow" href="/Tour/6">
+                        <div class="w-full aspect-[4/3] bg-gray-100 mb-6 overflow-hidden rounded-2xl relative">
+                            <img src="https://images.unsplash.com/photo-1498804103079-a6351b050096?auto=format&fit=crop&w=1200&q=80" alt="Brewing Architecture" class="img-stark absolute inset-0 w-full h-full object-cover" />
+                        </div>
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-2xl md:text-3xl font-semibold tracking-tight text-v-black m-0">Brewing Architecture</h3>
+                            <div class="flex gap-2 shrink-0">
+                                <span class="px-3 py-1 bg-slate-100 text-slate-800 rounded-full text-[10px] font-bold tracking-widest uppercase font-mono-jb">SEP 20</span>
+                                <span class="px-3 py-1 bg-slate-900 text-white rounded-full text-[10px] font-bold tracking-widest uppercase font-mono-jb">180 MIN</span>
+                            </div>
+                        </div>
+                        <p class="text-v-gray text-sm md:text-base leading-relaxed mb-10 font-normal pr-4 flex-grow">
+                            Master the craft of precision extraction. Refine your volumetric parameters and sensory dynamics to build the perfect cup.
+                        </p>
+                        <div class="flex items-center justify-between mt-auto border-t border-v-light-gray pt-4 font-mono-jb">
+                            <span class="text-2xl font-semibold text-v-black">$65 USD</span>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-slate-900 bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full transition-colors flex items-center">
+                                VIEW DOSSIER <span class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
+                            </span>
+                        </div>
+                    </a>
+                </article>
+
+                <!-- NEW: SCA Certification Course -->
+                <article class="lab-item flex flex-col group" data-location="special" data-difficulty="advanced">
+                    <a class="text-decoration-none text-slate-900 flex flex-col h-full bg-white rounded-3xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow" href="/Tour/9">
+                        <div class="w-full aspect-[4/3] bg-gray-100 mb-6 overflow-hidden rounded-2xl relative border border-red-200">
+                            <img src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1200&q=80" alt="SCA Certification" class="img-stark absolute inset-0 w-full h-full object-cover" />
+                            <div class="absolute top-3 right-3 bg-red-600 text-white rounded-full px-3 py-1 text-[9px] font-mono-jb font-bold uppercase tracking-widest shadow-sm">GUEST EVENT</div>
+                        </div>
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-2xl md:text-3xl font-semibold tracking-tight text-v-black m-0">SCA Certification</h3>
+                            <div class="flex gap-2 shrink-0">
+                                <span class="px-3 py-1 bg-slate-100 text-slate-800 rounded-full text-[10px] font-bold tracking-widest uppercase font-mono-jb">OCT 01</span>
+                                <span class="px-3 py-1 bg-slate-900 text-white rounded-full text-[10px] font-bold tracking-widest uppercase font-mono-jb">FULL DAY</span>
+                            </div>
+                        </div>
+                        <p class="text-v-gray text-sm md:text-base leading-relaxed mb-10 font-normal pr-4 flex-grow">
+                            An intensive seminar diving into deep coffee theory and science. Led by a certified SCA professional with official certification exams.
+                        </p>
+                        <div class="flex items-center justify-between mt-auto border-t border-v-light-gray pt-4 font-mono-jb">
+                            <span class="text-2xl font-semibold text-v-black">$450 USD</span>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-slate-900 bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full transition-colors flex items-center">
+                                SPECIAL EVENTS <span class="ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
+                            </span>
+                        </div>
+                    </a>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- SECTION: EXPEDITIONS -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 relative">
+            
+            <!-- Sticky Left Title & Filters (4 Columns) -->
+            <div class="lg:col-span-4 flex flex-col items-start lg:sticky lg:top-32 h-max z-10">
+                <div class="w-16 h-4 bg-v-red mb-8"></div>
+                <h2 class="text-5xl md:text-6xl font-bold tracking-tighter text-v-black leading-[0.9]">ORIGIN<br>EXPEDITIONS</h2>
+                <span class="text-[10px] font-bold uppercase tracking-widest text-v-gray mt-6 font-mono-jb">LA CONVENCIÓN VALLEY</span>
+
+                <div class="mt-8 flex flex-col w-full pr-8">
+                    <!-- Location Filter -->
+                    <div class="flex flex-col gap-3">
+                        <span class="text-[9px] font-bold uppercase tracking-widest text-v-gray font-mono-jb">LOCATION</span>
+                        <div class="flex flex-wrap gap-2" id="expedition-location-filters">
+                            <button class="filter-btn active px-3 py-1.5 border border-v-black text-[10px] font-bold font-mono-jb uppercase tracking-widest bg-v-black text-v-white transition-colors" data-filter="all">All</button>
+                            <button class="filter-btn px-3 py-1.5 border border-v-black text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-black hover:bg-v-light-gray transition-colors" data-filter="santa-teresa">Santa Teresa</button>
+                            <button class="filter-btn px-3 py-1.5 border border-v-black text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-black hover:bg-v-light-gray transition-colors" data-filter="echarati">Echarati</button>
+                            <button class="filter-btn px-3 py-1.5 border border-v-black text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-black hover:bg-v-light-gray transition-colors" data-filter="inkawasi">Inkawasi</button>
+                        </div>
+                    </div>
+
+                    <!-- Difficulty Filter -->
+                    <div class="flex flex-col gap-3 mt-4">
+                        <span class="text-[9px] font-bold uppercase tracking-widest text-v-gray font-mono-jb">DIFFICULTY</span>
+                        <div class="flex flex-wrap gap-2" id="expedition-difficulty-filters">
+                            <button class="filter-btn active px-3 py-1.5 border border-v-black text-[10px] font-bold font-mono-jb uppercase tracking-widest bg-v-black text-v-white transition-colors" data-filter="all">All Levels</button>
+                            <button class="filter-btn px-3 py-1.5 border border-v-black text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-black hover:bg-v-light-gray transition-colors" data-filter="beginner">Beginner</button>
+                            <button class="filter-btn px-3 py-1.5 border border-v-black text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-black hover:bg-v-light-gray transition-colors" data-filter="intermediate">Intermediate</button>
+                            <button class="filter-btn px-3 py-1.5 border border-v-black text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-black hover:bg-v-light-gray transition-colors" data-filter="advanced">Advanced</button>
+                        </div>
+                    </div>
+
+                    <!-- Frequency Filter -->
+                    <div class="flex flex-col gap-3 mt-4">
+                        <span class="text-[9px] font-bold uppercase tracking-widest text-v-gray font-mono-jb">FREQUENCY</span>
+                        <div class="flex flex-wrap gap-2" id="expedition-frequency-filters">
+                            <button class="filter-btn active px-3 py-1.5 border border-v-black text-[10px] font-bold font-mono-jb uppercase tracking-widest bg-v-black text-v-white transition-colors" data-filter="all">All</button>
+                            <button class="filter-btn px-3 py-1.5 border border-v-black text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-black hover:bg-v-light-gray transition-colors" data-filter="every-week">Every Week</button>
+                            <button class="filter-btn px-3 py-1.5 border border-v-black text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-black hover:bg-v-light-gray transition-colors" data-filter="august">August</button>
+                            <button class="filter-btn px-3 py-1.5 border border-v-black text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-black hover:bg-v-light-gray transition-colors" data-filter="september">September</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Content Column (8 Columns stacked) -->
+            <div class="lg:col-span-8 flex flex-col gap-24 md:gap-32" id="expeditions-list">
+                
+                <!-- Expedition 1 -->
+                <article class="expedition-item flex flex-col group" data-difficulty="beginner">
+                    <a class="text-decoration-none text-slate-900 block bg-white rounded-3xl p-6 md:p-10 shadow-sm border border-gray-100 hover:shadow-md transition-shadow" href="/Tour/4">
+                        <!-- Image Block spans full 8 cols -->
+                        <div class="w-full aspect-[21/9] bg-gray-100 mb-10 overflow-hidden rounded-2xl relative">
+                             <img src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&w=1600&q=80" alt="Cloud Forest" class="img-stark absolute inset-0 w-full h-full object-cover" />
+                        </div>
+
+                        <!-- Data Grid splits inside -->
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-12 h-full">
+                            <!-- Left: Content & Button -->
+                            <div class="md:col-span-7 flex flex-col">
+                                <div class="flex items-center gap-3 mb-4 font-mono-jb">
+                                    <div class="w-3 h-3 bg-v-red"></div>
+                                    <span class="text-[10px] font-bold uppercase tracking-widest text-v-black">BASE CAMP • 12 HOURS</span>
+                                    <span class="px-2 py-0.5 bg-slate-100 text-slate-800 rounded-full text-[10px] font-bold tracking-widest uppercase">AUG 30</span>
+                                </div>
+                                <h3 class="text-3xl md:text-4xl font-semibold tracking-tight mb-4 m-0">Cloud Forest Immersion</h3>
+                                <p class="text-v-gray text-base leading-relaxed mb-10 font-normal max-w-xl">
+                                    A highly structured excursion into the high-altitude canopy. We balance intense botanical science with spectacular leisure. Analyze micro-climates, execute selective harvesting, and cup the fresh crop directly at the source.
+                                </p>
+                                <div class="flex items-center gap-6 mt-auto">
+                                    <span class="bg-v-black text-v-white px-8 py-4 font-bold uppercase tracking-widest text-[10px] group-hover:bg-v-red transition-colors font-mono-jb">
+                                        VIEW DOSSIER
+                                    </span>
+                                    <span class="text-2xl font-semibold text-v-black font-mono-jb">$120 USD</span>
+                                </div>
+                            </div>
+
+                            <!-- Right: Timeline -->
+                            <div class="md:col-span-5 flex flex-col pt-2 md:pt-0 font-mono-jb">
+                                <h4 class="text-[10px] font-bold uppercase tracking-widest text-v-gray mb-4">MISSION TIMELINE</h4>
+                                <div class="flex flex-col border-t border-v-black font-sans">
+                                    <div class="flex items-start gap-4 py-4 border-b border-v-light-gray">
+                                        <span class="font-mono text-xs font-bold w-12 shrink-0 text-v-black pt-0.5">06:00</span>
+                                        <span class="text-sm font-normal text-v-gray w-full">4x4 Departure from Lab</span>
+                                    </div>
+                                    <div class="flex items-start gap-4 py-4 border-b border-v-light-gray">
+                                        <span class="font-mono text-xs font-bold w-12 shrink-0 text-v-black pt-0.5">10:00</span>
+                                        <span class="text-sm font-normal text-v-gray w-full">Botany Walk & Harvest</span>
+                                    </div>
+                                    <div class="flex items-start gap-4 pt-4 pb-0">
+                                        <span class="font-mono text-xs font-bold w-12 shrink-0 text-v-red pt-0.5">15:00</span>
+                                        <span class="text-sm font-semibold text-v-black w-full">Fresh Crop Cupping</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </article>
+
+                <!-- Expedition 2 -->
+                <article class="expedition-item flex flex-col group" data-difficulty="intermediate">
+                    <a class="text-decoration-none text-slate-900 block bg-white rounded-3xl p-6 md:p-10 shadow-sm border border-gray-100 hover:shadow-md transition-shadow" href="/Tour/5">
+                        <div class="w-full aspect-[21/9] bg-gray-100 mb-10 overflow-hidden rounded-2xl relative">
+                             <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=1600&q=80" alt="Fermentation Tanks" class="img-stark absolute inset-0 w-full h-full object-cover" />
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-12 h-full">
+                            <!-- Left: Content & Button -->
+                            <div class="md:col-span-7 flex flex-col">
+                                <div class="flex items-center gap-3 mb-4 font-mono-jb">
+                                    <div class="w-3 h-3 bg-v-blue"></div>
+                                    <span class="text-[10px] font-bold uppercase tracking-widest text-v-black">ADVANCED STUDY • 48 HOURS</span>
+                                    <span class="px-2 py-0.5 bg-slate-100 text-slate-800 rounded-full text-[10px] font-bold tracking-widest uppercase">SEP 12</span>
+                                </div>
+                                <h3 class="text-3xl md:text-4xl font-semibold tracking-tight mb-4 m-0">Fermentation Camp</h3>
+                                <p class="text-v-gray text-base leading-relaxed mb-10 font-normal max-w-xl">
+                                    A rigorous overnight immersion into post-harvest processing. Measure sugar content (Brix), track pH degradation during fermentation, and seal experimental anaerobic tanks alongside master producers.
+                                </p>
+                                <div class="flex items-center gap-6 mt-auto">
+                                    <span class="bg-v-black text-v-white px-8 py-4 font-bold uppercase tracking-widest text-[10px] group-hover:bg-v-blue transition-colors font-mono-jb">
+                                        VIEW DOSSIER
+                                    </span>
+                                    <span class="text-2xl font-semibold text-v-black font-mono-jb">$350 USD</span>
+                                </div>
+                            </div>
+
+                            <!-- Right: Syllabus -->
+                            <div class="md:col-span-5 flex flex-col pt-2 md:pt-0 font-mono-jb">
+                                <h4 class="text-[10px] font-bold uppercase tracking-widest text-v-gray mb-4">SYLLABUS</h4>
+                                <div class="flex flex-col border-t border-v-black font-sans">
+                                    <div class="flex flex-col gap-1 py-4 border-b border-v-light-gray">
+                                        <span class="font-mono text-[10px] font-bold text-v-black uppercase tracking-widest">DAY 01</span>
+                                        <span class="text-sm font-normal text-v-gray">Harvest & Brix Measurement</span>
+                                    </div>
+                                    <div class="flex flex-col gap-1 py-4 border-b border-v-light-gray">
+                                        <span class="font-mono text-[10px] font-bold text-v-black uppercase tracking-widest">NIGHT</span>
+                                        <span class="text-sm font-normal text-v-gray">Sensory Calibration (Firepit)</span>
+                                    </div>
+                                    <div class="flex flex-col gap-1 pt-4 pb-0">
+                                        <span class="font-mono text-[10px] font-bold text-v-blue uppercase tracking-widest">DAY 02</span>
+                                        <span class="text-sm font-semibold text-v-black">Anaerobic Tank Sealing & pH</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </article>
+
+                <!-- NEW: Master Producer Apprenticeship -->
+                <article class="expedition-item flex flex-col group" data-difficulty="advanced">
+                    <a class="text-decoration-none text-slate-900 block bg-white rounded-3xl p-6 md:p-10 shadow-sm border border-gray-100 hover:shadow-md transition-shadow" href="/Tour/10">
+                        <div class="w-full aspect-[21/9] bg-gray-100 mb-10 overflow-hidden rounded-2xl relative">
+                             <img src="https://images.unsplash.com/photo-1511556820780-d912e42b4980?auto=format&fit=crop&w=1600&q=80" alt="Master Producer Apprenticeship" class="img-stark absolute inset-0 w-full h-full object-cover" />
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-12 h-full">
+                            <!-- Left: Content & Button -->
+                            <div class="md:col-span-7 flex flex-col">
+                                <div class="flex items-center gap-3 mb-4 font-mono-jb">
+                                    <div class="w-3 h-3 bg-v-black"></div>
+                                    <span class="text-[10px] font-bold uppercase tracking-widest text-v-black">PRO LEVEL • 72 HOURS</span>
+                                    <span class="px-2 py-0.5 bg-slate-100 text-slate-800 rounded-full text-[10px] font-bold tracking-widest uppercase">OCT 15</span>
+                                </div>
+                                <h3 class="text-3xl md:text-4xl font-semibold tracking-tight mb-4 m-0">Master Apprenticeship</h3>
+                                <p class="text-v-gray text-base leading-relaxed mb-10 font-normal max-w-xl">
+                                    A highly technical, multi-day origin deep dive designed for professionals. Work directly with farm owners on agronomy, soil health, and experimental lot processing.
+                                </p>
+                                <div class="flex items-center gap-6 mt-auto">
+                                    <span class="bg-v-black text-v-white px-8 py-4 font-bold uppercase tracking-widest text-[10px] group-hover:bg-v-yellow group-hover:text-v-black transition-colors font-mono-jb">
+                                        VIEW DOSSIER
+                                    </span>
+                                    <span class="text-2xl font-semibold text-v-black font-mono-jb">$850 USD</span>
+                                </div>
+                            </div>
+
+                            <!-- Right: Syllabus -->
+                            <div class="md:col-span-5 flex flex-col pt-2 md:pt-0 font-mono-jb">
+                                <h4 class="text-[10px] font-bold uppercase tracking-widest text-v-gray mb-4">SYLLABUS</h4>
+                                <div class="flex flex-col border-t border-v-black font-sans">
+                                    <div class="flex flex-col gap-1 py-4 border-b border-v-light-gray">
+                                        <span class="font-mono text-[10px] font-bold text-v-black uppercase tracking-widest">DAY 01</span>
+                                        <span class="text-sm font-normal text-v-gray">Agronomy & Soil Science</span>
+                                    </div>
+                                    <div class="flex flex-col gap-1 py-4 border-b border-v-light-gray">
+                                        <span class="font-mono text-[10px] font-bold text-v-black uppercase tracking-widest">DAY 02</span>
+                                        <span class="text-sm font-normal text-v-gray">Experimental Processing</span>
+                                    </div>
+                                    <div class="flex flex-col gap-1 pt-4 pb-0">
+                                        <span class="font-mono text-[10px] font-bold text-v-black uppercase tracking-widest">DAY 03</span>
+                                        <span class="text-sm font-semibold text-v-black">Advanced Roasting & Q-Grading</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </article>
+
+            </div>
+        </section>
+</div>
+
+
+    </main>
+    
+    <footer class="mt-auto border-t border-v-light-gray py-16 px-6 md:px-12 bg-v-white font-mono-jb">
+    <div class="max-w-[1600px] mx-auto w-full flex flex-col md:flex-row justify-between items-start md:items-end gap-12">
+        
+        <!-- Brand & Color Palette Hook -->
+        <div>
+            <h2 class="text-5xl font-bold tracking-tighter text-v-black leading-none mb-6 font-sans">12° SUR</h2>
+            <div class="flex items-center gap-3">
+                <div class="w-4 h-4 bg-v-black"></div>
+                <div class="w-4 h-4 bg-v-gray"></div>
+                <div class="w-4 h-4 bg-v-red"></div>
+                <div class="w-4 h-4 bg-v-blue"></div>
+                <div class="w-4 h-4 bg-v-yellow"></div>
+            </div>
+        </div>
+
+        <!-- Swiss Grid Footer Links -->
+        <div class="flex flex-wrap gap-16 text-[10px] font-bold uppercase tracking-widest">
+            <div class="flex flex-col gap-4">
+                <a class="text-v-gray hover:text-v-black transition-colors text-decoration-none" href="/GreenBeans">GREEN BEAN SPECS</a>
+                <a class="text-v-gray hover:text-v-black transition-colors text-decoration-none" href="/Wholesale">WHOLESALE</a>
+                <a class="text-v-gray hover:text-v-black transition-colors text-decoration-none" href="/BrewMethods">BREW GUIDES</a>
+            </div>
+            <div class="flex flex-col gap-4">
+                <a class="text-v-black border-b border-v-black pb-0.5 self-start text-decoration-none" href="/About">ABOUT THE LAB</a>
+                <a class="text-v-gray hover:text-v-black transition-colors text-decoration-none" href="/Experiences">EXPERIENCES</a>
+                <a class="text-v-gray hover:text-v-black transition-colors text-decoration-none" href="/Privacy">PRIVACY POLICY</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sourcing & Delivery Info -->
+    <div class="max-w-[1600px] mx-auto w-full mt-12 pt-8 border-t border-v-black/10 text-[10px] text-v-black uppercase tracking-widest flex flex-col gap-4">
+        <p class="leading-loose max-w-4xl text-v-gray">
+            <strong class="text-v-black">HQ:</strong> CUSCO, PERU <br>
+            <strong class="text-v-black">SOURCING:</strong> WE SOURCE MOST OF OUR COFFEE DIRECTLY FROM LA CONVENCIÓN (SANTA TERESA, ECHARATI, INCAWASI). <br>
+            <strong class="text-v-black">LOGISTICS:</strong> WE DELIVER ANYWHERE IN CUSCO, LIMA, AND THROUGHOUT PERU.
+        </p>
+    </div>
+
+    <div class="max-w-[1600px] mx-auto w-full mt-8 pt-8 border-t border-v-light-gray text-[10px] text-v-gray uppercase tracking-widest flex flex-col sm:flex-row justify-between gap-4">
+        <span>&copy; 2026 12° SUR SPECIALTY COFFEE LAB</span>
+        <span>LA CONVENCIÓN VALLEY • PERU</span>
+    </div>
+</footer>
+
+
+    <!-- Unified Delivery & WhatsApp Float Button -->
+    <a b-67zt61eedp href="https://wa.me/15550199" target="_blank" class="delivery-float" title="Delivery & WhatsApp Dispatch">
+        <i b-67zt61eedp class="bi bi-truck text-xl"></i>
+        <span b-67zt61eedp>//</span>
+        <i b-67zt61eedp class="bi bi-whatsapp text-xl"></i>
+    </a>
+
+    <script>
+        let scrollTimeout;
+        window.addEventListener('scroll', () => {
+            document.body.classList.add('is-scrolling');
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                document.body.classList.remove('is-scrolling');
+            }, 150);
+        }, { passive: true });
+    </script>
+
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Urban Labs filtering logic
+            const urbanLocationFilters = document.querySelectorAll('#urban-location-filters .filter-btn');
+            const urbanDifficultyFilters = document.querySelectorAll('#urban-difficulty-filters .filter-btn');
+            const labItems = document.querySelectorAll('.lab-item');
+            
+            let currentUrbanLocation = 'all';
+            let currentUrbanDifficulty = 'all';
+
+            function filterUrbanLabs() {
+                labItems.forEach(item => {
+                    const itemLocation = item.getAttribute('data-location');
+                    const itemDifficulty = item.getAttribute('data-difficulty');
+                    
+                    const matchesLocation = currentUrbanLocation === 'all' || itemLocation === currentUrbanLocation;
+                    const matchesDifficulty = currentUrbanDifficulty === 'all' || itemDifficulty === currentUrbanDifficulty;
+
+                    if (matchesLocation && matchesDifficulty) {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            }
+
+            urbanLocationFilters.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Update active state styling
+                    urbanLocationFilters.forEach(b => {
+                        b.classList.remove('active', 'bg-v-black', 'text-v-white');
+                        b.classList.add('text-v-black', 'hover:bg-v-light-gray');
+                    });
+                    btn.classList.add('active', 'bg-v-black', 'text-v-white');
+                    btn.classList.remove('text-v-black', 'hover:bg-v-light-gray');
+                    
+                    currentUrbanLocation = btn.getAttribute('data-filter');
+                    filterUrbanLabs();
+                });
+            });
+
+            urbanDifficultyFilters.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Update active state styling
+                    urbanDifficultyFilters.forEach(b => {
+                        b.classList.remove('active', 'bg-v-black', 'text-v-white');
+                        b.classList.add('text-v-black', 'hover:bg-v-light-gray');
+                    });
+                    btn.classList.add('active', 'bg-v-black', 'text-v-white');
+                    btn.classList.remove('text-v-black', 'hover:bg-v-light-gray');
+                    
+                    currentUrbanDifficulty = btn.getAttribute('data-filter');
+                    filterUrbanLabs();
+                });
+            });
+
+            // Expeditions filtering logic
+            const expeditionDifficultyFilters = document.querySelectorAll('#expedition-difficulty-filters .filter-btn');
+            const expeditionItems = document.querySelectorAll('.expedition-item');
+            
+            let currentExpeditionDifficulty = 'all';
+
+            function filterExpeditions() {
+                expeditionItems.forEach(item => {
+                    const itemDifficulty = item.getAttribute('data-difficulty');
+                    
+                    if (currentExpeditionDifficulty === 'all' || itemDifficulty === currentExpeditionDifficulty) {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            }
+
+            expeditionDifficultyFilters.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Update active state styling
+                    expeditionDifficultyFilters.forEach(b => {
+                        b.classList.remove('active', 'bg-v-black', 'text-v-white');
+                        b.classList.add('text-v-black', 'hover:bg-v-light-gray');
+                    });
+                    btn.classList.add('active', 'bg-v-black', 'text-v-white');
+                    btn.classList.remove('text-v-black', 'hover:bg-v-light-gray');
+                    
+                    currentExpeditionDifficulty = btn.getAttribute('data-filter');
+                    filterExpeditions();
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

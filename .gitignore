@@ -1,0 +1,71 @@
+# Build outputs
+bin/
+obj/
+publish/
+
+# Deployment archives (temporary files)
+deployment_archives/*.tar.gz
+*.tar.gz
+
+# Database files (local development only)
+*.db
+*.db-shm
+*.db-wal
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio
+.vs/
+*.swp
+*.swo
+*~
+
+# Rider
+.idea/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Logs
+*.log
+logs/
+App_Data/*.ldf
+App_Data/*.mdf
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Node
+node_modules/
+
+# Large media (keep on server, not in git)
+*.mp4
+*.mov
+*.avi
+wwwroot/images/uploads/
+wwwroot/uploads/
+wwwroot/presentations/
+wwwroot/Media/
+wwwroot/data/*.geojson
+wwwroot/lib/
+wwwroot/images/
+
+# Build/debug logs
+build_*.txt
+build_diag.txt
+
+# SSH keys / secrets
+*.pem
+*.key
+Coffe_Cacoa_Coca.txt

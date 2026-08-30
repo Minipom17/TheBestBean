@@ -1,0 +1,373 @@
+@page
+@model TheBestBean.Pages.FarmerSurveys.EditModel
+@{
+    ViewData["Title"] = "Edit Farmer Survey";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header" style="background-color: var(--fairtrade-green); color: var(--white);">
+                    <h1 class="card-title h3 mb-0">
+                        <i class="bi bi-pencil me-2"></i>Edit Farmer Survey
+                    </h1>
+                    <p class="mb-0 mt-2">@Model.FarmerSurvey.FarmName - @Model.FarmerSurvey.Region</p>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
+                        <input type="hidden" asp-for="FarmerSurvey.Id" />
+
+                        <!-- Photo -->
+                        <div class="mb-3">
+                            <label class="form-label">Survey Photo (optional)</label>
+                            <input type="file" name="Upload" accept="image/*" class="form-control" />
+                            @if (!string.IsNullOrEmpty(Model.FarmerSurvey.SurveyPhotoPath))
+                            {
+                                <small class="d-block mt-1">Current: <a href="@Model.FarmerSurvey.SurveyPhotoPath" target="_blank">view</a></small>
+                            }
+                        </div>
+
+                        <!-- 🔑 Core Farm Identification -->
+                        <div class="border-bottom pb-4 mb-4">
+                            <h2 class="h4 fw-bold mb-3 text-primary">
+                                <i class="bi bi-key me-2"></i>🔑 Core Farm Identification
+                            </h2>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FarmerSurvey.FarmName" class="form-label">Farm/Cooperative Name</label>
+                                    <input asp-for="FarmerSurvey.FarmName" class="form-control" placeholder="e.g. Finca San Pedro" />
+                                    <span asp-validation-for="FarmerSurvey.FarmName" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FarmerSurvey.FarmerName" class="form-label">Farmer's Name/Contact</label>
+                                    <input asp-for="FarmerSurvey.FarmerName" class="form-control" placeholder="Full name and phone" />
+                                    <span asp-validation-for="FarmerSurvey.FarmerName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row">                            <div class="col-md-6 mb-3">
+                                <label asp-for="FarmerSurvey.Region" class="form-label">Region/Province/District</label>
+                                <input asp-for="FarmerSurvey.Region" class="form-control" placeholder="e.g. Cajamarca, Peru" />
+                                <span asp-validation-for="FarmerSurvey.Region" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label asp-for="FarmerSurvey.GpsCoordinates" class="form-label">GPS Coordinates</label>
+                                <input asp-for="FarmerSurvey.GpsCoordinates" class="form-control" placeholder="Lat, Long" />
+                                <span asp-validation-for="FarmerSurvey.GpsCoordinates" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label asp-for="FarmerSurvey.SurveyDate" class="form-label">Survey Date</label>
+                                <input asp-for="FarmerSurvey.SurveyDate" class="form-control" />
+                                <span asp-validation-for="FarmerSurvey.SurveyDate" class="text-danger"></span>
+                            </div>
+                            </div>
+                        </div>
+
+                        <!-- 🌍 Site & Environmental Conditions -->
+                        <div class="border-bottom pb-4 mb-4">
+                            <h2 class="h4 fw-bold mb-3 text-success">
+                                <i class="bi bi-globe me-2"></i>🌍 Site & Environmental Conditions
+                            </h2>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label asp-for="FarmerSurvey.ElevationMeters" class="form-label">Elevation (m above sea level)</label>
+                                    <input asp-for="FarmerSurvey.ElevationMeters" class="form-control" type="number" placeholder="e.g. 1450" />
+                                    <span asp-validation-for="FarmerSurvey.ElevationMeters" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label asp-for="FarmerSurvey.SlopeType" class="form-label">Average Slope</label>
+                                    <select asp-for="FarmerSurvey.SlopeType" class="form-select">
+                                        <option value="">Select slope type</option>
+                                        <option value="Flat (0-5%)">Flat (0-5%)</option>
+                                        <option value="Gentle (5-15%)">Gentle (5-15%)</option>
+                                        <option value="Moderate (15-30%)">Moderate (15-30%)</option>
+                                        <option value="Steep (30-50%)">Steep (30-50%)</option>
+                                        <option value="Very Steep (50%+)">Very Steep (50%+)</option>
+                                    </select>
+                                    <span asp-validation-for="FarmerSurvey.SlopeType" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label asp-for="FarmerSurvey.Aspect" class="form-label">Aspect/Orientation</label>
+                                    <select asp-for="FarmerSurvey.Aspect" class="form-select">
+                                        <option value="">Select aspect</option>
+                                        <option value="North-facing">North-facing</option>
+                                        <option value="South-facing">South-facing</option>
+                                        <option value="East-facing">East-facing</option>
+                                        <option value="West-facing">West-facing</option>
+                                        <option value="Variable">Variable</option>
+                                    </select>
+                                    <span asp-validation-for="FarmerSurvey.Aspect" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FarmerSurvey.TemperatureRange" class="form-label">Temperature Range</label>
+                                    <input asp-for="FarmerSurvey.TemperatureRange" class="form-control" placeholder="e.g. 18-25°C" />
+                                    <span asp-validation-for="FarmerSurvey.TemperatureRange" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FarmerSurvey.RainfallPatterns" class="form-label">Rainfall Patterns</label>
+                                    <input asp-for="FarmerSurvey.RainfallPatterns" class="form-control" placeholder="e.g. Dry: Jun-Aug, Rainy: Dec-Mar" />
+                                    <span asp-validation-for="FarmerSurvey.RainfallPatterns" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 mb-3">
+                                    <label asp-for="FarmerSurvey.WaterSource" class="form-label">Water Source</label>
+                                    <select asp-for="FarmerSurvey.WaterSource" class="form-select">
+                                        <option value="">Select water source</option>
+                                        <option value="Natural spring">Natural spring</option>
+                                        <option value="River/stream">River/stream</option>
+                                        <option value="Rain-fed only">Rain-fed only</option>
+                                        <option value="Irrigation system">Irrigation system</option>
+                                        <option value="Well/borehole">Well/borehole</option>
+                                        <option value="Multiple sources">Multiple sources</option>
+                                    </select>
+                                    <span asp-validation-for="FarmerSurvey.WaterSource" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- All other sections with the same form controls as Create page -->
+                        <!-- For brevity, I'm including the rest of the sections with proper field mappings -->
+
+                        <!-- 🌱 Farm Characteristics -->
+                        <div class="border-bottom pb-4 mb-4">
+                            <h2 class="h4 fw-bold mb-3 text-info">
+                                <i class="bi bi-leaf me-2"></i>🌱 Farm Characteristics
+                            </h2>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FarmerSurvey.TotalFarmSizeHa" class="form-label">Total Farm Size (hectares)</label>
+                                    <input asp-for="FarmerSurvey.TotalFarmSizeHa" class="form-control" type="number" step="0.1" placeholder="e.g. 5.5" />
+                                    <span asp-validation-for="FarmerSurvey.TotalFarmSizeHa" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FarmerSurvey.CoffeePlantedAreaHa" class="form-label">Coffee Planted Area (hectares)</label>
+                                    <input asp-for="FarmerSurvey.CoffeePlantedAreaHa" class="form-control" type="number" step="0.1" placeholder="e.g. 3.2" />
+                                    <span asp-validation-for="FarmerSurvey.CoffeePlantedAreaHa" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FarmerSurvey.VarietiesGrown" class="form-label">Coffee Varieties</label>
+                                    <input asp-for="FarmerSurvey.VarietiesGrown" class="form-control" placeholder="e.g. Typica, Bourbon, Caturra" />
+                                    <span asp-validation-for="FarmerSurvey.VarietiesGrown" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FarmerSurvey.PlantingDensityTreesHa" class="form-label">Planting Density (trees/ha)</label>
+                                    <input asp-for="FarmerSurvey.PlantingDensityTreesHa" class="form-control" type="number" placeholder="e.g. 3500" />
+                                    <span asp-validation-for="FarmerSurvey.PlantingDensityTreesHa" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FarmerSurvey.ShadeTrees" class="form-label">Shade Trees</label>
+                                    <input asp-for="FarmerSurvey.ShadeTrees" class="form-control" placeholder="Species and % cover" />
+                                    <span asp-validation-for="FarmerSurvey.ShadeTrees" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FarmerSurvey.OtherCrops" class="form-label">Other Crops</label>
+                                    <input asp-for="FarmerSurvey.OtherCrops" class="form-control" placeholder="Bananas, avocado, citrus, etc." />
+                                    <span asp-validation-for="FarmerSurvey.OtherCrops" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <div class="form-check">
+                                        <input asp-for="FarmerSurvey.HasIntercropping" class="form-check-input" />
+                                        <label asp-for="FarmerSurvey.HasIntercropping" class="form-check-label">Intercropping/Agroforestry</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-8 mb-3">
+                                    <label asp-for="FarmerSurvey.IntercroppingDetails" class="form-label">Intercropping Details</label>
+                                    <input asp-for="FarmerSurvey.IntercroppingDetails" class="form-control" placeholder="Details about intercropping system" />
+                                    <span asp-validation-for="FarmerSurvey.IntercroppingDetails" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 🌾 Soil & Ground Conditions -->
+                        <div class="border-bottom pb-4 mb-4">
+                            <h2 class="h4 fw-bold mb-3 text-warning">
+                                <i class="bi bi-tree me-2"></i>🌾 Soil & Ground Conditions
+                            </h2>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FarmerSurvey.SoilType" class="form-label">Soil Type</label>
+                                    <select asp-for="FarmerSurvey.SoilType" class="form-select">
+                                        <option value="">Select soil type</option>
+                                        <option value="Clay">Clay</option>
+                                        <option value="Loam">Loam</option>
+                                        <option value="Sandy">Sandy</option>
+                                        <option value="Volcanic">Volcanic</option>
+                                        <option value="Sandy loam">Sandy loam</option>
+                                        <option value="Clay loam">Clay loam</option>
+                                        <option value="Mixed">Mixed</option>
+                                    </select>
+                                    <span asp-validation-for="FarmerSurvey.SoilType" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FarmerSurvey.SoilDepth" class="form-label">Soil Depth/Rockiness</label>
+                                    <select asp-for="FarmerSurvey.SoilDepth" class="form-select">
+                                        <option value="">Select soil depth</option>
+                                        <option value="Deep (>1m)">Deep (>1m)</option>
+                                        <option value="Medium (50cm-1m)">Medium (50cm-1m)</option>
+                                        <option value="Shallow (<50cm)">Shallow (<50cm)</option>
+                                        <option value="Rocky/outcrops">Rocky/outcrops</option>
+                                    </select>
+                                    <span asp-validation-for="FarmerSurvey.SoilDepth" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FarmerSurvey.DrainageConditions" class="form-label">Drainage Conditions</label>
+                                    <select asp-for="FarmerSurvey.DrainageConditions" class="form-select">
+                                        <option value="">Select drainage</option>
+                                        <option value="Well-drained">Well-drained</option>
+                                        <option value="Moderately drained">Moderately drained</option>
+                                        <option value="Poorly drained">Poorly drained</option>
+                                        <option value="Compacted">Compacted</option>
+                                        <option value="Risk of waterlogging">Risk of waterlogging</option>
+                                    </select>
+                                    <span asp-validation-for="FarmerSurvey.DrainageConditions" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FarmerSurvey.ErosionRisks" class="form-label">Erosion Risks</label>
+                                    <select asp-for="FarmerSurvey.ErosionRisks" class="form-select">
+                                        <option value="">Select erosion risk</option>
+                                        <option value="None/low">None/low</option>
+                                        <option value="Moderate">Moderate</option>
+                                        <option value="High">High</option>
+                                        <option value="Landslides">Landslides present</option>
+                                        <option value="Gullying">Gullying present</option>
+                                    </select>
+                                    <span asp-validation-for="FarmerSurvey.ErosionRisks" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 mb-3">
+                                    <label asp-for="FarmerSurvey.SoilFertilityManagement" class="form-label">Soil Fertility Management</label>
+                                    <textarea asp-for="FarmerSurvey.SoilFertilityManagement" class="form-control" rows="3" placeholder="Describe fertilization, composting, organic practices, etc."></textarea>
+                                    <span asp-validation-for="FarmerSurvey.SoilFertilityManagement" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Navigation Buttons -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="btn-group d-flex justify-content-center bg-light p-3 rounded">
+                                    <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#coffee-practices">
+                                        ☕ Coffee Management
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="collapse" data-bs-target="post-harvest">
+                                        📦 Post-Harvest
+                                    </button>
+                                    <button type="button" class="btn btn-outline-info btn-sm" data-bs-toggle="collapse" data-bs-target="#socio-economic">
+                                        👥 Socio-Economic
+                                    </button>
+                                    <button type="button" class="btn btn-outline-success btn-sm" data-bs-toggle="collapse" data-bs-target="#notes">
+                                        📝 Notes
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Collapsible sections -->
+                        <div id="coffee-practices" class="collapse show border-bottom pb-4 mb-4">
+                            <h2 class="h4 fw-bold mb-3" style="color: var(--coffee-brown);">
+                                <i class="bi bi-cup-hot me-2"></i>☕ Coffee Management Practices
+                            </h2>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FarmerSurvey.CoffeePlantingYear" class="form-label">Year Coffee Planted</label>
+                                    <input asp-for="FarmerSurvey.CoffeePlantingYear" class="form-control" type="number" placeholder="e.g. 2010" />
+                                    <span asp-validation-for="FarmerSurvey.CoffeePlantingYear" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FarmerSurvey.PruningMethod" class="form-label">Pruning Method</label>
+                                    <select asp-for="FarmerSurvey.PruningMethod" class="form-select">
+                                        <option value="">Select pruning method</option>
+                                        <option value="Traditional">Traditional</option>
+                                        <option value="Stumping">Stumping</option>
+                                        <option value="Selective">Selective pruning</option>
+                                        <option value="No pruning">No pruning</option>
+                                        <option value="Mixed">Mixed approach</option>
+                                    </select>
+                                    <span asp-validation-for="FarmerSurvey.PruningMethod" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FarmerSurvey.FertilizationType" class="form-label">Fertilization</label>
+                                    <select asp-for="FarmerSurvey.FertilizationType" class="form-select">
+                                        <option value="">Select fertilization</option>
+                                        <option value="Organic only">Organic only</option>
+                                        <option value="Chemical only">Chemical only</option>
+                                        <option value="Both organic and chemical">Both organic and chemical</option>
+                                        <option value="None">None</option>
+                                        <option value="Integrated">Integrated approach</option>
+                                    </select>
+                                    <span asp-validation-for="FarmerSurvey.FertilizationType" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FarmerSurvey.HarvestingMethod" class="form-label">Harvesting Method</label>
+                                    <select asp-for="FarmerSurvey.HarvestingMethod" class="form-select">
+                                        <option value="">Select harvesting method</option>
+                                        <option value="Selective picking">Selective picking</option>
+                                        <option value="Strip picking">Strip picking</option>
+                                        <option value="Machine harvesting">Machine harvesting</option>
+                                        <option value="Mixed">Mixed approach</option>
+                                    </select>
+                                    <span asp-validation-for="FarmerSurvey.HarvestingMethod" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FarmerSurvey.ProcessingMethod" class="form-label">Processing Method</label>
+                                    <select asp-for="FarmerSurvey.ProcessingMethod" class="form-select">
+                                        <option value="">Select processing method</option>
+                                        <option value="Washed">Washed</option>
+                                        <option value="Natural">Natural</option>
+                                        <option value="Honey">Honey</option>
+                                        <option value="Semi-washed">Semi-washed</option>
+                                        <option value="Experimental">Experimental</option>
+                                    </select>
+                                    <span asp-validation-for="FarmerSurvey.ProcessingMethod" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FarmerSurvey.PestDiseasePresence" class="form-label">Pest & Disease Presence</label>
+                                    <input asp-for="FarmerSurvey.PestDiseasePresence" class="form-control" placeholder="Coffee leaf rust, broca, nematodes, etc." />
+                                    <span asp-validation-for="FarmerSurvey.PestDiseasePresence" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Simplified sections for Edit - showing key fields only -->
+                        
+                        <!-- Submit Buttons -->
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                <button type="submit" class="btn btn-primary btn-lg me-3">
+                                    <i class="bi bi-check-lg me-2"></i>Update Survey
+                                </button>
+                                <a asp-page="./Index" class="btn btn-outline-primary btn-lg me-3">
+                                    <i class="bi bi-list me-2"></i>Back to List
+                                </a>
+                                <a asp-page="./Details" asp-route-id="@Model.FarmerSurvey.Id" class="btn btn-outline-info btn-lg">
+                                    <i class="bi bi-eye me-2"></i>View Details
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

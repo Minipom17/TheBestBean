@@ -1,0 +1,83 @@
+@page
+@model TheBestBean.Pages.FarmProfiles.EditModel
+@{
+    ViewData["Title"] = "Edit Farm Profile";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header" style="background-color: transparent; border-bottom: 1px solid #E0E0E0;">
+                    <h1 class="card-title h3 mb-0 text-dark">
+                        <i class="bi bi-pencil me-2"></i>Edit Farm Profile
+                    </h1>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        <input type="hidden" asp-for="FarmProfile.Id" />
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="FarmProfile.FarmName" class="form-label">Farm Name</label>
+                                <input asp-for="FarmProfile.FarmName" class="form-control" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="FarmProfile.FarmerName" class="form-label">Farmer Name</label>
+                                <input asp-for="FarmProfile.FarmerName" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="FarmProfile.Region" class="form-label">Region</label>
+                                <input asp-for="FarmProfile.Region" class="form-control" />
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label asp-for="FarmProfile.GPSLatitude" class="form-label">Latitude</label>
+                                <input asp-for="FarmProfile.GPSLatitude" class="form-control" />
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label asp-for="FarmProfile.GPSLongitude" class="form-label">Longitude</label>
+                                <input asp-for="FarmProfile.GPSLongitude" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Add Photos (append)</label>
+                            <input type="file" name="Uploads" multiple accept="image/*" class="form-control" />
+                            <small class="text-muted">Existing photos are kept. New uploads are appended.</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="FarmProfile.FarmStory" class="form-label">Farm Story</label>
+                            <textarea asp-for="FarmProfile.FarmStory" rows="3" class="form-control"></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="FarmProfile.CoffeeVarieties" class="form-label">Varieties</label>
+                            <input asp-for="FarmProfile.CoffeeVarieties" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="FarmProfile.ProcessingMethod" class="form-label">Processing</label>
+                            <input asp-for="FarmProfile.ProcessingMethod" class="form-control" />
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary me-2"><i class="bi bi-check-lg me-1"></i>Save</button>
+                            <a asp-page="./Index" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+

@@ -1,0 +1,9 @@
+<!-- DRY: Reusable page header with consistent spacing -->
+<div class="d-flex justify-content-between align-items-center mb-5 pt-4">
+    @if (!string.IsNullOrEmpty(ViewData["CreateButtonText"]?.ToString()))
+    {
+        <a href="@ViewData["CreateButtonLink"]" class="btn btn-success">
+            <i class="bi bi-plus-circle me-1"></i> @ViewData["CreateButtonText"]
+        </a>
+    }
+</div>

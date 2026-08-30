@@ -1,0 +1,184 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "We source and roast coffees in Peru.";
+    ViewData["MetaDescription"] = "Purple Bean Coffee — specialty coffee roastery in Cusco, Peru. We source from high-altitude farms in La Convención and Cajamarca, roast in small batches, and offer immersive coffee experiences for travelers.";
+}
+
+<!-- MAIN CONTENT CONTAINER (Full Width for Bleed) -->
+<div class="flex-grow w-full relative pb-0 font-sans text-v-black dark:text-[#FAF3DD]">
+    
+    <!-- HERO FEATURE RELEASE (Full Bleed Image) -->
+    <section aria-label="Hero" class="relative w-full h-[95vh] min-h-screen flex items-center mb-0">
+        <!-- Background Image with Overlay -->
+        <div class="absolute inset-0 w-full h-full">
+            <img src="/Media/main1.jpg" alt="High-altitude coffee plantation in Cusco, Peru" class="w-full h-full object-cover" />
+        </div>
+
+        <!-- Content -->
+        <div class="relative z-10 w-full max-w-[1600px] mx-auto px-6 md:px-12">
+            <!-- Glassmorphism Text Container -->
+            <div class="max-w-xl mt-10">
+                <div class="bg-[#16A34A]/10 backdrop-blur-md p-4 mb-8">
+                    <h1 class="text-2xl md:text-3xl lg:text-4xl font-light tracking-tight text-white mb-6 font-sans capitalize leading-tight" data-entity-id="Home_Hero_Title" data-entity-type="SiteContent" data-editable="Value">
+                        @Html.Raw(Model.PageContent.GetValueOrDefault("Home_Hero_Title", "Elevate Your Senses"))
+                    </h1>
+                    
+                    <p class="text-white text-sm md:text-base leading-relaxed font-mono-jb font-extralight" data-entity-id="Home_Hero_Desc" data-entity-type="SiteContent" data-editable="Value">
+                        @Html.Raw(Model.PageContent.GetValueOrDefault("Home_Hero_Desc", "Unlock the wild, nuanced profiles born from the dramatic peaks of the Peruvian highlands. Grown in harmony with the mountains by our artisan farming families, every bean tells a story of extraordinary terroir. Sip the elevation at home, or join us on the mountain to live the magic behind the harvest."))
+                    </p>
+                </div>
+                
+                <!-- CTA Button -->
+                <a asp-page="/GreenBeans" class="inline-flex bg-transparent border border-white text-white px-8 py-3 font-bold uppercase tracking-widest text-[11px] hover:bg-white hover:text-black transition-all duration-300 font-grotesk text-decoration-none group items-center">
+                    SHOP COFFEES <span class="ml-3">&larr;</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- PHILOSOPHY / PHILOSOPHICAL HOOK (Lime Green) -->
+    <section aria-labelledby="philosophy-heading" class="w-full bg-[#D4FF00] dark:bg-[#9BB800] text-black dark:text-[#FAF3DD]">
+        <div class="max-w-[1600px] mx-auto px-6 md:px-12 py-32">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                <div class="lg:col-span-4">
+                    <h3 id="philosophy-heading" class="text-[10px] font-bold uppercase tracking-widest text-gray-800 dark:text-gray-900 font-mono-jb">01 // PHILOSOPHY</h3>
+                </div>
+                <div class="lg:col-span-8">
+                    <p class="text-3xl md:text-5xl font-bold tracking-tight text-[#FF6464] leading-[1.1] mb-8 font-sans" data-entity-id="Home_Philosophy_Title" data-entity-type="SiteContent" data-editable="Value">
+                        @Html.Raw(Model.PageContent.GetValueOrDefault("Home_Philosophy_Title", "We source and roast the finest coffees in <span class=\"border-b-4 border-white\">Peru</span>."))
+                    </p>
+                    <p class="text-gray-900 dark:text-gray-900 text-base md:text-lg font-normal leading-relaxed max-w-2xl" data-entity-id="Home_Philosophy_Desc" data-entity-type="SiteContent" data-editable="Value">
+                        @Html.Raw(Model.PageContent.GetValueOrDefault("Home_Philosophy_Desc", "Exploring the dynamic relationship between variety, altitude, and experimental post-harvest processing to showcase the inherent sweetness and vibrancy of the Andean coffee cherry."))
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CURRENT OFFERINGS (Interactive List) -->
+    <section aria-label="Current Offerings" class="w-full py-24 border-t border-v-light-gray relative overflow-hidden bg-white">
+        <div class="max-w-[1600px] mx-auto px-6 md:px-12 relative z-10">
+            <div class="grid grid-cols-1 md:grid-cols-[1fr_minmax(250px,350px)_1fr] lg:grid-cols-[1fr_minmax(350px,450px)_1fr] gap-2 w-full justify-between items-center relative min-h-[500px]">
+                
+                <!-- Left Column: Coffees -->
+                <div class="w-full flex flex-col z-10 h-full justify-center">
+                    <div class="text-[10px] md:text-[12px] font-bold text-gray-800 uppercase mb-4 tracking-widest font-mono-jb">coffee.</div>
+                    @{
+                        var textColors = new string[] { "text-[#D4FF00]", "text-[#FF6464]", "text-[#2800FF]", "text-[#8300FF]", "text-v-green" };
+                        var borderColors = new string[] { "border-[#D4FF00]", "border-[#FF6464]", "border-[#2800FF]", "border-[#8300FF]", "border-v-green" };
+                        int i = 0;
+                    }
+                    @foreach (var item in Model.FeaturedProducts)
+                    {
+                        var imageUrl = item.ImageUrl ?? "/Media/bag.png";
+                        var textColor = textColors[i % textColors.Length];
+                        var borderColor = borderColors[i % borderColors.Length];
+                        <a href="/Product/@item.Id" class="flex justify-between items-center py-4 text-decoration-none group hover-trigger bg-transparent @textColor hover:opacity-70 transition-all" data-img="@imageUrl">
+                            <span class="text-[10px] md:text-xs font-mono-jb tracking-widest opacity-80 group-hover:opacity-100 transition-opacity">[SCA <span data-entity-id="@item.Id" data-entity-type="CoffeeBean" data-editable="ScaScore">@item.ScaScore.ToString("0.##")</span>]</span>
+                            <span class="text-xs md:text-sm font-mono-jb font-bold opacity-100 transition-opacity text-right pl-4 border-b-2 @borderColor pb-0.5" data-entity-id="@item.Id" data-entity-type="CoffeeBean" data-editable="Name">@item.Name</span>
+                        </a>
+                        i++;
+                    }
+                </div>
+
+                <!-- Center Image Container -->
+                <div class="flex items-center justify-center h-full w-full pointer-events-none py-0">
+                    <div id="hoverImageContainer" class="w-full transition-opacity duration-300 opacity-0">
+                        <img id="hoverImage" src="" alt="Interactive preview of selected specialty coffee or expedition" class="w-full aspect-[4/5] object-cover transition-all duration-500 shadow-sm" loading="lazy" />
+                    </div>
+                </div>
+
+                <!-- Right Column: Experiences -->
+                <div class="w-full flex flex-col z-10 h-full justify-center mt-0">
+                    <div class="text-[10px] md:text-[12px] font-bold text-gray-800 uppercase mb-4 tracking-widest text-right font-mono-jb">experiences.</div>
+                    @{
+                        int j = 0;
+                    }
+                    @foreach (var exp in Model.FeaturedExperiences)
+                    {
+                        var imageUrl = exp.ImageUrl ?? "/Media/main1.jpg";
+                        var textColor = textColors[j % textColors.Length];
+                        var borderColor = borderColors[j % borderColors.Length];
+                        <a href="/Experiences" class="flex justify-between items-center py-4 text-decoration-none group hover-trigger bg-transparent @textColor hover:opacity-70 transition-all" data-img="@imageUrl">
+                            <span class="text-xs md:text-sm font-mono-jb font-bold opacity-100 transition-opacity text-left pr-4 border-b-2 @borderColor pb-0.5" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Title">@exp.Title</span>
+                            <span class="text-[10px] md:text-xs font-mono-jb tracking-widest opacity-80 group-hover:opacity-100 transition-opacity text-right">[@exp.Category.ToUpper()]</span>
+                        </a>
+                        j++;
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const hoverTriggers = document.querySelectorAll('.hover-trigger');
+            const imageContainer = document.getElementById('hoverImageContainer');
+            const hoverImage = document.getElementById('hoverImage');
+            
+            if (hoverTriggers.length > 0) {
+                hoverImage.src = hoverTriggers[0].getAttribute('data-img');
+                imageContainer.classList.remove('opacity-0');
+            }
+
+            hoverTriggers.forEach(trigger => {
+                trigger.addEventListener('mouseenter', function() {
+                    const imgSrc = this.getAttribute('data-img');
+                    if (imgSrc) {
+                        hoverImage.src = imgSrc;
+                        imageContainer.classList.remove('opacity-0');
+                    }
+                });
+            });
+        });
+    </script>
+
+
+
+</div>
+
+    <!-- Structured Data (JSON-LD) for SEO -->
+    <script type="application/ld+json">
+    @Html.Raw($@"{{
+      ""@context"": ""https://schema.org"",
+      ""@type"": ""CafeOrCoffeeShop"",
+      ""name"": ""Purple Bean Coffee"",
+      ""image"": [
+        ""https://purplebean.coffee/images/og-logo.png"",
+        ""https://purplebean.coffee/images/og-logo-square.png""
+      ],
+      ""@id"": ""https://purplebean.coffee"",
+      ""url"": ""https://purplebean.coffee"",
+      ""telephone"": ""+51993779381"",
+      ""priceRange"": ""$"",
+      ""address"": {{
+        ""@type"": ""PostalAddress"",
+        ""streetAddress"": ""Calle San Pedro"",
+        ""addressLocality"": ""Cusco"",
+        ""addressRegion"": ""Cusco"",
+        ""postalCode"": ""08002"",
+        ""addressCountry"": ""PE""
+      }},
+      ""geo"": {{
+        ""@type"": ""GeoCoordinates"",
+        ""latitude"": -13.520448,
+        ""longitude"": -71.981881
+      }},
+      ""openingHoursSpecification"": [
+        {{
+          ""@type"": ""OpeningHoursSpecification"",
+          ""dayOfWeek"": [
+            ""Monday"",
+            ""Tuesday"",
+            ""Wednesday"",
+            ""Thursday"",
+            ""Friday"",
+            ""Saturday""
+          ],
+          ""opens"": ""08:00"",
+          ""closes"": ""18:00""
+        }}
+      ]
+    }}")
+    </script>

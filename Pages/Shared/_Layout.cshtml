@@ -1,0 +1,432 @@
+@using TheBestBean.Services
+@using Microsoft.Extensions.Configuration
+@inject CartService CartService
+@inject IConfiguration Configuration
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <meta name="color-scheme" content="only light">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    @{
+        var canonicalUrl = ViewData["CanonicalUrl"] as string ?? $"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}";
+    }
+    <link rel="canonical" href="@canonicalUrl" />
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" sizes="48x48" href="/images/favicon-48.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <title>@ViewData["Title"] | Purple Bean Coffee</title>
+    <meta name="description" content="@(ViewData["MetaDescription"] ?? "Specialty coffee shop and roasting lab in Cusco, Peru. Sourcing and roasting the finest high-altitude coffees, and offering immersive coffee tours and workshops.")">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="@(ViewData["OgType"] ?? "website")">
+    <meta property="og:url" content="@canonicalUrl">
+    <meta property="og:title" content="@ViewData["Title"] | Purple Bean Coffee">
+    <meta property="og:description" content="@(ViewData["MetaDescription"] ?? "Sourcing and roasting the finest coffees from the high altitudes of Cusco, Peru.")">
+    <meta property="og:image" content="@(ViewData["MetaImage"] ?? "https://purplebean.coffee/images/og-logo.png")">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="@ViewData["Title"] | Purple Bean Coffee">
+    <meta property="og:site_name" content="Purple Bean Coffee">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="@canonicalUrl">
+    <meta property="twitter:title" content="@ViewData["Title"] | Purple Bean Coffee">
+    <meta property="twitter:description" content="@(ViewData["MetaDescription"] ?? "Sourcing and roasting the finest coffees from the high altitudes of Cusco, Peru.")">
+    <meta property="twitter:image" content="@(ViewData["MetaImage"] ?? "https://purplebean.coffee/images/og-logo.png")">
+
+    @{
+        var gaId = Configuration["GoogleAnalytics:MeasurementId"];
+    }
+    @if (!string.IsNullOrEmpty(gaId))
+    {
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=@gaId"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', '@gaId');
+        </script>
+    }
+
+    <!-- LocalBusiness Schema -->
+    <script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": ["CafeOrCoffeeShop", "TouristAttraction"],
+      "name": "Purple Bean Coffee",
+      "description": "Specialty coffee roastery based in Cusco, Peru. We source from high-altitude farms in La Convención and Cajamarca, roast in small batches, and offer immersive coffee experiences for travelers.",
+      "image": [
+        "https://purplebean.coffee/images/og-logo-square.png",
+        "https://purplebean.coffee/images/brand-icon.png"
+      ],
+      "logo": {
+        "@@type": "ImageObject",
+        "url": "https://purplebean.coffee/images/og-logo-square.png",
+        "width": 1200,
+        "height": 1200
+      },
+      "telephone": "+51993779381",
+      "url": "https://purplebean.coffee/",
+      "sameAs": [
+        "https://www.instagram.com/purple.beancoffee/"
+      ],
+      "address": {
+        "@@type": "PostalAddress",
+        "streetAddress": "Near San Pedro Market",
+        "addressLocality": "Cusco",
+        "addressRegion": "Cusco",
+        "postalCode": "08000",
+        "addressCountry": "PE"
+      },
+      "geo": {
+        "@@type": "GeoCoordinates",
+        "latitude": -13.52,
+        "longitude": -71.97
+      },
+      "areaServed": {
+        "@@type": "City",
+        "name": "Cusco",
+        "containedInPlace": {
+          "@@type": "Country",
+          "name": "Peru"
+        }
+      },
+      "priceRange": "$$",
+      "servesCuisine": "Specialty Coffee",
+      "knowsLanguage": ["en", "es"],
+      "hasOfferCatalog": {
+        "@@type": "OfferCatalog",
+        "name": "Purple Bean Coffee Products & Experiences",
+        "itemListElement": [
+          {
+            "@@type": "OfferCatalog",
+            "name": "Specialty Coffee",
+            "description": "Single-origin roasted specialty coffee from Cusco and Cajamarca"
+          },
+          {
+            "@@type": "OfferCatalog",
+            "name": "Coffee Experiences",
+            "description": "Hands-on coffee workshops, tastings, and farm visits in Cusco"
+          },
+          {
+            "@@type": "OfferCatalog",
+            "name": "Wholesale Green Beans",
+            "description": "Direct-trade green coffee beans for roasters"
+          }
+        ]
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "WebSite",
+      "name": "Purple Bean Coffee",
+      "url": "https://purplebean.coffee/",
+      "publisher": {
+        "@@type": "Organization",
+        "name": "Purple Bean Coffee",
+        "logo": {
+          "@@type": "ImageObject",
+          "url": "https://purplebean.coffee/images/og-logo-square.png",
+          "width": 1200,
+          "height": 1200
+        }
+      }
+    }
+    </script>
+    
+    <!-- Early theme init: prevent FOUC by setting dark class before render -->
+    <script>
+        (function() {
+            var saved = localStorage.getItem('theme');
+            if (saved === 'dark' || (!saved && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'v-white': 'var(--color-v-white)',
+                        'v-black': 'var(--color-v-black)',
+                        'v-gray': 'var(--color-v-gray)',
+                        'v-light-gray': 'var(--color-v-light-gray)',
+                        'v-yellow': '#FACC15', // Accent
+                        'v-blue': '#2563EB',   // Accent
+                        'v-green': '#16A34A',  // Accent
+                        'v-red': '#DC2626',    // JMB Structural Red
+                        'v-magenta': '#DB2777', // Accent
+                        'ink-black': '#000000',
+                        'paper-white': '#FFFFFF',
+                        'brand-red': '#DC2626'
+                    },
+                    fontFamily: {
+                        'sans': ['"Inter"', 'sans-serif'],
+                        'mono': ['"JetBrains Mono"', 'monospace'],
+                        'grotesk': ['"Space Grotesk"', 'sans-serif'],
+                        'mono-jb': ['"JetBrains Mono"', 'monospace'],
+                        'cousine': ['"Cousine"', 'monospace'],
+                    },
+                    letterSpacing: {
+                        'tighter': '-0.04em',
+                        'tight': '-0.02em',
+                        'widest': '0.15em',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cousine:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@200;300;400;600;700&family=Patrick+Hand&display=swap" as="style">
+    <link href="https://fonts.googleapis.com/css2?family=Cousine:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@200;300;400;600;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <!-- Cropper.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    
+    <style>
+        :root {
+            --color-v-white: #FFFFFF;
+            --color-v-black: #000000;
+            --color-v-gray: #737373;
+            --color-v-light-gray: #E5E5E5;
+        }
+
+        html.dark {
+            --color-v-gray: #dbdbdb;
+        }
+        
+        body {
+            background-color: #FFFFFF;
+            color: #000000;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .edit-mode-only { display: none !important; }
+        body.edit-mode .edit-mode-only { display: block !important; }
+        
+        h1, h2, h3, h4, h5, h6 {
+            overflow-wrap: normal;
+            word-break: normal;
+        }
+        .font-grotesk { font-family: 'Space Grotesk', sans-serif; }
+        .font-mono-jb, .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .font-marker { font-family: 'Patrick Hand', cursive; }
+        
+        .rule-thin {
+            border-bottom: 1px solid #E5E5E5;
+        }
+
+        /* Minimalist structural scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #E5E5E5; }
+        ::-webkit-scrollbar-thumb:hover { background: #000000; }
+
+        /* JMB Image Treatment: High contrast, stark grayscale on desktop, full color on mobile */
+        .img-stark {
+            transition: filter 0.5s ease;
+        }
+
+        body.is-scrolling .img-stark {
+            filter: grayscale(100%) contrast(1.15) brightness(0.95) !important;
+        }
+        
+        @@media (hover: hover) {
+            .img-stark {
+                filter: grayscale(100%) contrast(1.15) brightness(0.95);
+            }
+            .img-stark:hover, .group:hover .img-stark {
+                filter: grayscale(0%) contrast(1.0) brightness(1.0);
+            }
+        }
+
+        /* Delivery & WhatsApp Float Button */
+        .delivery-float {
+            position: fixed;
+            height: 48px;
+            padding: 0 20px;
+            bottom: 24px;
+            right: 24px;
+            background-color: #d4ff00;
+            color: #111111;
+            /* border: 2px solid #FACC15; */
+            border-radius: 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            box-shadow: none;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+        .delivery-float:hover {
+            background-color: #111111;
+            border-color: #111111;
+            color: #FFFFFF;
+            transform: none;
+        }
+    </style>
+    
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body class="min-h-screen flex flex-col font-sans text-sm selection:bg-v-black selection:text-v-white relative bg-v-white dark:bg-[#3C4A33] text-v-black dark:text-[#FAF3DD] transition-colors duration-300">
+    @{
+        var cartCount = 0;
+        try {
+            cartCount = CartService.GetCartItemCount(Context.Session);
+        } catch {}
+    }
+
+    <partial name="_Header" model="cartCount" />
+    
+    <main class="flex-1">
+        @RenderBody()
+    </main>
+    
+    <partial name="_Footer" />
+
+    <!-- Unified Delivery & WhatsApp Float Button -->
+    <a href="https://wa.me/51993779381" target="_blank" class="delivery-float" title="Delivery & WhatsApp Dispatch"
+       onclick="if (typeof gtag === 'function') { gtag('event', 'whatsapp_click', { event_category: 'engagement', event_label: location.pathname, page_path: location.pathname, transport_type: 'beacon' }); }">
+        <i class="bi bi-truck text-xl"></i>
+        <span>//</span>
+        <i class="bi bi-whatsapp text-xl"></i>
+    </a>
+
+    <script>
+        // Theme Toggle Logic (init already done in <head> to prevent FOUC)
+        function setTheme(isDark) {
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        let scrollTimeout;
+        window.addEventListener('scroll', () => {
+            document.body.classList.add('is-scrolling');
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                document.body.classList.remove('is-scrolling');
+            }, 150);
+        }, { passive: true });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+    
+    <!-- Image Crop Modal (Hidden by default) -->
+    <div id="crop-modal-overlay" class="fixed inset-0 bg-black/80 z-[99999] hidden flex items-center justify-center">
+        <div class="bg-white dark:bg-[#2F3A28] rounded-lg p-6 max-w-4xl w-full mx-4 flex flex-col max-h-[90vh]">
+            <h3 class="text-xl font-bold mb-4 font-grotesk dark:text-[#FAF3DD]">Crop Image</h3>
+            <div class="flex-1 overflow-hidden min-h-[400px] bg-gray-100 dark:bg-black/50 relative flex items-center justify-center">
+                <img id="crop-image-target" src="" class="max-w-full max-h-full block">
+            </div>
+            <div class="mt-6 flex justify-end gap-4">
+                <button id="crop-cancel-btn" class="px-6 py-2 border-2 border-v-black dark:border-[#FAF3DD] rounded-none font-mono text-sm font-bold uppercase hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">Cancel</button>
+                <button id="crop-save-btn" class="px-6 py-2 bg-v-green text-white rounded-none font-mono text-sm font-bold uppercase flex items-center gap-2 hover:bg-green-700 transition-colors"><i class="bi bi-crop"></i> Crop & Upload</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Currency Geolocation Logic
+        document.addEventListener('DOMContentLoaded', function() {
+            function updatePrices() {
+                const currency = localStorage.getItem('Currency') || 'USD';
+                // Find all elements marked for dynamic price display
+                document.querySelectorAll('.price-display').forEach(el => {
+                    const priceUsd = el.getAttribute('data-price-usd');
+                    const pricePen = el.getAttribute('data-price-pen');
+                    const isFrom = el.hasAttribute('data-from');
+                    
+                    if (!priceUsd || !pricePen) return;
+
+                    let prefix = isFrom ? 'From ' : '';
+                    if (currency === 'PEN') {
+                        el.textContent = `${prefix}S/${parseFloat(pricePen).toFixed(2)}`;
+                    } else {
+                        el.textContent = `${prefix}$${parseFloat(priceUsd).toFixed(2)}`;
+                    }
+                });
+            }
+
+            // Also attach it to window so we can trigger it from other pages (like Product page)
+            window.updateCurrencyPrices = updatePrices;
+
+            const storedCurrency = localStorage.getItem('Currency');
+            if (!storedCurrency) {
+                // Fetch from free IP API
+                fetch('https://ipapi.co/json/')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.country_code === 'PE') {
+                            localStorage.setItem('Currency', 'PEN');
+                        } else {
+                            localStorage.setItem('Currency', 'USD');
+                        }
+                        updatePrices();
+                    })
+                    .catch(err => {
+                        console.error('IP Geolocation failed', err);
+                        localStorage.setItem('Currency', 'USD');
+                        updatePrices();
+                    });
+            } else {
+                updatePrices();
+            }
+        });
+    </script>
+
+    <!-- Cropper.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    
+    @if (User.Identity?.IsAuthenticated == true && User.IsInRole("Admin"))
+    {
+        <button id="inline-edit-toggle" aria-label="Toggle Edit Mode" class="fixed top-0 right-0 z-[100000] bg-v-yellow text-v-black border-0 p-0 m-0 w-8 h-8 flex items-center justify-center cursor-pointer text-base" title="Toggle Edit Mode">
+            <i class="bi bi-pencil-fill"></i>
+        </button>
+    }
+
+    <!-- Inline Editor Logic -->
+    <script src="~/js/inline-editor.js" asp-append-version="true"></script>
+</body>
+</html>

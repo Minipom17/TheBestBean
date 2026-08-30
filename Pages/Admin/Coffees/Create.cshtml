@@ -1,0 +1,105 @@
+@page
+@model TheBestBean.Pages_Admin_Coffees.CreateModel
+
+@{
+    ViewData["Title"] = "Add New Coffee";
+}
+
+<div class="max-w-4xl mx-auto py-12 px-6">
+    <div class="mb-8 flex items-center justify-between">
+        <div>
+            <h1 class="font-grotesk text-4xl font-bold mb-2">Add New Coffee</h1>
+            <p class="font-mono text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest">Catalog Management</p>
+        </div>
+        <a asp-page="Index" class="font-mono text-xs font-bold uppercase border-2 border-v-black dark:border-white px-4 py-2 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">Back to List</a>
+    </div>
+
+    <div class="bg-white dark:bg-[#2F3A28] border border-gray-200 dark:border-dark-border p-8 rounded-none shadow-sm">
+        <form method="post" enctype="multipart/form-data" class="space-y-6">
+            <div asp-validation-summary="ModelOnly" class="text-v-red text-sm font-bold mb-4"></div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Name -->
+                <div class="md:col-span-2">
+                    <label asp-for="CoffeeBean.Name" class="block font-mono text-xs font-bold uppercase mb-2"></label>
+                    <input asp-for="CoffeeBean.Name" class="w-full border-2 border-gray-200 dark:border-gray-600 bg-transparent p-3 font-sans focus:border-v-black dark:focus:border-white outline-none transition-colors" placeholder="e.g. Super Highland [SL09 / Inca Geisha]" />
+                    <span asp-validation-for="CoffeeBean.Name" class="text-v-red text-xs mt-1 block"></span>
+                </div>
+
+                <!-- Flavor Profile -->
+                <div class="md:col-span-2">
+                    <label asp-for="CoffeeBean.FlavorProfile" class="block font-mono text-xs font-bold uppercase mb-2"></label>
+                    <input asp-for="CoffeeBean.FlavorProfile" class="w-full border-2 border-gray-200 dark:border-gray-600 bg-transparent p-3 font-sans focus:border-v-black dark:focus:border-white outline-none transition-colors" placeholder="e.g. Black currant, savory, complex acidity" />
+                    <span asp-validation-for="CoffeeBean.FlavorProfile" class="text-v-red text-xs mt-1 block"></span>
+                </div>
+
+                <!-- Rating -->
+                <div>
+                    <label asp-for="CoffeeBean.Rating" class="block font-mono text-xs font-bold uppercase mb-2"></label>
+                    <input asp-for="CoffeeBean.Rating" class="w-full border-2 border-gray-200 dark:border-gray-600 bg-transparent p-3 font-sans focus:border-v-black dark:focus:border-white outline-none transition-colors" placeholder="e.g. 4.8" />
+                    <span asp-validation-for="CoffeeBean.Rating" class="text-v-red text-xs mt-1 block"></span>
+                </div>
+
+                <!-- Processing Method -->
+                <div>
+                    <label asp-for="CoffeeBean.ProcessingMethod" class="block font-mono text-xs font-bold uppercase mb-2"></label>
+                    <input asp-for="CoffeeBean.ProcessingMethod" class="w-full border-2 border-gray-200 dark:border-gray-600 bg-transparent p-3 font-sans focus:border-v-black dark:focus:border-white outline-none transition-colors" placeholder="e.g. Washed" />
+                    <span asp-validation-for="CoffeeBean.ProcessingMethod" class="text-v-red text-xs mt-1 block"></span>
+                </div>
+
+                <!-- Producer -->
+                <div>
+                    <label asp-for="CoffeeBean.Producer" class="block font-mono text-xs font-bold uppercase mb-2"></label>
+                    <input asp-for="CoffeeBean.Producer" class="w-full border-2 border-gray-200 dark:border-gray-600 bg-transparent p-3 font-sans focus:border-v-black dark:focus:border-white outline-none transition-colors" placeholder="e.g. Oscar Vilches" />
+                    <span asp-validation-for="CoffeeBean.Producer" class="text-v-red text-xs mt-1 block"></span>
+                </div>
+
+                <!-- Variety -->
+                <div>
+                    <label asp-for="CoffeeBean.Variety" class="block font-mono text-xs font-bold uppercase mb-2"></label>
+                    <input asp-for="CoffeeBean.Variety" class="w-full border-2 border-gray-200 dark:border-gray-600 bg-transparent p-3 font-sans focus:border-v-black dark:focus:border-white outline-none transition-colors" placeholder="e.g. Geisha" />
+                    <span asp-validation-for="CoffeeBean.Variety" class="text-v-red text-xs mt-1 block"></span>
+                </div>
+
+                <!-- Altitude -->
+                <div>
+                    <label asp-for="CoffeeBean.Altitude" class="block font-mono text-xs font-bold uppercase mb-2"></label>
+                    <input asp-for="CoffeeBean.Altitude" class="w-full border-2 border-gray-200 dark:border-gray-600 bg-transparent p-3 font-sans focus:border-v-black dark:focus:border-white outline-none transition-colors" placeholder="e.g. 2200 msnm" />
+                    <span asp-validation-for="CoffeeBean.Altitude" class="text-v-red text-xs mt-1 block"></span>
+                </div>
+
+                <!-- Image Upload -->
+                <div>
+                    <label class="block font-mono text-xs font-bold uppercase mb-2">Upload Image</label>
+                    <input type="file" name="ImageUpload" class="w-full border-2 border-gray-200 dark:border-gray-600 bg-transparent p-2 font-sans focus:border-v-black dark:focus:border-white outline-none transition-colors file:mr-4 file:py-2 file:px-4 file:rounded-none file:border-0 file:text-sm file:font-bold file:bg-v-black file:text-white dark:file:bg-white dark:file:text-black hover:file:bg-gray-800 cursor-pointer" accept="image/*" />
+                </div>
+
+                <!-- Relations -->
+                <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                    <div>
+                        <label asp-for="CoffeeBean.OriginCountryId" class="block font-mono text-xs font-bold uppercase mb-2">Country</label>
+                        <select asp-for="CoffeeBean.OriginCountryId" class="w-full border-2 border-gray-200 dark:border-gray-600 bg-transparent p-3 font-sans focus:border-v-black dark:focus:border-white outline-none transition-colors" asp-items="ViewBag.OriginCountryId"></select>
+                    </div>
+                    <div>
+                        <label asp-for="CoffeeBean.CoffeeRegionId" class="block font-mono text-xs font-bold uppercase mb-2">Region</label>
+                        <select asp-for="CoffeeBean.CoffeeRegionId" class="w-full border-2 border-gray-200 dark:border-gray-600 bg-transparent p-3 font-sans focus:border-v-black dark:focus:border-white outline-none transition-colors" asp-items="ViewBag.CoffeeRegionId"></select>
+                    </div>
+                    <div>
+                        <label asp-for="CoffeeBean.CoffeeFarmId" class="block font-mono text-xs font-bold uppercase mb-2">Farm</label>
+                        <select asp-for="CoffeeBean.CoffeeFarmId" class="w-full border-2 border-gray-200 dark:border-gray-600 bg-transparent p-3 font-sans focus:border-v-black dark:focus:border-white outline-none transition-colors" asp-items="ViewBag.CoffeeFarmId"></select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-8 flex justify-end">
+                <button type="submit" class="bg-v-yellow text-v-black font-mono text-sm font-bold uppercase px-8 py-3 hover:bg-black hover:text-white transition-colors border-2 border-v-yellow hover:border-black flex items-center gap-2">
+                    <i class="bi bi-plus-lg"></i> Create Coffee
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,80 @@
+@page
+@model TheBestBean.Pages_Admin_Experiences.CreateModel
+
+        @{
+        ViewData["Title"] = "Create";
+        }
+        
+        <h1>Create</h1>
+        
+    <h4>Experience</h4>
+    <hr />
+    <div class="row">
+    <div class="col-md-4">
+    <form method="post" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <span class="text-danger">*</span>
+                <label asp-for="Experience.Title" class="control-label"></label>
+                <input asp-for="Experience.Title" class="form-control" />
+                <span asp-validation-for="Experience.Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <span class="text-danger">*</span>
+                <label asp-for="Experience.Category" class="control-label"></label>
+                <input asp-for="Experience.Category" class="form-control" />
+                <span asp-validation-for="Experience.Category" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <span class="text-danger">*</span>
+                <label asp-for="Experience.Location" class="control-label"></label>
+                <input asp-for="Experience.Location" class="form-control" />
+                <span asp-validation-for="Experience.Location" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <span class="text-danger">*</span>
+                <label asp-for="Experience.Month" class="control-label"></label>
+                <input asp-for="Experience.Month" class="form-control" />
+                <span asp-validation-for="Experience.Month" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <span class="text-danger">*</span>
+                <label asp-for="Experience.Difficulty" class="control-label"></label>
+                <input asp-for="Experience.Difficulty" class="form-control" />
+                <span asp-validation-for="Experience.Difficulty" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <span class="text-danger">*</span>
+                <label asp-for="Experience.Description" class="control-label"></label>
+                <input asp-for="Experience.Description" class="form-control" />
+                <span asp-validation-for="Experience.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label class="control-label">Upload Image</label>
+                <input type="file" name="ImageUpload" class="form-control" accept="image/*" />
+                <span class="text-muted small">Leave blank to keep the current image (if any).</span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Experience.Price" class="control-label"></label>
+                <input asp-for="Experience.Price" class="form-control" />
+                <span asp-validation-for="Experience.Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Experience.Tag" class="control-label"></label>
+                <input asp-for="Experience.Tag" class="form-control" />
+                <span asp-validation-for="Experience.Tag" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

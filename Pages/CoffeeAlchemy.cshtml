@@ -1,0 +1,681 @@
+@page
+@model CoffeeAlchemyModel
+@{
+    ViewData["Title"] = "Coffee Alchemy";
+}
+
+<div class="container-fluid px-0">
+    <!-- Hero Section - New Hybrid Theme Style -->
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-12 mx-auto">
+                <div class="flex flex-col md:flex-row justify-between items-end mb-12 border-b border-gray-200 dark:border-dark-border pb-8" style="display: flex; flex-direction: row; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; border-bottom: 1px solid #e5e7eb; padding-bottom: 2rem;">
+                    <div>
+                        <span class="inline-block px-3 py-1 bg-black dark:bg-white text-white dark:text-black text-xs font-bold font-mono mb-6" style="display: inline-block; padding: 0.25rem 0.75rem; background: #111111; color: white; font-size: 0.75rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; margin-bottom: 1.5rem;">ALCHEMY</span>
+                        <h1 class="font-grotesk text-5xl md:text-8xl tracking-tight leading-none" style="font-family: 'Space Grotesk', sans-serif; font-size: 4rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1;">Coffee Alchemy</h1>
+                    </div>
+                    <div class="mt-8 md:mt-0 font-mono text-xs md:text-sm text-gray-500 dark:text-gray-400 max-w-xs text-right" style="margin-top: 0; font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; color: #6b7280; max-width: 18rem; text-align: right;">
+                        Transform your daily brew into extraordinary experiences. Discover modern coffee creations that celebrate Peru's vibrant flavors.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signature Creations Section -->
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-12 mx-auto">
+                <div class="flex flex-col md:flex-row justify-between items-end mb-12 border-b border-gray-200 dark:border-dark-border pb-8" style="display: flex; flex-direction: row; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; border-bottom: 1px solid #e5e7eb; padding-bottom: 2rem;">
+                    <div>
+                        <span class="inline-block px-3 py-1 bg-black dark:bg-white text-white dark:text-black text-xs font-bold font-mono mb-6" style="display: inline-block; padding: 0.25rem 0.75rem; background: #111111; color: white; font-size: 0.75rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; margin-bottom: 1.5rem;">RECIPES</span>
+                        <h1 class="font-grotesk text-5xl md:text-7xl tracking-tight leading-none" style="font-family: 'Space Grotesk', sans-serif; font-size: 3.5rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1;">Signature Coffee Creations</h1>
+                    </div>
+                    <div class="mt-8 md:mt-0 font-mono text-xs md:text-sm text-gray-500 dark:text-gray-400 max-w-xs text-right" style="margin-top: 0; font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; color: #6b7280; max-width: 18rem; text-align: right;">
+                        Inspired by Peru's diverse flavors and global coffee culture
+                    </div>
+                </div>
+                
+                <!-- Recipe Grid - 3 per row -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 border-l border-t border-gray-200 dark:border-dark-border" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-left: 1px solid #e5e7eb; border-top: 1px solid #e5e7eb;">
+                <!-- Mango Coffee -->
+                <div class="recipe-card-new border-r border-b border-gray-200 dark:border-dark-border p-8 hover:bg-off-white dark:hover:bg-white/5 transition-colors group cursor-pointer flex flex-col" style="border-right: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb; padding: 2rem; transition: background-color 0.3s; cursor: pointer; display: flex; flex-direction: column;">
+                    <div class="text-center mb-6" style="text-align: center; margin-bottom: 1.5rem;">
+                        <div class="drink-visual mango-coffee" style="height: 150px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+                            <div class="drink-glass" style="width: 80px; height: 120px; background: rgba(255,255,255,0.1); border-radius: 8px 8px 40px 40px; position: relative; border: 2px solid #ddd; overflow: hidden;">
+                                <div class="mango-layer" style="position: absolute; bottom: 40px; left: 5px; right: 5px; height: 30px; background: linear-gradient(90deg, #FF8C00, #FFA500); border-radius: 15px;"></div>
+                                <div class="coffee-layer" style="position: absolute; bottom: 10px; left: 5px; right: 5px; height: 20px; background: #8B4513; border-radius: 10px;"></div>
+                                <div class="mango-garnish" style="position: absolute; top: -5px; right: 10px; width: 15px; height: 15px; background: #FF8C00; border-radius: 50%;"></div>
+                            </div>
+                        </div>
+                        <h4 class="font-grotesk text-2xl font-bold mb-2 group-hover:text-swiss-red transition-colors" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; transition: color 0.3s;">Mango Coffee</h4>
+                        <p class="font-mono text-xs text-gray-500 mb-4" style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #6b7280; margin-bottom: 1rem;">Tropical Peruvian Fusion</p>
+                    </div>
+                    <div class="recipe-details" style="flex-grow: 1;">
+                        <h5 class="font-grotesk font-bold mb-3" style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; margin-bottom: 0.75rem;">Ingredients</h5>
+                        <ul class="ingredient-list font-sans text-sm text-gray-600 dark:text-gray-400 mb-4" style="font-family: 'Inter', sans-serif; font-size: 0.875rem; color: #4b5563; margin-bottom: 1rem; padding-left: 1.25rem;">
+                            <li>1 shot espresso or ½ cup strong coffee</li>
+                            <li>½ cup fresh mango puree</li>
+                            <li>1 tbsp honey</li>
+                            <li>¼ cup coconut milk</li>
+                            <li>Ice cubes</li>
+                            <li>Mango slices for garnish</li>
+                        </ul>
+                        <h5 class="font-grotesk font-bold mb-3" style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; margin-bottom: 0.75rem;">Instructions</h5>
+                        <ol class="instruction-list font-sans text-sm text-gray-600 dark:text-gray-400 mb-4" style="font-family: 'Inter', sans-serif; font-size: 0.875rem; color: #4b5563; margin-bottom: 1rem; padding-left: 1.25rem;">
+                            <li>Blend mango puree with honey until smooth</li>
+                            <li>Pour mango mixture into a tall glass with ice</li>
+                            <li>Slowly pour coconut milk over the back of a spoon</li>
+                            <li>Top with espresso or coffee</li>
+                            <li>Garnish with fresh mango slices</li>
+                        </ol>
+                        <div class="flavor-notes border-t border-gray-200 dark:border-dark-border pt-4 mt-auto" style="border-top: 1px solid #e5e7eb; padding-top: 1rem; margin-top: auto;">
+                            <p class="font-sans text-xs text-gray-600 dark:text-gray-400" style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #4b5563;"><strong>Flavor Profile:</strong> Sweet tropical mango with rich coffee undertones and creamy coconut finish.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Orange Espresso -->
+                <div class="recipe-card-new border-r border-b border-gray-200 dark:border-dark-border p-8 hover:bg-off-white dark:hover:bg-white/5 transition-colors group cursor-pointer flex flex-col" style="border-right: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb; padding: 2rem; transition: background-color 0.3s; cursor: pointer; display: flex; flex-direction: column;">
+                    <div class="text-center mb-6" style="text-align: center; margin-bottom: 1.5rem;">
+                        <div class="drink-visual orange-espresso" style="height: 150px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+                            <div class="drink-glass" style="width: 80px; height: 120px; background: rgba(255,255,255,0.1); border-radius: 8px 8px 40px 40px; position: relative; border: 2px solid #ddd; overflow: hidden;">
+                                <div class="orange-layer" style="position: absolute; bottom: 30px; left: 5px; right: 5px; height: 40px; background: linear-gradient(90deg, #FF8C00, #FFA500); border-radius: 20px;"></div>
+                                <div class="espresso-layer" style="position: absolute; bottom: 5px; left: 5px; right: 5px; height: 15px; background: #2F1B14; border-radius: 8px;"></div>
+                                <div class="orange-peel" style="position: absolute; top: -8px; left: 10px; width: 20px; height: 8px; background: #FF8C00; border-radius: 10px 10px 0 0;"></div>
+                            </div>
+                        </div>
+                        <h4 class="font-grotesk text-2xl font-bold mb-2 group-hover:text-swiss-red transition-colors" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; transition: color 0.3s;">Orange Espresso</h4>
+                        <p class="font-mono text-xs text-gray-500 mb-4" style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #6b7280; margin-bottom: 1rem;">Citrus Meets Coffee</p>
+                    </div>
+                    <div class="recipe-details" style="flex-grow: 1;">
+                        <h5 class="font-grotesk font-bold mb-3" style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; margin-bottom: 0.75rem;">Ingredients</h5>
+                        <ul class="ingredient-list font-sans text-sm text-gray-600 dark:text-gray-400 mb-4" style="font-family: 'Inter', sans-serif; font-size: 0.875rem; color: #4b5563; margin-bottom: 1rem; padding-left: 1.25rem;">
+                            <li>2 shots espresso</li>
+                            <li>2 oz fresh orange juice</li>
+                            <li>1 tsp orange zest</li>
+                            <li>1 tbsp simple syrup</li>
+                            <li>Orange peel twist for garnish</li>
+                        </ul>
+                        <h5 class="font-grotesk font-bold mb-3" style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; margin-bottom: 0.75rem;">Instructions</h5>
+                        <ol class="instruction-list font-sans text-sm text-gray-600 dark:text-gray-400 mb-4" style="font-family: 'Inter', sans-serif; font-size: 0.875rem; color: #4b5563; margin-bottom: 1rem; padding-left: 1.25rem;">
+                            <li>Combine orange juice, zest, and simple syrup</li>
+                            <li>Pour mixture into a warmed cup</li>
+                            <li>Pull espresso shots directly into the cup</li>
+                            <li>Stir gently to combine</li>
+                            <li>Garnish with orange peel twist</li>
+                        </ol>
+                        <div class="flavor-notes border-t border-gray-200 dark:border-dark-border pt-4 mt-auto" style="border-top: 1px solid #e5e7eb; padding-top: 1rem; margin-top: auto;">
+                            <p class="font-sans text-xs text-gray-600 dark:text-gray-400" style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #4b5563;"><strong>Flavor Profile:</strong> Bright citrus acidity complements the espresso's bitterness with a clean, refreshing finish.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tonic Cold Brew -->
+                <div class="recipe-card-new border-r border-b border-gray-200 dark:border-dark-border p-8 hover:bg-off-white dark:hover:bg-white/5 transition-colors group cursor-pointer flex flex-col" style="border-right: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb; padding: 2rem; transition: background-color 0.3s; cursor: pointer; display: flex; flex-direction: column;">
+                    <div class="text-center mb-6" style="text-align: center; margin-bottom: 1.5rem;">
+                        <div class="drink-visual tonic-coldbrew" style="height: 150px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+                            <div class="drink-glass" style="width: 80px; height: 120px; background: rgba(255,255,255,0.1); border-radius: 8px 8px 40px 40px; position: relative; border: 2px solid #ddd; overflow: hidden;">
+                                <div class="tonic-layer" style="position: absolute; bottom: 20px; left: 5px; right: 5px; height: 60px; background: linear-gradient(90deg, #E0F6FF, #B8E6FF); border-radius: 30px;"></div>
+                                <div class="coldbrew-layer" style="position: absolute; bottom: 5px; left: 5px; right: 5px; height: 15px; background: #2F1B14; border-radius: 8px;"></div>
+                                <div class="bubbles" style="position: absolute; top: 20px; left: 50%; width: 4px; height: 4px; background: white; border-radius: 50%; animation: bubble 2s ease-in-out infinite;"></div>
+                            </div>
+                        </div>
+                        <h4 class="font-grotesk text-2xl font-bold mb-2 group-hover:text-swiss-red transition-colors" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; transition: color 0.3s;">Tonic Cold Brew</h4>
+                        <p class="font-mono text-xs text-gray-500 mb-4" style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #6b7280; margin-bottom: 1rem;">Sparkling Coffee Experience</p>
+                    </div>
+                    <div class="recipe-details" style="flex-grow: 1;">
+                        <h5 class="font-grotesk font-bold mb-3" style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; margin-bottom: 0.75rem;">Ingredients</h5>
+                        <ul class="ingredient-list font-sans text-sm text-gray-600 dark:text-gray-400 mb-4" style="font-family: 'Inter', sans-serif; font-size: 0.875rem; color: #4b5563; margin-bottom: 1rem; padding-left: 1.25rem;">
+                            <li>4 oz cold brew coffee</li>
+                            <li>4 oz tonic water</li>
+                            <li>1 tsp lime juice</li>
+                            <li>Ice cubes</li>
+                            <li>Lime wheel for garnish</li>
+                        </ul>
+                        <h5 class="font-grotesk font-bold mb-3" style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; margin-bottom: 0.75rem;">Instructions</h5>
+                        <ol class="instruction-list font-sans text-sm text-gray-600 dark:text-gray-400 mb-4" style="font-family: 'Inter', sans-serif; font-size: 0.875rem; color: #4b5563; margin-bottom: 1rem; padding-left: 1.25rem;">
+                            <li>Fill a tall glass with ice</li>
+                            <li>Pour cold brew coffee over ice</li>
+                            <li>Add lime juice and stir</li>
+                            <li>Slowly top with tonic water</li>
+                            <li>Garnish with lime wheel</li>
+                        </ol>
+                        <div class="flavor-notes border-t border-gray-200 dark:border-dark-border pt-4 mt-auto" style="border-top: 1px solid #e5e7eb; padding-top: 1rem; margin-top: auto;">
+                            <p class="font-sans text-xs text-gray-600 dark:text-gray-400" style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #4b5563;"><strong>Flavor Profile:</strong> Effervescent and refreshing with botanical notes from tonic and bright acidity from lime.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lucuma Latte -->
+                <div class="recipe-card-new border-r border-b border-gray-200 dark:border-dark-border p-8 hover:bg-off-white dark:hover:bg-white/5 transition-colors group cursor-pointer flex flex-col" style="border-right: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb; padding: 2rem; transition: background-color 0.3s; cursor: pointer; display: flex; flex-direction: column;">
+                    <div class="text-center mb-6" style="text-align: center; margin-bottom: 1.5rem;">
+                        <div class="drink-visual lucuma-latte" style="height: 150px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+                            <div class="drink-glass" style="width: 80px; height: 120px; background: rgba(255,255,255,0.1); border-radius: 8px 8px 40px 40px; position: relative; border: 2px solid #ddd; overflow: hidden;">
+                                <div class="lucuma-layer" style="position: absolute; bottom: 50px; left: 5px; right: 5px; height: 30px; background: linear-gradient(90deg, #D2B48C, #F4E4BC); border-radius: 15px;"></div>
+                                <div class="milk-layer" style="position: absolute; bottom: 20px; left: 5px; right: 5px; height: 20px; background: white; border-radius: 10px;"></div>
+                                <div class="foam-top" style="position: absolute; top: 5px; left: 5px; right: 5px; height: 25px; background: rgba(255,255,255,0.9); border-radius: 25px 25px 10px 10px;"></div>
+                                <div class="cinnamon-dust" style="position: absolute; top: 0; left: 50%; width: 2px; height: 2px; background: #8B4513; border-radius: 50%;"></div>
+                            </div>
+                        </div>
+                        <h4 class="font-grotesk text-2xl font-bold mb-2 group-hover:text-swiss-red transition-colors" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; transition: color 0.3s;">Lucuma Latte</h4>
+                        <p class="font-mono text-xs text-gray-500 mb-4" style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #6b7280; margin-bottom: 1rem;">Peruvian Superfood Latte</p>
+                    </div>
+                    <div class="recipe-details" style="flex-grow: 1;">
+                        <h5 class="font-grotesk font-bold mb-3" style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; margin-bottom: 0.75rem;">Ingredients</h5>
+                        <ul class="ingredient-list font-sans text-sm text-gray-600 dark:text-gray-400 mb-4" style="font-family: 'Inter', sans-serif; font-size: 0.875rem; color: #4b5563; margin-bottom: 1rem; padding-left: 1.25rem;">
+                            <li>1 shot espresso</li>
+                            <li>1 cup steamed milk</li>
+                            <li>2 tbsp lucuma powder</li>
+                            <li>1 tsp vanilla extract</li>
+                            <li>1 tsp honey</li>
+                            <li>Cinnamon for dusting</li>
+                        </ul>
+                        <h5 class="font-grotesk font-bold mb-3" style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; margin-bottom: 0.75rem;">Instructions</h5>
+                        <ol class="instruction-list font-sans text-sm text-gray-600 dark:text-gray-400 mb-4" style="font-family: 'Inter', sans-serif; font-size: 0.875rem; color: #4b5563; margin-bottom: 1rem; padding-left: 1.25rem;">
+                            <li>Mix lucuma powder with vanilla and honey</li>
+                            <li>Pull espresso shot into the mixture</li>
+                            <li>Steam milk to 150°F with microfoam</li>
+                            <li>Pour milk in circular motion</li>
+                            <li>Dust with cinnamon</li>
+                        </ol>
+                        <div class="flavor-notes border-t border-gray-200 dark:border-dark-border pt-4 mt-auto" style="border-top: 1px solid #e5e7eb; padding-top: 1rem; margin-top: auto;">
+                            <p class="font-sans text-xs text-gray-600 dark:text-gray-400" style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #4b5563;"><strong>Flavor Profile:</strong> Creamy caramel-maple sweetness from lucuma with traditional latte richness.</p>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Flavor Pairing Guide - New Hybrid Theme Style -->
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-12 mx-auto">
+                <div class="flex flex-col md:flex-row justify-between items-end mb-12 border-b border-gray-200 dark:border-dark-border pb-8" style="display: flex; flex-direction: row; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; border-bottom: 1px solid #e5e7eb; padding-bottom: 2rem;">
+                    <div>
+                        <span class="inline-block px-3 py-1 bg-black dark:bg-white text-white dark:text-black text-xs font-bold font-mono mb-6" style="display: inline-block; padding: 0.25rem 0.75rem; background: #111111; color: white; font-size: 0.75rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; margin-bottom: 1.5rem;">GUIDE</span>
+                        <h1 class="font-grotesk text-5xl md:text-7xl tracking-tight leading-none" style="font-family: 'Space Grotesk', sans-serif; font-size: 3.5rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1;">Flavor Pairing</h1>
+                    </div>
+                    <div class="mt-8 md:mt-0 font-mono text-xs md:text-sm text-gray-500 dark:text-gray-400 max-w-xs text-right" style="margin-top: 0; font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; color: #6b7280; max-width: 18rem; text-align: right;">
+                        Master the art of combining coffee with complementary flavors
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 border-l border-t border-gray-200 dark:border-dark-border" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-left: 1px solid #e5e7eb; border-top: 1px solid #e5e7eb;">
+                    <div class="pairing-category-new border-r border-b border-gray-200 dark:border-dark-border p-8 hover:bg-off-white dark:hover:bg-white/5 transition-colors group cursor-pointer flex flex-col" style="border-right: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb; padding: 2rem; transition: background-color 0.3s; cursor: pointer; display: flex; flex-direction: column;">
+                        <h4 class="font-grotesk text-xl font-bold mb-4 group-hover:text-swiss-red transition-colors" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; transition: color 0.3s;">Fruity & Bright</h4>
+                        <div class="pairing-items-new flex flex-wrap gap-2 mb-4" style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+                            <span class="pairing-item-new px-2 py-1 bg-gray-100 dark:bg-[#2F3A28] dark:bg-white/10 text-xs font-bold uppercase rounded" style="padding: 0.25rem 0.5rem; background: #f3f4f6; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; border-radius: 4px;">Citrus</span>
+                            <span class="pairing-item-new px-2 py-1 bg-gray-100 dark:bg-[#2F3A28] dark:bg-white/10 text-xs font-bold uppercase rounded" style="padding: 0.25rem 0.5rem; background: #f3f4f6; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; border-radius: 4px;">Berries</span>
+                            <span class="pairing-item-new px-2 py-1 bg-gray-100 dark:bg-[#2F3A28] dark:bg-white/10 text-xs font-bold uppercase rounded" style="padding: 0.25rem 0.5rem; background: #f3f4f6; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; border-radius: 4px;">Stone Fruits</span>
+                            <span class="pairing-item-new px-2 py-1 bg-gray-100 dark:bg-[#2F3A28] dark:bg-white/10 text-xs font-bold uppercase rounded" style="padding: 0.25rem 0.5rem; background: #f3f4f6; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; border-radius: 4px;">Tropical Fruits</span>
+                        </div>
+                        <p class="font-sans text-xs text-gray-500 dark:text-gray-400 mt-auto" style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #6b7280; margin-top: auto;">Best with light roasts and pour-over methods</p>
+                    </div>
+                    
+                    <div class="pairing-category-new border-r border-b border-gray-200 dark:border-dark-border p-8 hover:bg-off-white dark:hover:bg-white/5 transition-colors group cursor-pointer flex flex-col" style="border-right: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb; padding: 2rem; transition: background-color 0.3s; cursor: pointer; display: flex; flex-direction: column;">
+                        <h4 class="font-grotesk text-xl font-bold mb-4 group-hover:text-swiss-red transition-colors" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; transition: color 0.3s;">Sweet & Creamy</h4>
+                        <div class="pairing-items-new flex flex-wrap gap-2 mb-4" style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+                            <span class="pairing-item-new px-2 py-1 bg-gray-100 dark:bg-[#2F3A28] dark:bg-white/10 text-xs font-bold uppercase rounded" style="padding: 0.25rem 0.5rem; background: #f3f4f6; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; border-radius: 4px;">Vanilla</span>
+                            <span class="pairing-item-new px-2 py-1 bg-gray-100 dark:bg-[#2F3A28] dark:bg-white/10 text-xs font-bold uppercase rounded" style="padding: 0.25rem 0.5rem; background: #f3f4f6; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; border-radius: 4px;">Caramel</span>
+                            <span class="pairing-item-new px-2 py-1 bg-gray-100 dark:bg-[#2F3A28] dark:bg-white/10 text-xs font-bold uppercase rounded" style="padding: 0.25rem 0.5rem; background: #f3f4f6; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; border-radius: 4px;">Coconut</span>
+                            <span class="pairing-item-new px-2 py-1 bg-gray-100 dark:bg-[#2F3A28] dark:bg-white/10 text-xs font-bold uppercase rounded" style="padding: 0.25rem 0.5rem; background: #f3f4f6; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; border-radius: 4px;">Lucuma</span>
+                        </div>
+                        <p class="font-sans text-xs text-gray-500 dark:text-gray-400 mt-auto" style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #6b7280; margin-top: auto;">Perfect with medium roasts and milk-based drinks</p>
+                    </div>
+                    
+                    <div class="pairing-category-new border-r border-b border-gray-200 dark:border-dark-border p-8 hover:bg-off-white dark:hover:bg-white/5 transition-colors group cursor-pointer flex flex-col" style="border-right: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb; padding: 2rem; transition: background-color 0.3s; cursor: pointer; display: flex; flex-direction: column;">
+                        <h4 class="font-grotesk text-xl font-bold mb-4 group-hover:text-swiss-red transition-colors" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; transition: color 0.3s;">Spicy & Warm</h4>
+                        <div class="pairing-items-new flex flex-wrap gap-2 mb-4" style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+                            <span class="pairing-item-new px-2 py-1 bg-gray-100 dark:bg-[#2F3A28] dark:bg-white/10 text-xs font-bold uppercase rounded" style="padding: 0.25rem 0.5rem; background: #f3f4f6; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; border-radius: 4px;">Cinnamon</span>
+                            <span class="pairing-item-new px-2 py-1 bg-gray-100 dark:bg-[#2F3A28] dark:bg-white/10 text-xs font-bold uppercase rounded" style="padding: 0.25rem 0.5rem; background: #f3f4f6; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; border-radius: 4px;">Cardamom</span>
+                            <span class="pairing-item-new px-2 py-1 bg-gray-100 dark:bg-[#2F3A28] dark:bg-white/10 text-xs font-bold uppercase rounded" style="padding: 0.25rem 0.5rem; background: #f3f4f6; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; border-radius: 4px;">Ginger</span>
+                            <span class="pairing-item-new px-2 py-1 bg-gray-100 dark:bg-[#2F3A28] dark:bg-white/10 text-xs font-bold uppercase rounded" style="padding: 0.25rem 0.5rem; background: #f3f4f6; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; border-radius: 4px;">Cacao</span>
+                        </div>
+                        <p class="font-sans text-xs text-gray-500 dark:text-gray-400 mt-auto" style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #6b7280; margin-top: auto;">Excellent with dark roasts and espresso</p>
+                    </div>
+                    
+                    <div class="pairing-category-new border-r border-b border-gray-200 dark:border-dark-border p-8 hover:bg-off-white dark:hover:bg-white/5 transition-colors group cursor-pointer flex flex-col" style="border-right: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb; padding: 2rem; transition: background-color 0.3s; cursor: pointer; display: flex; flex-direction: column;">
+                        <h4 class="font-grotesk text-xl font-bold mb-4 group-hover:text-swiss-red transition-colors" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; transition: color 0.3s;">Herbal & Fresh</h4>
+                        <div class="pairing-items-new flex flex-wrap gap-2 mb-4" style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+                            <span class="pairing-item-new px-2 py-1 bg-gray-100 dark:bg-[#2F3A28] dark:bg-white/10 text-xs font-bold uppercase rounded" style="padding: 0.25rem 0.5rem; background: #f3f4f6; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; border-radius: 4px;">Mint</span>
+                            <span class="pairing-item-new px-2 py-1 bg-gray-100 dark:bg-[#2F3A28] dark:bg-white/10 text-xs font-bold uppercase rounded" style="padding: 0.25rem 0.5rem; background: #f3f4f6; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; border-radius: 4px;">Lavender</span>
+                            <span class="pairing-item-new px-2 py-1 bg-gray-100 dark:bg-[#2F3A28] dark:bg-white/10 text-xs font-bold uppercase rounded" style="padding: 0.25rem 0.5rem; background: #f3f4f6; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; border-radius: 4px;">Rosemary</span>
+                            <span class="pairing-item-new px-2 py-1 bg-gray-100 dark:bg-[#2F3A28] dark:bg-white/10 text-xs font-bold uppercase rounded" style="padding: 0.25rem 0.5rem; background: #f3f4f6; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; border-radius: 4px;">Thyme</span>
+                        </div>
+                        <p class="font-sans text-xs text-gray-500 dark:text-gray-400 mt-auto" style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #6b7280; margin-top: auto;">Great with cold brew and iced preparations</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Seasonal Specials - New Hybrid Theme Style -->
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-12 mx-auto">
+                <div class="flex flex-col md:flex-row justify-between items-end mb-12 border-b border-gray-200 dark:border-dark-border pb-8" style="display: flex; flex-direction: row; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; border-bottom: 1px solid #e5e7eb; padding-bottom: 2rem;">
+                    <div>
+                        <span class="inline-block px-3 py-1 bg-black dark:bg-white text-white dark:text-black text-xs font-bold font-mono mb-6" style="display: inline-block; padding: 0.25rem 0.75rem; background: #111111; color: white; font-size: 0.75rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; margin-bottom: 1.5rem;">SEASONAL</span>
+                        <h1 class="font-grotesk text-5xl md:text-7xl tracking-tight leading-none" style="font-family: 'Space Grotesk', sans-serif; font-size: 3.5rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1;">Coffee Creations</h1>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 border-l border-t border-gray-200 dark:border-dark-border" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-left: 1px solid #e5e7eb; border-top: 1px solid #e5e7eb;">
+                    <div class="seasonal-card-new border-r border-b border-gray-200 dark:border-dark-border p-8 hover:bg-off-white dark:hover:bg-white/5 transition-colors group cursor-pointer flex flex-col" style="border-right: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb; padding: 2rem; transition: background-color 0.3s; cursor: pointer; display: flex; flex-direction: column;">
+                        <h5 class="font-grotesk text-lg font-bold mb-3 group-hover:text-swiss-red transition-colors" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.125rem; font-weight: 700; margin-bottom: 0.75rem; transition: color 0.3s;">Spring: Passion Fruit Coffee</h5>
+                        <p class="font-sans text-sm text-gray-600 dark:text-gray-400" style="font-family: 'Inter', sans-serif; font-size: 0.875rem; color: #4b5563;">Bright passion fruit meets smooth cold brew for a refreshing spring treat</p>
+                    </div>
+                    <div class="seasonal-card-new border-r border-b border-gray-200 dark:border-dark-border p-8 hover:bg-off-white dark:hover:bg-white/5 transition-colors group cursor-pointer flex flex-col" style="border-right: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb; padding: 2rem; transition: background-color 0.3s; cursor: pointer; display: flex; flex-direction: column;">
+                        <h5 class="font-grotesk text-lg font-bold mb-3 group-hover:text-swiss-red transition-colors" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.125rem; font-weight: 700; margin-bottom: 0.75rem; transition: color 0.3s;">Summer: Chicha Coffee</h5>
+                        <p class="font-sans text-sm text-gray-600 dark:text-gray-400" style="font-family: 'Inter', sans-serif; font-size: 0.875rem; color: #4b5563;">Traditional Peruvian chicha morada spices combined with iced coffee</p>
+                    </div>
+                    <div class="seasonal-card-new border-r border-b border-gray-200 dark:border-dark-border p-8 hover:bg-off-white dark:hover:bg-white/5 transition-colors group cursor-pointer flex flex-col" style="border-right: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb; padding: 2rem; transition: background-color 0.3s; cursor: pointer; display: flex; flex-direction: column;">
+                        <h5 class="font-grotesk text-lg font-bold mb-3 group-hover:text-swiss-red transition-colors" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.125rem; font-weight: 700; margin-bottom: 0.75rem; transition: color 0.3s;">Autumn: Pisco Coffee</h5>
+                        <p class="font-sans text-sm text-gray-600 dark:text-gray-400" style="font-family: 'Inter', sans-serif; font-size: 0.875rem; color: #4b5563;">Peruvian pisco brandy adds warmth to rich espresso for cooler evenings</p>
+                    </div>
+                    <div class="seasonal-card-new border-r border-b border-gray-200 dark:border-dark-border p-8 hover:bg-off-white dark:hover:bg-white/5 transition-colors group cursor-pointer flex flex-col" style="border-right: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb; padding: 2rem; transition: background-color 0.3s; cursor: pointer; display: flex; flex-direction: column;">
+                        <h5 class="font-grotesk text-lg font-bold mb-3 group-hover:text-swiss-red transition-colors" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.125rem; font-weight: 700; margin-bottom: 0.75rem; transition: color 0.3s;">Winter: Spiced Hot Chocolate Coffee</h5>
+                        <p class="font-sans text-sm text-gray-600 dark:text-gray-400" style="font-family: 'Inter', sans-serif; font-size: 0.875rem; color: #4b5563;">Cusco's finest cacao meets dark roast with warming spices</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pro Tips - New Hybrid Theme Style -->
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-12 mx-auto">
+                <div class="flex flex-col md:flex-row justify-between items-end mb-12 border-b border-gray-200 dark:border-dark-border pb-8" style="display: flex; flex-direction: row; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; border-bottom: 1px solid #e5e7eb; padding-bottom: 2rem;">
+                    <div>
+                        <span class="inline-block px-3 py-1 bg-black dark:bg-white text-white dark:text-black text-xs font-bold font-mono mb-6" style="display: inline-block; padding: 0.25rem 0.75rem; background: #111111; color: white; font-size: 0.75rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; margin-bottom: 1.5rem;">TIPS</span>
+                        <h1 class="font-grotesk text-5xl md:text-7xl tracking-tight leading-none" style="font-family: 'Space Grotesk', sans-serif; font-size: 3.5rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1;">Pro Tips</h1>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 border-l border-t border-gray-200 dark:border-dark-border" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-left: 1px solid #e5e7eb; border-top: 1px solid #e5e7eb;">
+                    <div class="tip-card-new border-r border-b border-gray-200 dark:border-dark-border p-8 hover:bg-off-white dark:hover:bg-white/5 transition-colors group cursor-pointer flex flex-col" style="border-right: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb; padding: 2rem; transition: background-color 0.3s; cursor: pointer; display: flex; flex-direction: column;">
+                        <h5 class="font-grotesk text-lg font-bold mb-3 group-hover:text-swiss-red transition-colors" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.125rem; font-weight: 700; margin-bottom: 0.75rem; transition: color 0.3s;">Quality Ingredients</h5>
+                        <p class="font-sans text-sm text-gray-600 dark:text-gray-400" style="font-family: 'Inter', sans-serif; font-size: 0.875rem; color: #4b5563;">Use fresh, high-quality ingredients. The better your base coffee, the better your creation.</p>
+                    </div>
+                    <div class="tip-card-new border-r border-b border-gray-200 dark:border-dark-border p-8 hover:bg-off-white dark:hover:bg-white/5 transition-colors group cursor-pointer flex flex-col" style="border-right: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb; padding: 2rem; transition: background-color 0.3s; cursor: pointer; display: flex; flex-direction: column;">
+                        <h5 class="font-grotesk text-lg font-bold mb-3 group-hover:text-swiss-red transition-colors" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.125rem; font-weight: 700; margin-bottom: 0.75rem; transition: color 0.3s;">Temperature Matters</h5>
+                        <p class="font-sans text-sm text-gray-600 dark:text-gray-400" style="font-family: 'Inter', sans-serif; font-size: 0.875rem; color: #4b5563;">Hot ingredients should be hot, cold should be cold. Don't let temperature compromise your drink.</p>
+                    </div>
+                    <div class="tip-card-new border-r border-b border-gray-200 dark:border-dark-border p-8 hover:bg-off-white dark:hover:bg-white/5 transition-colors group cursor-pointer flex flex-col" style="border-right: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb; padding: 2rem; transition: background-color 0.3s; cursor: pointer; display: flex; flex-direction: column;">
+                        <h5 class="font-grotesk text-lg font-bold mb-3 group-hover:text-swiss-red transition-colors" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.125rem; font-weight: 700; margin-bottom: 0.75rem; transition: color 0.3s;">Layering Technique</h5>
+                        <p class="font-sans text-sm text-gray-600 dark:text-gray-400" style="font-family: 'Inter', sans-serif; font-size: 0.875rem; color: #4b5563;">Pour heavier liquids first, then lighter ones over the back of a spoon for clean layers.</p>
+                    </div>
+                    <div class="tip-card-new border-r border-b border-gray-200 dark:border-dark-border p-8 hover:bg-off-white dark:hover:bg-white/5 transition-colors group cursor-pointer flex flex-col" style="border-right: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb; padding: 2rem; transition: background-color 0.3s; cursor: pointer; display: flex; flex-direction: column;">
+                        <h5 class="font-grotesk text-lg font-bold mb-3 group-hover:text-swiss-red transition-colors" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.125rem; font-weight: 700; margin-bottom: 0.75rem; transition: color 0.3s;">Balance is Key</h5>
+                        <p class="font-sans text-sm text-gray-600 dark:text-gray-400" style="font-family: 'Inter', sans-serif; font-size: 0.875rem; color: #4b5563;">Start with small amounts of flavorings and adjust. You can always add more, but you can't take it away.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.alchemy-hero-section {
+    background: linear-gradient(135deg, #FF6B35 0%, #F7931E 50%, #FFD23F 100%);
+    padding: 80px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.alchemy-hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="30" cy="30" r="3" fill="rgba(255,255,255,0.1)"/><circle cx="70" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="70" r="2.5" fill="rgba(255,255,255,0.1)"/></svg>');
+    animation: float 25s infinite linear;
+}
+
+.alchemy-visual {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+}
+
+.coffee-glass {
+    width: 120px;
+    height: 200px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 10px 10px 50px 50px;
+    position: relative;
+    border: 3px solid rgba(255,255,255,0.3);
+    overflow: hidden;
+}
+
+.liquid-layer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 40px;
+}
+
+.layer-1 {
+    bottom: 120px;
+    background: linear-gradient(90deg, #8B4513, #A0522D);
+    animation: layerFloat 3s ease-in-out infinite;
+}
+
+.layer-2 {
+    bottom: 80px;
+    background: linear-gradient(90deg, #FF6B35, #F7931E);
+    animation: layerFloat 3s ease-in-out infinite 1s;
+}
+
+.layer-3 {
+    bottom: 40px;
+    background: linear-gradient(90deg, #FFD23F, #FFA500);
+    animation: layerFloat 3s ease-in-out infinite 2s;
+}
+
+.foam-layer {
+    position: absolute;
+    top: 10px;
+    left: 5px;
+    right: 5px;
+    height: 30px;
+    background: rgba(255,255,255,0.8);
+    border-radius: 50px 50px 20px 20px;
+    animation: foamBubble 2s ease-in-out infinite;
+}
+
+@@keyframes layerFloat {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(10px); }
+}
+
+@@keyframes foamBubble {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* Removed old recipe-card styles - using new border-based design */
+
+.drink-visual {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.drink-glass {
+    width: 80px;
+    height: 120px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px 8px 40px 40px;
+    position: relative;
+    border: 2px solid #ddd;
+    overflow: hidden;
+}
+
+.mango-coffee .mango-layer {
+    position: absolute;
+    bottom: 40px;
+    left: 5px;
+    right: 5px;
+    height: 30px;
+    background: linear-gradient(90deg, #FF8C00, #FFA500);
+    border-radius: 15px;
+}
+
+.mango-coffee .coffee-layer {
+    position: absolute;
+    bottom: 10px;
+    left: 5px;
+    right: 5px;
+    height: 20px;
+    background: #8B4513;
+    border-radius: 10px;
+}
+
+.mango-coffee .mango-garnish {
+    position: absolute;
+    top: -5px;
+    right: 10px;
+    width: 15px;
+    height: 15px;
+    background: #FF8C00;
+    border-radius: 50%;
+}
+
+.orange-espresso .orange-layer {
+    position: absolute;
+    bottom: 30px;
+    left: 5px;
+    right: 5px;
+    height: 40px;
+    background: linear-gradient(90deg, #FF8C00, #FFA500);
+    border-radius: 20px;
+}
+
+.orange-espresso .espresso-layer {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    right: 5px;
+    height: 15px;
+    background: #2F1B14;
+    border-radius: 8px;
+}
+
+.orange-espresso .orange-peel {
+    position: absolute;
+    top: -8px;
+    left: 10px;
+    width: 20px;
+    height: 8px;
+    background: #FF8C00;
+    border-radius: 10px 10px 0 0;
+}
+
+.tonic-coldbrew .tonic-layer {
+    position: absolute;
+    bottom: 20px;
+    left: 5px;
+    right: 5px;
+    height: 60px;
+    background: linear-gradient(90deg, #E0F6FF, #B8E6FF);
+    border-radius: 30px;
+}
+
+.tonic-coldbrew .coldbrew-layer {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    right: 5px;
+    height: 15px;
+    background: #2F1B14;
+    border-radius: 8px;
+}
+
+.tonic-coldbrew .bubbles {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    width: 4px;
+    height: 4px;
+    background: white;
+    border-radius: 50%;
+    animation: bubble 2s ease-in-out infinite;
+}
+
+@@keyframes bubble {
+    0% { transform: translateY(0); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translateY(-100px); opacity: 0; }
+}
+
+.lucuma-latte .lucuma-layer {
+    position: absolute;
+    bottom: 50px;
+    left: 5px;
+    right: 5px;
+    height: 30px;
+    background: linear-gradient(90deg, #D2B48C, #F4E4BC);
+    border-radius: 15px;
+}
+
+.lucuma-latte .milk-layer {
+    position: absolute;
+    bottom: 20px;
+    left: 5px;
+    right: 5px;
+    height: 20px;
+    background: white;
+    border-radius: 10px;
+}
+
+.lucuma-latte .foam-top {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    height: 25px;
+    background: rgba(255,255,255,0.9);
+    border-radius: 25px 25px 10px 10px;
+}
+
+.lucuma-latte .cinnamon-dust {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 2px;
+    height: 2px;
+    background: #8B4513;
+    border-radius: 50%;
+}
+
+.recipe-row {
+    column-gap: 2rem;
+}
+
+.recipe-visual-col {
+    padding-right: 2rem;
+}
+
+.recipe-details-col {
+    padding-left: 2rem;
+}
+
+.ingredient-list, .instruction-list {
+    padding-left: 0;
+    list-style-position: inside;
+}
+
+.ingredient-list li, .instruction-list li {
+    margin-bottom: 8px;
+    line-height: 1.6;
+}
+
+.flavor-notes {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* Removed brown background - using new hybrid theme */
+
+.pairing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+}
+
+/* Removed old pairing-category styles - using new border-based design */
+
+.pairing-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+/* Removed old pairing-item styles - using new border-based design */
+
+.seasonal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+}
+
+/* Removed old seasonal-card styles - using new border-based design */
+
+.pro-tips-section {
+    background: white;
+}
+
+.tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+}
+
+/* Removed old tip-card styles - using new border-based design */
+
+/* Dark mode support */
+.dark .bg-off-white {
+    background-color: #111111 !important;
+}
+
+.dark .border-gray-200 {
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.dark .text-gray-500 {
+    color: #6b7280 !important;
+}
+
+.dark .text-gray-400 {
+    color: #6b7280 !important;
+}
+
+.dark .text-gray-600 {
+    color: #9ca3af !important;
+}
+
+.text-swiss-red {
+    color: #FF3B30 !important;
+}
+
+.font-grotesk {
+    font-family: 'Space Grotesk', sans-serif !important;
+}
+
+.font-mono {
+    font-family: 'JetBrains Mono', 'Courier New', monospace !important;
+}
+
+.font-sans {
+    font-family: 'Inter', sans-serif !important;
+}
+
+@@media (max-width: 768px) {
+    .grid.grid-cols-1.md\:grid-cols-2.lg\:grid-cols-3 {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .grid.grid-cols-1.md\:grid-cols-2.lg\:grid-cols-4 {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .drink-glass {
+        width: 60px;
+        height: 90px;
+    }
+}
+</style>

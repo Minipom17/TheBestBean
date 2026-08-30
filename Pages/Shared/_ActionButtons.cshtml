@@ -1,0 +1,8 @@
+@model TheBestBean.Models.CoffeeBean
+
+<!-- DRY: Reusable action buttons for coffee beans -->
+<td style="white-space: nowrap;">
+    <a href="/CoffeeBeans/Edit/@Model.Id" class="btn btn-sm btn-outline-primary me-1" style="font-size: 0.7rem; padding: 0.25rem 0.5rem;">Edit</a>
+    <a href="/CoffeeBeans/Details/@Model.Id" class="btn btn-sm btn-outline-info me-1" style="font-size: 0.7rem; padding: 0.25rem 0.5rem;">Details</a>
+    <a href="/CoffeeBeans/Delete/@Model.Id" class="btn btn-sm btn-outline-danger" style="font-size: 0.7rem; padding: 0.25rem 0.5rem;">Delete</a>
+</td>

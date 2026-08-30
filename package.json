@@ -1,0 +1,22 @@
+{
+  "name": "thebestbean",
+  "version": "1.0.0",
+  "description": "Purple Bean Coffee front-end tooling",
+  "main": "index.js",
+  "scripts": {
+    "build:map": "esbuild ClientApp/map/coffee-map.js --bundle --format=esm --sourcemap --outdir=wwwroot/js --minify",
+    "watch:map": "esbuild ClientApp/map/coffee-map.js --bundle --format=esm --sourcemap --outdir=wwwroot/js --watch",
+    "build": "npm run build:map"
+  },
+  "keywords": [
+    "coffee",
+    "leaflet",
+    "peru"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "esbuild": "^0.24.0",
+    "leaflet": "^1.9.4"
+  }
+}

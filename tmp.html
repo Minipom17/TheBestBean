@@ -1,0 +1,2370 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>12° Sur RoastOS</title>
+    <!-- Google Fonts for Exchange Plan -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --card-bg: #f9f9f9;
+            --text-color: #1a1a1a;
+            --border-color: #333;
+            --nav-bg: #1a1a1a;
+            --accent-orange: #ff6b35;
+            --accent-green: #27ae60;
+            --input-bg: #ffffff;
+            --font-main: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --font-tech: 'Courier New', Courier, monospace;
+        }
+
+        body.dark-mode {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --border-color: #555;
+            --nav-bg: #000000;
+            --input-bg: #2d2d2d;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding-bottom: 90px;
+            line-height: 1.4;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- FLOATING TIMER --- */
+        #floatingTimerBar {
+            display: none; position: fixed; top: 0; left: 0; right: 0;
+            height: 50px; background: var(--accent-green); color: white;
+            z-index: 9999; align-items: center; justify-content: center;
+            font-family: var(--font-tech); font-size: 1.5rem; font-weight: bold;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        #floatingTimerBar.active { display: flex; }
+        
+        .timer-close-btn {
+            position: absolute; right: 15px; top: 0; bottom: 0;
+            display: flex; align-items: center; font-size: 1.5rem; cursor: pointer;
+            padding: 0 10px; opacity: 0.8;
+        }
+        .timer-close-btn:hover { opacity: 1; }
+
+        /* --- NAVIGATION --- */
+        .nav-bar {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            height: 65px; background: var(--nav-bg);
+            display: flex; justify-content: space-around; align-items: center;
+            z-index: 2000; box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+        }
+        .nav-item {
+            color: rgba(255,255,255,0.6); text-align: center; font-size: 0.7rem;
+            cursor: pointer; width: 100%; height: 100%; display: flex;
+            flex-direction: column; justify-content: center; align-items: center;
+            border-top: 4px solid transparent; letter-spacing: 1px; text-transform: uppercase;
+        }
+        .nav-item.active { color: white; border-top: 4px solid var(--accent-orange); }
+        .nav-icon { font-size: 1.2rem; margin-bottom: 4px; }
+
+        /* --- LANGUAGE SWITCHER --- */
+        .lang-bar { 
+            font-size: 0.7rem; margin-bottom: 5px; 
+            display: flex; gap: 5px; 
+            align-items: center;
+        }
+        .lang-btn {
+            background: none; border: none; padding: 2px 4px; cursor: pointer;
+            color: var(--text-color); opacity: 0.6; font-weight: bold;
+            text-transform: uppercase; font-size: 0.7rem;
+        }
+        .lang-btn:hover, .lang-btn.active { opacity: 1; text-decoration: underline; color: var(--accent-orange); }
+        #lang-inventory { justify-content: flex-start; margin-left: -2px; }
+        #lang-center { justify-content: center; }
+        
+        /* Home icon on right */
+        .home-icon-right {
+            margin-left: auto;
+            margin-right: 0;
+        }
+        
+        /* Top bar for dark mode toggle */
+        .top-control-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: var(--nav-bg);
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 1999;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .theme-toggle-btn {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.8);
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 5px 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .theme-toggle-btn:hover {
+            color: white;
+        }
+        
+        body {
+            padding-top: 40px;
+        }
+
+        /* --- VIEWS --- */
+        .view-section { display: none; padding: 20px; max-width: 1400px; margin: 0 auto; }
+        .view-section.active { display: block; }
+
+        @media (max-width: 900px) {
+            .view-section { padding: 10px 0px !important; }
+            .container { padding: 0 !important; }
+            .card { border-radius: 0; border-left: none; border-right: none; }
+            .lang-bar { padding: 0 10px; }
+        }
+
+        /* --- SHARED --- */
+        .card { 
+            background: var(--card-bg); border: 1px solid #ddd; 
+            border-radius: 4px; padding: 15px; margin-bottom: 15px; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+        }
+        .btn { 
+            background: var(--accent-orange); color: white; border: none; 
+            padding: 12px; border-radius: 2px; cursor: pointer; 
+            font-weight: bold; font-size: 0.9rem; letter-spacing: 1px; text-transform: uppercase;
+        }
+        .btn-outline { background: transparent; border: 1px solid var(--text-color); color: var(--text-color); cursor: pointer; padding:8px; border-radius:2px; text-transform: uppercase; font-size: 0.8rem;}
+        
+        input, select, textarea {
+            width: 100%; padding: 10px; border: 1px solid #ccc;
+            background: var(--input-bg); color: var(--text-color);
+            border-radius: 2px; box-sizing: border-box; margin-bottom: 10px;
+            font-family: var(--font-main);
+        }
+        label { font-size: 0.7rem; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; color: #666; display: block; margin-bottom: 4px;}
+        .row { display: flex; gap: 10px; }
+
+        /* --- INVENTORY --- */
+        .inventory-header { text-align: center; padding: 10px 0 20px 0; border-bottom: 1px solid #eee; margin-bottom: 20px; }
+        .inventory-header h2 { margin: 0; letter-spacing: 2px; text-transform: uppercase; }
+        .inventory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; padding: 0 10px; }
+        
+        .bean-card { background: white; border: 1px solid #eee; padding: 20px; text-align: center; transition: transform 0.2s; }
+        .bean-icon { width: 60px; height: 60px; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; }
+        .bean-icon img { width: 100%; height: 100%; object-fit: contain; }
+        .stock-bar-container { height: 4px; background: #eee; width: 100%; margin: 15px 0; }
+        .stock-bar-fill { height: 100%; background: var(--accent-orange); width: 50%; }
+
+        /* --- ROAST --- */
+        .roast-grid { display: grid; grid-template-columns: 240px 1fr; gap: 20px; align-items: start; padding: 0 10px; }
+        @media (max-width: 900px) { 
+            .roast-grid { display: flex; flex-direction: column-reverse; align-items: stretch; gap:15px; padding: 0; } 
+            .chart-container { height: 300px; border-radius: 0; border-left: none; border-right: none; } 
+        }
+        .chart-container { height: 400px; background: var(--bg-color); border: 1px solid #ddd; padding: 10px; border-radius: 4px; width: 100%; box-sizing: border-box; }
+        .live-input-panel { display: none; background: var(--card-bg); border: 2px solid var(--accent-green); padding: 10px; margin-bottom: 10px; text-align: center; border-radius: 4px; }
+        .live-input-panel.flash { animation: pulse 1s infinite; }
+        .input-success { animation: flashGreen 0.5s; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.4); } 70% { box-shadow: 0 0 0 10px transparent; } }
+        @keyframes flashGreen { 0% { background-color: rgba(39, 174, 96, 0.5); } 100% { background-color: var(--card-bg); } }
+        .overlay-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
+        .overlay-chip { font-size: 0.75rem; padding: 4px 8px; border-radius: 12px; display: flex; align-items: center; gap: 5px; color: white; font-weight: bold; }
+        .chip-close { cursor: pointer; opacity: 0.8; font-weight: 900; }
+
+        /* --- SCA FORM --- */
+        .sca-form-wrapper { border: 3px solid black; background: white; color: black; padding: 5px; font-family: var(--font-tech); width: 100%; box-sizing: border-box; font-size: 0.8rem; }
+        .sca-form-wrapper input, .sca-form-wrapper select, .sca-form-wrapper textarea { background: white !important; color: black !important; border-color: black !important; font-family: var(--font-tech); }
+
+        .sca-header-row { display: flex; justify-content: space-between; border-bottom: 3px solid black; padding-bottom: 10px; margin-bottom: 10px; flex-wrap:wrap; gap:10px; }
+        .sca-title { font-size: 1.2rem; margin-bottom: 5px; text-transform: uppercase; letter-spacing: -0.5px; }
+        
+        .sample-container { border: 2px solid black; margin-bottom: 10px; }
+        .sample-grid { display: grid; grid-template-columns: 70px 2fr 1fr 1fr 1fr 1.2fr 1.2fr 1.2fr 90px; grid-template-rows: auto; }
+        
+        @media (max-width: 1100px) {
+            .sample-grid { grid-template-columns: 1fr 1fr 1fr; grid-template-rows: auto auto auto; }
+            .cell-sample { grid-row: 1; grid-column: 1; } .cell-frag { grid-row: 1; grid-column: 2; } .cell-flav { grid-row: 1; grid-column: 3; }
+            .cell-acid { grid-row: 2; grid-column: 1; } .cell-body { grid-row: 2; grid-column: 2; } .cell-bal { grid-row: 2; grid-column: 3; }
+            .cell-sweet { grid-row: 3; grid-column: 1; } .cell-overall { grid-row: 3; grid-column: 2; } .cell-final { grid-row: 3; grid-column: 3; }
+        }
+
+        .cell { border-right: 1px solid black; border-bottom: 1px solid black; padding: 4px; display: flex; flex-direction: column; position: relative; }
+        .cell-header { font-size: 0.65rem; text-transform: uppercase; margin-bottom: 4px; text-align: center; width: 100%; border-bottom: 1px solid #eee;}
+        .score-box { border: 1px solid black; width: 40px; height: 25px; margin: 0 auto; text-align: center; font-size: 1rem; padding: 0; }
+
+        /* Elements */
+        .roast-squares { display: flex; gap: 4px; justify-content: center; margin-top: 5px; }
+        .r-sq { width: 15px; height: 15px; border: 1px solid black; background: white; cursor: pointer; }
+        .r-sq.selected { background: #6f4e37; border-color: black; }
+        
+        .v-slider-wrapper { position: relative; width: 20px; height: 60px; margin: 0 auto; }
+        .v-slider { -webkit-appearance: none; width: 60px; height: 20px; background: transparent; transform: rotate(-90deg); transform-origin: 20px 20px; position: absolute; top: 0; left: 0; cursor: pointer; z-index: 2; }
+        .v-track { position: absolute; top: 0; bottom: 0; left: 9px; width: 1px; background: #000; }
+        .score-val { font-size: 0.7rem; margin-top: 2px; text-align: center; }
+
+        .check-row { display: flex; justify-content: center; gap: 2px; margin-top: 5px; }
+        .sq-check { width: 12px; height: 12px; border: 1px solid black; background: white; cursor: pointer; }
+        .sq-check.checked { background: black; }
+
+        .notes-area textarea { border: none !important; border-bottom: 1px dotted #999 !important; resize: none; height: 25px; margin: 0; padding: 2px; font-family: var(--font-tech); font-size: 0.8rem; }
+
+        /* --- CAPTURE MODE (FIXED FOR CUTOFF) --- */
+        body.capture-mode .nav-bar, body.capture-mode .no-print, body.capture-mode #floatingTimerBar, body.capture-mode .lang-bar { display: none !important; }
+        body.capture-mode .container { 
+            width: 1200px !important; 
+            max-width: 1200px !important; 
+            margin: 0; 
+            padding: 20px 60px 20px 20px; 
+            background: white; 
+        }
+        body.capture-mode .sample-grid { grid-template-columns: 70px 2fr 1fr 1fr 1fr 1.2fr 1.2fr 1.2fr 90px !important; grid-template-rows: auto !important; }
+        body.capture-mode .cell { grid-row: auto !important; grid-column: auto !important; }
+        
+        .static-report-header { display: none; border-bottom: 2px solid #333; margin-bottom: 20px; padding-bottom: 10px;}
+        .static-report-header h1 { margin: 0; text-transform: uppercase; }
+        body.capture-mode .static-report-header { display: flex; justify-content: space-between; align-items: flex-end; }
+
+        /* --- EXCHANGE PLAN / HERBERT STYLES --- */
+        .exchange-container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        .section-label { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: #FF3B30; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 0.5rem; }
+        
+        /* Mint Highlight Class */
+        .highlight-mint {
+            background-color: #e6f4ea;
+            color: #137333;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 700;
+        }
+        .zone-header { border-bottom: 2px solid #111111; padding-bottom: 1rem; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: flex-end; }
+        .zone-title { font-size: 2rem; margin: 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
+        .zone-badge { background: #111111; color: white; padding: 0.2rem 0.6rem; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; }
+        .custom-card { background: #ffffff; border: 1px solid #e5e7eb; padding: 2rem; transition: all 0.3s ease; height: 100%; display: flex; flex-direction: column; }
+        .custom-card:hover { background: #F9F9F9; border-color: #d1d5db; }
+        .vault-module { border: 1px solid #e5e7eb; margin-bottom: -1px; padding: 2rem; transition: background 0.2s; }
+        .vault-module:hover { background: #F9F9F9; }
+        
+        /* Manager Container (Shared for Session & Vault) */
+        .manager-container {
+            border: 1px solid #111111;
+            margin-top: 4rem;
+            background: white;
+        }
+        .manager-header {
+            background: #111111;
+            color: white;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .manager-content {
+            padding: 2rem;
+        }
+        
+        /* Notes Area */
+        .notes-area {
+            width: 100%;
+            padding: 1.5rem;
+            background: #F9F9F9;
+            border: 1px solid #e5e7eb;
+            font-family: 'Inter', sans-serif;
+            min-height: 120px;
+            resize: vertical;
+            margin-top: 1rem;
+        }
+        ul.checklist { list-style: none; padding: 0; margin: 1rem 0; }
+        ul.checklist li { position: relative; padding-left: 1.5rem; margin-bottom: 0.5rem; color: #2c2c2c; font-size: 0.95rem; }
+        ul.checklist li::before { content: "→"; position: absolute; left: 0; color: #FF3B30; font-weight: bold; }
+        .timeline-box { border-left: 2px solid #e5e7eb; padding-left: 1.5rem; margin-bottom: 1.5rem; }
+        .timeline-title { font-weight: 700; color: #111111; }
+        .timeline-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: #FF3B30; margin-bottom: 0.5rem; display: block; }
+        .session-toolbar { display: flex; gap: 10px; margin-bottom: 1.5rem; background: #F9F9F9; padding: 1rem; border: 1px solid #e5e7eb; align-items: center; }
+        select.session-select { flex-grow: 1; padding: 0.5rem; border: 1px solid #e5e7eb; font-family: 'JetBrains Mono', monospace; background: white; font-size: 0.9rem; cursor: pointer; }
+        .btn-action { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border: 1px solid #111111; background: white; cursor: pointer; transition: all 0.2s; font-family: 'Space Grotesk', sans-serif; font-weight: bold; font-size: 1.2rem; }
+        .btn-action:hover { background: #111111; color: white; }
+        .btn-delete:hover { background: #FF3B30; border-color: #FF3B30; color: white; }
+        .upload-zone { padding: 3rem; text-align: center; border: 1px dashed #111111; background: white; cursor: pointer; margin-bottom: 2rem; transition: background 0.2s; }
+        .upload-zone:hover { background: #F9F9F9; }
+        .analysis-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; border: 1px solid #e5e7eb; }
+        .analysis-col { padding: 1.5rem; border-right: 1px solid #e5e7eb; background: white; }
+        .analysis-col:last-child { border-right: none; }
+        .correction-box { background: #ffecec; padding: 0.8rem; border-left: 3px solid #FF3B30; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; margin-top: 0.5rem; }
+        .vocab-tag { display: inline-block; background: #f3f4f6; padding: 0.2rem 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; margin-right: 0.5rem; margin-bottom: 0.5rem; border: 1px solid #e5e7eb; }
+        .vocab-section { border: 1px solid #e5e7eb; margin-top: 2rem; }
+        .vocab-section table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+        .vocab-section th, .vocab-section td { padding: 1rem 1.5rem; border-bottom: 1px solid #e5e7eb; text-align: left; }
+        .vocab-section th { font-family: 'Inter', sans-serif; font-size: 0.75rem; text-transform: uppercase; color: #666666; background: #F9F9F9; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem; }
+        @media (max-width: 768px) { 
+            .analysis-grid { grid-template-columns: 1fr; } 
+            .analysis-col { border-right: none; border-bottom: 1px solid #e5e7eb; } 
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+
+        /* --- EDITABLE TEXT STYLES --- */
+        [contenteditable="true"] {
+            outline: none;
+            position: relative;
+            min-height: 1.2em;
+            padding: 2px 4px;
+            margin: -2px -4px;
+            border-radius: 3px;
+            transition: background-color 0.2s;
+        }
+        [contenteditable="true"]:hover {
+            background-color: rgba(59, 130, 246, 0.1);
+            cursor: text;
+        }
+        [contenteditable="true"]:focus {
+            background-color: rgba(59, 130, 246, 0.15);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+        }
+        [contenteditable="true"]:empty:before {
+            content: attr(data-placeholder);
+            color: #999;
+            font-style: italic;
+        }
+        .editable-save-indicator {
+            position: fixed;
+            top: 50px;
+            right: 20px;
+            background: #27ae60;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            z-index: 10000;
+            display: none;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        .editable-save-indicator.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+    </style>
+</head>
+<body>
+
+<div id="floatingTimerBar">
+    <span id="floatTime">00:00</span>
+    <div class="timer-close-btn" onclick="toggleTimer()">✕</div>
+</div>
+
+<div class="top-control-bar no-print">
+    <button class="theme-toggle-btn" onclick="toggleTheme()">
+        <span>🌗</span>
+        <span data-i18n="nav_mode">Mode</span>
+    </button>
+</div>
+
+<nav class="nav-bar no-print">
+    <div class="nav-item active" onclick="switchTab('herbert')"><div class="nav-icon">👤</div><div>Herbert</div></div>
+    <div class="nav-item" onclick="switchTab('inventory')"><div class="nav-icon">📦</div><div data-i18n="nav_stock">Stock</div></div>
+    <div class="nav-item" onclick="switchTab('roast')"><div class="nav-icon">🔥</div><div data-i18n="nav_roast">Roast</div></div>
+    <div class="nav-item" onclick="switchTab('qc')"><div class="nav-icon">📄</div><div data-i18n="nav_sca">SCA</div></div>
+    <div class="nav-item" onclick="switchTab('history')"><div class="nav-icon">📋</div><div>History</div></div>
+    <div class="nav-item" onclick="switchTab('farm')"><div class="nav-icon">🏡</div><div>Farm</div></div>
+</nav>
+
+<div id="appContainer" class="container">
+    <section id="view-herbert" class="view-section active">
+        <div class="lang-bar" id="lang-center">
+            <button class="lang-btn" onclick="setLang('en')">EN</button> / 
+            <button class="lang-btn" onclick="setLang('es')">ES</button> / 
+            <button class="lang-btn" onclick="setLang('cn')">CN</button>
+            <a href="/" class="lang-btn home-icon-right" style="text-decoration: none; display: inline-flex; align-items: center; margin-left: auto;"><img src="/Media/home_icon.svg" alt="Home" style="width: 14px; height: 14px;"></a>
+        </div>
+        
+        <div class="exchange-container">
+            <div class="editable-save-indicator" id="saveIndicator">💾 Saved</div>
+            <header style="margin-bottom: 4rem; text-align: center;">
+                <span class="section-label" contenteditable="true" data-herbert-id="header-label">Strategic Partnership</span>
+                <h1 style="font-size: 3.5rem; line-height: 1.1; margin-bottom: 1rem; font-family: 'Space Grotesk', sans-serif; font-weight: 700;" contenteditable="true" data-herbert-id="header-title">The Exchange Plan</h1>
+                <p style="font-size: 1.2rem; color: #666666;" contenteditable="true" data-herbert-id="header-subtitle">Brussels 2026 | World of Coffee</p>
+            </header>
+
+            <!-- THE AGREEMENT (SUMMARY) -->
+            <div style="background: #F9F9F9; border: 1px solid #e5e7eb; padding: 2rem; margin-bottom: 4rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 1.5rem;">
+                    <h4 style="margin:0;" contenteditable="true" data-herbert-id="agreement-title">The Agreement (The "Trade")</h4>
+                    <span class="mono-text" style="color: #FF3B30; font-family: 'JetBrains Mono', monospace;" contenteditable="true" data-herbert-id="agreement-badge">MUTUAL BENEFIT</span>
+                </div>
+                <div class="grid-2" style="margin-bottom: 0; gap: 4rem;">
+                    <div>
+                        <span class="section-label highlight-mint" contenteditable="true" data-herbert-id="role-teacher-label">YOUR ROLE (TEACHER)</span>
+                        <p style="margin-top:0.5rem; font-size: 0.95rem;" contenteditable="true" data-herbert-id="role-teacher-deliverable"><strong>Deliverable:</strong> Help Herbert master a world-class English speech for Brussels 2026.</p>
+                        <p style="font-size: 0.9rem; color: #666666;" contenteditable="true" data-herbert-id="role-teacher-actions">Actions: Speech editing, phonetics, confidence training.</p>
+                    </div>
+                    <div>
+                        <span class="section-label highlight-mint" contenteditable="true" data-herbert-id="role-herbert-label">HERBERT'S ROLE (PRO)</span>
+                        <p style="margin-top:0.5rem; font-size: 0.95rem;" contenteditable="true" data-herbert-id="role-herbert-deliverable"><strong>Deliverable:</strong> Teach you the "Production Chain" to source & develop coffee products.</p>
+                        <p style="font-size: 0.9rem; color: #666666;" contenteditable="true" data-herbert-id="role-herbert-actions">Actions: Sourcing contacts, grading systems, sensory training.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ZONE 1: YOU (ENGLISH TEACHER) -->
+            <div id="zone-teacher">
+                <div class="zone-header">
+                    <h2 class="zone-title" contenteditable="true" data-herbert-id="zone1-title">Zone 1: English Mastery</h2>
+                    <span class="zone-badge" contenteditable="true" data-herbert-id="zone1-badge">THE TEACHER LEADS</span>
+                </div>
+
+                <div class="grid-2">
+                    <!-- Mission Card -->
+                    <div class="custom-card">
+                        <span class="section-label" contenteditable="true" data-herbert-id="zone1-goal">GOAL: WORLD BREWERS CUP</span>
+                        <h3 contenteditable="true" data-herbert-id="zone1-speech-coach-title">The Speech Coach</h3>
+                        <p style="color: #666666;" contenteditable="true" data-herbert-id="zone1-speech-coach-desc">Analyze and perfect Herbert's presentation for the World Finals.</p>
+                        <strong style="display:block; margin-top:1rem;">Herbert's Specific Needs:</strong>
+                        <ul class="checklist" contenteditable="true" data-herbert-id="zone1-needs-list">
+                            <li>Develop a speech that makes logical sense in English.</li>
+                            <li>Identify key vocabulary & synonyms (The "Script").</li>
+                            <li>Master pronunciation of technical terms.</li>
+                            <li>Build confidence for the "Open Service".</li>
+                        </ul>
+                    </div>
+
+                    <!-- Event Context Card -->
+                    <div class="custom-card" style="background: #fff;">
+                        <span class="section-label" contenteditable="true" data-herbert-id="zone1-event-label">CONTEXT: THE EVENT</span>
+                        <h3 contenteditable="true" data-herbert-id="zone1-event-title">WOC Brussels 2026</h3>
+                        <div style="margin-top: auto;" contenteditable="true" data-herbert-id="zone1-event-content">
+                            <p style="font-size: 0.9rem; margin-bottom: 0.5rem;"><strong>When:</strong> June 25–27, 2026</p>
+                            <p style="font-size: 0.9rem; margin-bottom: 0.5rem;"><strong>Where:</strong> Brussels Expo, Belgium</p>
+                            <p style="font-size: 0.9rem; margin-bottom: 0.5rem;"><strong>Focus:</strong> World Brewers Cup (Manual Filter)</p>
+                            <p style="font-size: 0.9rem; color: #666666;">
+                                This is the pinnacle event. Competitors perform compulsory and open services, judged on aroma, flavor, body, and presentation.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- SESSION MANAGER APP -->
+            <div class="manager-container" style="margin-top: 4rem;">
+                <div class="manager-header">
+                        <span class="mono-text" style="font-family: 'JetBrains Mono', monospace;" contenteditable="true" data-herbert-id="session-analytics-title">SESSION ANALYTICS</span>
+                        <span class="mono-text" style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: #aaa;" contenteditable="true" data-herbert-id="session-analytics-version">AUTO-TRANSCRIPT V.1</span>
+                    </div>
+
+                    <div class="manager-content">
+                        <!-- Toolbar -->
+                        <div class="session-toolbar">
+                            <span class="section-label" style="margin:0; color:#111111;" contenteditable="true" data-herbert-id="session-load-label">LOAD SESSION:</span>
+                            <select id="sessionSelect" class="session-select" onchange="loadHerbertSession(this.value)">
+                                <!-- JS Populated -->
+                            </select>
+                            <button class="btn-action" onclick="addNewHerbertSession()" title="Add New Session">+</button>
+                            <button class="btn-action btn-delete" onclick="deleteHerbertSession()" title="Delete Session">×</button>
+                        </div>
+
+                        <!-- Agenda Section -->
+                        <div style="background: #fff; border: 1px solid #e5e7eb; padding: 1.5rem; margin-bottom: 1.5rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <span class="section-label" style="margin: 0;">TODAY'S AGENDA</span>
+                                <input 
+                                    type="date" 
+                                    id="sessionAgendaDate" 
+                                    style="padding: 0.5rem; border: 1px solid #e5e7eb; font-family: 'JetBrains Mono', monospace; background: white; font-size: 0.9rem; cursor: pointer;" 
+                                    data-herbert-id="session-agenda-date">
+                            </div>
+                            <textarea 
+                                id="sessionAgenda" 
+                                class="notes-area" 
+                                style="width: 100%; padding: 1rem; background: #F9F9F9; border: 1px solid #e5e7eb; font-family: 'Inter', sans-serif; min-height: 100px; resize: vertical; margin: 0;" 
+                                contenteditable="true" 
+                                data-herbert-id="session-agenda"
+                                placeholder="Focus topics for today's lesson: pronunciation practice, speech structure, vocabulary review..."></textarea>
+                        </div>
+
+                        <!-- Upload Zone -->
+                        <div class="upload-zone" id="uploadZone" onclick="simulateHerbertUpload()">
+                            <h4 style="margin-bottom:0.5rem;" contenteditable="true" data-herbert-id="upload-title">📄 Upload Transcript / Audio</h4>
+                            <p style="color: #666666; font-size: 0.9rem; margin:0;" contenteditable="true" data-herbert-id="upload-desc">Click to simulate analyzing a new file...</p>
+                        </div>
+
+                        <!-- Analysis Grid -->
+                        <div class="analysis-grid" id="analysisDisplay">
+                            <!-- Grammar -->
+                            <div class="analysis-col">
+                                <span class="section-label">GRAMMAR & LOGIC</span>
+                                <div id="grammarContent" contenteditable="true">
+                                    <!-- JS Populated -->
+                                </div>
+                            </div>
+
+                            <!-- Pronunciation -->
+                            <div class="analysis-col">
+                                <span class="section-label">PRONUNCIATION</span>
+                                <div id="pronContent" contenteditable="true">
+                                    <!-- JS Populated -->
+                                </div>
+                            </div>
+
+                            <!-- Vocabulary -->
+                            <div class="analysis-col">
+                                <span class="section-label">VOCABULARY LOG</span>
+                                <div id="vocabContent" contenteditable="true">
+                                    <!-- JS Populated -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notes Section -->
+                        <div style="margin-top: 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                            <!-- Teacher's Notes -->
+                            <div style="border: 1px solid #e5e7eb; background: white;">
+                                <div style="background: #F9F9F9; padding: 1rem; border-bottom: 1px solid #e5e7eb;">
+                                    <span class="section-label" style="margin: 0;">TEACHER'S NOTES</span>
+                                </div>
+                                <textarea 
+                                    id="sessionTeacherNotes" 
+                                    class="notes-area" 
+                                    style="width: 100%; padding: 1.5rem; background: white; border: none; font-family: 'Inter', sans-serif; min-height: 150px; resize: vertical; margin: 0;" 
+                                    contenteditable="true" 
+                                    data-herbert-id="session-teacher-notes"
+                                    placeholder="Add notes about Herbert's progress, areas to focus on, corrections made..."></textarea>
+                            </div>
+
+                            <!-- Student's Notes -->
+                            <div style="border: 1px solid #e5e7eb; background: white;">
+                                <div style="background: #F9F9F9; padding: 1rem; border-bottom: 1px solid #e5e7eb;">
+                                    <span class="section-label" style="margin: 0;">STUDENT'S NOTES</span>
+                                </div>
+                                <textarea 
+                                    id="sessionStudentNotes" 
+                                    class="notes-area" 
+                                    style="width: 100%; padding: 1.5rem; background: white; border: none; font-family: 'Inter', sans-serif; min-height: 150px; resize: vertical; margin: 0;" 
+                                    contenteditable="true" 
+                                    data-herbert-id="session-student-notes"
+                                    placeholder="Herbert's personal notes, questions, reflections from this session..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reference Vocabulary (Shared Tool) -->
+                <div class="vocab-section" style="margin-top: 3rem;">
+                    <div style="background: #F9F9F9; padding: 1rem; border-bottom: 1px solid #e5e7eb;">
+                        <span class="section-label">SHARED REFERENCE: SENSORY LEXICON</span>
+                    </div>
+                    <table contenteditable="true" data-herbert-id="vocab-table">
+                        <thead>
+                            <tr>
+                                <th width="30%">Basic Term</th>
+                                <th width="35%">Target Vocabulary (Speech)</th>
+                                <th width="35%">Product Insight (Grading)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>"Sour"</td>
+                                <td><strong>Tart, Zesty, Citric</strong></td>
+                                <td>Under-extracted or high altitude washed.</td>
+                            </tr>
+                            <tr>
+                                <td>"Bitter"</td>
+                                <td><strong>Dark Cocoa, Roast-forward</strong></td>
+                                <td>Over-extracted or Robusta presence.</td>
+                            </tr>
+                            <tr>
+                                <td>"Thick"</td>
+                                <td><strong>Syrupy, Velvety, Coating</strong></td>
+                                <td>High solubility. Desired for Espresso.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Spacer -->
+            <div style="height: 80px;"></div>
+
+            <!-- ZONE 2: HERBERT (PRODUCT MENTOR) -->
+            <div id="zone-herbert" style="margin-top: 4rem;">
+                <div class="zone-header">
+                    <h2 class="zone-title" contenteditable="true" data-herbert-id="zone2-title">Zone 2: Product Mentorship</h2>
+                    <span class="zone-badge" contenteditable="true" data-herbert-id="zone2-badge">HERBERT LEADS</span>
+                </div>
+
+                <div class="grid-2">
+                    <!-- Mission Card -->
+                    <div class="custom-card">
+                        <span class="section-label" contenteditable="true" data-herbert-id="zone2-goal">GOAL: PRODUCT LAUNCH</span>
+                        <h3 contenteditable="true" data-herbert-id="zone2-mentor-title">The Product Mentor</h3>
+                        <p style="color: #666666;" contenteditable="true" data-herbert-id="zone2-mentor-desc">Develop the skills necessary to successfully develop two distinct coffee products.</p>
+                        <strong style="display:block; margin-top:1rem;">Your Learning Needs:</strong>
+                        <ul class="checklist" contenteditable="true" data-herbert-id="zone2-learning-list">
+                            <li>Identify coffee worth buying (Sourcing).</li>
+                            <li>Test and grade coffee samples.</li>
+                            <li>Place initial and repeat orders.</li>
+                            <li>Define descriptors that represent the product.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Product Lines -->
+                    <div class="custom-card" style="background: #F9F9F9;">
+                        <span class="section-label" contenteditable="true" data-herbert-id="zone2-products-label">TARGET PRODUCTS</span>
+                        <div style="margin-bottom: 1.5rem;">
+                            <strong style="display:block; margin-bottom:0.5rem;" contenteditable="true" data-herbert-id="zone2-product-a-title">Product A: Specialty</strong>
+                            <span class="mono-text" style="font-family: 'JetBrains Mono', monospace; font-size:0.85rem; color:#666666;" contenteditable="true" data-herbert-id="zone2-product-a-desc">Pour Over / Filter focus.</span>
+                        </div>
+                        <div>
+                            <strong style="display:block; margin-bottom:0.5rem;" contenteditable="true" data-herbert-id="zone2-product-b-title">Product B: Commercial</strong>
+                            <span class="mono-text" style="font-family: 'JetBrains Mono', monospace; font-size:0.85rem; color:#666666;" contenteditable="true" data-herbert-id="zone2-product-b-desc">Home Espresso / Moka / Electric Machine.</span>
+                        </div>
+                        <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #e5e7eb;">
+                             <span class="section-label" style="color: #111111;" contenteditable="true" data-herbert-id="zone2-skill-label">REQUIRED SKILL:</span>
+                             <p style="font-size: 0.9rem; margin:0;" contenteditable="true" data-herbert-id="zone2-skill-desc">Building a network of contacts to buy from.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NEW: DYNAMIC KNOWLEDGE VAULT MANAGER -->
+                <div class="manager-container" style="margin-top: 4rem;">
+                    <div class="manager-header">
+                        <span class="mono-text" style="font-family: 'JetBrains Mono', monospace;">THE KNOWLEDGE VAULT</span>
+                        <span class="mono-text" style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: #aaa;">PRODUCTION CHAIN DB</span>
+                    </div>
+                    
+                    <div class="manager-content">
+                        <!-- Toolbar -->
+                        <div class="session-toolbar">
+                            <span class="section-label" style="margin:0; color:#111111;">SELECT STEP:</span>
+                            <select id="vaultSelect" class="session-select" onchange="loadVaultModule(this.value)">
+                                <!-- JS Populated -->
+                            </select>
+                            <button class="btn-action" onclick="addNewVaultModule()" title="Add New Step">+</button>
+                            <button class="btn-action btn-delete" onclick="deleteVaultModule()" title="Delete Step">×</button>
+                        </div>
+
+                        <!-- Agenda Section -->
+                        <div style="background: #fff; border: 1px solid #e5e7eb; padding: 1.5rem; margin-bottom: 1.5rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <span class="section-label" style="margin: 0;">TODAY'S AGENDA</span>
+                                <input 
+                                    type="date" 
+                                    id="vaultAgendaDate" 
+                                    style="padding: 0.5rem; border: 1px solid #e5e7eb; font-family: 'JetBrains Mono', monospace; background: white; font-size: 0.9rem; cursor: pointer;" 
+                                    data-herbert-id="vault-agenda-date">
+                            </div>
+                            <textarea 
+                                id="vaultAgenda" 
+                                class="notes-area" 
+                                style="width: 100%; padding: 1rem; background: #F9F9F9; border: 1px solid #e5e7eb; font-family: 'Inter', sans-serif; min-height: 100px; resize: vertical; margin: 0;" 
+                                contenteditable="true" 
+                                data-herbert-id="vault-agenda"
+                                placeholder="Focus topics for today: sourcing contacts, cupping techniques, order placement strategy..."></textarea>
+                        </div>
+
+                        <!-- Dynamic Content Area -->
+                        <div id="vaultContentArea">
+                            <!-- Populated by JS -->
+                        </div>
+
+                        <!-- Notes Section -->
+                        <div style="margin-top: 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                            <!-- Teacher's Notes -->
+                            <div style="border: 1px solid #e5e7eb; background: white;">
+                                <div style="background: #F9F9F9; padding: 1rem; border-bottom: 1px solid #e5e7eb;">
+                                    <span class="section-label" style="margin: 0;">TEACHER'S NOTES</span>
+                                </div>
+                                <textarea 
+                                    id="vaultTeacherNotes" 
+                                    class="notes-area" 
+                                    style="width: 100%; padding: 1.5rem; background: white; border: none; font-family: 'Inter', sans-serif; min-height: 150px; resize: vertical; margin: 0;" 
+                                    contenteditable="true" 
+                                    data-herbert-id="vault-teacher-notes"
+                                    placeholder="Teaching notes about sourcing, grading techniques, contacts shared..."></textarea>
+                            </div>
+
+                            <!-- Student's Notes -->
+                            <div style="border: 1px solid #e5e7eb; background: white;">
+                                <div style="background: #F9F9F9; padding: 1rem; border-bottom: 1px solid #e5e7eb;">
+                                    <span class="section-label" style="margin: 0;">STUDENT'S NOTES</span>
+                                </div>
+                                <textarea 
+                                    id="vaultStudentNotes" 
+                                    class="notes-area" 
+                                    style="width: 100%; padding: 1.5rem; background: white; border: none; font-family: 'Inter', sans-serif; min-height: 150px; resize: vertical; margin: 0;" 
+                                    contenteditable="true" 
+                                    data-herbert-id="vault-student-notes"
+                                    placeholder="Your learning notes, key takeaways, questions for Herbert..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Roadmap -->
+                 <div style="margin-top: 3rem; background: #fff; border: 1px solid #e5e7eb; padding: 2rem;">
+                    <h4 style="margin-bottom: 1.5rem;" contenteditable="true" data-herbert-id="roadmap-title">Strategic Roadmap</h4>
+                    
+                    <div class="timeline-box">
+                        <span class="timeline-meta">MONTHS 1-3 | FOUNDATIONS</span>
+                        <span class="timeline-title" contenteditable="true" data-herbert-id="roadmap-1-title">The "Sourcing Map" & Scripting</span>
+                        <div contenteditable="true" data-herbert-id="roadmap-1-desc" style="margin-top:0.5rem;">
+                            <p style="font-size:0.9rem; color: #666666;">
+                                <strong>For You:</strong> Where to go, who to call, specific contract terms. (Goal: First purchase within Month 1-2).<br>
+                                <strong>For Herbert:</strong> Drafting the first speech draft (Logic & Grammar).
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-box">
+                        <span class="timeline-meta">MONTHS 4-6 | REFINEMENT</span>
+                        <span class="timeline-title" contenteditable="true" data-herbert-id="roadmap-2-title">Sensory Training & Vocabulary</span>
+                        <div contenteditable="true" data-herbert-id="roadmap-2-desc" style="margin-top:0.5rem;">
+                            <p style="font-size:0.9rem; color: #666666;">
+                                <strong>For You:</strong> Build your "Product Profile" (Espresso vs Pour Over).<br>
+                                <strong>For Herbert:</strong> Elevate descriptors (e.g., "Good" -> "Structured Elegance").
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-box" style="border-left-color: #FF3B30;">
+                        <span class="timeline-meta">MONTHS 6+ | MASTERY</span>
+                        <span class="timeline-title" contenteditable="true" data-herbert-id="roadmap-3-title">Mock Buy & Mock Comp</span>
+                        <div contenteditable="true" data-herbert-id="roadmap-3-desc" style="margin-top:0.5rem;">
+                            <p style="font-size:0.9rem; color: #666666;">
+                                <strong>For You:</strong> Attempt a "Mock Buy" of a sample.<br>
+                                <strong>For Herbert:</strong> Full routine performance. Critique ONLY pronunciation/delivery.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="view-inventory" class="view-section">
+        <div class="lang-bar" id="lang-inventory">
+            <button class="lang-btn" onclick="setLang('en')">EN</button> / 
+            <button class="lang-btn" onclick="setLang('es')">ES</button> / 
+            <button class="lang-btn" onclick="setLang('cn')">CN</button>
+            <a href="/" class="lang-btn home-icon-right" style="text-decoration: none; display: inline-flex; align-items: center; margin-left: auto;"><img src="/Media/home_icon.svg" alt="Home" style="width: 14px; height: 14px;"></a>
+        </div>
+
+        <div class="inventory-header">
+            <h2>12° Sur</h2>
+            <div style="margin-top:10px;">
+                <button class="btn-outline" onclick="exportInventoryCSV()">⬇ CSV</button>
+                <button class="btn" style="width:auto; margin-left:10px;" onclick="openBeanForm()" data-i18n="btn_add_bean">+ Add Bean</button>
+            </div>
+        </div>
+        
+        <div id="beanForm" class="card" style="display:none; border-left: 5px solid var(--accent-orange);">
+            <h3 id="formTitle" style="margin-top:0;" data-i18n="new_shipment">New Shipment</h3>
+            <input type="hidden" id="invId">
+            <div class="row"><div style="flex:1"><label data-i18n="lbl_name">Name</label><input type="text" id="invName"></div><div style="flex:1"><label data-i18n="lbl_country">Country</label><input type="text" id="invCountry"></div></div>
+            <div class="row"><div style="flex:1"><label data-i18n="lbl_farmer">Farmer</label><input type="text" id="invFarmer"></div><div style="flex:1"><label data-i18n="lbl_process">Process</label><select id="invProcess"><option>Washed</option><option>Natural</option><option>Honey</option></select></div></div>
+            <div class="row"><div style="flex:1"><label data-i18n="lbl_weight">Weight (kg)</label><input type="number" id="invWeight"></div><div style="flex:1"><label data-i18n="lbl_cost">Cost/kg</label><input type="number" id="invCost"></div></div>
+            <div class="row"><div style="flex:1"><label>Certificates</label><select id="invHasCertificates" onchange="toggleCertificateUpload()"><option value="false">No</option><option value="true">Yes</option></select></div></div>
+            <div id="certificateUploadRow" style="display:none;" class="row"><div style="flex:1"><label>Certificate PDF</label><input type="file" id="invCertificate" accept=".pdf"></div></div>
+            <div class="row"><button class="btn" onclick="saveBean()" data-i18n="btn_save">Save Stock</button><button class="btn-outline" onclick="toggleBeanForm()" style="border:none;" data-i18n="btn_cancel">Cancel</button></div>
+        </div>
+        <div id="inventoryList" class="inventory-grid"></div>
+    </section>
+
+    <section id="view-roast" class="view-section">
+        <div class="lang-bar" id="lang-center">
+            <button class="lang-btn" onclick="setLang('en')">EN</button> / 
+            <button class="lang-btn" onclick="setLang('es')">ES</button> / 
+            <button class="lang-btn" onclick="setLang('cn')">CN</button>
+            <a href="/" class="lang-btn home-icon-right" style="text-decoration: none; display: inline-flex; align-items: center; margin-left: auto;"><img src="/Media/home_icon.svg" alt="Home" style="width: 14px; height: 14px;"></a>
+        </div>
+
+        <div class="static-report-header">
+            <div><h1>Roast Report</h1><div style="font-size:0.9rem; color:#666;" id="staticBeanName">Bean Name</div></div>
+            <div style="text-align:right; font-family:monospace; font-weight:bold;"><div>Time: <span id="staticTimer">00:00</span></div><div>DTR: <span id="staticDTR">--</span>% | Loss: <span id="staticLoss">--</span>%</div></div>
+        </div>
+
+        <div class="no-print" style="display:flex; justify-content:space-between; margin-bottom:15px; padding: 0 10px;">
+            <div style="display:flex; align-items:center; gap:10px;"><h1 id="timer" style="font-family:var(--font-tech); margin:0; font-size:2rem;">00:00</h1><div style="font-size:0.7rem; color:#666;">DTR: <span id="dtrValue">--</span>%</div></div>
+            <button id="btnStart" class="btn" style="width:auto; background:var(--accent-green);" onclick="toggleTimer()" data-i18n="btn_start">START ROAST</button>
+        </div>
+
+        <div class="card no-print">
+            <div class="row" style="align-items: flex-end;">
+                <div style="flex:1;"><label data-i18n="lbl_select_bean">Select Bean</label><select id="roastBeanSelect" onchange="loadBeanDetails()"></select></div>
+                <div style="flex:1;"><label data-i18n="lbl_overlay">Ghost Overlay</label><div style="display:flex; gap:5px;"><select id="overlaySelect"><option value="">-- None --</option></select><button class="btn-outline" onclick="addOverlay()" style="width:auto; padding:5px 10px;">+</button></div></div>
+            </div>
+            <div id="activeOverlaysList" class="overlay-chips"></div>
+            <div style="display:flex; gap:10px; margin-top:5px;"><div style="flex:1"><label data-i18n="lbl_green">Green (g)</label><input type="number" id="greenWeight" value="1000" onchange="calcLoss()"></div><div style="flex:1"><label data-i18n="lbl_roasted">Roasted (g)</label><input type="number" id="roastedWeight" onchange="calcLoss()"></div></div>
+        </div>
+
+        <div class="roast-grid">
+            <div class="input-column">
+                <div id="activeInputPanel" class="live-input-panel"><label data-i18n="lbl_temp_check">Temp Check</label><div style="display:flex; gap:5px;"><input type="number" id="liveTempInput" placeholder="°C" style="font-size:1.2rem; text-align:center;"><button class="btn" onclick="submitLiveTemp()" style="width:auto;">✓</button></div></div>
+                <div class="card" style="height:350px; overflow-y:auto; padding:0;"><table style="width:100%; font-size:0.8rem; text-align:center; border-collapse:collapse;"><thead style="position:sticky; top:0; background:#eee;"><tr><th style="padding:5px;">Time</th><th>Temp</th></tr></thead><tbody id="roastTableBody"></tbody></table></div>
+                <div class="no-print" style="display:grid; grid-template-columns:1fr 1fr; gap:5px;">
+                    <button class="btn-outline" onclick="triggerEvent('TP')">TP</button><button class="btn-outline" onclick="triggerEvent('Dry')">Dry</button>
+                    <button class="btn" style="background:#f39c12;" onclick="triggerEvent('FC')">Crack</button><button class="btn" style="background:#2c3e50;" onclick="triggerEvent('DROP')">DROP</button>
+                </div>
+            </div>
+            <div class="chart-column">
+                <div class="chart-container"><canvas id="roastChart"></canvas></div>
+                <div class="card" style="margin-top:20px;"><label data-i18n="lbl_notes">Batch Notes</label><textarea id="roastNotes" style="height:80px;"></textarea></div>
+                <div class="row no-print" style="flex-wrap:wrap;"><button class="btn" onclick="saveRoastAndDeduct()" data-i18n="btn_save_batch">💾 Save Batch</button><button class="btn-outline" onclick="saveAsImage()" data-i18n="btn_image">📸 Image</button><button class="btn-outline" onclick="exportRoastLogCSV()">⬇ Log</button></div>
+            </div>
+        </div>
+    </section>
+    <section id="view-roast-lab" class="view-section">
+        <style>
+    /* Custom styles for the textarea lines and range input */
+    .lined-textarea {
+        background-image: repeating-linear-gradient(transparent, transparent 23px, #e5e5e5 24px);
+        line-height: 24px;
+        padding-top: 2px;
+    }
+    
+    /* Hide standard range thumb to replace with custom */
+    input[type=range]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        opacity: 0;
+    }
+    input[type=range]::-moz-range-thumb {
+        border: none;
+        opacity: 0;
+    }
+    
+    /* Scoped brutalist UI for roast lab */
+    #roast-lab-app {
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    }
+</style>
+
+<div id="roast-lab-app" class="font-sans text-black"></div>
+
+<script>
+    const rl_apiKey = ""; // Runtime provides the key
+
+    // --- STATE MANAGEMENT ---
+    let rl_state = {
+        selectedRoast: null,
+        isAnalyzing: false,
+        analysisResult: null
+    };
+
+    // --- UTILS & LOGIC ---
+    const rl_calculateDTR = (total, dev) => {
+        const toSeconds = (timeStr) => {
+            if (!timeStr || !timeStr.includes(':')) return 0;
+            const [m, s] = timeStr.split(':').map(Number);
+            return (m * 60) + s;
+        };
+        const t = toSeconds(total);
+        const d = toSeconds(dev);
+        if (t === 0) return "0.0";
+        return ((d / t) * 100).toFixed(1);
+    };
+
+    const rl_generateRadarChartSVG = (data) => {
+        const size = 180;
+        const center = size / 2;
+        const radius = size * 0.35;
+        const points = [
+            { label: 'AROMATICS', value: data.aromatics || 0 },
+            { label: 'ACIDITY', value: data.acidity || 0 },
+            { label: 'SWEETNESS', value: data.sweetness || 0 },
+            { label: 'AFTERTASTE', value: data.aftertaste || 0 },
+            { label: 'BODY', value: data.body || 0 },
+        ];
+
+        const getCoords = (val, i, total) => {
+            const factor = (val / 5) * radius;
+            const angle = (Math.PI * 2 * i) / total - Math.PI / 2;
+            return [center + factor * Math.cos(angle), center + factor * Math.sin(angle)];
+        };
+
+        let svg = `<svg width="${size}" height="${size}" class="overflow-visible font-mono font-bold text-[8px]">`;
+        
+        // Grid
+        [1, 2, 3, 4, 5].forEach(v => {
+            svg += `<circle cx="${center}" cy="${center}" r="${(v/5) * radius}" fill="none" stroke="#000" stroke-width="0.5" stroke-dasharray="2 2" />`;
+        });
+
+        // Axis & Labels
+        points.forEach((p, i) => {
+            const [x, y] = getCoords(5, i, points.length);
+            const [lx, ly] = getCoords(6.5, i, points.length);
+            let angleDeg = ((i / points.length) * 360) - 90;
+            if (angleDeg > 90 && angleDeg < 270) angleDeg += 180; 
+            
+            svg += `<g>
+                <line x1="${center}" y1="${center}" x2="${x}" y2="${y}" stroke="#000" stroke-width="0.5" />
+                <text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="middle" transform="rotate(${angleDeg}, ${lx}, ${ly})" fill="black">${p.label}</text>
+            </g>`;
+        });
+
+        // Data Polygon
+        const polyPoints = points.map((p, i) => getCoords(p.value, i, points.length).join(',')).join(' ');
+        svg += `<polygon points="${polyPoints}" fill="none" stroke="#000" stroke-width="2" />`;
+        
+        points.forEach((p, i) => {
+            const [px, py] = getCoords(p.value, i, points.length);
+            svg += `<circle cx="${px}" cy="${py}" r="2" fill="#000" />`;
+        });
+
+        svg += `</svg>`;
+        return svg;
+    };
+
+    // --- GLOBAL EVENT HANDLERS ---
+    window.rl_openRoast = (id) => {
+        // Find the roast from the .NET OS roasts array!
+        const r = roasts.find(x => x.id == id);
+        if (r) {
+            const bean = inventory.find(b => b.id == r.beanId) || {};
+            
+            let dtr = r.dTRPercent || '0.0';
+            
+            rl_state.selectedRoast = {
+                id: r.id, 
+                origin: bean.country || '', 
+                roastery: '12° SUR', 
+                batchNum: r.id.toString(), 
+                roastLevel: 'MEDIUM', 
+                process: bean.process || '', 
+                time: r.roastTime ? formatTime(r.roastTime) : '', 
+                devTime: '', 
+                dtr: dtr, 
+                rating: 0, body: 0, acidity: 0, aromatics: 0, sweetness: 0, aftertaste: 0, 
+                spectrum: 50, 
+                notes: r.notes || '', 
+                intendedFor: [], 
+                price: ''
+            };
+        } else {
+            // New Roast Template
+            rl_state.selectedRoast = {
+                id: null, origin: '', roastery: '12° SUR', batchNum: '', roastLevel: 'MEDIUM', process: '', time: '', devTime: '', dtr: '0.0', rating: 0, body: 0, acidity: 0, aromatics: 0, sweetness: 0, aftertaste: 0, spectrum: 50, notes: '', intendedFor: [], price: ''
+            };
+        }
+        rl_state.analysisResult = null;
+        
+        // Hide other views and show the Roast Lab wrapper inside OS
+        document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+        document.getElementById('view-roast-lab').classList.add('active');
+        
+        rl_renderApp();
+    };
+
+    window.rl_closeRoast = () => {
+        rl_state.selectedRoast = null;
+        rl_renderApp();
+        // Go back to history tab
+        switchTab('history');
+    };
+
+    window.rl_updateField = (field, value) => {
+        if(!rl_state.selectedRoast) return;
+        rl_state.selectedRoast[field] = value;
+        if (field === 'time' || field === 'devTime') {
+            rl_state.selectedRoast.dtr = rl_calculateDTR(rl_state.selectedRoast.time, rl_state.selectedRoast.devTime);
+            const dtrDisplay = document.getElementById('dtr-display');
+            if(dtrDisplay) dtrDisplay.innerText = rl_state.selectedRoast.dtr;
+        }
+    };
+
+    window.rl_updateAttribute = (field, value) => {
+        if(!rl_state.selectedRoast) return;
+        rl_state.selectedRoast[field] = value;
+        rl_renderApp();
+    };
+
+    window.rl_toggleIntendedFor = (value) => {
+        if(!rl_state.selectedRoast) return;
+        const current = rl_state.selectedRoast.intendedFor || [];
+        if (current.includes(value)) {
+            rl_state.selectedRoast.intendedFor = current.filter(item => item !== value);
+        } else {
+            rl_state.selectedRoast.intendedFor.push(value);
+        }
+        rl_renderApp();
+    };
+
+    window.rl_updateSpectrum = (value) => {
+        if(!rl_state.selectedRoast) return;
+        rl_state.selectedRoast.spectrum = parseInt(value);
+        const thumb = document.getElementById('spectrum-thumb');
+        if(thumb) thumb.style.left = `calc(${value}% - 4px)`;
+    };
+
+    window.rl_triggerFileInput = () => {
+        const fileInput = document.getElementById('file-upload');
+        if(fileInput) fileInput.click();
+    };
+
+    window.rl_handleImageUpload = (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+            const base64Data = e.target.result.split(',')[1];
+            await rl_analyzeImage(base64Data);
+        };
+        reader.readAsDataURL(file);
+    };
+
+    const rl_analyzeImage = async (base64Image) => {
+        rl_state.isAnalyzing = true;
+        rl_renderApp(); 
+
+        const systemPrompt = `Analyze the coffee beans. Provide Agtron estimation, uniformity, and predicted acidity/sugars based on roast degree. Be concise.`;
+        
+        try {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${rl_apiKey}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ role: "user", parts: [{ text: "Analyze this roast profile." }, { inlineData: { mimeType: "image/png", data: base64Image } }] }],
+                    systemInstruction: { parts: [{ text: systemPrompt }] }
+                })
+            });
+            const result = await response.json();
+            rl_state.analysisResult = result.candidates?.[0]?.content?.parts?.[0]?.text || "No analysis returned.";
+        } catch (err) {
+            rl_state.analysisResult = "Analysis failed. Please check your connection or API Key.";
+            console.error(err);
+        } finally {
+            rl_state.isAnalyzing = false;
+            rl_renderApp();
+        }
+    };
+
+    const rl_renderDetail = () => {
+        const sr = rl_state.selectedRoast;
+        if (!sr) return '';
+        
+        const renderRatingButtons = (field) => {
+            return [1,2,3,4,5].map(num => `
+                <button onclick="rl_updateAttribute('${field}', ${num})" class="w-5 h-5 flex items-center justify-center border-2 border-black p-0 cursor-pointer ${sr[field] >= num ? 'bg-black text-white' : 'bg-transparent text-black'}">
+                    ${num}
+                </button>
+            `).join('');
+        };
+
+        const rulerTicks = Array.from({length: 51}).map((_, i) => {
+            let height = i % 10 === 0 ? 'h-3 w-0.5' : i % 5 === 0 ? 'h-2 w-[1px]' : 'h-1 w-[1px]';
+            return `<div class="absolute bottom-0 bg-black ${height}" style="left: ${i * 2}%"></div>`;
+        }).join('');
+
+        return `
+        <div class="max-w-4xl mx-auto bg-[#f8f6f2] p-8 shadow-2xl rounded-sm text-black pb-20 mt-8">
+            <button onclick="rl_closeRoast()" class="flex items-center gap-2 text-xs font-mono font-bold mb-6 hover:text-red-500 uppercase tracking-widest bg-transparent border-none p-0 cursor-pointer text-black">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to History
+            </button>
+
+            <div class="bg-[#fcfbf9] border-[3px] border-black p-6 relative">
+                <div class="flex justify-between items-end mb-4">
+                    <h2 class="text-3xl font-black text-red-500 uppercase tracking-widest m-0">ROAST INDEX</h2>
+                    <button class="text-xs font-mono font-bold border-2 border-black px-4 py-1 hover:bg-black hover:text-white transition-colors bg-white text-black cursor-pointer">
+                        UPDATE LOG
+                    </button>
+                </div>
+
+                <div class="border-[3px] border-black flex flex-col font-mono text-xs font-bold uppercase">
+                    <div class="flex border-b-[3px] border-black">
+                        <div class="flex-[2] border-r-[3px] border-black p-2 flex flex-col">
+                            <span class="text-[10px] mb-1">COFFEE</span>
+                            <input type="text" oninput="rl_updateField('origin', this.value)" value="${sr.origin || ''}" class="w-full bg-transparent border-none outline-none text-sm font-black text-black p-0 m-0 shadow-none" />
+                        </div>
+                        <div class="flex-[1] border-r-[3px] border-black p-2 flex flex-col">
+                            <span class="text-[10px] mb-1">ROASTERY</span>
+                            <input type="text" oninput="rl_updateField('roastery', this.value)" value="${sr.roastery || ''}" class="w-full bg-transparent border-none outline-none text-sm font-black text-black p-0 m-0 shadow-none" />
+                        </div>
+                        <div class="w-16 p-2 flex flex-col items-center justify-center">
+                            <span class="text-[10px] mb-1">#</span>
+                            <input type="text" oninput="rl_updateField('batchNum', this.value)" value="${sr.batchNum || ''}" class="w-full bg-transparent border-none outline-none text-center font-black text-black p-0 m-0 shadow-none" />
+                        </div>
+                    </div>
+
+                    <div class="flex border-b-[3px] border-black">
+                        <div class="flex-[1.5] border-r-[3px] border-black p-2 flex flex-col">
+                            <span class="text-[10px] mb-2">ROAST</span>
+                            <div class="flex justify-between items-center text-[10px]">
+                                ${['LIGHT', 'MEDIUM', 'DARK'].map(level => `
+                                    <label class="flex items-center gap-1 cursor-pointer m-0 p-0 text-black">
+                                        <div class="w-3 h-3 rounded-full border-2 border-black flex items-center justify-center" onclick="rl_updateAttribute('roastLevel', '${level}')">
+                                            ${sr.roastLevel === level ? '<div class="w-1.5 h-1.5 bg-black rounded-full"></div>' : ''}
+                                        </div>
+                                        ${level}
+                                    </label>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <div class="flex-[1] border-r-[3px] border-black p-2 flex flex-col">
+                            <span class="text-[10px] mb-1">PROCESS</span>
+                            <input type="text" oninput="rl_updateField('process', this.value)" value="${sr.process || ''}" class="w-full bg-transparent border-none outline-none font-black text-black p-0 m-0 shadow-none" />
+                        </div>
+                        <div class="flex-[1.5] p-2 flex flex-col">
+                            <span class="text-[10px] mb-1">ORIGIN</span>
+                            <input type="text" oninput="rl_updateField('origin', this.value)" value="${sr.origin || ''}" class="w-full bg-transparent border-none outline-none font-black text-black p-0 m-0 shadow-none" />
+                        </div>
+                    </div>
+
+                    <div class="flex border-b-[3px] border-black">
+                        <div class="flex-1 border-r-[3px] border-black p-2 flex flex-col">
+                            <span class="text-[10px] mb-1">TOTAL TIME</span>
+                            <input type="text" oninput="rl_updateField('time', this.value)" value="${sr.time || ''}" class="w-full bg-transparent border-none outline-none font-black text-center text-black p-0 m-0 shadow-none" />
+                        </div>
+                        <div class="flex-1 border-r-[3px] border-black p-2 flex flex-col">
+                            <span class="text-[10px] mb-1">DEV TIME</span>
+                            <input type="text" oninput="rl_updateField('devTime', this.value)" value="${sr.devTime || ''}" class="w-full bg-transparent border-none outline-none font-black text-center text-black p-0 m-0 shadow-none" />
+                        </div>
+                        <div class="flex-1 border-r-[3px] border-black p-2 flex flex-col bg-stone-100">
+                            <span class="text-[10px] mb-1 text-black">DTR %</span>
+                            <div id="dtr-display" class="w-full bg-transparent outline-none font-black text-center text-black">${sr.dtr || '0.0'}</div>
+                        </div>
+                        <div class="flex-[1.5] flex">
+                            <div class="flex-1 border-r-[3px] border-black p-2 flex flex-col items-center justify-center">
+                                <span class="text-[10px] mb-1">RATING</span>
+                            </div>
+                            <div class="flex-[2] flex items-center justify-around px-2">
+                                ${renderRatingButtons('rating')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 mb-8 px-4">
+                    <div class="w-full relative py-4">
+                        <div class="w-full h-4 border-b-2 border-l-2 border-r-2 border-black relative">
+                            ${rulerTicks}
+                            <input type="range" min="0" max="100" value="${sr.spectrum || 50}" oninput="rl_updateSpectrum(this.value)" class="absolute top-0 w-full h-full opacity-0 cursor-ew-resize z-10 m-0 p-0" />
+                            <div id="spectrum-thumb" class="absolute top-[-4px] w-2 h-6 bg-black pointer-events-none transition-all duration-75" style="left: calc(${sr.spectrum || 50}% - 4px)"></div>
+                        </div>
+                        <div class="flex justify-between mt-1 text-[10px] font-mono font-bold tracking-widest text-black uppercase">
+                            <span>Roasted</span><span>Spices</span><span>Nutty</span><span>Sweet</span><span>Floral</span><span>Fruity</span><span>Sour</span><span>Earthy</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-4">
+                    <div class="flex justify-center items-center">
+                        ${rl_generateRadarChartSVG(sr)}
+                    </div>
+                    <div class="col-span-2 flex flex-col font-mono text-xs font-bold uppercase">
+                        <div class="flex gap-8 mb-6 mt-4">
+                            <div class="space-y-3">
+                                ${['ESP', 'POUR-OVER'].map(type => `
+                                    <label class="flex items-center gap-3 cursor-pointer m-0 p-0 text-black">
+                                        <div class="w-5 h-5 border-2 border-black p-0.5" onclick="rl_toggleIntendedFor('${type}')">
+                                            ${(sr.intendedFor || []).includes(type) ? '<div class="w-full h-full bg-black"></div>' : ''}
+                                        </div>
+                                        ${type}
+                                    </label>
+                                `).join('')}
+                            </div>
+                            <div class="space-y-3">
+                                ${['MILK', 'WATER'].map(type => `
+                                    <label class="flex items-center gap-3 cursor-pointer m-0 p-0 text-black">
+                                        <div class="w-5 h-5 border-2 border-black p-0.5" onclick="rl_toggleIntendedFor('${type}')">
+                                            ${(sr.intendedFor || []).includes(type) ? '<div class="w-full h-full bg-black"></div>' : ''}
+                                        </div>
+                                        ${type}
+                                    </label>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <div class="flex-1 flex flex-col">
+                            <span class="mb-2">NOTES:</span>
+                            <textarea oninput="rl_updateField('notes', this.value)" class="flex-1 bg-transparent border-none outline-none resize-none lined-textarea text-sm w-full text-black m-0 p-0 shadow-none h-24">${sr.notes || ''}</textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 pt-6 border-t-[3px] border-black border-dashed flex flex-col md:flex-row gap-6">
+                    <div class="flex-1 font-mono uppercase text-xs">
+                        <span class="font-black mb-2 block">AI VISUAL ANALYSIS LAB</span>
+                        <div onclick="rl_triggerFileInput()" class="w-full h-24 border-2 border-black flex items-center justify-center cursor-pointer hover:bg-black hover:text-white transition-colors bg-white text-black">
+                            <input type="file" id="file-upload" onchange="rl_handleImageUpload(event)" class="hidden" accept="image/*" />
+                            ${rl_state.isAnalyzing 
+                                ? '<span class="animate-pulse">PROCESSING...</span>' 
+                                : '<span class="flex items-center gap-2"><i data-lucide="camera" class="w-4 h-4"></i> UPLOAD SAMPLE</span>'
+                            }
+                        </div>
+                    </div>
+                    ${rl_state.analysisResult ? `
+                        <div class="flex-[2] font-mono text-[10px] uppercase border-2 border-black p-3 bg-white h-32 overflow-y-auto text-black">
+                            <strong class="block mb-2 text-red-500 border-b border-black pb-1">RESULT:</strong>
+                            <div class="leading-tight">${rl_state.analysisResult}</div>
+                        </div>
+                    ` : ''}
+                </div>
+            </div>
+            <div class="text-right mt-2 text-[10px] font-mono font-bold text-stone-400">12° Sur_ROAST_LAB_V2</div>
+        </div>
+        `;
+    };
+
+    const rl_renderApp = () => {
+        const app = document.getElementById('roast-lab-app');
+        if (rl_state.selectedRoast) {
+            app.innerHTML = '<main class="bg-white min-h-screen pb-12">' + rl_renderDetail() + '</main>';
+        } else {
+            app.innerHTML = '';
+        }
+        
+        if (window.lucide) {
+            lucide.createIcons();
+        }
+    };
+</script>
+
+    </section>
+
+    <section id="view-qc" class="view-section">
+        <div class="no-print" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; padding:0 5px; flex-wrap: wrap; gap: 10px;">
+            <div style="display:flex; align-items:center; gap:15px;">
+                <h2 style="margin:0;">SCA Cupping</h2>
+                <select id="qcRoastSelect" style="margin:0; width:auto; padding:8px; border:1px solid #ccc; font-weight:bold; border-radius:4px;"><option value="">-- Select Batch --</option></select>
+            </div>
+            <div><button class="btn" style="width:auto;" onclick="saveCuppingForm()">💾 Save</button><button class="btn-outline" style="width:auto; margin-left:10px;" onclick="exportQCCSV()">⬇ CSV</button><button class="btn-outline" style="width:auto; margin-left:10px;" onclick="saveFormImage()">📸 Image</button></div>
+        </div>
+        
+        <div id="scaFormWrapper" class="sca-form-wrapper">
+            <div class="sca-header-row">
+                <div style="flex-grow:1">
+                    <div class="sca-title">SCA Arabica Cupping Form</div>
+                    <div style="display:flex; gap:20px; flex-wrap:wrap;">
+                        <div>Name: <input type="text" style="border:none; border-bottom:1px solid black; width:120px;"></div>
+                        <div>Date: <span id="qcDate"></span></div>
+                    </div>
+                </div>
+                <div style="font-size:0.6rem; border:1px solid black; padding:5px;">6.00 Good | 7.00 Very Good<br>8.00 Excl | 9.00 Outstnd</div>
+            </div>
+            <div id="sampleRowsContainer"></div>
+        </div>
+    </section>
+
+    <section id="view-history" class="view-section">
+        <div class="lang-bar" id="lang-center">
+            <button class="lang-btn" onclick="setLang('en')">EN</button> / 
+            <button class="lang-btn" onclick="setLang('es')">ES</button> / 
+            <button class="lang-btn" onclick="setLang('cn')">CN</button>
+            <a href="/" class="lang-btn home-icon-right" style="text-decoration: none; display: inline-flex; align-items: center; margin-left: auto;"><img src="/Media/home_icon.svg" alt="Home" style="width: 14px; height: 14px;"></a>
+        </div>
+        
+        <div style="display: flex; gap: 20px; margin-bottom: 20px; padding: 0 10px;">
+            <button class="btn" onclick="loadHistory('roasts')" style="width:auto;">📊 Roast History</button>
+            <button class="btn-outline" onclick="loadHistory('cupping')" style="width:auto;">☕ Cupping History</button>
+        </div>
+
+        <div id="historyContent" style="padding: 0 10px;">
+            <div class="card" style="text-align: center; padding: 40px; color: #666;">
+                <p>Select a history type to view saved data</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="view-farm" class="view-section">
+        <div class="lang-bar" id="lang-center">
+            <button class="lang-btn" onclick="setLang('en')">EN</button> / 
+            <button class="lang-btn" onclick="setLang('es')">ES</button> / 
+            <button class="lang-btn" onclick="setLang('cn')">CN</button>
+            <a href="/" class="lang-btn home-icon-right" style="text-decoration: none; display: inline-flex; align-items: center; margin-left: auto;"><img src="/Media/home_icon.svg" alt="Home" style="width: 14px; height: 14px;"></a>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 0 10px;">
+            <div>
+                <h2 style="margin: 0;">Micro-lot Farm Profiles</h2>
+                <p style="margin: 5px 0 0 0; color: #666; font-size: 0.9rem;">Discover exceptional small-scale coffee farms</p>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <a href="/FarmProfiles/Create" class="btn" style="width: auto;">+ Add Farm</a>
+            </div>
+        </div>
+
+        <div id="farmContent" style="padding: 0 10px;">
+            <div class="card" style="text-align: center; padding: 40px; color: #666;">
+                <p>Loading farm profiles...</p>
+            </div>
+        </div>
+    </section>
+</div>
+
+<template id="scaRowTemplate">
+    <div class="sample-container" data-id="">
+        <div class="sample-grid">
+            <div class="cell cell-sample"><div class="cell-header">Lot #</div><input type="text" style="width:100%; border:none; font-weight:bold; text-align:center; font-size:1rem;" placeholder="#"><div class="roast-squares"><div class="r-sq" onclick="selectRoast(this)"></div><div class="r-sq" onclick="selectRoast(this)"></div><div class="r-sq" onclick="selectRoast(this)"></div></div></div>
+            <div class="cell cell-frag"><div class="cell-header">Fragrance</div><div style="display:flex; align-items:center; font-size:0.6rem;"><span style="width:30px;">Dry</span><input type="range" style="height:2px;"></div><div style="display:flex; align-items:center; font-size:0.6rem;"><span style="width:30px;">Brk</span><input type="range" style="height:2px;"></div><input type="number" class="score-box sc-frag" step="0.25" max="10" onchange="limitInput(this)"></div>
+            <div class="cell cell-flav"><div class="cell-header">Flavor</div><input type="number" class="score-box sc-flav" step="0.25" max="10" onchange="limitInput(this)"><div style="border-top:1px solid black; margin-top:5px; padding-top:2px;"><div class="cell-header" style="border:none; margin:0;">Aftertaste</div><input type="number" class="score-box sc-after" step="0.25" max="10" onchange="limitInput(this)"></div></div>
+            <div class="cell cell-acid"><div class="cell-header">Acidity</div><input type="number" class="score-box sc-acid" step="0.25" max="10" onchange="limitInput(this)"><div style="display:flex;justify-content:space-between;font-size:0.5rem;"><span>H</span><span>L</span></div><input type="range" style="height:2px;"></div>
+            <div class="cell cell-body"><div class="cell-header">Body</div><input type="number" class="score-box sc-body" step="0.25" max="10" onchange="limitInput(this)"><div style="display:flex;justify-content:space-between;font-size:0.5rem;"><span>Hv</span><span>Th</span></div><input type="range" style="height:2px;"></div>
+            <div class="cell cell-bal"><div class="cell-header">Bal | Uni</div><input type="number" class="score-box sc-bal" step="0.25" max="10" onchange="limitInput(this)"><div style="font-size:0.6rem; text-align:center; margin-top:2px;">Uniformity</div><div class="check-row check-uni"><div class="sq-check checked"></div><div class="sq-check checked"></div><div class="sq-check checked"></div><div class="sq-check checked"></div><div class="sq-check checked"></div></div></div>
+            <div class="cell cell-sweet"><div class="cell-header">Swt | Cln</div><div class="check-row check-sweet"><div class="sq-check checked"></div><div class="sq-check checked"></div><div class="sq-check checked"></div><div class="sq-check checked"></div><div class="sq-check checked"></div></div><div style="font-size:0.6rem; text-align:center; margin-top:2px;">Clean Cup</div><div class="check-row check-clean"><div class="sq-check checked"></div><div class="sq-check checked"></div><div class="sq-check checked"></div><div class="sq-check checked"></div><div class="sq-check checked"></div></div></div>
+            <div class="cell cell-overall"><div class="cell-header">Overall</div><input type="number" class="score-box sc-overall" step="0.25" max="10" onchange="limitInput(this)"><div style="margin-top:5px; font-size:0.6rem; text-align:center;">Defects</div><div style="display:flex; justify-content:center; align-items:center; font-size:0.7rem;">#<input type="number" class="d-cups" value="0" style="width:15px; height:15px; text-align:center; margin:0 2px;">x 2</div></div>
+            <div class="cell cell-final"><div class="cell-header">FINAL</div><div class="final-score-disp" style="font-size:1.5rem; font-weight:bold; text-align:center; margin-top:10px;">0.00</div></div>
+        </div>
+        <div class="notes-area"><span style="font-size:0.7rem; font-weight:bold;">NOTES:</span><textarea></textarea></div>
+    </div>
+</template>
+
+<script>
+    const translations = {
+        en: { nav_stock:"Stock", nav_roast:"Roast", nav_sca:"SCA", nav_mode:"Mode", btn_add_bean:"+ Add Bean", new_shipment:"New Shipment", lbl_name:"Name", lbl_country:"Country", lbl_farmer:"Farmer", lbl_process:"Process", lbl_weight:"Weight (kg)", lbl_cost:"Cost/kg", btn_save:"Save Stock", btn_cancel:"Cancel", btn_start:"START ROAST", lbl_select_bean:"Select Bean", lbl_overlay:"Ghost Overlay", lbl_green:"Green (g)", lbl_roasted:"Roasted (g)", lbl_temp_check:"Temp Check", lbl_notes:"Batch Notes", btn_save_batch:"💾 Save Batch", btn_image:"📸 Image" },
+        es: { nav_stock:"Inventario", nav_roast:"Tueste", nav_sca:"SCA", nav_mode:"Modo", btn_add_bean:"+ Nuevo", new_shipment:"Nueva Carga", lbl_name:"Nombre", lbl_country:"País", lbl_farmer:"Productor", lbl_process:"Proceso", lbl_weight:"Peso (kg)", lbl_cost:"Costo/kg", btn_save:"Guardar", btn_cancel:"Cancelar", btn_start:"INICIAR", lbl_select_bean:"Elegir Grano", lbl_overlay:"Superponer", lbl_green:"Verde (g)", lbl_roasted:"Tostado (g)", lbl_temp_check:"Control Temp", lbl_notes:"Notas Lote", btn_save_batch:"💾 Guardar", btn_image:"📸 Imagen" },
+        cn: { nav_stock:"库存", nav_roast:"烘焙", nav_sca:"杯测", nav_mode:"模式", btn_add_bean:"+ 添加生豆", new_shipment:"新进货", lbl_name:"名称", lbl_country:"国家", lbl_farmer:"农场", lbl_process:"处理法", lbl_weight:"重量 (kg)", lbl_cost:"成本/kg", btn_save:"保存", btn_cancel:"取消", btn_start:"开始烘焙", lbl_select_bean:"选择生豆", lbl_overlay:"参考曲线", lbl_green:"生豆 (g)", lbl_roasted:"熟豆 (g)", lbl_temp_check:"温度检查", lbl_notes:"烘焙笔记", btn_save_batch:"💾 保存", btn_image:"📸 截图" }
+    };
+    function setLang(lang) { const t = translations[lang]; if(!t)return; document.querySelectorAll('[data-i18n]').forEach(el => { const k=el.dataset.i18n; if(t[k]) el.innerText=t[k]; }); }
+
+    let inventory = [];
+    let roasts = [];
+    let cuppingScores = [];
+    let currentRoast = { data: [], events: [] };
+    let timerInterval, secondsElapsed = 0, isRunning = false, roastChart, activeOverlays = [];
+    const overlayColors = ['#bdc3c7', '#e67e22', '#9b59b6', '#e74c3c', '#1abc9c'];
+
+    window.onload = async function() {
+        // Initialize Herbert session manager if on Herbert tab
+        if (document.getElementById('view-herbert') && document.getElementById('view-herbert').classList.contains('active')) {
+            renderHerbertDropdown();
+            loadHerbertSession(currentHerbertSessionId);
+            // Load vault with a delay to ensure DOM is ready
+            setTimeout(() => {
+                initVaultModules();
+            }, 300);
+            // Initialize editable content
+            setTimeout(initHerbertEditable, 200);
+        }
+        initChart(); 
+        await loadInventory(); 
+        await loadRoasts();
+        await loadCuppingScores();
+        renderInventory(); 
+        populateRoastDropdown(); 
+        initRoastTable(); 
+        populateOverlayDropdown(); 
+        populateQCDropdown();
+        document.getElementById('qcDate').innerText = new Date().toLocaleDateString();
+        buildSCAForm();
+    };
+
+    // API Functions
+    async function loadInventory() {
+        try {
+            const response = await fetch('OS?handler=Inventory');
+            if (response.ok) {
+                inventory = await response.json();
+            }
+        } catch (error) {
+            console.error('Error loading inventory:', error);
+        }
+    }
+
+    async function loadRoasts() {
+        try {
+            const response = await fetch('OS?handler=Roasts');
+            if (response.ok) {
+                const data = await response.json();
+                roasts = data.map(r => ({
+                    id: r.id,
+                    beanId: r.beanId,
+                    beanName: r.beanName,
+                    date: r.date,
+                    roastTime: r.roastTime,
+                    data: r.data ? JSON.parse(r.data) : [],
+                    events: r.events ? JSON.parse(r.events) : []
+                }));
+            }
+        } catch (error) {
+            console.error('Error loading roasts:', error);
+        }
+    }
+
+    async function loadCuppingScores() {
+        try {
+            const response = await fetch('OS?handler=CuppingScores');
+            if (response.ok) {
+                cuppingScores = await response.json();
+            }
+        } catch (error) {
+            console.error('Error loading cupping scores:', error);
+        }
+    }
+
+    // ========== HERBERT EDITABLE CONTENT MANAGER ==========
+    function saveHerbertContent() {
+        const editableElements = document.querySelectorAll('[data-herbert-id]');
+        const content = {};
+        editableElements.forEach(el => {
+            const id = el.getAttribute('data-herbert-id');
+            if (el.tagName === 'TEXTAREA') {
+                content[id] = el.value;
+            } else {
+                content[id] = el.innerHTML;
+            }
+        });
+        localStorage.setItem('herbert_content', JSON.stringify(content));
+        showSaveIndicator();
+    }
+
+    function loadHerbertContent() {
+        const saved = localStorage.getItem('herbert_content');
+        if (!saved) return;
+        
+        try {
+            const content = JSON.parse(saved);
+            Object.keys(content).forEach(id => {
+                const el = document.querySelector(`[data-herbert-id="${id}"]`);
+                if (el) {
+                    if (el.tagName === 'TEXTAREA') {
+                        el.value = content[id];
+                    } else {
+                        el.innerHTML = content[id];
+                    }
+                }
+            });
+        } catch (e) {
+            console.error('Error loading Herbert content:', e);
+        }
+    }
+
+    function showSaveIndicator() {
+        const indicator = document.getElementById('saveIndicator');
+        if (indicator) {
+            indicator.classList.add('show');
+            setTimeout(() => {
+                indicator.classList.remove('show');
+            }, 2000);
+        }
+    }
+
+    function initHerbertEditable() {
+        // Load saved content
+        loadHerbertContent();
+        
+        // Add event listeners to all editable elements
+        const editableElements = document.querySelectorAll('[data-herbert-id]');
+        editableElements.forEach(el => {
+            // Save on blur (when user finishes editing)
+            el.addEventListener('blur', saveHerbertContent);
+            // Save on Enter key (for better UX)
+            el.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey && el.tagName !== 'TEXTAREA') {
+                    e.preventDefault();
+                    el.blur();
+                }
+            });
+        });
+        
+        // Handle textarea separately
+        const textareas = document.querySelectorAll('#vault-step1-notes');
+        textareas.forEach(ta => {
+            ta.addEventListener('input', debounce(saveHerbertContent, 500));
+        });
+    }
+
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
+    function switchTab(tabId) {
+        document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+        document.getElementById('view-' + tabId).classList.add('active');
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+        if(tabId==='roast') { populateRoastDropdown(); populateOverlayDropdown(); }
+        if(tabId==='qc') populateQCDropdown();
+        if(tabId==='history') loadHistory('roasts');
+        if(tabId==='farm') loadFarmProfiles();
+        if(tabId==='herbert') {
+            renderHerbertDropdown();
+            loadHerbertSession(currentHerbertSessionId);
+            initVaultModules();
+            // Initialize editable content after a short delay to ensure DOM is ready
+            setTimeout(initHerbertEditable, 100);
+        }
+    }
+    
+    async function loadFarmProfiles() {
+        try {
+            const response = await fetch('FarmProfiles/Index?handler=Api');
+            if (!response.ok) {
+                document.getElementById('farmContent').innerHTML = '<div class="card" style="text-align: center; padding: 40px; color: #666;"><p>Unable to load farm profiles. <a href="/FarmProfiles">View full farm page</a></p></div>';
+                return;
+            }
+            const html = await response.text();
+            // For now, show a link to the full farm page
+            document.getElementById('farmContent').innerHTML = '<div class="card" style="padding: 20px;"><p>Farm profiles integration coming soon. <a href="/FarmProfiles" class="btn" style="width: auto; margin-top: 10px;">View Full Farm Page</a></p></div>';
+        } catch (error) {
+            document.getElementById('farmContent').innerHTML = '<div class="card" style="text-align: center; padding: 40px; color: #666;"><p>Error loading farms. <a href="/FarmProfiles">View full farm page</a></p></div>';
+        }
+    }
+
+    function toggleBeanForm() { const el = document.getElementById('beanForm'); el.style.display = el.style.display === 'none' ? 'block' : 'none';}
+    function openBeanForm() { document.getElementById('beanForm').style.display = 'block'; }
+    function toggleCertificateUpload() {
+        const hasCert = document.getElementById('invHasCertificates').value === 'true';
+        document.getElementById('certificateUploadRow').style.display = hasCert ? 'block' : 'none';
+    }
+    async function saveBean() { 
+        const beanId = parseInt(document.getElementById('invId').value) || 0;
+        const name = document.getElementById('invName').value;
+        if(!name) return alert('Name is required');
+        
+        const formData = new FormData();
+        formData.append('id', beanId);
+        formData.append('name', name);
+        formData.append('country', document.getElementById('invCountry').value || '');
+        formData.append('farmer', document.getElementById('invFarmer').value || '');
+        formData.append('process', document.getElementById('invProcess').value || '');
+        formData.append('totalKg', parseFloat(document.getElementById('invWeight').value) || 0);
+        formData.append('costPerKg', document.getElementById('invCost').value || '');
+        formData.append('hasCertificates', document.getElementById('invHasCertificates').value === 'true');
+        
+        const certFile = document.getElementById('invCertificate').files[0];
+        if (certFile) {
+            formData.append('certificate', certFile);
+        }
+        
+        try {
+            const response = await fetch('OS?handler=SaveInventory', {
+                method: 'POST',
+                body: formData
+            });
+            if (response.ok) {
+                await loadInventory();
+                renderInventory();
+                toggleBeanForm();
+                // Clear form
+                document.getElementById('invId').value = '';
+                document.getElementById('invName').value = '';
+                document.getElementById('invCountry').value = '';
+                document.getElementById('invFarmer').value = '';
+                document.getElementById('invWeight').value = '';
+                document.getElementById('invCost').value = '';
+                document.getElementById('invHasCertificates').value = 'false';
+                document.getElementById('invCertificate').value = '';
+                document.getElementById('certificateUploadRow').style.display = 'none';
+            } else {
+                const errorText = await response.text();
+                console.error('Error saving bean:', response.status, errorText);
+                alert('Error saving bean: ' + (errorText || response.statusText || 'Unknown error'));
+            }
+        } catch (error) {
+            console.error('Error saving bean:', error);
+            alert('Error saving bean: ' + error.message);
+        }
+    }
+    function renderInventory() { 
+        const c = document.getElementById('inventoryList'); 
+        c.innerHTML=''; 
+        c.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 max-w-6xl mx-auto pb-20';
+        inventory.forEach(b => { 
+            const imageHtml = `<div class="w-full h-full flex items-center justify-center text-gray-300"><i data-lucide="image" class="w-12 h-12"></i></div>`; 
+            c.innerHTML += `
+                <div class="group cursor-pointer border border-transparent hover:border-gray-200 transition-colors p-4 -m-4 bg-white text-black">
+                    <div class="w-full aspect-square bg-gray-100 mb-6 overflow-hidden relative">
+                        <img src="/Media/Green_bean.svg" alt="Green Bean" class="absolute top-4 right-4 w-8 h-8 opacity-50" />
+                        ${imageHtml}
+                    </div>
+                    <div class="flex justify-between items-baseline mb-2">
+                        <h3 class="text-xl font-bold tracking-tight m-0">${b.name}</h3>
+                        <span class="font-mono text-xs font-bold">${b.totalKg.toFixed(1)} kg</span>
+                    </div>
+                    <p class="text-xs text-gray-500 uppercase tracking-widest font-bold mb-4">${b.country || 'Unknown'}</p>
+                    <div class="border-t border-dotted border-gray-300 pt-4 font-mono text-[10px] uppercase font-bold text-gray-500 space-y-2">
+                        <div class="flex justify-between"><span>PROCESS</span><span class="text-black">${b.process || '-'}</span></div>
+                        <div class="flex justify-between"><span>COST/KG</span><span class="text-black">$${b.costPerKg || '0.00'}</span></div>
+                    </div>
+                </div>`; 
+        }); 
+        if (window.lucide) lucide.createIcons();
+    }
+
+    function buildSCAForm() {
+        const container = document.getElementById('sampleRowsContainer');
+        const tmpl = document.getElementById('scaRowTemplate');
+        container.innerHTML = '';
+        for(let i=1; i<=3; i++) {
+            const clone = tmpl.content.cloneNode(true);
+            const row = clone.querySelector('.sample-container');
+            row.id = `row-${i}`;
+            ['uni','sweet','clean'].forEach(type => {
+                const grp = row.querySelector(`.check-${type}`);
+                grp.querySelectorAll('.sq-check').forEach(sq => {
+                    sq.onclick = function() { this.classList.toggle('checked'); calc(row.id); };
+                });
+            });
+            row.querySelectorAll('input').forEach(inp => { inp.oninput = () => calc(row.id); });
+            container.appendChild(clone);
+        }
+    }
+    
+    function limitInput(el) { let v = parseFloat(el.value); if(v > 10) el.value = 10; calc(el.closest('.sample-container').id); }
+    function selectRoast(el) { el.parentElement.querySelectorAll('.r-sq').forEach(d => d.classList.remove('selected')); el.classList.add('selected'); }
+    function calc(rowId) {
+        const row = document.getElementById(rowId);
+        let attrSum = 0;
+        ['frag','flav','after','acid','body','bal','overall'].forEach(k => { attrSum += (parseFloat(row.querySelector(`.sc-${k}`).value) || 0); });
+        let sysSum = 0;
+        ['uni','sweet','clean'].forEach(k => { sysSum += (row.querySelector(`.check-${k}`).querySelectorAll('.checked').length * 2); });
+        const defects = (parseFloat(row.querySelector('.d-cups').value)||0) * 2; 
+        const total = attrSum + sysSum - defects;
+        row.querySelector('.final-score-disp').innerText = total.toFixed(2);
+    }
+
+    function toggleTimer() {
+        const btn=document.getElementById('btnStart'); const floatBar = document.getElementById('floatingTimerBar');
+        if(!isRunning) { 
+            isRunning=true; btn.innerText="STOP"; btn.style.background="var(--accent-red)"; 
+            document.getElementById('activeInputPanel').style.display="block"; floatBar.classList.add('active');
+            timerInterval=setInterval(()=>{ secondsElapsed++; const t = formatTime(secondsElapsed); document.getElementById('timer').innerText=t; document.getElementById('floatTime').innerText=t; document.getElementById('staticTimer').innerText=t; if(secondsElapsed%30===0) document.getElementById('activeInputPanel').classList.add('flash'); },1000); 
+        } else { 
+            isRunning=false; clearInterval(timerInterval); document.getElementById('activeInputPanel').style.display="none"; floatBar.classList.remove('active'); btn.innerText="START"; btn.style.background="var(--accent-green)"; 
+        }
+    }
+
+    function populateRoastDropdown() { const s = document.getElementById('roastBeanSelect'); s.innerHTML='<option value="">-- Select Green Bean --</option>'; inventory.forEach(b => s.innerHTML+=`<option value="${b.id}">${b.name} (${b.totalKg}kg)</option>`); }
+    function initRoastTable() { currentRoast.data=[]; for(let i=0;i<=20;i++){currentRoast.data.push({time:i*60,temp:null}); if(i<20)currentRoast.data.push({time:i*60+30,temp:null});} renderRoastTable(); }
+    function renderRoastTable() { const b=document.getElementById('roastTableBody'); b.innerHTML=''; currentRoast.data.forEach((r,i)=>{ if(i>60)return; b.innerHTML+=`<tr><td>${formatTime(r.time)}</td><td><input type="number" value="${r.temp||''}" style="border:none;text-align:center;" onchange="updateRoast(${i},this.value)"></td></tr>`; }); }
+    function updateRoast(i,v) { currentRoast.data[i].temp=parseFloat(v); if(i>0 && currentRoast.data[i-1].temp) currentRoast.data[i].ror=(currentRoast.data[i].temp-currentRoast.data[i-1].temp)*2; updateChart(); }
+    function submitLiveTemp() { const v=document.getElementById('liveTempInput').value; if(v){ updateRoast(Math.round(secondsElapsed/30),v); document.getElementById('activeInputPanel').classList.add('input-success'); setTimeout(()=>document.getElementById('activeInputPanel').classList.remove('input-success'),500); } document.getElementById('liveTempInput').value=''; }
+    function initChart() { const ctx=document.getElementById('roastChart').getContext('2d'); roastChart = new Chart(ctx, { type:'line', data:{labels:[], datasets:[{label:'Temp', data:[], borderColor:'#2c3e50', tension:0.4},{label:'RoR', data:[], borderColor:'#2980b9', borderDash:[5,5], yAxisID:'y1', tension:0.4}]}, options:{maintainAspectRatio:false, layout: { padding: { right: 20, left: 0 } }, scales:{y:{position:'left'}, y1:{position:'right', min:0, max:30}}} }); }
+    function updateChart() { roastChart.data.labels=currentRoast.data.map(d=>formatTime(d.time)); roastChart.data.datasets[0].data=currentRoast.data.map(d=>d.temp); roastChart.data.datasets[1].data=currentRoast.data.map(d=>d.ror); roastChart.data.datasets = roastChart.data.datasets.slice(0, 2); activeOverlays.forEach((id, index) => { const r = roasts.find(x => x.id == id); if(r) { const color = overlayColors[index % overlayColors.length]; roastChart.data.datasets.push({ label: `Overlay`, data: r.data.map(d => d.temp), borderColor: color, borderDash: [2,2], pointRadius: 0, yAxisID: 'y' }); } }); roastChart.update(); }
+    async function saveRoastAndDeduct() { 
+        const bid=document.getElementById('roastBeanSelect').value; 
+        if(!bid) return alert("Select Bean");
+        
+        // Calculate weight loss
+        const greenWeight = parseFloat(document.getElementById('greenWeight').value) || 0;
+        const roastedWeight = parseFloat(document.getElementById('roastedWeight').value) || 0;
+        const weightLossPercent = greenWeight > 0 ? ((greenWeight - roastedWeight) / greenWeight * 100) : null;
+        
+        // Extract event times
+        const events = currentRoast.events || [];
+        const firstCrackTime = events.find(e => e.type === 'FC')?.time || null;
+        const dropTime = events.find(e => e.type === 'DROP')?.time || null;
+        const turnPointTime = events.find(e => e.type === 'TP')?.time || null;
+        const dryEndTime = events.find(e => e.type === 'Dry')?.time || null;
+        
+        const roastData = {
+            beanId: parseInt(bid),
+            roastTimeSeconds: secondsElapsed || null,
+            greenWeight: greenWeight,
+            roastedWeight: roastedWeight,
+            weightLossPercent: weightLossPercent,
+            dTRPercent: parseFloat(document.getElementById('dtrValue').innerText) || null,
+            firstCrackTime: firstCrackTime,
+            dropTime: dropTime,
+            turnPointTime: turnPointTime,
+            dryEndTime: dryEndTime,
+            temperatureData: currentRoast.data,
+            events: events,
+            notes: document.getElementById('roastNotes').value || null
+        };
+        
+        try {
+            const response = await fetch('OS?handler=SaveRoast', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(roastData)
+            });
+            if (response.ok) {
+                await loadRoasts();
+                populateOverlayDropdown();
+                alert("Roast saved successfully!");
+            } else {
+                alert('Error saving roast');
+            }
+        } catch (error) {
+            console.error('Error saving roast:', error);
+            alert('Error saving roast');
+        }
+    }
+    function populateOverlayDropdown() { const s=document.getElementById('overlaySelect'); s.innerHTML='<option value="">-- Past --</option>'; roasts.forEach(r=>s.innerHTML+=`<option value="${r.id}">${r.date}</option>`); }
+    function addOverlay() { const id=document.getElementById('overlaySelect').value; if(id) activeOverlays.push(id); updateChart(); }
+    function saveAsImage() { document.body.classList.add('capture-mode'); setTimeout(()=>{ html2canvas(document.getElementById('appContainer'), {scale:1.5}).then(c=>{ document.body.classList.remove('capture-mode'); const a=document.createElement('a'); a.download='Roast.png'; a.href=c.toDataURL(); a.click(); }); },200); }
+    function saveFormImage() { html2canvas(document.getElementById('scaFormWrapper'), {scale:1.5, backgroundColor:'#fff'}).then(c=>{ const a=document.createElement('a'); a.download='QC.png'; a.href=c.toDataURL(); a.click(); }); }
+    function toggleTheme() { document.body.classList.toggle('dark-mode'); }
+    function exportInventoryCSV() { let csv = "Name,Country,Farmer,Process,Kg,Cost/kg\n"; inventory.forEach(b => csv += `${b.name},${b.country || ''},${b.farmer || ''},${b.process || ''},${b.totalKg},${b.costPerKg || ''}\n`); downloadFile(csv, 'inventory.csv'); }
+    async function saveCuppingForm() {
+        const roastBatchId = document.getElementById('qcRoastSelect').value;
+        if (!roastBatchId) {
+            alert('Please select a roast batch first');
+            return;
+        }
+
+        const rows = document.querySelectorAll('#sampleRowsContainer .sample-container');
+        if (rows.length === 0) {
+            alert('No cupping data to save');
+            return;
+        }
+
+        // Save the first row (sample) for now - can be extended to save all rows
+        const row = rows[0];
+        const cupperName = row.querySelector('input[type="text"]')?.value || '';
+        const lotNumber = row.querySelector('.cell-sample input[type="text"]')?.value || '';
+        
+        // Get roast level (which square is selected)
+        const roastSquares = row.querySelectorAll('.r-sq');
+        let roastLevel = '';
+        roastSquares.forEach((sq, idx) => {
+            if (sq.classList.contains('selected')) {
+                roastLevel = ['Light', 'Medium', 'Dark'][idx] || '';
+            }
+        });
+
+        // Get fragrance sliders and score
+        const fragDry = row.querySelector('.cell-frag input[type="range"]:first-of-type')?.value || null;
+        const fragBreak = row.querySelector('.cell-frag input[type="range"]:last-of-type')?.value || null;
+        const fragScore = parseFloat(row.querySelector('.sc-frag')?.value) || null;
+
+        // Get other scores
+        const flavorScore = parseFloat(row.querySelector('.sc-flav')?.value) || null;
+        const aftertasteScore = parseFloat(row.querySelector('.sc-after')?.value) || null;
+        const acidScore = parseFloat(row.querySelector('.sc-acid')?.value) || null;
+        const acidIntensity = row.querySelector('.cell-acid input[type="range"]')?.value || null;
+        const bodyScore = parseFloat(row.querySelector('.sc-body')?.value) || null;
+        const bodyIntensity = row.querySelector('.cell-body input[type="range"]')?.value || null;
+        const balanceScore = parseFloat(row.querySelector('.sc-bal')?.value) || null;
+        const overallScore = parseFloat(row.querySelector('.sc-overall')?.value) || null;
+        const defectCups = parseInt(row.querySelector('.d-cups')?.value) || 0;
+        const finalScore = parseFloat(row.querySelector('.final-score-disp')?.innerText) || null;
+
+        // Count checked squares
+        const uniChecks = row.querySelector('.check-uni .checked')?.parentElement.querySelectorAll('.checked').length || 0;
+        const sweetChecks = row.querySelector('.check-sweet .checked')?.parentElement.querySelectorAll('.checked').length || 0;
+        const cleanChecks = row.querySelector('.check-clean .checked')?.parentElement.querySelectorAll('.checked').length || 0;
+
+        // Get notes
+        const notes = row.querySelector('.notes-area textarea')?.value || '';
+
+        const cuppingData = {
+            roastBatchId: parseInt(roastBatchId),
+            cupperName: cupperName || null,
+            lotNumber: lotNumber || null,
+            roastLevel: roastLevel || null,
+            fragranceDry: fragDry ? parseFloat(fragDry) : null,
+            fragranceBreak: fragBreak ? parseFloat(fragBreak) : null,
+            fragranceScore: fragScore,
+            flavorScore: flavorScore,
+            aftertasteScore: aftertasteScore,
+            acidityScore: acidScore,
+            acidityIntensity: acidIntensity ? parseFloat(acidIntensity) : null,
+            bodyScore: bodyScore,
+            bodyIntensity: bodyIntensity ? parseFloat(bodyIntensity) : null,
+            balanceScore: balanceScore,
+            uniformityChecks: uniChecks,
+            sweetnessChecks: sweetChecks,
+            cleanCupChecks: cleanChecks,
+            overallScore: overallScore,
+            defectCups: defectCups,
+            finalScore: finalScore,
+            notes: notes || null
+        };
+
+        try {
+            const response = await fetch('OS?handler=SaveCupping', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(cuppingData)
+            });
+            if (response.ok) {
+                alert('Cupping form saved successfully!');
+            } else {
+                const error = await response.text();
+                alert('Error saving cupping form: ' + error);
+            }
+        } catch (error) {
+            console.error('Error saving cupping form:', error);
+            alert('Error saving cupping form');
+        }
+    }
+    function exportQCCSV() { /* Placeholder */ }
+    function exportRoastLogCSV() { 
+        if (!currentRoast.data || currentRoast.data.length === 0) {
+            alert('No roast data to export');
+            return;
+        }
+        
+        let csv = "Time,Temperature,RoR,Events\n";
+        currentRoast.data.forEach((point, index) => {
+            const timeStr = formatTime(point.time);
+            const temp = point.temp !== null && point.temp !== undefined ? point.temp : '';
+            const ror = point.ror !== null && point.ror !== undefined ? point.ror.toFixed(2) : '';
+            
+            // Find events at this time point (within 30 seconds)
+            const eventsAtTime = currentRoast.events.filter(e => Math.abs(e.time - point.time) <= 30);
+            const eventStr = eventsAtTime.map(e => e.type).join('; ') || '';
+            
+            csv += `${timeStr},${temp},${ror},"${eventStr}"\n`;
+        });
+        
+        // Add summary at the end
+        const beanSelect = document.getElementById('roastBeanSelect');
+        const beanName = beanSelect.options[beanSelect.selectedIndex]?.text || 'Unknown Bean';
+        const greenWeight = document.getElementById('greenWeight').value || '';
+        const roastedWeight = document.getElementById('roastedWeight').value || '';
+        const notes = document.getElementById('roastNotes').value || '';
+        
+        csv += "\n";
+        csv += "Summary\n";
+        csv += `Bean,${beanName}\n`;
+        csv += `Green Weight (g),${greenWeight}\n`;
+        csv += `Roasted Weight (g),${roastedWeight}\n`;
+        csv += `Total Time,${formatTime(secondsElapsed)}\n`;
+        if (notes) {
+            csv += `Notes,"${notes.replace(/"/g, '""')}"\n`;
+        }
+        
+        downloadFile(csv, `roast_log_${new Date().toISOString().split('T')[0]}.csv`);
+    }
+    function downloadFile(c,n) { const a=document.createElement('a'); a.href="data:text/csv;charset=utf-8,"+encodeURI(c); a.download=n; a.click(); }
+    function formatTime(s) { return `${Math.floor(s/60)}:${(s%60).toString().padStart(2,'0')}`; }
+    function triggerEvent(n) { document.getElementById('roastNotes').value += `[${formatTime(secondsElapsed)}] ${n}\n`; currentRoast.events.push({type:n, time:secondsElapsed}); }
+    function populateQCDropdown() { const s = document.getElementById('qcRoastSelect'); s.innerHTML='<option value="">-- Select Batch --</option>'; roasts.forEach(r => { const b=inventory.find(x=>x.id==r.beanId)||{name:'Unknown'}; s.innerHTML+=`<option value="${r.id}">${b.name} (${r.date})</option>`; }); }
+    function calcLoss() { 
+        const green = parseFloat(document.getElementById('greenWeight').value) || 0;
+        const roasted = parseFloat(document.getElementById('roastedWeight').value) || 0;
+        if (green > 0) {
+            const loss = ((green - roasted) / green * 100).toFixed(2);
+            document.getElementById('staticLoss').innerText = loss + '%';
+        }
+    }
+    function loadBeanDetails() { 
+        const bid = document.getElementById('roastBeanSelect').value;
+        if (bid) {
+            const bean = inventory.find(b => b.id == bid);
+            if (bean) {
+                document.getElementById('staticBeanName').innerText = bean.name;
+            }
+        }
+    }
+
+    async function loadHistory(type) {
+        const container = document.getElementById('historyContent');
+        
+        if (type === 'roasts') {
+            await loadRoasts();
+            if (roasts.length === 0) {
+                container.innerHTML = '<div class="card" style="text-align: center; padding: 40px; color: #666;"><p>No saved roasts found</p></div>';
+                return;
+            }
+            
+            let html = `
+                <div class="text-center my-16 text-black">
+                    <h2 class="text-5xl md:text-6xl font-black uppercase tracking-tight mb-4">BATCH ARCHIVE</h2>
+                    <div class="flex items-center justify-center gap-2">
+                        <div class="h-[1px] w-12 bg-black"></div>
+                        <div class="w-1.5 h-1.5 rounded-full bg-black"></div>
+                        <div class="h-[1px] w-12 bg-black"></div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 max-w-6xl mx-auto pb-20">`;
+            roasts.forEach(r => {
+                const bean = inventory.find(b => b.id == r.beanId) || { name: r.beanName || 'Unknown' };
+                const imageHtml = `<div class="w-full h-full flex items-center justify-center text-gray-300"><i data-lucide="image" class="w-12 h-12"></i></div>`;
+                let dtr = r.dTRPercent || '0.0';
+                
+                html += `
+                <div onclick="viewRoastDetails(${r.id})" class="group cursor-pointer border border-transparent hover:border-gray-200 transition-colors p-4 -m-4 bg-white text-black">
+                    <div class="w-full aspect-square bg-gray-100 mb-6 overflow-hidden">
+                        ${imageHtml}
+                    </div>
+                    <div class="flex justify-between items-baseline mb-2">
+                        <h3 class="text-xl font-bold tracking-tight m-0">${bean.country || bean.name}</h3>
+                        <span class="font-mono text-xs font-bold">#${r.id}</span>
+                    </div>
+                    <p class="text-xs text-gray-500 uppercase tracking-widest font-bold mb-4">12° SUR</p>
+                    <p class="text-sm text-gray-600 mb-6 line-clamp-2 min-h-[40px]">${r.notes || 'No notes.'}</p>
+                    <div class="border-t border-dotted border-gray-300 pt-4 font-mono text-[10px] uppercase font-bold text-gray-500 space-y-2">
+                        <div class="flex justify-between"><span>DATE</span><span class="text-black">${r.date}</span></div>
+                        <div class="flex justify-between"><span>DTR / TIME</span><span class="text-black">${dtr}% / ${r.roastTime ? formatTime(r.roastTime) : '-'}</span></div>
+                    </div>
+                </div>`;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+            if (window.lucide) lucide.createIcons();
+        } else if (type === 'cupping') {
+            await loadCuppingScores();
+            if (cuppingScores.length === 0) {
+                container.innerHTML = '<div class="card" style="text-align: center; padding: 40px; color: #666;"><p>No saved cupping forms found</p></div>';
+                return;
+            }
+            
+            let html = '<div style="display: grid; gap: 15px;">';
+            cuppingScores.forEach(c => {
+                const roast = roasts.find(r => r.id === c.roastBatchId) || {};
+                const bean = inventory.find(b => b.id == roast.beanId) || { name: 'Unknown' };
+                html += `<div class="card" style="padding: 15px;">
+                    <div style="display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 10px;">
+                        <div>
+                            <h3 style="margin: 0 0 5px 0;">${bean.name}</h3>
+                            <div style="font-size: 0.85rem; color: #666;">Date: ${c.cuppingDate} | Cupper: ${c.cupperName || 'N/A'} | Final Score: ${c.finalScore ? c.finalScore.toFixed(2) : 'N/A'}</div>
+                        </div>
+                        <button class="btn-outline" onclick="viewCuppingDetails(${c.id})" style="width: auto;">View Details</button>
+                    </div>
+                </div>`;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
+    }
+
+    function viewRoastDetails(roastId) {
+        if(window.rl_openRoast) {
+            window.rl_openRoast(roastId);
+        } else {
+            alert('Roast Lab is not loaded.');
+        }
+    }
+
+    function viewCuppingDetails(cuppingId) {
+        const cupping = cuppingScores.find(c => c.id === cuppingId);
+        if (!cupping) {
+            alert('Cupping form not found');
+            return;
+        }
+        
+        let details = `Cupping Form Details\n\n`;
+        details += `Date: ${cupping.cuppingDate}\n`;
+        details += `Cupper: ${cupping.cupperName || 'N/A'}\n`;
+        details += `Lot Number: ${cupping.lotNumber || 'N/A'}\n`;
+        details += `Final Score: ${cupping.finalScore ? cupping.finalScore.toFixed(2) : 'N/A'}\n`;
+        details += `\nScores:\n`;
+        details += `  Fragrance: ${cupping.fragranceScore || 'N/A'}\n`;
+        details += `  Flavor: ${cupping.flavorScore || 'N/A'}\n`;
+        details += `  Aftertaste: ${cupping.aftertasteScore || 'N/A'}\n`;
+        details += `  Acidity: ${cupping.acidityScore || 'N/A'}\n`;
+        details += `  Body: ${cupping.bodyScore || 'N/A'}\n`;
+        details += `  Balance: ${cupping.balanceScore || 'N/A'}\n`;
+        details += `  Overall: ${cupping.overallScore || 'N/A'}\n`;
+        
+        alert(details);
+    }
+
+    // ========== HERBERT SESSION MANAGER ==========
+    let herbertSessions = [
+        {
+            id: 1,
+            name: "Session 001: Initial Assessment",
+            grammar: [
+                { original: "The coffee have a strong taste.", corrected: "The coffee <strong>has</strong> a <strong>robust</strong> profile." },
+                { original: "I make the brew now.", corrected: "I am <strong>beginning</strong> the brew now." }
+            ],
+            pron: [
+                { word: "Acidity", ipa: "/əˈsɪd.ɪ.ti/", note: "Stress 2nd syllable" },
+                { word: "Specialty", ipa: "/ˈspeʃ.əl.ti/", note: "Sharp 'T' sound" }
+            ],
+            vocab: ["Viscous", "Astringent", "Extraction"]
+        },
+        {
+            id: 2,
+            name: "Session 002: Sourcing Vocabulary",
+            grammar: [
+                { original: "We buy the beans from farmer.", corrected: "We <strong>source</strong> the lots directly from the <strong>producer</strong>." }
+            ],
+            pron: [
+                { word: "Origin", ipa: "/ˈɔːr.ə.dʒɪn/", note: "Soft 'g' sound" },
+                { word: "Varietal", ipa: "/vəˈraɪ.ə.t̬əl/", note: "Long 'i' sound" }
+            ],
+            vocab: ["Direct Trade", "Microlot", "Cultivar", "Heirloom"]
+        }
+    ];
+
+    let currentHerbertSessionId = 1;
+
+    function loadHerbertSession(id) {
+        currentHerbertSessionId = parseInt(id);
+        const session = herbertSessions.find(s => s.id === currentHerbertSessionId);
+        if (!session) return;
+
+        // Update Grammar
+        const gramContainer = document.getElementById('grammarContent');
+        if (gramContainer) {
+            gramContainer.innerHTML = session.grammar.map(g => `
+                <div style="margin-bottom:1.5rem;">
+                    <p style="margin:0; font-style:italic; color:#666;">"${g.original}"</p>
+                    <div class="correction-box">${g.corrected}</div>
+                </div>
+            `).join('');
+        }
+
+        // Update Pronunciation
+        const pronContainer = document.getElementById('pronContent');
+        if (pronContainer) {
+            pronContainer.innerHTML = session.pron.map(p => `
+                <div style="margin-bottom:1rem;">
+                    <strong>${p.word}</strong>
+                    <p style="font-family:'JetBrains Mono', monospace; margin:0.2rem 0;">${p.ipa}</p>
+                    <span style="font-size:0.8rem; color:#FF3B30;">${p.note}</span>
+                </div>
+            `).join('');
+        }
+
+        // Update Vocab
+        const vocabContainer = document.getElementById('vocabContent');
+        if (vocabContainer) {
+            vocabContainer.innerHTML = session.vocab.map(v => `<span class="vocab-tag">${v}</span>`).join('');
+        }
+    }
+
+    function addNewHerbertSession() {
+        const name = prompt("Enter Session Name (e.g., Session 003: Roast Profiles):");
+        if (name) {
+            const newId = herbertSessions.length > 0 ? Math.max(...herbertSessions.map(s => s.id)) + 1 : 1;
+            const newSession = {
+                id: newId,
+                name: name,
+                grammar: [],
+                pron: [],
+                vocab: []
+            };
+            herbertSessions.push(newSession);
+            currentHerbertSessionId = newId;
+            renderHerbertDropdown();
+            loadHerbertSession(newId);
+            
+            // Show Empty State
+            const gramContainer = document.getElementById('grammarContent');
+            const pronContainer = document.getElementById('pronContent');
+            const vocabContainer = document.getElementById('vocabContent');
+            if (gramContainer) gramContainer.innerHTML = '<p style="color:#999; font-style:italic;">No data yet. Upload transcript.</p>';
+            if (pronContainer) pronContainer.innerHTML = '';
+            if (vocabContainer) vocabContainer.innerHTML = '';
+        }
+    }
+
+    function deleteHerbertSession() {
+        if (confirm("Are you sure you want to delete this session?")) {
+            herbertSessions = herbertSessions.filter(s => s.id !== currentHerbertSessionId);
+            if (herbertSessions.length > 0) {
+                currentHerbertSessionId = herbertSessions[0].id;
+            } else {
+                currentHerbertSessionId = null;
+            }
+            renderHerbertDropdown();
+            if (currentHerbertSessionId) loadHerbertSession(currentHerbertSessionId);
+        }
+    }
+
+    function renderHerbertDropdown() {
+        const select = document.getElementById('sessionSelect');
+        if (!select) return;
+        select.innerHTML = '';
+        herbertSessions.forEach(s => {
+            const option = document.createElement('option');
+            option.value = s.id;
+            option.text = s.name;
+            select.appendChild(option);
+        });
+        select.value = currentHerbertSessionId;
+    }
+
+    function simulateHerbertUpload() {
+        const zone = document.getElementById('uploadZone');
+        if (!zone) return;
+        const originalText = zone.innerHTML;
+        
+        zone.innerHTML = '<h4 style="color:#FF3B30;">Analyzing Transcript...</h4><p>Extracting Grammar & Phonetics...</p>';
+        
+        setTimeout(() => {
+            // Mock adding data to current session
+            const session = herbertSessions.find(s => s.id === currentHerbertSessionId);
+            if (session) {
+                session.grammar.push({ original: "I think the coffee is good.", corrected: "I <strong>believe</strong> this coffee presents an <strong>elegant</strong> structure." });
+                session.pron.push({ word: "Fermentation", ipa: "/ˌfɝː.menˈteɪ.ʃən/", note: "Clear 'shun' ending" });
+                session.vocab.push("Anaerobic", "Thermal Shock");
+                loadHerbertSession(currentHerbertSessionId);
+            }
+            zone.innerHTML = originalText;
+            alert("Transcript Analyzed Successfully!");
+        }, 1500);
+    }
+
+    // ========== VAULT MANAGER ==========
+    let vaultModules = {};
+    let currentVaultId = 1;
+
+    function initVaultModules() {
+        const saved = localStorage.getItem('vault_modules_data');
+        if (saved) {
+            try {
+                vaultModules = JSON.parse(saved);
+            } catch(e) { console.error("Error parsing saved vault modules", e); }
+        }
+        
+        // If empty (first load), populate default
+        if (Object.keys(vaultModules).length === 0) {
+            vaultModules = {
+                1: {
+                    title: "Identify & Buy (Sourcing)",
+                    subtitle: "STEP 1: ACQUISITION",
+                    description: "Protocols for identifying farmers, buying samples first, and understanding contract terms.",
+                    content: `
+                        <div class="grid-2" style="margin-bottom:1rem; gap:1rem;">
+                            <div style="padding:1rem; border:1px solid #e5e7eb;">
+                                <strong>Contract Basics</strong>
+                                <p style="font-size:0.9rem; color:#666;">FOB (Free on Board) vs CIF (Cost, Insurance, Freight).</p>
+                            </div>
+                            <div style="padding:1rem; border:1px solid #e5e7eb;">
+                                <strong>Sample Protocol</strong>
+                                <p style="font-size:0.9rem; color:#666;">Always request PSS (Pre-Shipment Sample) before final payment.</p>
+                            </div>
+                        </div>
+                        <ul class="checklist">
+                            <li>Identify origin seasonality (e.g., Ethiopia harvest in Jan-Mar).</li>
+                            <li>Request Type Samples (Generic) vs Stock Lots (Specific).</li>
+                        </ul>
+                    `
+                },
+                2: {
+                    title: "Test & Grade",
+                    subtitle: "STEP 2: QUALITY CONTROL",
+                    description: "Distinguishing between Physical Defects (Commercial) and Sensory Attributes (Specialty).",
+                    content: `
+                        <div class="grid-2" style="margin-bottom:1rem; gap:1rem;">
+                            <div style="padding:1rem; border:1px solid #e5e7eb;">
+                                <strong>Physical Grading</strong>
+                                <p style="font-size:0.9rem; color:#666;">Counting stones, insect damage, broken beans. Crucial for commercial price negotiation.</p>
+                            </div>
+                            <div style="padding:1rem; border:1px solid #e5e7eb;">
+                                <strong>SCA Sensory Grading</strong>
+                                <p style="font-size:0.9rem; color:#666;">Scoring 0-100 based on Fragrance, Aroma, Acid, Body, Balance. 80+ is Specialty.</p>
+                            </div>
+                        </div>
+                    `
+                },
+                3: {
+                    title: "Place Orders & Repeat",
+                    subtitle: "STEP 3: LOGISTICS",
+                    description: "Logistics of placing the order, shipping, and establishing repeat business.",
+                    content: `
+                        <ul class="checklist">
+                            <li>Confirm Incoterms (Who pays for shipping?).</li>
+                            <li>Determine payment terms (Upfront vs Net 30).</li>
+                            <li>Plan for warehousing and release schedule.</li>
+                        </ul>
+                    `
+                }
+            };
+        }
+        
+        renderVaultDropdown();
+        // Load the first available module if any
+        const ids = Object.keys(vaultModules);
+        if (ids.length > 0) {
+            loadVaultModule(ids[0]);
+        }
+    }
+
+    function saveVaultModules() {
+        localStorage.setItem('vault_modules_data', JSON.stringify(vaultModules));
+        renderVaultDropdown(); // Re-render to update titles if changed
+    }
+
+    function renderVaultDropdown() {
+        const select = document.getElementById('vaultSelect');
+        if (!select) return;
+        select.innerHTML = '';
+        Object.keys(vaultModules).forEach(id => {
+            const m = vaultModules[id];
+            const option = document.createElement('option');
+            option.value = id;
+            option.text = m.title; // Simplified display
+            if (m.title.indexOf('.') === -1 && !isNaN(parseInt(id))) {
+                 // Try to keep the numbering format if valuable, or just use title
+                 // option.text = `0${id}. ${m.title}`; 
+            }
+            select.appendChild(option);
+        });
+        select.value = currentVaultId;
+    }
+
+    function addNewVaultModule() {
+        const title = prompt("Enter Step Title (e.g., '04. Marketing Strategy'):");
+        if (!title) return;
+        const subtitle = prompt("Enter Subtitle (e.g., 'STEP 4: LAUNCH'):") || "NEW STEP";
+        
+        const ids = Object.keys(vaultModules).map(k => parseInt(k));
+        const newId = ids.length > 0 ? Math.max(...ids) + 1 : 1;
+        
+        vaultModules[newId] = {
+            title: title,
+            subtitle: subtitle,
+            description: "Description of this new step...",
+            content: "<p>Start adding content here...</p>"
+        };
+        saveVaultModules();
+        loadVaultModule(newId);
+    }
+
+    function deleteVaultModule() {
+        if (!confirm("Are you sure you want to delete this step? This cannot be undone.")) return;
+        delete vaultModules[currentVaultId];
+        saveVaultModules();
+        
+        const ids = Object.keys(vaultModules);
+        if (ids.length > 0) {
+            loadVaultModule(ids[0]);
+        } else {
+            document.getElementById('vaultContentArea').innerHTML = '<div style="padding:2rem; text-align:center;">No steps available. Add a new one.</div>';
+            currentVaultId = null;
+        }
+    }
+
+    function loadVaultModule(idInput) {
+        const id = parseInt(idInput);
+        currentVaultId = id;
+        
+        // Update selection in dropdown
+        const select = document.getElementById('vaultSelect');
+        if (select) select.value = id;
+
+        const module = vaultModules[id];
+        const container = document.getElementById('vaultContentArea');
+        if (!container) {
+            console.error('vaultContentArea not found, retrying...');
+            setTimeout(() => loadVaultModule(id), 200);
+            return;
+        }
+        if (!module) {
+            console.error('Vault module not found for id:', id);
+            return;
+        }
+        
+        console.log('Loading vault module:', id);
+        
+        container.innerHTML = `
+            <div style="border:1px solid #e5e7eb; padding:2rem; background: #fff;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:1rem;">
+                    <h4 style="margin:0;" contenteditable="true" data-herbert-id="vault-module-${id}-title">${module.title}</h4>
+                    <span class="mono-text" style="font-family: 'JetBrains Mono', monospace; font-size:0.8rem; color:#FF3B30;">${module.subtitle}</span>
+                </div>
+                <p style="color:#666; font-size:1.1rem; border-bottom:1px solid #e5e7eb; padding-bottom:1rem;" contenteditable="true" data-herbert-id="vault-module-${id}-desc">${module.description}</p>
+                
+                <div style="margin-top:2rem;" contenteditable="true" data-herbert-id="vault-module-${id}-content">
+                    ${module.content}
+                </div>
+
+                <div style="margin-top:2rem;">
+                    <span class="section-label" style="color:#111111;">YOUR NOTES:</span>
+                    <textarea class="notes-area" id="vault-notes-${id}" data-herbert-id="vault-notes-${id}" placeholder="Type your learning notes, contact details, or observations here..."></textarea>
+                </div>
+            </div>
+        `;
+        
+        // Make inner content elements editable
+        setTimeout(() => {
+            const contentDiv = container.querySelector(`[data-herbert-id="vault-module-${id}-content"]`);
+            if (contentDiv) {
+                contentDiv.querySelectorAll('strong, p, li, div').forEach(el => {
+                    if (!el.hasAttribute('contenteditable')) {
+                        el.setAttribute('contenteditable', 'true');
+                    }
+                });
+                // Re-initialize editable content handlers
+                if (typeof initHerbertEditable === 'function') {
+                    setTimeout(initHerbertEditable, 50);
+                }
+            }
+        }, 100);
+        
+        // Load saved notes if any
+        const savedNotes = localStorage.getItem(`vault_notes_${id}`);
+        if (savedNotes) {
+            const textarea = document.getElementById(`vault-notes-${id}`);
+            if (textarea) textarea.value = savedNotes;
+        }
+        
+        // Save notes on input
+        const textarea = document.getElementById(`vault-notes-${id}`);
+        if (textarea) {
+            textarea.addEventListener('input', debounce(() => {
+                localStorage.setItem(`vault_notes_${id}`, textarea.value);
+            }, 500));
+        }
+
+        // Attach listeners to editable fields to auto-save to vaultModules
+        const titleEl = document.querySelector(`[data-herbert-id="vault-module-${id}-title"]`);
+        if(titleEl) titleEl.addEventListener('blur', () => { vaultModules[id].title = titleEl.innerText; saveVaultModules(); });
+        
+        const subEl = document.querySelector(`[data-herbert-id="vault-module-${id}-subtitle"]`);
+        if(subEl) subEl.addEventListener('blur', () => { vaultModules[id].subtitle = subEl.innerText; saveVaultModules(); });
+        
+        const descEl = document.querySelector(`[data-herbert-id="vault-module-${id}-desc"]`);
+        if(descEl) descEl.addEventListener('blur', () => { vaultModules[id].description = descEl.innerText; saveVaultModules(); });
+        
+        const contentAreaEl = document.querySelector(`[data-herbert-id="vault-module-${id}-content"]`);
+        if(contentAreaEl) contentAreaEl.addEventListener('blur', () => { vaultModules[id].content = contentAreaEl.innerHTML; saveVaultModules(); });
+    }
+
+</script>
+<!-- WhatsApp Floating Button -->
+<a href="https://wa.me/15550199" target="_blank" class="whatsapp-float" title="Chat with us on WhatsApp">
+    <i class="bi bi-whatsapp"></i>
+</a>
+<style>
+    .whatsapp-float {
+        position: fixed;
+        width: 60px;
+        height: 60px;
+        bottom: 20px;
+        left: 20px;
+        background-color: #25d366;
+        color: #FFF;
+        border-radius: 50px;
+        text-align: center;
+        font-size: 30px;
+        box-shadow: 2px 2px 3px #999;
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .whatsapp-float:hover {
+        background-color: #128C7E;
+        color: #FFF;
+        transform: scale(1.1);
+    }
+</style>
+</body>
+</html>
+
