@@ -1,0 +1,8 @@
+{
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "."
+  },
+  "install": "dotnet restore && dotnet build --no-restore",
+  "start": "dotnet run --urls http://0.0.0.0:5202"
+}
