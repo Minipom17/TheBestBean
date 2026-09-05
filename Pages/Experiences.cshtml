@@ -25,38 +25,35 @@
                 </h2>
                 <span class="text-[10px] font-bold uppercase tracking-widest text-v-gray mt-6 font-mono-jb block" data-entity-id="Experiences_UrbanLabs_Subtitle" data-entity-type="SiteContent" data-editable="Value">CUSCO, LIMA</span>
                 
-                <div class="mt-8 flex flex-col gap-6 w-[85%] pr-8">
-                    <!-- Location Filter -->
-                    <div class="flex flex-col gap-3">
-                        <span class="text-[9px] font-bold uppercase tracking-widest text-v-gray font-mono-jb">LOCATION</span>
-                        <div class="flex flex-wrap gap-4" id="urban-location-filters">
-                            <button class="filter-btn active border-b border-v-black dark:border-[#2A262C] pb-1 mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-black dark:text-[#D6D0C8] transition-colors bg-transparent" data-filter="all">All</button>
+                <div class="mt-6 md:mt-8 exp-filters font-mono-jb lg:w-[85%]" aria-label="Workshop filters">
+                    <div class="exp-filter-row">
+                        <span class="exp-filter-label">Location</span>
+                        <div class="exp-filter-scroll scrollbar-hide" id="urban-location-filters" role="group" aria-label="Filter by location">
+                            <button type="button" class="exp-chip filter-btn active" data-filter="all">All</button>
                             @foreach (var loc in Model.ExperiencesList.Where(e => e.Category == "Urban Workshops" && !string.IsNullOrEmpty(e.Location)).Select(e => e.Location.Trim().ToUpper()).Distinct())
                             {
-                                <button class="filter-btn mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-gray hover:text-v-black dark:text-[#D6D0C8] transition-colors bg-transparent border-none p-0 cursor-pointer" data-filter="@loc.ToLower()">@loc</button>
+                                <button type="button" class="exp-chip filter-btn" data-filter="@loc.ToLower()">@loc</button>
                             }
                         </div>
                     </div>
 
-                    <!-- Difficulty Filter -->
-                    <div class="flex flex-col gap-3">
-                        <span class="text-[9px] font-bold uppercase tracking-widest text-v-gray font-mono-jb">DIFFICULTY</span>
-                        <div class="flex flex-wrap gap-4" id="urban-difficulty-filters">
-                            <button class="filter-btn active border-b border-v-black dark:border-[#2A262C] pb-1 mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-black dark:text-[#D6D0C8] transition-colors bg-transparent" data-filter="all">All Levels</button>
-                            <button class="filter-btn mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-gray hover:text-v-black dark:text-[#D6D0C8] transition-colors bg-transparent border-none p-0 cursor-pointer" data-filter="beginner">Beginner</button>
-                            <button class="filter-btn mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-gray hover:text-v-black dark:text-[#D6D0C8] transition-colors bg-transparent border-none p-0 cursor-pointer" data-filter="intermediate">Intermediate</button>
-                            <button class="filter-btn mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-gray hover:text-v-black dark:text-[#D6D0C8] transition-colors bg-transparent border-none p-0 cursor-pointer" data-filter="advanced">Advanced</button>
+                    <div class="exp-filter-row">
+                        <span class="exp-filter-label">Level</span>
+                        <div class="exp-filter-scroll scrollbar-hide" id="urban-difficulty-filters" role="group" aria-label="Filter by difficulty">
+                            <button type="button" class="exp-level filter-btn active" data-filter="all"><span class="exp-level-dot all" aria-hidden="true"></span>All</button>
+                            <button type="button" class="exp-level filter-btn" data-filter="beginner"><span class="exp-level-dot beginner" aria-hidden="true"></span>Beginner</button>
+                            <button type="button" class="exp-level filter-btn" data-filter="intermediate"><span class="exp-level-dot intermediate" aria-hidden="true"></span>Intermediate</button>
+                            <button type="button" class="exp-level filter-btn" data-filter="advanced"><span class="exp-level-dot advanced" aria-hidden="true"></span>Advanced</button>
                         </div>
                     </div>
 
-                    <!-- Frequency Filter -->
-                    <div class="flex flex-col gap-3 mt-4">
-                        <span class="text-[9px] font-bold uppercase tracking-widest text-v-gray font-mono-jb">FREQUENCY</span>
-                        <div class="flex flex-wrap gap-4" id="urban-frequency-filters">
-                            <button class="filter-btn active border-b border-v-black dark:border-[#2A262C] pb-1 mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-black dark:text-[#D6D0C8] transition-colors bg-transparent" data-filter="all">All</button>
+                    <div class="exp-filter-row">
+                        <span class="exp-filter-label">When</span>
+                        <div class="exp-filter-scroll scrollbar-hide" id="urban-frequency-filters" role="group" aria-label="Filter by schedule">
+                            <button type="button" class="exp-chip filter-btn active" data-filter="all">All</button>
                             @foreach (var m in Model.ExperiencesList.Where(e => e.Category == "Urban Workshops" && !string.IsNullOrEmpty(e.Month)).Select(e => e.Month.Trim().ToUpper()).Distinct())
                             {
-                                <button class="filter-btn mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-gray hover:text-v-black dark:text-[#D6D0C8] transition-colors bg-transparent border-none p-0 cursor-pointer" data-filter="@m.ToLower()">@m</button>
+                                <button type="button" class="exp-chip filter-btn" data-filter="@m.ToLower()">@m</button>
                             }
                         </div>
                     </div>
@@ -229,38 +226,35 @@
                 </h2>
                 <a asp-page="/OriginMap" class="text-[12px] md:text-[10px] font-bold uppercase tracking-widest text-v-gray hover:text-v-red mt-6 font-mono-jb text-decoration-none cursor-pointer transition-colors" data-entity-id="Experiences_Expeditions_Subtitle" data-entity-type="SiteContent" data-editable="Value">@Html.Raw(Model.PageContent.GetValueOrDefault("Experiences_Expeditions_Subtitle", "SANTA TERESA · CAJAMARCA"))</a>
 
-                <div class="mt-8 flex flex-col w-full pr-8">
-                    <!-- Location Filter -->
-                    <div class="flex flex-col gap-3">
-                        <span class="text-[9px] font-bold uppercase tracking-widest text-v-gray font-mono-jb">LOCATION</span>
-                        <div class="flex flex-wrap gap-4" id="expedition-location-filters">
-                            <button class="filter-btn active border-b border-v-black dark:border-[#2A262C] pb-1 mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-black dark:text-[#D6D0C8] transition-colors bg-transparent" data-filter="all">All</button>
+                <div class="mt-6 md:mt-8 exp-filters font-mono-jb w-full" aria-label="Expedition filters">
+                    <div class="exp-filter-row">
+                        <span class="exp-filter-label">Location</span>
+                        <div class="exp-filter-scroll scrollbar-hide" id="expedition-location-filters" role="group" aria-label="Filter by location">
+                            <button type="button" class="exp-chip filter-btn active" data-filter="all">All</button>
                             @foreach (var loc in Model.ExperiencesList.Where(e => e.Category == "Expedition" && !string.IsNullOrEmpty(e.Location)).Select(e => e.Location.Trim().ToUpper()).Distinct())
                             {
-                                <button class="filter-btn mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-gray hover:text-v-black dark:text-[#D6D0C8] transition-colors bg-transparent border-none p-0 cursor-pointer" data-filter="@loc.ToLower()">@loc</button>
+                                <button type="button" class="exp-chip filter-btn" data-filter="@loc.ToLower()">@loc</button>
                             }
                         </div>
                     </div>
 
-                    <!-- Difficulty Filter -->
-                    <div class="flex flex-col gap-3 mt-4">
-                        <span class="text-[9px] font-bold uppercase tracking-widest text-v-gray font-mono-jb">DIFFICULTY</span>
-                        <div class="flex flex-wrap gap-4" id="expedition-difficulty-filters">
-                            <button class="filter-btn active border-b border-v-black dark:border-[#2A262C] pb-1 mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-black dark:text-[#D6D0C8] transition-colors bg-transparent" data-filter="all">All Levels</button>
-                            <button class="filter-btn mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-gray hover:text-v-black dark:text-[#D6D0C8] transition-colors bg-transparent border-none p-0 cursor-pointer" data-filter="beginner">Beginner</button>
-                            <button class="filter-btn mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-gray hover:text-v-black dark:text-[#D6D0C8] transition-colors bg-transparent border-none p-0 cursor-pointer" data-filter="intermediate">Intermediate</button>
-                            <button class="filter-btn mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-gray hover:text-v-black dark:text-[#D6D0C8] transition-colors bg-transparent border-none p-0 cursor-pointer" data-filter="advanced">Advanced</button>
+                    <div class="exp-filter-row">
+                        <span class="exp-filter-label">Level</span>
+                        <div class="exp-filter-scroll scrollbar-hide" id="expedition-difficulty-filters" role="group" aria-label="Filter by difficulty">
+                            <button type="button" class="exp-level filter-btn active" data-filter="all"><span class="exp-level-dot all" aria-hidden="true"></span>All</button>
+                            <button type="button" class="exp-level filter-btn" data-filter="beginner"><span class="exp-level-dot beginner" aria-hidden="true"></span>Beginner</button>
+                            <button type="button" class="exp-level filter-btn" data-filter="intermediate"><span class="exp-level-dot intermediate" aria-hidden="true"></span>Intermediate</button>
+                            <button type="button" class="exp-level filter-btn" data-filter="advanced"><span class="exp-level-dot advanced" aria-hidden="true"></span>Advanced</button>
                         </div>
                     </div>
 
-                    <!-- Frequency Filter -->
-                    <div class="flex flex-col gap-3 mt-4">
-                        <span class="text-[9px] font-bold uppercase tracking-widest text-v-gray font-mono-jb">FREQUENCY</span>
-                        <div class="flex flex-wrap gap-4" id="expedition-frequency-filters">
-                            <button class="filter-btn active border-b border-v-black dark:border-[#2A262C] pb-1 mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-black dark:text-[#D6D0C8] transition-colors bg-transparent" data-filter="all">All</button>
+                    <div class="exp-filter-row">
+                        <span class="exp-filter-label">When</span>
+                        <div class="exp-filter-scroll scrollbar-hide" id="expedition-frequency-filters" role="group" aria-label="Filter by schedule">
+                            <button type="button" class="exp-chip filter-btn active" data-filter="all">All</button>
                             @foreach (var m in Model.ExperiencesList.Where(e => e.Category == "Expedition" && !string.IsNullOrEmpty(e.Month)).Select(e => e.Month.Trim().ToUpper()).Distinct())
                             {
-                                <button class="filter-btn mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-gray hover:text-v-black dark:text-[#D6D0C8] transition-colors bg-transparent border-none p-0 cursor-pointer" data-filter="@m.ToLower()">@m</button>
+                                <button type="button" class="exp-chip filter-btn" data-filter="@m.ToLower()">@m</button>
                             }
                         </div>
                     </div>
@@ -357,12 +351,27 @@
 @section Scripts {
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Urban Workshops filtering logic
-            const urbanLocationFilters = document.querySelectorAll('#urban-location-filters .filter-btn');
-            const urbanDifficultyFilters = document.querySelectorAll('#urban-difficulty-filters .filter-btn');
-            const urbanFrequencyFilters = document.querySelectorAll('#urban-frequency-filters .filter-btn');
+            function setActiveFilter(buttons, activeBtn) {
+                buttons.forEach(b => b.classList.remove('active'));
+                activeBtn.classList.add('active');
+                if (typeof activeBtn.scrollIntoView === 'function') {
+                    activeBtn.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' });
+                }
+            }
+
+            function bindFilterGroup(selector, onChange) {
+                const buttons = document.querySelectorAll(selector);
+                buttons.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        setActiveFilter(buttons, btn);
+                        onChange(btn.getAttribute('data-filter'));
+                    });
+                });
+                return buttons;
+            }
+
+            // Urban Workshops filtering
             const labItems = document.querySelectorAll('.lab-item');
-            
             let currentUrbanLocation = 'all';
             let currentUrbanDifficulty = 'all';
             let currentUrbanFrequency = 'all';
@@ -372,140 +381,60 @@
                     const itemLocation = item.getAttribute('data-location') || 'all';
                     const itemDifficulty = item.getAttribute('data-difficulty');
                     const itemFrequency = item.getAttribute('data-frequency') || 'all';
-                    
+
                     const matchesLocation = currentUrbanLocation === 'all' || itemLocation === currentUrbanLocation;
                     const matchesDifficulty = currentUrbanDifficulty === 'all' || itemDifficulty === currentUrbanDifficulty;
                     const matchesFrequency = currentUrbanFrequency === 'all' || itemFrequency === currentUrbanFrequency;
 
-                    if (matchesLocation && matchesDifficulty && matchesFrequency) {
-                        item.style.display = 'flex';
-                    } else {
-                        item.style.display = 'none';
-                    }
+                    item.style.display = (matchesLocation && matchesDifficulty && matchesFrequency) ? 'flex' : 'none';
                 });
             }
 
-            urbanLocationFilters.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    // Update active state styling
-                    urbanLocationFilters.forEach(b => {
-                        b.classList.remove('active', 'border-b', 'border-v-black dark:border-[#2A262C]', 'pb-1', 'text-v-black dark:text-[#D6D0C8]');
-                        b.classList.add('text-v-gray', 'hover:text-v-black dark:text-[#D6D0C8]');
-                    });
-                    btn.classList.add('active', 'border-b', 'border-v-black dark:border-[#2A262C]', 'pb-1', 'text-v-black dark:text-[#D6D0C8]');
-                    btn.classList.remove('text-v-gray', 'hover:text-v-black dark:text-[#D6D0C8]');
-                    
-                    currentUrbanLocation = btn.getAttribute('data-filter');
-                    filterUrbanLabs();
-                });
+            bindFilterGroup('#urban-location-filters .filter-btn', value => {
+                currentUrbanLocation = value;
+                filterUrbanLabs();
+            });
+            bindFilterGroup('#urban-difficulty-filters .filter-btn', value => {
+                currentUrbanDifficulty = value;
+                filterUrbanLabs();
+            });
+            bindFilterGroup('#urban-frequency-filters .filter-btn', value => {
+                currentUrbanFrequency = value;
+                filterUrbanLabs();
             });
 
-            urbanDifficultyFilters.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    // Update active state styling
-                    urbanDifficultyFilters.forEach(b => {
-                        b.classList.remove('active', 'border-b', 'border-v-black dark:border-[#2A262C]', 'pb-1', 'text-v-black dark:text-[#D6D0C8]');
-                        b.classList.add('text-v-gray', 'hover:text-v-black dark:text-[#D6D0C8]');
-                    });
-                    btn.classList.add('active', 'border-b', 'border-v-black dark:border-[#2A262C]', 'pb-1', 'text-v-black dark:text-[#D6D0C8]');
-                    btn.classList.remove('text-v-gray', 'hover:text-v-black dark:text-[#D6D0C8]');
-                    
-                    currentUrbanDifficulty = btn.getAttribute('data-filter');
-                    filterUrbanLabs();
-                });
-            });
-
-            urbanFrequencyFilters.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    // Update active state styling
-                    urbanFrequencyFilters.forEach(b => {
-                        b.classList.remove('active', 'border-b', 'border-v-black dark:border-[#2A262C]', 'pb-1', 'text-v-black dark:text-[#D6D0C8]');
-                        b.classList.add('text-v-gray', 'hover:text-v-black dark:text-[#D6D0C8]');
-                    });
-                    btn.classList.add('active', 'border-b', 'border-v-black dark:border-[#2A262C]', 'pb-1', 'text-v-black dark:text-[#D6D0C8]');
-                    btn.classList.remove('text-v-gray', 'hover:text-v-black dark:text-[#D6D0C8]');
-                    
-                    currentUrbanFrequency = btn.getAttribute('data-filter');
-                    filterUrbanLabs();
-                });
-            });
-
-                        // Expeditions filtering logic
-            const expeditionLocationFilters = document.querySelectorAll('#expedition-location-filters .filter-btn');
-            const expeditionDifficultyFilters = document.querySelectorAll('#expedition-difficulty-filters .filter-btn');
-            const expeditionFrequencyFilters = document.querySelectorAll('#expedition-frequency-filters .filter-btn');
+            // Expeditions filtering
             const expeditionItems = document.querySelectorAll('.expedition-item');
-            
             let currentExpeditionLocation = 'all';
             let currentExpeditionDifficulty = 'all';
             let currentExpeditionFrequency = 'all';
 
             function filterExpeditions() {
                 expeditionItems.forEach(item => {
-                    const itemLocation = item.getAttribute('data-location') || 'all'; 
+                    const itemLocation = item.getAttribute('data-location') || 'all';
                     const itemDifficulty = item.getAttribute('data-difficulty');
                     const itemFrequency = item.getAttribute('data-frequency') || 'all';
-                    
+
                     const matchesLocation = currentExpeditionLocation === 'all' || itemLocation === currentExpeditionLocation;
                     const matchesDifficulty = currentExpeditionDifficulty === 'all' || itemDifficulty === currentExpeditionDifficulty;
                     const matchesFrequency = currentExpeditionFrequency === 'all' || itemFrequency === currentExpeditionFrequency;
 
-                    if (matchesLocation && matchesDifficulty && matchesFrequency) {
-                        item.style.display = 'flex';
-                    } else {
-                        item.style.display = 'none';
-                    }
+                    item.style.display = (matchesLocation && matchesDifficulty && matchesFrequency) ? 'flex' : 'none';
                 });
             }
 
-            if(expeditionLocationFilters.length > 0) {
-                expeditionLocationFilters.forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        expeditionLocationFilters.forEach(b => {
-                            b.classList.remove('active', 'border-b', 'border-v-black dark:border-[#2A262C]', 'pb-1', 'text-v-black dark:text-[#D6D0C8]');
-                            b.classList.add('text-v-gray', 'hover:text-v-black dark:text-[#D6D0C8]');
-                        });
-                        btn.classList.add('active', 'border-b', 'border-v-black dark:border-[#2A262C]', 'pb-1', 'text-v-black dark:text-[#D6D0C8]');
-                        btn.classList.remove('text-v-gray', 'hover:text-v-black dark:text-[#D6D0C8]');
-                        
-                        currentExpeditionLocation = btn.getAttribute('data-filter');
-                        filterExpeditions();
-                    });
-                });
-            }
-
-            if (expeditionDifficultyFilters.length > 0) {
-                expeditionDifficultyFilters.forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        // Update active state styling
-                        expeditionDifficultyFilters.forEach(b => {
-                            b.classList.remove('active', 'border-b', 'border-v-black dark:border-[#2A262C]', 'pb-1', 'text-v-black dark:text-[#D6D0C8]');
-                            b.classList.add('text-v-gray', 'hover:text-v-black dark:text-[#D6D0C8]');
-                        });
-                        btn.classList.add('active', 'border-b', 'border-v-black dark:border-[#2A262C]', 'pb-1', 'text-v-black dark:text-[#D6D0C8]');
-                        btn.classList.remove('text-v-gray', 'hover:text-v-black dark:text-[#D6D0C8]');
-                        
-                        currentExpeditionDifficulty = btn.getAttribute('data-filter');
-                        filterExpeditions();
-                    });
-                });
-            }
-
-            if (expeditionFrequencyFilters.length > 0) {
-                expeditionFrequencyFilters.forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        expeditionFrequencyFilters.forEach(b => {
-                            b.classList.remove('active', 'border-b', 'border-v-black dark:border-[#2A262C]', 'pb-1', 'text-v-black dark:text-[#D6D0C8]');
-                            b.classList.add('text-v-gray', 'hover:text-v-black dark:text-[#D6D0C8]');
-                        });
-                        btn.classList.add('active', 'border-b', 'border-v-black dark:border-[#2A262C]', 'pb-1', 'text-v-black dark:text-[#D6D0C8]');
-                        btn.classList.remove('text-v-gray', 'hover:text-v-black dark:text-[#D6D0C8]');
-                        
-                        currentExpeditionFrequency = btn.getAttribute('data-filter');
-                        filterExpeditions();
-                    });
-                });
-            }
+            bindFilterGroup('#expedition-location-filters .filter-btn', value => {
+                currentExpeditionLocation = value;
+                filterExpeditions();
+            });
+            bindFilterGroup('#expedition-difficulty-filters .filter-btn', value => {
+                currentExpeditionDifficulty = value;
+                filterExpeditions();
+            });
+            bindFilterGroup('#expedition-frequency-filters .filter-btn', value => {
+                currentExpeditionFrequency = value;
+                filterExpeditions();
+            });
         });
 
         // Global carousel function for featured workshops

@@ -205,6 +205,160 @@ html.dark .hover\:border-\[\#FF3B1F\]:hover {
     display: none;
 }
 
+/* Experiences page — compact horizontal filter chips */
+.exp-filters {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    width: 100%;
+}
+
+.exp-filter-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    min-width: 0;
+}
+
+.exp-filter-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #8a8680;
+}
+
+.exp-filter-scroll {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.4rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    margin-left: -1.5rem;
+    margin-right: -1.5rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-bottom: 2px;
+}
+
+@media (min-width: 1024px) {
+    .exp-filter-scroll {
+        margin-left: 0;
+        margin-right: 0;
+        padding-left: 0;
+        padding-right: 0;
+        flex-wrap: wrap;
+        overflow-x: visible;
+        scroll-snap-type: none;
+    }
+}
+
+.exp-chip {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    appearance: none;
+    border: 1px solid #d8d4ce;
+    background: transparent;
+    color: #8a8680;
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    padding: 0.4rem 0.7rem;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.exp-chip:hover {
+    color: #111;
+    border-color: #111;
+}
+
+.exp-chip.active {
+    background: #111;
+    border-color: #111;
+    color: #fff;
+}
+
+.exp-level {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    appearance: none;
+    border: 1px solid #d8d4ce;
+    background: transparent;
+    color: #8a8680;
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    padding: 0.4rem 0.65rem;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.exp-level:hover {
+    color: #111;
+    border-color: #111;
+}
+
+.exp-level.active {
+    background: #111;
+    border-color: #111;
+    color: #fff;
+}
+
+.exp-level-dot {
+    width: 0.4rem;
+    height: 0.4rem;
+    flex-shrink: 0;
+}
+
+.exp-level-dot.beginner { background: #E8C547; }
+.exp-level-dot.intermediate { background: #F05A28; }
+.exp-level-dot.advanced { background: #FF3B1F; }
+.exp-level-dot.all {
+    background: linear-gradient(135deg, #E8C547 0%, #F05A28 50%, #FF3B1F 100%);
+}
+
+.exp-level.active .exp-level-dot {
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35);
+}
+
+html.dark .exp-filter-label {
+    color: #8a8680;
+}
+
+html.dark .exp-chip,
+html.dark .exp-level {
+    border-color: #2A262C;
+    color: #8a8680;
+}
+
+html.dark .exp-chip:hover,
+html.dark .exp-level:hover {
+    color: #D6D0C8;
+    border-color: #D6D0C8;
+}
+
+html.dark .exp-chip.active,
+html.dark .exp-level.active {
+    background: #D6D0C8;
+    border-color: #D6D0C8;
+    color: #121014;
+}
+
+html.dark .exp-level.active .exp-level-dot {
+    box-shadow: 0 0 0 1px rgba(18, 16, 20, 0.35);
+}
+
 /* Home offerings: coffee → image → workshops on mobile; list | image on desktop */
 .offerings-split {
     display: grid;
