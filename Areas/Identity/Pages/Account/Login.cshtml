@@ -5,9 +5,9 @@
     ViewData["Title"] = "Admin Log In";
 }
 
-<div class="pt-32 pb-20 bg-white dark:bg-[#3C4A33] min-h-[70vh]">
+<div class="pt-32 pb-20 bg-white dark:bg-[#121014] min-h-[70vh]">
     <div class="container mx-auto px-4 md:px-8 flex justify-center">
-        <div class="w-full max-w-md bg-gray-50 dark:bg-[#2F3A28] p-8 md:p-12 border border-gray-100 dark:border-[#4F6044]">
+        <div class="w-full max-w-md bg-gray-50 dark:bg-[#1C191F] p-8 md:p-12 border border-gray-100 dark:border-[#2A262C]">
             <h1 class="text-3xl font-grotesk font-bold tracking-tighter mb-8 text-center uppercase">
                 @ViewData["Title"]
             </h1>
@@ -17,25 +17,25 @@
                 
                 <div>
                     <label asp-for="Input.Email" class="block text-xs font-mono-jb uppercase tracking-widest text-gray-500 dark:text-gray-300 mb-2">Email</label>
-                    <input asp-for="Input.Email" class="w-full bg-white dark:bg-[#1A2315] border border-gray-200 dark:border-[#4F6044] p-3 text-sm font-light focus:outline-none focus:border-black dark:focus:border-[#FAF3DD] transition-colors" autocomplete="username" aria-required="true" placeholder="admin@12sur.com" />
+                    <input asp-for="Input.Email" class="w-full bg-white dark:bg-[#1A2315] border border-gray-200 dark:border-[#2A262C] p-3 text-sm font-light focus:outline-none focus:border-black dark:focus:border-[#D6D0C8] transition-colors" autocomplete="username" aria-required="true" placeholder="admin@12sur.com" />
                     <span asp-validation-for="Input.Email" class="text-red-500 text-xs font-mono-jb mt-1 block"></span>
                 </div>
                 
                 <div>
                     <label asp-for="Input.Password" class="block text-xs font-mono-jb uppercase tracking-widest text-gray-500 dark:text-gray-300 mb-2">Password</label>
-                    <input asp-for="Input.Password" class="w-full bg-white dark:bg-[#1A2315] border border-gray-200 dark:border-[#4F6044] p-3 text-sm font-light focus:outline-none focus:border-black dark:focus:border-[#FAF3DD] transition-colors" autocomplete="current-password" aria-required="true" placeholder="••••••••" />
+                    <input asp-for="Input.Password" class="w-full bg-white dark:bg-[#1A2315] border border-gray-200 dark:border-[#2A262C] p-3 text-sm font-light focus:outline-none focus:border-black dark:focus:border-[#D6D0C8] transition-colors" autocomplete="current-password" aria-required="true" placeholder="••••••••" />
                     <span asp-validation-for="Input.Password" class="text-red-500 text-xs font-mono-jb mt-1 block"></span>
                 </div>
                 
                 <div class="flex items-center">
-                    <input class="w-4 h-4 text-black bg-white border-gray-300 rounded focus:ring-black dark:bg-[#1A2315] dark:border-[#4F6044] dark:focus:ring-[#FAF3DD]" type="checkbox" asp-for="Input.RememberMe" />
+                    <input class="w-4 h-4 text-black bg-white border-gray-300 rounded focus:ring-black dark:bg-[#1A2315] dark:border-[#2A262C] dark:focus:ring-[#D6D0C8]" type="checkbox" asp-for="Input.RememberMe" />
                     <label asp-for="Input.RememberMe" class="ml-2 text-xs font-mono-jb uppercase tracking-widest text-gray-500 dark:text-gray-300 cursor-pointer">
                         @Html.DisplayNameFor(m => m.Input.RememberMe)
                     </label>
                 </div>
                 
                 <div class="pt-4">
-                    <button id="login-submit" type="submit" class="w-full bg-black text-white dark:bg-[#FAF3DD] dark:text-black py-4 font-mono-jb font-bold text-xs uppercase tracking-widest hover:bg-v-red transition-colors border border-black dark:border-[#FAF3DD]">
+                    <button id="login-submit" type="submit" class="w-full bg-black text-white dark:bg-[#D6D0C8] dark:text-black py-4 font-mono-jb font-bold text-xs uppercase tracking-widest hover:bg-v-red transition-colors border border-black dark:border-[#D6D0C8]">
                         Log In
                     </button>
                 </div>

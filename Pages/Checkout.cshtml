@@ -4,10 +4,10 @@
     ViewData["Title"] = "Checkout";
 }
 
-<div class="pt-32 pb-20 bg-white dark:bg-[#3C4A33] min-h-screen">
+<div class="pt-32 pb-20 bg-white dark:bg-[#121014] min-h-screen">
     <div class="container mx-auto px-4 md:px-8">
         <!-- Back Link -->
-        <a asp-page="/Cart" class="flex items-center gap-2 font-mono-jb text-[10px] uppercase tracking-widest text-gray-400 hover:text-black dark:text-[#FAF3DD] mb-12 transition-colors text-decoration-none">
+        <a asp-page="/Cart" class="flex items-center gap-2 font-mono-jb text-[10px] uppercase tracking-widest text-gray-400 hover:text-black dark:text-[#D6D0C8] mb-12 transition-colors text-decoration-none">
             <i class="bi bi-arrow-left"></i> Back to Bag
         </a>
 
@@ -25,7 +25,7 @@
                         <div class="space-y-4">
                             <div>
                                 <label asp-for="Email" class="block text-[10px] font-bold uppercase tracking-widest mb-2">Email Address</label>
-                                <input asp-for="Email" type="email" class="w-full bg-white dark:bg-[#3C4A33] border-2 border-gray-100 p-3 focus:outline-none focus:border-black transition-colors font-light" placeholder="jane@example.com" required />
+                                <input asp-for="Email" type="email" class="w-full bg-white dark:bg-[#121014] border-2 border-gray-100 p-3 focus:outline-none focus:border-black transition-colors font-light" placeholder="jane@example.com" required />
                                 <span asp-validation-for="Email" class="text-xs text-red-500 mt-1"></span>
                             </div>
                             <div class="flex items-center gap-2">
@@ -42,35 +42,35 @@
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
                                     <label asp-for="FirstName" class="block text-[10px] font-bold uppercase tracking-widest mb-2">First Name</label>
-                                    <input asp-for="FirstName" class="w-full bg-white dark:bg-[#3C4A33] border-2 border-gray-100 p-3 focus:outline-none focus:border-black transition-colors font-light" required />
+                                    <input asp-for="FirstName" class="w-full bg-white dark:bg-[#121014] border-2 border-gray-100 p-3 focus:outline-none focus:border-black transition-colors font-light" required />
                                 </div>
                                 <div>
                                     <label asp-for="LastName" class="block text-[10px] font-bold uppercase tracking-widest mb-2">Last Name</label>
-                                    <input asp-for="LastName" class="w-full bg-white dark:bg-[#3C4A33] border-2 border-gray-100 p-3 focus:outline-none focus:border-black transition-colors font-light" required />
+                                    <input asp-for="LastName" class="w-full bg-white dark:bg-[#121014] border-2 border-gray-100 p-3 focus:outline-none focus:border-black transition-colors font-light" required />
                                 </div>
                             </div>
                             <input type="hidden" asp-for="FullName" id="FullName" />
 
                             <div>
                                 <label asp-for="Address" class="block text-[10px] font-bold uppercase tracking-widest mb-2">Street Address</label>
-                                <input asp-for="Address" class="w-full bg-white dark:bg-[#3C4A33] border-2 border-gray-100 p-3 focus:outline-none focus:border-black transition-colors font-light" placeholder="123 Coffee Lane" required />
+                                <input asp-for="Address" class="w-full bg-white dark:bg-[#121014] border-2 border-gray-100 p-3 focus:outline-none focus:border-black transition-colors font-light" placeholder="123 Coffee Lane" required />
                                 <span asp-validation-for="Address" class="text-xs text-red-500 mt-1"></span>
                             </div>
 
                             <div class="grid grid-cols-3 gap-4">
                                 <div class="col-span-1">
                                     <label asp-for="ZipCode" class="block text-[10px] font-bold uppercase tracking-widest mb-2">Postal Code</label>
-                                    <input asp-for="ZipCode" class="w-full bg-white dark:bg-[#3C4A33] border-2 border-gray-100 p-3 focus:outline-none focus:border-black transition-colors font-light" required />
+                                    <input asp-for="ZipCode" class="w-full bg-white dark:bg-[#121014] border-2 border-gray-100 p-3 focus:outline-none focus:border-black transition-colors font-light" required />
                                 </div>
                                 <div class="col-span-2">
                                     <label asp-for="City" class="block text-[10px] font-bold uppercase tracking-widest mb-2">City</label>
-                                    <input asp-for="City" class="w-full bg-white dark:bg-[#3C4A33] border-2 border-gray-100 p-3 focus:outline-none focus:border-black transition-colors font-light" required />
+                                    <input asp-for="City" class="w-full bg-white dark:bg-[#121014] border-2 border-gray-100 p-3 focus:outline-none focus:border-black transition-colors font-light" required />
                                 </div>
                             </div>
 
                              <div>
                                 <label asp-for="Phone" class="block text-[10px] font-bold uppercase tracking-widest mb-2">Phone</label>
-                                <input asp-for="Phone" type="tel" class="w-full bg-white dark:bg-[#3C4A33] border-2 border-gray-100 p-3 focus:outline-none focus:border-black transition-colors font-light" required />
+                                <input asp-for="Phone" type="tel" class="w-full bg-white dark:bg-[#121014] border-2 border-gray-100 p-3 focus:outline-none focus:border-black transition-colors font-light" required />
                             </div>
                         </div>
                     </section>
@@ -78,20 +78,50 @@
                     <!-- Payment -->
                     <section>
                         <h2 class="text-lg font-mono-jb font-bold uppercase tracking-widest mb-6 border-b border-black pb-2">03. Payment</h2>
-                        <div class="p-8 border-2 border-dashed border-gray-100 bg-gray-50 flex flex-col items-center justify-center text-center">
-                            <i class="bi bi-lock text-gray-300 fs-2 mb-4"></i>
-                            <p class="text-xs font-mono-jb uppercase tracking-widest text-gray-500 mb-2">Secure checkout with</p>
-                            <div class="flex gap-4 text-gray-400 fs-3">
-                                <i class="bi bi-credit-card"></i>
-                                <i class="bi bi-paypal"></i>
-                                <i class="bi bi-google"></i>
-                            </div>
-                            <p class="text-[10px] text-gray-400 mt-6 font-light">Payment processing will be handled on the next step.</p>
+                        <p class="text-sm text-gray-600 mb-6 leading-relaxed">
+                            Locals in Perú: pay with <strong>Yape</strong> in soles. Card and PayPal are in USD and pick up bank FX.
+                        </p>
+                        <div class="grid grid-cols-1 gap-3" id="payment-method-cards">
+                            <label class="yape-pay-option yape-pay-option--recommended">
+                                <input type="radio" name="PaymentMethod" value="Yape" checked class="sr-only peer" />
+                                <div class="yape-pay-option__card peer-checked:ring-2">
+                                    <div class="flex items-start justify-between gap-4">
+                                        <div>
+                                            <span class="yape-price__badge">Yape</span>
+                                            <h3 class="font-grotesk font-bold text-lg mt-2 mb-1">Yape / Plin · Perú</h3>
+                                            <p class="text-xs text-gray-500 font-light m-0">Pay in soles after you place the order. We’ll send the QR to WhatsApp.</p>
+                                        </div>
+                                        <div class="text-right shrink-0">
+                                            <div class="text-2xl font-grotesk font-bold">S/ @LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</div>
+                                            <div class="text-[10px] font-mono-jb uppercase tracking-widest text-[#722EA8] font-bold mt-1">Recommended</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </label>
+                            <label class="yape-pay-option">
+                                <input type="radio" name="PaymentMethod" value="Card" class="sr-only peer" />
+                                <div class="yape-pay-option__card peer-checked:ring-2">
+                                    <div class="flex items-start justify-between gap-4">
+                                        <div>
+                                            <h3 class="font-grotesk font-bold text-lg mt-0 mb-1">Card / PayPal</h3>
+                                            <p class="text-xs text-gray-500 font-light m-0">International USD. Bank FX and card fees make this the higher soles price.</p>
+                                        </div>
+                                        <div class="text-right shrink-0">
+                                            <div class="text-2xl font-grotesk font-bold">$@Model.CartTotal.ToString("F2")</div>
+                                            <div class="text-[10px] font-mono-jb uppercase tracking-widest text-gray-400 mt-1">≈ S/ @LocalPricing.CardSoles(Model.CartTotal).ToString("0")</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </label>
                         </div>
+                        @if (LocalPricing.YapeSavings(Model.CartTotal) > 0)
+                        {
+                            <p class="yape-price__save mt-4">Yape saves you about S/ @LocalPricing.YapeSavings(Model.CartTotal).ToString("0") versus paying by card.</p>
+                        }
                     </section>
 
-                    <button type="submit" class="w-full bg-black text-white py-5 font-mono-jb font-bold text-xs uppercase tracking-widest hover:bg-v-red transition-colors border border-black">
-                        Complete Order — S/ @((Model.CartTotal * 3.8m).ToString("F2"))
+                    <button type="submit" id="checkout-submit" class="w-full bg-black text-white py-5 font-mono-jb font-bold text-xs uppercase tracking-widest hover:bg-v-red transition-colors border border-black">
+                        Complete order — Yape S/ @LocalPricing.YapeSoles(Model.CartTotal).ToString("0")
                     </button>
                 </form>
             </div>
@@ -105,7 +135,7 @@
                         @foreach (var item in Model.CartItems)
                         {
                             <div class="flex gap-4 items-center">
-                                <div class="w-16 h-20 bg-white dark:bg-[#3C4A33] border border-gray-200 relative shrink-0">
+                                <div class="w-16 h-20 bg-white dark:bg-[#121014] border border-gray-200 relative shrink-0">
                                     <img src="@item.ImageUrl" alt="@item.ProductName" class="w-full h-full object-cover" onerror="this.src='https://picsum.photos/200/300?random=@item.ProductId'">
                                     <span class="absolute -top-2 -right-2 bg-black text-white w-5 h-5 flex items-center justify-center rounded-full text-[10px] font-bold font-mono-jb">
                                         @item.Quantity
@@ -115,8 +145,9 @@
                                     <h4 class="font-grotesk font-bold text-sm">@item.ProductName</h4>
                                     <p class="text-[10px] text-gray-400 font-mono-jb uppercase tracking-widest">@item.ProductType</p>
                                 </div>
-                                <div class="font-mono-jb text-sm font-bold">
-                                    S/ @((item.Subtotal * 3.8m).ToString("F2"))
+                                <div class="font-mono-jb text-sm font-bold text-right">
+                                    <div>S/ @LocalPricing.YapeSoles(item.Subtotal).ToString("0")</div>
+                                    <div class="text-[10px] text-gray-400 font-normal">$@item.Subtotal.ToString("F2")</div>
                                 </div>
                             </div>
                         }
@@ -124,17 +155,22 @@
 
                     <div class="space-y-4 border-t border-gray-200 pt-8 text-sm">
                         <div class="flex justify-between">
-                            <span class="font-light text-gray-500">Subtotal</span>
-                            <span class="font-mono-jb font-bold">S/ @((Model.CartTotal * 3.8m).ToString("F2"))</span>
+                            <span class="font-light text-gray-500">Yape / Plin</span>
+                            <span class="font-mono-jb font-bold">S/ @LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="font-light text-gray-500">Card / PayPal</span>
+                            <span class="font-mono-jb font-bold">$@Model.CartTotal.ToString("F2") <span class="text-gray-400 font-normal">≈ S/ @LocalPricing.CardSoles(Model.CartTotal).ToString("0")</span></span>
                         </div>
                         <div class="flex justify-between">
                             <span class="font-light text-gray-500">Shipping</span>
                             <span class="text-green-600 font-mono-jb font-bold">FREE</span>
                         </div>
                         <div class="flex justify-between border-t border-black pt-4 mt-6">
-                            <span class="text-xl font-grotesk font-bold">Total</span>
-                            <span class="text-2xl font-grotesk font-bold">S/ @((Model.CartTotal * 3.8m).ToString("F2"))</span>
+                            <span class="text-xl font-grotesk font-bold">Yape total</span>
+                            <span class="text-2xl font-grotesk font-bold">S/ @LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</span>
                         </div>
+                        <p class="text-[10px] text-gray-400 font-mono-jb uppercase tracking-widest m-0">Taxes included · Yape is the local soles price</p>
                     </div>
                 </div>
             </div>
@@ -171,6 +207,18 @@
 
             firstName?.addEventListener('input', updateFullName);
             lastName?.addEventListener('input', updateFullName);
+
+            const submit = document.getElementById('checkout-submit');
+            const yapeTotal = 'S/ @LocalPricing.YapeSoles(Model.CartTotal).ToString("0")';
+            const cardTotal = '$@Model.CartTotal.ToString("F2")';
+            document.querySelectorAll('input[name="PaymentMethod"]').forEach(function (input) {
+                input.addEventListener('change', function () {
+                    if (!submit) return;
+                    submit.textContent = this.value === 'Yape'
+                        ? 'Complete order — Yape ' + yapeTotal
+                        : 'Complete order — Card ' + cardTotal;
+                });
+            });
         });
     </script>
 }

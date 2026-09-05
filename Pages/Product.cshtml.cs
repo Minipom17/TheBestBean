@@ -32,6 +32,7 @@ namespace TheBestBean.Pages
             int.TryParse(id, out int productId);
             var bean = await _context.CoffeeBean
                 .Include(b => b.OriginCountry)
+                .Include(b => b.CoffeeRegion)
                 .FirstOrDefaultAsync(b => b.Id == productId || b.Name == id || b.Name.Replace(" ", "-") == id);
 
             PageContent = await _context.SiteContent
@@ -44,7 +45,7 @@ namespace TheBestBean.Pages
                 {
                     Id = bean.Id,
                     Name = bean.Name,
-                    Origin = bean.OriginCountry?.Name ?? "Peru",
+                    Origin = bean.CoffeeRegion?.Name ?? bean.OriginCountry?.Name ?? "Peru",
                     Type = "Bean",
                     Price = bean.BasePriceUSD,
                     BasePriceUSD = bean.BasePriceUSD,
@@ -63,7 +64,8 @@ namespace TheBestBean.Pages
                     Variety = bean.Variety,
                     Altitude = bean.Altitude,
                     Producer = bean.Producer ?? string.Empty,
-                    ScaScore = bean.ScaScore
+                    ScaScore = bean.ScaScore,
+                    GalleryImages = AngelCatarataGallery(bean)
                 };
             }
             else 
@@ -82,6 +84,17 @@ namespace TheBestBean.Pages
             ViewData["MetaDescription"] = !string.IsNullOrEmpty(Product.FlavorProfile) ? $"Experience {Product.Name}. {Product.FlavorProfile}" : Product.Description;
             ViewData["MetaImage"] = $"https://purplebean.coffee{Product.ImageUrl}";
             ViewData["OgType"] = "product";
+            Ga4Ecommerce.SetPageEvent(ViewData, "view_item", Ga4Ecommerce.Payload(new[]
+            {
+                new CartItem
+                {
+                    ProductId = Product.Id,
+                    ProductName = Product.Name,
+                    ProductType = Product.Type,
+                    Price = Product.BasePriceUSD > 0 ? Product.BasePriceUSD : Product.Price,
+                    Quantity = 1
+                }
+            }));
 
             return Page();
         }
@@ -114,9 +127,31 @@ namespace TheBestBean.Pages
             };
 
             _cartService.AddToCart(HttpContext.Session, cartItem);
+            Ga4Ecommerce.QueueAddToCart(TempData, cartItem);
 
             TempData["CartMessage"] = $"{quantity}x {finalName} added to cart!";
             return RedirectToPage("/Product", new { id = productId });
+        }
+
+        private static List<string> AngelCatarataGallery(CoffeeBean bean)
+        {
+            var isAngel = (bean.Name ?? string.Empty).Contains("Catarata", StringComparison.OrdinalIgnoreCase)
+                || (bean.Producer ?? string.Empty).Contains("Manosalva", StringComparison.OrdinalIgnoreCase)
+                || (bean.Producer ?? string.Empty).Contains("Ángel", StringComparison.OrdinalIgnoreCase);
+            if (!isAngel)
+            {
+                return new List<string>();
+            }
+
+            return
+            [
+                "/Media/producers/angel-cajamarca/farm-view.jpg?v=4",
+                "/Media/producers/angel-cajamarca/cherries-cluster.jpg?v=4",
+                "/Media/producers/angel-cajamarca/harvest-sack.jpg?v=4",
+                "/Media/producers/angel-cajamarca/wooden-bin.jpg?v=4",
+                "/Media/producers/angel-cajamarca/depulper.jpg?v=4",
+                "/Media/producers/angel-cajamarca/cherries-branch.jpg?v=4"
+            ];
         }
 
         private List<Product> GetMockProducts()

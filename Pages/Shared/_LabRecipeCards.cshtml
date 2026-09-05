@@ -1,0 +1,51 @@
+<section id="lab-recipe-cards" class="lab-recipe-section mt-24 mb-8" aria-labelledby="lab-recipes-heading">
+    <div class="flex items-center gap-4 mb-2 min-w-0 no-print">
+        <h2 id="lab-recipes-heading" class="text-3xl font-bold tracking-tight text-v-black dark:text-[#D6D0C8] m-0">GUEST RECIPE CARDS</h2>
+        <div class="h-px bg-gray-200 dark:bg-[#2A262C] flex-grow"></div>
+    </div>
+    <p class="text-v-gray text-sm max-w-2xl mb-6 leading-relaxed no-print">
+        Take-home brew cards from the Cusco Coffee Lab — V60 pour-over and inverted AeroPress. Open the dropdown to view them on the page, or print / save as PDF.
+    </p>
+
+    <div class="lab-recipe-toolbar no-print">
+        <button type="button" class="lab-recipe-print-btn" onclick="printLabRecipes()">
+            Print cards
+        </button>
+        <a class="lab-recipe-pdf-link" href="~/docs/cusco-lab-recipe-cards.pdf" target="_blank" rel="noopener">
+            Open PDF
+        </a>
+    </div>
+
+    <details id="lab-recipe-dropdown" class="lab-recipe-dropdown">
+        <summary class="lab-recipe-dropdown__summary no-print">
+            <span class="lab-recipe-dropdown__title">V60 + AeroPress cards</span>
+            <span class="lab-recipe-dropdown__hint">SYS.CUSCO · PB-W1-RECIPES</span>
+            <span class="lab-recipe-dropdown__chevron" aria-hidden="true"></span>
+        </summary>
+
+        <div class="lab-recipe-sheet">
+            <figure class="lab-recipe-page">
+                <img src="~/docs/recipe-card-v60.png" alt="Purple Bean Labs V60 pour-over recipe card: 15g dose, 93°C, 2:30 drawdown, grind 600–800 µm." />
+                <figcaption class="no-print">V60 pour-over · 15g · 93°C · 2:30</figcaption>
+            </figure>
+            <figure class="lab-recipe-page">
+                <img src="~/docs/recipe-card-aeropress.png" alt="Purple Bean Labs inverted AeroPress recipe card: 18g dose, 90°C, 90 seconds, grind 500–700 µm." />
+                <figcaption class="no-print">AeroPress inverted · 18g · 90°C · 90s</figcaption>
+            </figure>
+        </div>
+    </details>
+</section>
+
+<script>
+    function printLabRecipes() {
+        var dropdown = document.getElementById('lab-recipe-dropdown');
+        if (dropdown) dropdown.open = true;
+        document.documentElement.classList.add('print-lab-recipes');
+        var clear = function () {
+            document.documentElement.classList.remove('print-lab-recipes');
+            window.removeEventListener('afterprint', clear);
+        };
+        window.addEventListener('afterprint', clear);
+        window.print();
+    }
+</script>

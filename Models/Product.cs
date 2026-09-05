@@ -24,6 +24,7 @@ namespace TheBestBean.Models
         public string Altitude { get; set; } = string.Empty;
         public string Producer { get; set; } = string.Empty;
         public decimal ScaScore { get; set; }
+        public List<string> GalleryImages { get; set; } = new();
         public string GetStarRating()
         {
             var stars = "";

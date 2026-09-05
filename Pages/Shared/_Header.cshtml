@@ -9,19 +9,19 @@
 }
 
 <!-- TOP STICKY BAR -->
-<header class="px-6 md:px-12 py-3 flex flex-col lg:flex-row justify-between items-start lg:items-center text-[10px] font-bold uppercase tracking-widest rule-thin sticky top-0 bg-v-white dark:bg-[#3C4A33] lg:bg-white/95 lg:dark:bg-[#3C4A33]/95 lg:backdrop-blur-md z-50 text-v-black dark:text-[#FAF3DD] font-mono-jb relative lg:static">
+<header class="px-6 md:px-12 py-3 flex flex-col lg:flex-row justify-between items-start lg:items-center text-[10px] font-bold uppercase tracking-widest rule-thin sticky top-0 bg-v-white dark:bg-night lg:bg-white/95 lg:dark:bg-night/95 lg:backdrop-blur-md z-50 text-v-black dark:text-cream font-mono-jb relative lg:static">
     
     <!-- Left Side: Brand -->
     <div class="flex flex-row justify-between items-center w-full lg:w-auto">
         <div class="flex items-center gap-6 text-v-gray">
-            <a asp-page="/Index" class="flex flex-row items-center text-decoration-none group mr-2">
-                <img src="~/images/logoo.svg?v=3" alt="Purple Bean Coffee logo" class="h-11 md:h-14 group-hover:opacity-80 transition-opacity" />
-            </a>
+            <div class="flex items-center gap-1">
+            <partial name="_BrandLockup" />
+            </div>
         </div>
         
         <!-- Mobile Right-Side Toggle -->
         <div class="flex lg:hidden items-center gap-4">
-            <button id="mobile-nav-toggle" aria-label="Open Mobile Menu" class="p-2 text-v-black dark:text-[#FAF3DD] focus:outline-none bg-transparent border-0 cursor-pointer">
+            <button id="mobile-nav-toggle" aria-label="Open Mobile Menu" class="p-2 text-v-black dark:text-cream focus:outline-none bg-transparent border-0 cursor-pointer">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <line x1="3" y1="12" x2="21" y2="12"></line>
                     <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -33,39 +33,37 @@
 
     <!-- Right Side: Links (Desktop) -->
     <nav class="hidden lg:flex flex-row items-center gap-8 text-v-gray">
-        <a asp-page="/GreenBeans" class="hover:text-v-black dark:text-[#FAF3DD] transition-colors text-decoration-none whitespace-nowrap">@SharedLocalizer["Coffee"]</a>
-        <a asp-page="/BrewMethods" class="hover:text-v-black dark:text-[#FAF3DD] transition-colors text-decoration-none whitespace-nowrap">@SharedLocalizer["BrewGuides"]</a>
-        <a asp-page="/Experiences" class="hover:text-v-black dark:text-[#FAF3DD] transition-colors text-decoration-none whitespace-nowrap">@SharedLocalizer["Experiences"]</a>
-        <a asp-page="/Wholesale" class="hover:text-v-black dark:text-[#FAF3DD] transition-colors text-decoration-none whitespace-nowrap">@SharedLocalizer["Wholesale"]</a>
-        <a asp-page="/Blog" class="hover:text-v-black dark:text-[#FAF3DD] transition-colors text-decoration-none whitespace-nowrap">@SharedLocalizer["Blog"]</a>
+        <a asp-page="/GreenBeans" class="hover:text-v-black dark:text-cream transition-colors text-decoration-none whitespace-nowrap">@SharedLocalizer["Coffee"]</a>
+        <a asp-page="/BrewMethods" class="hover:text-v-black dark:text-cream transition-colors text-decoration-none whitespace-nowrap">@SharedLocalizer["BrewGuides"]</a>
+        <a asp-page="/Experiences" class="hover:text-v-black dark:text-cream transition-colors text-decoration-none whitespace-nowrap">@SharedLocalizer["Experiences"]</a>
+        <a asp-page="/Wholesale" class="hover:text-v-black dark:text-cream transition-colors text-decoration-none whitespace-nowrap">@SharedLocalizer["Wholesale"]</a>
+        <a asp-page="/Blog" class="hover:text-v-black dark:text-cream transition-colors text-decoration-none whitespace-nowrap">@SharedLocalizer["Blog"]</a>
         
         <!-- Utilities -->
-        <a asp-page="/Admin/Index" class="hover:text-v-black dark:text-[#FAF3DD] transition-colors text-decoration-none" title="Admin Login">
+        <a asp-page="/Admin/Index" class="hover:text-v-black dark:text-cream transition-colors text-decoration-none" title="Admin Login">
             <i class="bi bi-person-fill text-base"></i>
         </a>
-        <button onclick="handleThemeToggle()" aria-label="Toggle Theme" class="hover:text-v-black dark:text-[#FAF3DD] transition-colors cursor-pointer border-0 bg-transparent p-0 flex items-center" title="Toggle Theme">
+        <button onclick="handleThemeToggle()" aria-label="Toggle Theme" class="hover:text-v-black dark:text-cream transition-colors cursor-pointer border-0 bg-transparent p-0 flex items-center" title="Toggle Theme">
             <i class="bi bi-moon-fill hidden dark:inline text-base"></i>
             <i class="bi bi-sun-fill inline dark:hidden text-base"></i>
         </button>
         
         <form asp-controller="Culture" asp-action="SetCulture" asp-route-returnUrl="@returnUrl" method="post" class="m-0 p-0 flex items-center">
             <input type="hidden" name="culture" value="@toggleCulture" />
-            <button type="submit" class="hover:text-v-black dark:text-[#FAF3DD] transition-colors cursor-pointer border-0 bg-transparent p-0 flex items-center font-bold font-mono-jb text-[10px]" title="Switch Language">
+            <button type="submit" class="hover:text-v-black dark:text-cream transition-colors cursor-pointer border-0 bg-transparent p-0 flex items-center font-bold font-mono-jb text-[10px]" title="Switch Language">
                 <i class="bi bi-globe text-base mr-1"></i> @toggleText
             </button>
         </form>
 
-        <a asp-page="/Cart" class="hover:text-v-red transition-colors text-decoration-none font-bold text-v-black dark:text-[#FAF3DD] whitespace-nowrap">[ @SharedLocalizer["Cart"]: @Model ]</a>
+        <a asp-page="/Cart" class="hover:text-v-red transition-colors text-decoration-none font-bold text-v-black dark:text-cream whitespace-nowrap">[ @SharedLocalizer["Cart"]: @Model ]</a>
     </nav>
 </header>
 
 <!-- FULL SCREEN MOBILE MENU -->
-<div id="mobile-nav-menu" class="fixed inset-0 z-[200] bg-[#111111] text-[#A0A0A0] hidden flex-col p-6 overflow-y-auto">
+<div id="mobile-nav-menu" class="fixed inset-0 z-[200] bg-night text-mist hidden flex-col p-6 overflow-y-auto">
     <!-- Mobile Menu Header -->
     <div class="flex justify-between items-center mb-16 pt-2">
-        <a asp-page="/Index" class="flex flex-row items-center text-decoration-none">
-            <img src="~/images/logoo.svg?v=3" alt="Purple Bean Coffee logo" class="h-14" />
-        </a>
+        <partial name="_BrandLockup" />
         <button id="mobile-nav-close" aria-label="Close Mobile Menu" class="text-gray-400 hover:text-white focus:outline-none p-2 bg-transparent border-0 cursor-pointer">
             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -75,20 +73,20 @@
     
     <!-- Mobile Links -->
     <nav class="flex flex-col gap-6 text-xl font-bold font-sans tracking-widest uppercase mb-12">
-        <a asp-page="/GreenBeans" class="text-[#D0D0D0] hover:text-white transition-colors text-decoration-none block">@SharedLocalizer["Coffee"]</a>
-        <a asp-page="/BrewMethods" class="text-[#D0D0D0] hover:text-white transition-colors text-decoration-none block">@SharedLocalizer["BrewGuides"]</a>
-        <a asp-page="/Experiences" class="text-[#D0D0D0] hover:text-white transition-colors text-decoration-none block">@SharedLocalizer["Experiences"]</a>
-        <a asp-page="/Wholesale" class="text-[#D0D0D0] hover:text-white transition-colors text-decoration-none block">@SharedLocalizer["Wholesale"]</a>
-        <a asp-page="/Blog" class="text-[#D0D0D0] hover:text-white transition-colors text-decoration-none block">@SharedLocalizer["Blog"]</a>
-        <a asp-page="/OS" class="text-[#D0D0D0] hover:text-white transition-colors text-decoration-none block">OS</a>
+        <a asp-page="/GreenBeans" class="text-cream hover:text-sun transition-colors text-decoration-none block">@SharedLocalizer["Coffee"]</a>
+        <a asp-page="/BrewMethods" class="text-cream hover:text-sun transition-colors text-decoration-none block">@SharedLocalizer["BrewGuides"]</a>
+        <a asp-page="/Experiences" class="text-cream hover:text-sun transition-colors text-decoration-none block">@SharedLocalizer["Experiences"]</a>
+        <a asp-page="/Wholesale" class="text-cream hover:text-sun transition-colors text-decoration-none block">@SharedLocalizer["Wholesale"]</a>
+        <a asp-page="/Blog" class="text-cream hover:text-sun transition-colors text-decoration-none block">@SharedLocalizer["Blog"]</a>
+        <a asp-page="/OS" class="text-cream hover:text-sun transition-colors text-decoration-none block">OS</a>
     </nav>
     
     <!-- Mobile Bottom Links -->
     <div class="mt-auto flex flex-col gap-4 text-sm font-bold font-sans tracking-widest uppercase pb-8">
-        <a asp-page="/Admin/Index" class="text-white hover:text-gray-300 text-decoration-none block">LOG IN</a>
-        <a asp-page="/Cart" class="text-white hover:text-gray-300 text-decoration-none block">@SharedLocalizer["Cart"] (@Model)</a>
+        <a asp-page="/Admin/Index" class="text-cream hover:text-sun text-decoration-none block">LOG IN</a>
+        <a asp-page="/Cart" class="text-cream hover:text-sun text-decoration-none block">@SharedLocalizer["Cart"] (@Model)</a>
         
-        <button onclick="handleThemeToggle()" aria-label="Toggle Theme" class="text-left text-[#A0A0A0] hover:text-white flex items-center gap-3 mt-4 bg-transparent border-0 p-0 font-bold uppercase cursor-pointer">
+        <button onclick="handleThemeToggle()" aria-label="Toggle Theme" class="text-left text-mist hover:text-sun flex items-center gap-3 mt-4 bg-transparent border-0 p-0 font-bold uppercase cursor-pointer">
             <i class="bi bi-circle-half text-lg"></i>
             <span class="dark:hidden">DARK MODE</span>
             <span class="hidden dark:inline">LIGHT MODE</span>
@@ -96,7 +94,7 @@
         
         <form asp-controller="Culture" asp-action="SetCulture" asp-route-returnUrl="@returnUrl" method="post" class="m-0 p-0 w-full mt-4">
             <input type="hidden" name="culture" value="@toggleCulture" />
-            <button type="submit" class="text-left text-[#A0A0A0] hover:text-white flex items-center gap-3 bg-transparent border-0 p-0 font-bold uppercase cursor-pointer w-full" title="Switch Language">
+            <button type="submit" class="text-left text-mist hover:text-sun flex items-center gap-3 bg-transparent border-0 p-0 font-bold uppercase cursor-pointer w-full" title="Switch Language">
                 <i class="bi bi-globe text-lg"></i> LANGUAGE: @(currentCulture == "en" ? "ENGLISH" : "ESPAÑOL")
             </button>
         </form>
@@ -127,6 +125,34 @@
                 mobileMenu.classList.add('hidden');
                 mobileMenu.classList.remove('flex');
                 document.body.style.overflow = '';
+            });
+        }
+
+        var brandFonts = [
+            { id: 'varela-round', label: 'Varela Round' },
+            { id: 'instrument-serif', label: 'Instrument Serif' },
+            { id: 'syne', label: 'Syne' },
+            { id: 'fraunces', label: 'Fraunces' }
+        ];
+        function applyBrandFont(id) {
+            document.documentElement.setAttribute('data-brand-font', id);
+            try { localStorage.setItem('brandFont', id); } catch (e) {}
+            var meta = brandFonts.find(function (f) { return f.id === id; });
+            document.querySelectorAll('#brand-font-cycle').forEach(function (btn) {
+                btn.setAttribute('title', (meta ? meta.label : id) + ' — click for next');
+            });
+        }
+        var savedFont = null;
+        try { savedFont = localStorage.getItem('brandFont'); } catch (e) {}
+        applyBrandFont(savedFont && brandFonts.some(function (f) { return f.id === savedFont; }) ? savedFont : 'varela-round');
+        var fontBtn = document.getElementById('brand-font-cycle');
+        if (fontBtn) {
+            fontBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var current = document.documentElement.getAttribute('data-brand-font') || 'varela-round';
+                var idx = brandFonts.findIndex(function (f) { return f.id === current; });
+                applyBrandFont(brandFonts[(idx + 1) % brandFonts.length].id);
             });
         }
     });

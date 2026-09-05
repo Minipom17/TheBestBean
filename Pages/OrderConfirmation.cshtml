@@ -167,7 +167,18 @@
         
         <div class="info-row">
             <span class="info-label">Total Amount</span>
-            <span class="info-value" style="color: #0059ff; font-size: 1.25rem;">S/ @((Model.OrderTotal * 3.8m).ToString("F2"))</span>
+            @if (string.Equals(Model.PaymentMethod, "Card", StringComparison.OrdinalIgnoreCase))
+            {
+                <span class="info-value" style="color: #0059ff; font-size: 1.25rem;">$@Model.OrderTotal.ToString("F2")</span>
+            }
+            else
+            {
+                <span class="info-value" style="color: #722EA8; font-size: 1.25rem;">S/ @LocalPricing.YapeSoles(Model.OrderTotal).ToString("0")</span>
+            }
+        </div>
+        <div class="info-row">
+            <span class="info-label">Pay with</span>
+            <span class="info-value">@(string.Equals(Model.PaymentMethod, "Card", StringComparison.OrdinalIgnoreCase) ? "Card / PayPal (USD)" : "Yape / Plin (soles)")</span>
         </div>
     </div>
 
@@ -180,10 +191,19 @@
             <div class="order-item">
                 <div>
                     <div class="item-name">@item.ProductName</div>
-                    <div class="item-qty">Qty: @item.Quantity × S/ @((item.Price * 3.8m).ToString("F2"))</div>
+                    <div class="item-qty">Qty: @item.Quantity ×
+                        @if (string.Equals(Model.PaymentMethod, "Card", StringComparison.OrdinalIgnoreCase))
+                        {
+                            <text>$@item.Price.ToString("F2")</text>
+                        }
+                        else
+                        {
+                            <text>S/ @LocalPricing.YapeSoles(item.Price).ToString("0")</text>
+                        }
+                    </div>
                 </div>
                 <div style="font-weight: 600; color: var(--charcoal);">
-                    S/ @((item.Subtotal * 3.8m).ToString("F2"))
+                    S/ @LocalPricing.YapeSoles(item.Subtotal).ToString("0")
                 </div>
             </div>
         }
@@ -204,8 +224,16 @@
         <div class="step-item">
             <div class="step-icon">2</div>
             <div class="step-content">
-                <h4>Payment Instructions</h4>
-                <p>We'll send you payment instructions via email. We accept Venmo, Zelle, or bank transfer.</p>
+                @if (string.Equals(Model.PaymentMethod, "Card", StringComparison.OrdinalIgnoreCase))
+                {
+                    <h4>Pay by card / PayPal</h4>
+                    <p>We’ll email USD payment instructions for <strong>$@Model.OrderTotal.ToString("F2")</strong>. Bank FX makes this the higher soles price — Yape is cheaper next time.</p>
+                }
+                else
+                {
+                    <h4>Yape S/ @LocalPricing.YapeSoles(Model.OrderTotal).ToString("0")</h4>
+                    <p>Yape or Plin to <strong>993 779 381</strong> (Purple Bean). Put order <strong>@Model.OrderNumber</strong> in the note. We’ll also send the QR on WhatsApp.</p>
+                }
             </div>
         </div>
 

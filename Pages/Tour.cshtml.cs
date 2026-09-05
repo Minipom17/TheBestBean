@@ -24,6 +24,8 @@ namespace TheBestBean.Pages
         public List<Experience> RelatedTours { get; set; } = new();
         public Dictionary<string, string> PageContent { get; set; } = new Dictionary<string, string>();
         public List<string> JsonLdBlocks { get; set; } = new();
+        public bool IsCoffeeLab { get; set; }
+        public IReadOnlyList<LabRecipeCard> LabRecipes { get; set; } = Array.Empty<LabRecipeCard>();
 
         public IActionResult OnGet(string id)
         {
@@ -41,7 +43,24 @@ namespace TheBestBean.Pages
                     .Take(2)
                     .ToList();
 
+                IsCoffeeLab = IsCuscoCoffeeLab(Tour);
+                if (IsCoffeeLab)
+                {
+                    LabRecipes = CoffeeLabRecipes;
+                }
+
                 ApplyTourSeo(Tour);
+                Ga4Ecommerce.SetPageEvent(ViewData, "view_item", Ga4Ecommerce.Payload(new[]
+                {
+                    new CartItem
+                    {
+                        ProductId = Tour.Id,
+                        ProductName = Tour.Title,
+                        ProductType = "Experience",
+                        Price = Tour.Price,
+                        Quantity = 1
+                    }
+                }));
             }
 
             PageContent = _context.SiteContent.Where(c => c.Page == "Tour").ToDictionary(c => c.Key, c => c.Value);
@@ -163,6 +182,103 @@ namespace TheBestBean.Pages
             }
         };
 
+        private static bool IsCuscoCoffeeLab(Experience tour)
+        {
+            var title = tour.Title ?? string.Empty;
+            if (title.Contains("Coffee Lab", StringComparison.OrdinalIgnoreCase)
+                || title.Contains("Coffee Laboratory", StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            return string.Equals(tour.Tag, "FEATURED", StringComparison.OrdinalIgnoreCase)
+                && (tour.Category ?? string.Empty).Contains("Urban", StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static readonly IReadOnlyList<LabRecipeCard> CoffeeLabRecipes =
+        [
+            new LabRecipeCard
+            {
+                Code = "01",
+                Method = "V60",
+                Kind = "Pour-over",
+                Dose = "15 g",
+                Yield = "250 g",
+                Time = "2:45",
+                Grind = "Medium-fine",
+                Temp = "96 °C",
+                Ratio = "1 : 16.5",
+                Steps =
+                [
+                    "Rinse the paper filter and warm the carafe.",
+                    "Bloom with 45 g water for 45 seconds.",
+                    "Pour in slow concentric circles to 250 g.",
+                    "Let the bed drain. Total time about 2:45."
+                ],
+                Tip = "Keep the pour gentle — the cone is unforgiving and shows floral, citrus cups from Cusco lots."
+            },
+            new LabRecipeCard
+            {
+                Code = "02",
+                Method = "Espresso",
+                Kind = "Pressure",
+                Dose = "18 g",
+                Yield = "36 g",
+                Time = "28–32 s",
+                Grind = "Fine / espresso",
+                Temp = "93 °C",
+                Ratio = "1 : 2",
+                Steps =
+                [
+                    "Dose 18 g, distribute, and tamp level.",
+                    "Start the shot. Aim for 36 g in 28–32 seconds.",
+                    "If it gushes, grind finer. If it chokes, grind coarser.",
+                    "Taste: sweetness first, then acidity, then finish."
+                ],
+                Tip = "Change one variable at a time. Grind is the first lever in the lab."
+            },
+            new LabRecipeCard
+            {
+                Code = "03",
+                Method = "AeroPress",
+                Kind = "Immersion",
+                Dose = "18 g",
+                Yield = "200 g",
+                Time = "2:00",
+                Grind = "Medium-fine",
+                Temp = "92 °C",
+                Ratio = "1 : 11",
+                Steps =
+                [
+                    "Inverted: add 18 g coffee, then 200 g water.",
+                    "Stir hard for 10 seconds. Steep to 1:30.",
+                    "Cap, flip onto the mug, press steadily for 30 seconds.",
+                    "Stop when you hear the hiss. Don’t squeeze the puck dry."
+                ],
+                Tip = "Full body, low bitterness — a travel brew guests can repeat at home."
+            },
+            new LabRecipeCard
+            {
+                Code = "04",
+                Method = "Cupping",
+                Kind = "Sensory",
+                Dose = "8.25 g",
+                Yield = "150 g",
+                Time = "4:00 +",
+                Grind = "Coarse / cupping",
+                Temp = "93 °C",
+                Ratio = "1 : 18",
+                Steps =
+                [
+                    "Grind 8.25 g into the bowl. Smell the dry fragrance.",
+                    "Pour 150 g water. Steep 4 minutes.",
+                    "Break the crust, smell the wet aroma, skim the foam.",
+                    "Taste with a cupping spoon from hot to cool."
+                ],
+                Tip = "Score sweetness, acidity, body, and aftertaste. Cooler cups tell the truth."
+            }
+        ];
+
         private static string ToAbsolute(string? path)
         {
             if (string.IsNullOrWhiteSpace(path))
@@ -192,11 +308,25 @@ namespace TheBestBean.Pages
             };
 
             _cartService.AddToCart(HttpContext.Session, cartItem);
+            Ga4Ecommerce.QueueAddToCart(TempData, cartItem);
 
             TempData["CartMessage"] = $"{participants}x {title} booking added to cart!";
             return RedirectToPage("/Cart");
         }
+    }
 
-
+    public sealed class LabRecipeCard
+    {
+        public required string Code { get; init; }
+        public required string Method { get; init; }
+        public required string Kind { get; init; }
+        public required string Dose { get; init; }
+        public required string Yield { get; init; }
+        public required string Time { get; init; }
+        public required string Grind { get; init; }
+        public required string Temp { get; init; }
+        public required string Ratio { get; init; }
+        public required string[] Steps { get; init; }
+        public required string Tip { get; init; }
     }
 }

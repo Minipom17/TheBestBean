@@ -15,37 +15,40 @@
 @if (Model.Tour != null)
 {
     <!-- Huge Hero Image (Rounded Corners) -->
-    <div class="max-w-[1600px] mx-auto w-full px-4 md:px-12 mt-6">
-        <div class="w-full aspect-[21/9] md:aspect-[3/1] bg-gray-100 dark:bg-[#2F3A28] overflow-hidden rounded-3xl relative shadow-sm">
-             @{
-                 var heroPos = Model.PageContent.GetValueOrDefault($"Tour_Hero_Pos_{Model.Tour.Id}", "50% 50%");
-             }
+    <div class="max-w-[1600px] mx-auto w-full px-4 md:px-12 mt-6 no-print">
+        @{
+            var heroPos = Model.PageContent.GetValueOrDefault($"Tour_Hero_Pos_{Model.Tour.Id}", "50% 50%");
+        }
+        <div class="w-full aspect-[21/9] md:aspect-[3/1] bg-gray-100 dark:bg-[#1C191F] overflow-hidden rounded-3xl relative shadow-sm">
              <img src="@Model.Tour.ImageUrl" alt="@Model.Tour.Title" class="absolute inset-0 w-full h-full object-cover" style="object-position: @heroPos;" data-entity-id="@Model.Tour.Id" data-entity-type="Experience" data-editable="ImageUrl" data-position-key="Tour_Hero_Pos_@Model.Tour.Id" />
         </div>
     </div>
 
     <!-- Main Content -->
-    <div class="flex-grow max-w-[1600px] mx-auto w-full px-6 md:px-12 relative pb-32 font-sans text-v-black dark:text-[#FAF3DD] bg-v-white dark:bg-[#3C4A33] mt-12 md:mt-24">
+    <div class="flex-grow max-w-[1600px] mx-auto w-full px-6 md:px-12 relative pb-32 font-sans text-v-black dark:text-[#D6D0C8] bg-v-white dark:bg-[#121014] mt-12 md:mt-24">
         
-        <main class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 relative">
+        <main class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 relative no-print">
             
             <!-- Left Grid: Sticky Reservation Card -->
             <div class="lg:col-span-4 flex flex-col relative order-2 lg:order-1">
-                <div class="lg:sticky lg:top-32 bg-white dark:bg-[#3C4A33] rounded-3xl border border-gray-100 p-8 shadow-sm">
-                    <h3 class="text-4xl font-bold tracking-tight text-v-black dark:text-[#FAF3DD] mb-2">$@Model.Tour.Price.ToString("0") <span class="text-xs text-v-gray font-normal">USD / Participant</span></h3>
+                <div class="lg:sticky lg:top-32 bg-white dark:bg-[#121014] rounded-3xl border border-gray-100 p-8 shadow-sm">
+                    <div class="mb-2">
+                        <partial name="_YapePrice" model="new DualPriceModel { Usd = Model.Tour.Price, Pen = LocalPricing.YapeSoles(Model.Tour.Price) }" />
+                        <p class="text-xs text-v-gray mt-2 m-0">per participant</p>
+                    </div>
                     
                     <div class="flex flex-col gap-4 mt-8 pt-8 border-t border-gray-100">
                         <div class="flex justify-between items-start text-sm gap-4">
                             <span class="text-v-gray font-normal shrink-0">Duration</span>
-                            <span class="text-v-black dark:text-[#FAF3DD] font-semibold text-right">@Model.Tour.Duration</span>
+                            <span class="text-v-black dark:text-[#D6D0C8] font-semibold text-right">@Model.Tour.Duration</span>
                         </div>
                         <div class="flex justify-between items-start text-sm gap-4">
                             <span class="text-v-gray font-normal shrink-0">Location</span>
-                            <span class="text-v-black dark:text-[#FAF3DD] font-semibold text-right" data-entity-id="@Model.Tour.Id" data-entity-type="Experience" data-editable="Location">@Model.Tour.Location</span>
+                            <span class="text-v-black dark:text-[#D6D0C8] font-semibold text-right" data-entity-id="@Model.Tour.Id" data-entity-type="Experience" data-editable="Location">@Model.Tour.Location</span>
                         </div>
                         <div class="flex justify-between items-start text-sm gap-4">
                             <span class="text-v-gray font-normal shrink-0">Level</span>
-                            <span class="text-v-black dark:text-[#FAF3DD] font-semibold text-right" data-entity-id="@Model.Tour.Id" data-entity-type="Experience" data-editable="Difficulty">@Model.Tour.Difficulty</span>
+                            <span class="text-v-black dark:text-[#D6D0C8] font-semibold text-right" data-entity-id="@Model.Tour.Id" data-entity-type="Experience" data-editable="Difficulty">@Model.Tour.Difficulty</span>
                         </div>
                     </div>
 
@@ -70,14 +73,14 @@
                 <!-- Title Block -->
                 <div>
                     <span class="text-[10px] font-bold uppercase tracking-widest text-v-gray font-mono-jb block mb-4">@Model.Tour.Category &bull; @Model.Tour.Duration</span>
-                    <h1 class="text-5xl md:text-7xl font-bold tracking-tighter text-v-black dark:text-[#FAF3DD] leading-[0.9] m-0" data-entity-id="@Model.Tour.Id" data-entity-type="Experience" data-editable="Title">
+                    <h1 class="text-5xl md:text-7xl font-bold tracking-tighter text-v-black dark:text-[#D6D0C8] leading-[0.9] m-0" data-entity-id="@Model.Tour.Id" data-entity-type="Experience" data-editable="Title">
                         @Model.Tour.Title
                     </h1>
                 </div>
 
                 <!-- Overview -->
                 <div>
-                    <h2 class="text-2xl font-bold tracking-tight text-v-black dark:text-[#FAF3DD] leading-none mb-6">
+                    <h2 class="text-2xl font-bold tracking-tight text-v-black dark:text-[#D6D0C8] leading-none mb-6">
                         Overview
                     </h2>
                     <p class="text-v-gray text-lg md:text-xl leading-relaxed font-normal max-w-3xl" data-entity-id="@Model.Tour.Id" data-entity-type="Experience" data-editable="LongDescription">
@@ -107,16 +110,18 @@
                                 @for (int i = 0; i < Model.Tour.ProvidedEquipment.Count; i++)
                                 {
                                     <li class="flex items-start gap-3">
-                                        <span class="text-v-black dark:text-[#FAF3DD] font-bold mt-0.5">@(i + 1).</span>
+                                        <span class="text-v-black dark:text-[#D6D0C8] font-bold mt-0.5">@(i + 1).</span>
                                         <span class="leading-relaxed">@Model.Tour.ProvidedEquipment[i]</span>
                                     </li>
                                 }
                             </ul>
 
                             <!-- Take Home Section -->
+                            @if (!string.Equals(Model.Tour.Category, "Expedition", StringComparison.OrdinalIgnoreCase))
+                            {
                             <div class="mt-8 pt-6 border-t border-[#FF3B1F]/30">
                                 <span class="text-[10px] font-bold uppercase tracking-widest text-[#FF3B1F] block mb-4">TAKE HOME</span>
-                                <ul class="list-none p-0 m-0 space-y-3 font-mono-jb text-sm text-v-black dark:text-[#FAF3DD]">
+                                <ul class="list-none p-0 m-0 space-y-3 font-mono-jb text-sm text-v-black dark:text-[#D6D0C8]">
                                     <li class="flex items-start gap-3">
                                         <span class="text-[#FF3B1F] shrink-0">+</span>
                                         <span class="leading-relaxed">200g coffee</span>
@@ -125,18 +130,26 @@
                                         <span class="text-[#FF3B1F] shrink-0">+</span>
                                         <span class="leading-relaxed">SCA flavor wheel</span>
                                     </li>
+                                    @if (Model.IsCoffeeLab)
+                                    {
+                                        <li class="flex items-start gap-3">
+                                            <span class="text-[#FF3B1F] shrink-0">+</span>
+                                            <span class="leading-relaxed">Recipe cards (V60 + AeroPress) — print from this page</span>
+                                        </li>
+                                    }
                                 </ul>
                             </div>
+                            }
                         </div>
                     </div>
                 }
 
                 <!-- Syllabus & Timeline -->
                 <div>
-                    <h2 class="text-2xl font-bold tracking-tight text-v-black dark:text-[#FAF3DD] mb-8">Syllabus & Timeline</h2>
+                    <h2 class="text-2xl font-bold tracking-tight text-v-black dark:text-[#D6D0C8] mb-8">Syllabus & Timeline</h2>
                     
                     <div class="flex flex-col relative pl-2">
-                        <div class="absolute left-[11px] top-2 bottom-2 w-px bg-gray-200 dark:bg-[#4F6044]"></div>
+                        <div class="absolute left-[11px] top-2 bottom-2 w-px bg-gray-200 dark:bg-[#2A262C]"></div>
                         @for (int i = 0; i < Model.Tour.Syllabus.Count; i++)
                         {
                             var moduleText = Model.Tour.Syllabus[i];
@@ -145,9 +158,9 @@
                             var bodyPart = parts.Length > 1 ? parts[1].Trim() : moduleText;
 
                             <div class="relative pl-8 pb-10 last:pb-0">
-                                <div class="absolute -left-0.5 top-1.5 w-2.5 h-2.5 bg-v-black dark:bg-[#FAF3DD] rounded-full shadow-[0_0_0_4px_white] dark:shadow-[0_0_0_4px_#3C4A33]"></div>
+                                <div class="absolute -left-0.5 top-1.5 w-2.5 h-2.5 bg-v-black dark:bg-[#D6D0C8] rounded-full shadow-[0_0_0_4px_white] dark:shadow-[0_0_0_4px_#121014]"></div>
                                 <span class="text-[10px] font-bold uppercase tracking-widest text-v-gray block mb-1">@headerPart</span>
-                                <h4 class="text-sm font-bold text-v-black dark:text-[#FAF3DD] m-0 leading-tight">@bodyPart</h4>
+                                <h4 class="text-sm font-bold text-v-black dark:text-[#D6D0C8] m-0 leading-tight">@bodyPart</h4>
                             </div>
                         }
                     </div>
@@ -156,14 +169,14 @@
                 <!-- Equipment & Gear -->
                 @if (Model.Tour.RequiredGear != null && Model.Tour.RequiredGear.Any())
                 {
-                    <div class="grid grid-cols-1 gap-12 mt-12 pt-12 border-t border-v-black/10 dark:border-[#4F6044]">
+                    <div class="grid grid-cols-1 gap-12 mt-12 pt-12 border-t border-v-black/10 dark:border-[#2A262C]">
                         <div>
-                            <span class="text-[10px] font-bold uppercase tracking-widest text-v-black dark:text-[#FAF3DD] font-mono-jb block mb-6">MANDATORY PROTOCOL</span>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-v-black dark:text-[#D6D0C8] font-mono-jb block mb-6">MANDATORY PROTOCOL</span>
                             <ul class="list-none p-0 m-0 space-y-4 font-mono-jb text-xs text-v-gray">
                                 @foreach (var item in Model.Tour.RequiredGear)
                                 {
                                     <li class="flex items-start gap-3">
-                                        <span class="text-v-black dark:text-[#FAF3DD] shrink-0">+</span>
+                                        <span class="text-v-black dark:text-[#D6D0C8] shrink-0">+</span>
                                         <span class="leading-relaxed">@item</span>
                                     </li>
                                 }
@@ -177,9 +190,9 @@
         <!-- Picture Deck -->
         @if (Model.Tour.GalleryImages != null && Model.Tour.GalleryImages.Any())
         {
-            <div class="mt-24 mb-12">
+            <div class="mt-24 mb-12 no-print">
                 <div class="flex items-center gap-4 mb-8">
-                    <h2 class="text-3xl font-bold tracking-tight text-v-black dark:text-[#FAF3DD] m-0">ARCHIVE DOSSIER</h2>
+                    <h2 class="text-3xl font-bold tracking-tight text-v-black dark:text-[#D6D0C8] m-0">ARCHIVE DOSSIER</h2>
                     <div class="h-px bg-gray-200 flex-grow"></div>
                 </div>
                 
@@ -194,19 +207,24 @@
             </div>
         }
 
+        @if (Model.IsCoffeeLab)
+        {
+            <partial name="_LabRecipeCards" />
+        }
+
     </div>
 }
 else
 {
-    <div class="flex-grow max-w-[1600px] mx-auto w-full px-6 md:px-12 relative pb-32 font-sans text-v-black dark:text-[#FAF3DD] bg-v-white dark:bg-[#3C4A33]">
-        <div class="text-left py-32 border-b border-v-black/10 dark:border-[#4F6044] font-sans mt-24">
-            <h1 class="text-6xl md:text-8xl font-bold mb-8 tracking-tighter uppercase text-v-black dark:text-[#FAF3DD]">DOSSIER NOT FOUND</h1>
+    <div class="flex-grow max-w-[1600px] mx-auto w-full px-6 md:px-12 relative pb-32 font-sans text-v-black dark:text-[#D6D0C8] bg-v-white dark:bg-[#121014]">
+        <div class="text-left py-32 border-b border-v-black/10 dark:border-[#2A262C] font-sans mt-24">
+            <h1 class="text-6xl md:text-8xl font-bold mb-8 tracking-tighter uppercase text-v-black dark:text-[#D6D0C8]">DOSSIER NOT FOUND</h1>
             <p class="text-lg text-v-gray mb-16">The requested protocol does not exist in the current archive.</p>
             <a asp-page="/Experiences" class="group flex items-center gap-4 cursor-pointer border-none bg-transparent p-0 m-0 text-decoration-none">
                 <span class="w-12 h-12 bg-v-black rounded-full flex items-center justify-center text-v-white group-hover:bg-v-red transition-colors duration-300">
                     <i class="bi bi-arrow-left text-xl"></i>
                 </span>
-                <span class="text-xl md:text-2xl font-bold tracking-tight text-v-black dark:text-[#FAF3DD] group-hover:text-v-red transition-colors duration-300">
+                <span class="text-xl md:text-2xl font-bold tracking-tight text-v-black dark:text-[#D6D0C8] group-hover:text-v-red transition-colors duration-300">
                     RETURN TO ARCHIVE
                 </span>
             </a>

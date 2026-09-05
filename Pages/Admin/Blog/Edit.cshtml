@@ -8,21 +8,21 @@
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div class="sm:flex sm:items-center mb-8">
         <div class="sm:flex-auto">
-            <h1 class="text-3xl font-mono-jb uppercase font-bold text-v-black dark:text-[#FAF3DD]">@(Model.IsNew ? "New Post" : "Edit Post")</h1>
+            <h1 class="text-3xl font-mono-jb uppercase font-bold text-v-black dark:text-[#D6D0C8]">@(Model.IsNew ? "New Post" : "Edit Post")</h1>
         </div>
         <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-            <a asp-page="./Index" class="inline-flex items-center justify-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-v-black px-4 py-2 text-sm font-medium text-gray-700 dark:text-[#FAF3DD] shadow-sm hover:bg-gray-50 focus:outline-none sm:w-auto font-mono-jb uppercase tracking-widest">Back</a>
+            <a asp-page="./Index" class="inline-flex items-center justify-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-v-black px-4 py-2 text-sm font-medium text-gray-700 dark:text-[#D6D0C8] shadow-sm hover:bg-gray-50 focus:outline-none sm:w-auto font-mono-jb uppercase tracking-widest">Back</a>
         </div>
     </div>
 
-    <form method="post" class="space-y-8 divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-[#3C4A33] p-8 shadow rounded-lg">
+    <form method="post" class="space-y-8 divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-[#121014] p-8 shadow rounded-lg">
         <div class="space-y-6">
             <input type="hidden" asp-for="BlogPost.Id" />
             <input type="hidden" asp-for="BlogPost.CreatedAt" />
 
             <!-- Title -->
             <div>
-                <label asp-for="BlogPost.Title" class="block text-sm font-medium text-gray-700 dark:text-[#FAF3DD]">Title</label>
+                <label asp-for="BlogPost.Title" class="block text-sm font-medium text-gray-700 dark:text-[#D6D0C8]">Title</label>
                 <div class="mt-1">
                     <input type="text" asp-for="BlogPost.Title" class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-v-black dark:text-white shadow-sm focus:border-v-red focus:ring-v-red sm:text-sm" />
                 </div>
@@ -31,7 +31,7 @@
 
             <!-- Slug -->
             <div>
-                <label asp-for="BlogPost.Slug" class="block text-sm font-medium text-gray-700 dark:text-[#FAF3DD]">URL Slug</label>
+                <label asp-for="BlogPost.Slug" class="block text-sm font-medium text-gray-700 dark:text-[#D6D0C8]">URL Slug</label>
                 <div class="mt-1 flex rounded-md shadow-sm">
                     <span class="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-v-black px-3 text-gray-500 dark:text-gray-400 sm:text-sm">purplebean.coffee/blog/</span>
                     <input type="text" asp-for="BlogPost.Slug" class="block w-full min-w-0 flex-1 rounded-none rounded-r-md border-gray-300 dark:border-gray-600 dark:bg-v-black dark:text-white focus:border-v-red focus:ring-v-red sm:text-sm" placeholder="my-awesome-post" />
@@ -42,7 +42,7 @@
             <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
                 <!-- Author -->
                 <div>
-                    <label asp-for="BlogPost.Author" class="block text-sm font-medium text-gray-700 dark:text-[#FAF3DD]">Author</label>
+                    <label asp-for="BlogPost.Author" class="block text-sm font-medium text-gray-700 dark:text-[#D6D0C8]">Author</label>
                     <div class="mt-1">
                         <input type="text" asp-for="BlogPost.Author" class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-v-black dark:text-white shadow-sm focus:border-v-red focus:ring-v-red sm:text-sm" />
                     </div>
@@ -50,7 +50,7 @@
                 </div>
                 <!-- Image URL -->
                 <div>
-                    <label asp-for="BlogPost.ImageUrl" class="block text-sm font-medium text-gray-700 dark:text-[#FAF3DD]">Cover Image URL</label>
+                    <label asp-for="BlogPost.ImageUrl" class="block text-sm font-medium text-gray-700 dark:text-[#D6D0C8]">Cover Image URL</label>
                     <div class="mt-1">
                         <input type="text" asp-for="BlogPost.ImageUrl" class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-v-black dark:text-white shadow-sm focus:border-v-red focus:ring-v-red sm:text-sm" />
                     </div>
@@ -60,7 +60,7 @@
 
             <!-- Content -->
             <div>
-                <label asp-for="BlogPost.Content" class="block text-sm font-medium text-gray-700 dark:text-[#FAF3DD]">Content (HTML or Markdown)</label>
+                <label asp-for="BlogPost.Content" class="block text-sm font-medium text-gray-700 dark:text-[#D6D0C8]">Content (HTML or Markdown)</label>
                 <div class="mt-1">
                     <textarea asp-for="BlogPost.Content" rows="15" class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-v-black dark:text-white shadow-sm focus:border-v-red focus:ring-v-red sm:text-sm font-mono-jb"></textarea>
                 </div>
@@ -73,7 +73,7 @@
                     <input asp-for="BlogPost.IsPublished" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-v-red focus:ring-v-red dark:bg-v-black dark:border-gray-600">
                 </div>
                 <div class="ml-3 text-sm">
-                    <label asp-for="BlogPost.IsPublished" class="font-medium text-gray-700 dark:text-[#FAF3DD]">Publish Post</label>
+                    <label asp-for="BlogPost.IsPublished" class="font-medium text-gray-700 dark:text-[#D6D0C8]">Publish Post</label>
                     <p class="text-gray-500 dark:text-gray-400">If unchecked, this post will be saved as a draft.</p>
                 </div>
             </div>

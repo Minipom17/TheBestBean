@@ -17,6 +17,13 @@ html {
   min-height: 100%;
 }
 
+header img.brand-mark,
+#mobile-nav-menu img.brand-mark {
+    height: 2.5rem !important;
+    width: 2.5rem !important;
+    max-height: 2.5rem !important;
+}
+
 body {
   margin-bottom: 60px;
 }
@@ -68,12 +75,13 @@ body.edit-mode [data-editable]:hover {
     color: #FFFFFF;
 }
 .dark .btn-lab {
-    border-color: #FAF3DD;
-    color: #FAF3DD;
+    border-color: #D6D0C8;
+    color: #D6D0C8;
 }
 .dark .btn-lab:hover {
-    background-color: #FAF3DD;
-    color: #111111;
+    background-color: #8B6FA0;
+    color: #121014;
+    border-color: #8B6FA0;
 }
 
 /* Custom Range Slider for Lab Aesthetic */
@@ -87,7 +95,7 @@ body.edit-mode [data-editable]:hover {
     margin: 0;
 }
 .dark .range-lab {
-    background: #FAF3DD;
+    background: #D6D0C8;
 }
 .range-lab::-webkit-slider-thumb {
     -webkit-appearance: none;
@@ -100,7 +108,7 @@ body.edit-mode [data-editable]:hover {
     cursor: pointer;
 }
 .dark .range-lab::-webkit-slider-thumb {
-    border: 2px solid #FAF3DD;
+    border: 2px solid #D6D0C8;
 }
 .range-lab::-moz-range-thumb {
     width: 12px;
@@ -111,7 +119,7 @@ body.edit-mode [data-editable]:hover {
     cursor: pointer;
 }
 .dark .range-lab::-moz-range-thumb {
-    border: 2px solid #FAF3DD;
+    border: 2px solid #D6D0C8;
 }
 
 /* Lab Title / Section Header */
@@ -128,7 +136,7 @@ body.edit-mode [data-editable]:hover {
     margin-bottom: 16px;
 }
 .dark .lab-title {
-    color: #FAF3DD;
+    color: #D6D0C8;
 }
 
 /* Lab Card */
@@ -139,5 +147,753 @@ body.edit-mode [data-editable]:hover {
     color: #111111;
 }
 .dark .lab-card {
-    background-color: #2F3A28; /* Adjust for dark mode */
-}
+    background-color: #1C191F; /* Adjust for dark mode */
+}
+
+.flavor-explorer {
+    background-color: rgb(137 215 255 / 45%);
+}
+html.dark [class*="255,255,137"],
+html.dark .flavor-explorer {
+    background-color: #1C191F !important;
+    border-color: rgba(214, 208, 200, 0.12) !important;
+}
+html.dark .flavor-explorer .text-black,
+html.dark [class*="255,255,137"] .text-black {
+    color: #D6D0C8 !important;
+}
+html.dark .flavor-explorer .border-black,
+html.dark [class*="255,255,137"] .border-black {
+    border-color: rgba(214, 208, 200, 0.22) !important;
+}
+html.dark .flavor-triangle {
+    background: linear-gradient(160deg, #8B6FA0 0%, #3A353C 52%, #121014 100%) !important;
+}
+
+/* Brew method labels & borders: coral in light, purple in dark */
+html.dark .bg-\[\#FF3B1F\] {
+    background-color: rgb(139, 111, 160) !important;
+}
+html.dark .border-\[\#FF3B1F\] {
+    border-color: rgb(139, 111, 160) !important;
+}
+html.dark .border-\[\#FF3B1F\]\/30 {
+    border-color: rgba(139, 111, 160, 0.3) !important;
+}
+html.dark .text-\[\#FF3B1F\] {
+    color: rgb(185, 163, 201) !important;
+}
+html.dark .bg-\[\#FF3B1F\]\/10 {
+    background-color: rgba(139, 111, 160, 0.15) !important;
+}
+html.dark .group:hover .group-hover\:text-\[\#FF3B1F\] {
+    color: rgb(185, 163, 201) !important;
+}
+html.dark .group:hover .group-hover\:border-\[\#FF3B1F\] {
+    border-color: rgb(139, 111, 160) !important;
+}
+html.dark .hover\:border-\[\#FF3B1F\]:hover {
+    border-color: rgb(139, 111, 160) !important;
+}
+
+/* Hide scrollbar on filter strip */
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+/* Home offerings: coffee → image → workshops on mobile; list | image on desktop */
+.offerings-split {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+        "coffee"
+        "image"
+        "workshops";
+}
+.offerings-split-coffee { grid-area: coffee; }
+.offerings-split-image { grid-area: image; }
+.offerings-split-workshops { grid-area: workshops; }
+@media (min-width: 1024px) {
+    .offerings-split {
+        grid-template-columns: minmax(0, 42%) minmax(0, 58%);
+        grid-template-rows: auto 1fr;
+        grid-template-areas:
+            "coffee image"
+            "workshops image";
+        min-height: 70vh;
+    }
+}
+
+/* Home offerings: blinking terminal cursor on the active row */
+.offerings-cursor {
+    display: none;
+    width: 9px;
+    height: 16px;
+    background: #111111;
+    flex-shrink: 0;
+    animation: offerings-blink 0.7s step-end infinite;
+}
+html.dark .offerings-cursor {
+    background: #D6D0C8;
+}
+.offerings-row.offerings-active .offerings-cursor {
+    display: inline-block;
+}
+.offerings-row.offerings-active {
+    background-color: var(--offerings-hl, #E8E6E3) !important;
+    color: inherit !important;
+}
+.offerings-row.offerings-active .opacity-60 {
+    opacity: 0.85;
+}
+html.dark .offerings-row.offerings-active {
+    background-color: var(--offerings-hl-dark, rgba(214, 208, 200, 0.18)) !important;
+    color: inherit !important;
+}
+#hoverImageContainer img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.offerings-choose-prompt {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #111;
+    background: rgba(255, 255, 137, 0.92);
+    padding: 10px 12px;
+    margin: 0 0 1.25rem;
+}
+html.dark .offerings-choose-prompt {
+    color: #D6D0C8;
+    background: rgba(139, 111, 160, 0.38);
+}
+.offerings-choose-prompt.is-hidden {
+    display: none !important;
+}
+@media (max-width: 1023px) {
+    .offerings-choose-prompt {
+        display: flex;
+    }
+}
+@keyframes offerings-blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .offerings-cursor { animation: none; }
+}
+
+/* Cusco Coffee Lab guest recipe cards */
+.lab-recipe-section {
+    break-inside: avoid;
+}
+.lab-recipe-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.85rem 1.25rem;
+    margin: 1.25rem 0 1.5rem;
+}
+.lab-recipe-print-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    cursor: pointer;
+    background: #111;
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 0.85rem 1.4rem;
+    border-radius: 999px;
+    margin: 0;
+    text-decoration: none;
+}
+.lab-recipe-print-btn:hover {
+    background: #37106A;
+}
+.lab-recipe-pdf-link {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #37106A;
+    text-decoration: none;
+    border-bottom: 1px solid #37106A;
+    padding-bottom: 2px;
+}
+.lab-recipe-pdf-link:hover {
+    color: #111;
+    border-color: #111;
+}
+.lab-recipe-dropdown {
+    border: 1px solid #111;
+    background: #fff;
+}
+html.dark .lab-recipe-dropdown {
+    border-color: #D6D0C8;
+    background: #1C191F;
+}
+.lab-recipe-dropdown__summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.25rem;
+    padding: 1.15rem 1.25rem;
+    font-family: 'JetBrains Mono', monospace;
+}
+.lab-recipe-dropdown__summary::-webkit-details-marker {
+    display: none;
+}
+.lab-recipe-dropdown__title {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #111;
+}
+html.dark .lab-recipe-dropdown__title {
+    color: #D6D0C8;
+}
+.lab-recipe-dropdown__hint {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #8B8490;
+    flex-grow: 1;
+}
+.lab-recipe-dropdown__chevron {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: rotate(45deg);
+    margin-left: auto;
+    transition: transform 0.2s ease;
+}
+.lab-recipe-dropdown[open] .lab-recipe-dropdown__chevron {
+    transform: rotate(225deg);
+}
+.lab-recipe-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.85rem 1.25rem;
+    margin: 0 0 1.25rem;
+}
+.lab-recipe-dropdown .lab-recipe-sheet {
+    padding: 0 1.25rem 1.5rem;
+}
+.lab-recipe-sheet {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+@media (min-width: 900px) {
+    .lab-recipe-sheet {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+.lab-recipe-page {
+    margin: 0;
+    background: #fff;
+    border: 1px solid #111;
+}
+.lab-recipe-page img {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: #fff;
+}
+.lab-recipe-page figcaption {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #8B8490;
+    padding: 0.7rem 0.85rem 0.85rem;
+    border-top: 1px solid #eee;
+}
+
+/* Yape vs card pricing */
+.yape-price {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+.yape-price--compact {
+    align-items: flex-end;
+    text-align: right;
+    min-width: 7.5rem;
+}
+.yape-price__yape {
+    display: flex;
+    align-items: baseline;
+    gap: 0.55rem;
+    flex-wrap: wrap;
+}
+.yape-price--compact .yape-price__yape {
+    justify-content: flex-end;
+}
+.yape-price__badge {
+    display: inline-flex;
+    align-items: center;
+    background: #722EA8;
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.45rem;
+    line-height: 1.2;
+}
+.yape-price__soles {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.65rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    color: #111;
+}
+.yape-price--compact .yape-price__soles {
+    font-size: 1.05rem;
+}
+html.dark .yape-price__soles {
+    color: #D6D0C8;
+}
+.yape-price__card {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.4rem 0.65rem;
+    color: #6B6570;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+.yape-price--compact .yape-price__card {
+    justify-content: flex-end;
+    font-size: 10px;
+}
+.yape-price__card-label {
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 9px;
+}
+.yape-price__card-usd {
+    color: #111;
+}
+html.dark .yape-price__card-usd {
+    color: #D6D0C8;
+}
+.yape-price__card-pen {
+    color: #9A93A0;
+    font-weight: 500;
+    text-decoration: line-through;
+}
+.yape-price__save {
+    margin: 0.15rem 0 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #722EA8;
+}
+.yape-pay-option {
+    cursor: pointer;
+    display: block;
+}
+.yape-pay-option__card {
+    border: 1px solid #e5e7eb;
+    padding: 1.25rem 1.35rem;
+    background: #fff;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.yape-pay-option--recommended .yape-pay-option__card {
+    border-color: #722EA8;
+    background: #faf7fd;
+}
+.yape-pay-option__card.peer-checked\:ring-2,
+.yape-pay-option input:checked + .yape-pay-option__card {
+    box-shadow: 0 0 0 2px #722EA8;
+    border-color: #722EA8;
+}
+.lab-recipe-card {
+    background: #F7F4EF;
+    color: #121014;
+    border: 1px solid #37106A;
+    padding: 1.35rem 1.4rem 1.1rem;
+    min-height: 22rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+}
+.lab-recipe-card__node {
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    background: #37106A;
+    z-index: 1;
+}
+.lab-recipe-card__node--tl { top: -3px; left: -3px; }
+.lab-recipe-card__node--tr { top: -3px; right: -3px; }
+.lab-recipe-card__node--bl { bottom: -3px; left: -3px; }
+.lab-recipe-card__node--br { bottom: -3px; right: -3px; }
+.lab-recipe-card__brand {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    margin-bottom: 1.1rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid rgba(55, 16, 106, 0.22);
+}
+.lab-recipe-card__mark {
+    width: 2rem;
+    height: 2rem;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+.lab-recipe-card__word {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex-grow: 1;
+}
+.lab-recipe-card__name {
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    text-transform: lowercase;
+    line-height: 1;
+    color: #121014;
+}
+.lab-recipe-card__lab {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #37106A;
+    margin-top: 0.35rem;
+}
+.lab-recipe-card__code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: #37106A;
+}
+.lab-recipe-card__title {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+.lab-recipe-card__title h3 {
+    margin: 0;
+    font-size: 1.65rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    text-transform: uppercase;
+    color: #121014;
+}
+.lab-recipe-card__title span {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #8B8490;
+}
+.lab-recipe-card__specs {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.65rem 0.5rem;
+    margin: 0 0 1rem;
+    padding: 0.75rem 0;
+    border-top: 1px solid rgba(55, 16, 106, 0.18);
+    border-bottom: 1px solid rgba(55, 16, 106, 0.18);
+}
+.lab-recipe-card__specs div {
+    min-width: 0;
+}
+.lab-recipe-card__specs dt {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #8B8490;
+    margin: 0 0 0.2rem;
+}
+.lab-recipe-card__specs dd {
+    margin: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: #121014;
+}
+.lab-recipe-card__steps {
+    list-style: none;
+    margin: 0 0 1rem;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    flex-grow: 1;
+}
+.lab-recipe-card__steps li {
+    font-size: 12px;
+    line-height: 1.4;
+    color: #2A262C;
+    padding-left: 1.4rem;
+    position: relative;
+}
+.lab-recipe-card__steps li::before {
+    position: absolute;
+    left: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    color: #37106A;
+    counter-increment: lab-step;
+    content: counter(lab-step) ".";
+}
+.lab-recipe-card__steps {
+    counter-reset: lab-step;
+}
+.lab-recipe-card__tip {
+    margin: 0 0 0.9rem;
+    font-size: 11px;
+    line-height: 1.45;
+    color: #5C5660;
+    font-style: italic;
+}
+.lab-recipe-card__foot {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #37106A;
+    padding-top: 0.7rem;
+    border-top: 1px solid rgba(55, 16, 106, 0.18);
+}
+html.dark .lab-recipe-card,
+html.dark .lab-recipe-card__name,
+html.dark .lab-recipe-card__title h3,
+html.dark .lab-recipe-card__specs dd {
+    color: #121014;
+}
+html.dark .lab-recipe-card {
+    background: #F7F4EF;
+}
+
+@media print {
+    .delivery-float {
+        display: none !important;
+    }
+    html.print-lab-recipes body > header,
+    html.print-lab-recipes body > footer,
+    html.print-lab-recipes .delivery-float,
+    html.print-lab-recipes .no-print {
+        display: none !important;
+    }
+    html.print-lab-recipes body,
+    html.print-lab-recipes main,
+    html.print-lab-recipes .flex-grow {
+        background: #fff !important;
+        color: #121014 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        max-width: none !important;
+    }
+    html.print-lab-recipes .lab-recipe-section {
+        margin: 0 !important;
+    }
+    html.print-lab-recipes details.lab-recipe-dropdown {
+        display: block !important;
+        border: 0 !important;
+    }
+    html.print-lab-recipes details.lab-recipe-dropdown[open] .lab-recipe-sheet,
+    html.print-lab-recipes details.lab-recipe-dropdown .lab-recipe-sheet {
+        display: block !important;
+        padding: 0 !important;
+    }
+    html.print-lab-recipes .lab-recipe-page {
+        border: 0;
+        break-after: page;
+        page-break-after: always;
+        width: 100%;
+    }
+    html.print-lab-recipes .lab-recipe-page:last-child {
+        break-after: auto;
+        page-break-after: auto;
+    }
+    html.print-lab-recipes .lab-recipe-page img {
+        width: 100%;
+        max-height: 277mm;
+        object-fit: contain;
+    }
+    @page {
+        size: A4 portrait;
+        margin: 8mm;
+    }
+}
+
+/* Brew guides */
+.brew-guides {
+    background: #fff;
+}
+html.dark .brew-guides {
+    background: #121014;
+}
+.brew-variables-band {
+    background-color: rgb(102, 216, 208);
+    color: #111;
+}
+html.dark .brew-variables-band {
+    background-color: rgb(102, 216, 208);
+    color: #111;
+}
+.brew-var-card {
+    background: #fff;
+    color: #111;
+    padding: 1.5rem 1.4rem 1.25rem;
+    min-height: 14.5rem;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+}
+.brew-var-spec {
+    margin-top: auto;
+    align-self: flex-start;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--brew-accent, #111);
+    background: color-mix(in srgb, var(--brew-accent, #111) 12%, #fff);
+    padding: 0.35rem 0.55rem;
+}
+.brew-method-card {
+    border: 1px solid #111;
+    background: #fff;
+    color: #111;
+    padding: 1.75rem 1.5rem 1.5rem;
+    position: relative;
+}
+html.dark .brew-method-card {
+    border-color: #D6D0C8;
+    background: #1C191F;
+    color: #D6D0C8;
+}
+.brew-method-card__head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 1.1rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+html.dark .brew-method-card__head {
+    border-bottom-color: rgba(214, 208, 200, 0.14);
+}
+.brew-method-card__tag {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #66D8D0;
+    margin-bottom: 0.4rem;
+}
+.brew-method-card h3 {
+    margin: 0;
+    font-size: clamp(1.6rem, 4vw, 2.25rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    text-transform: uppercase;
+}
+.brew-method-card__stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(3.5rem, auto));
+    gap: 0.75rem 1.25rem;
+    margin: 0;
+}
+.brew-method-card__stats dt {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #8B8490;
+    margin: 0 0 0.2rem;
+}
+.brew-method-card__stats dd {
+    margin: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+}
+.brew-method-card__steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    counter-reset: brew-step;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+.brew-method-card__steps li {
+    position: relative;
+    padding-left: 1.75rem;
+    font-size: 0.95rem;
+    line-height: 1.45;
+}
+.brew-method-card__steps li::before {
+    counter-increment: brew-step;
+    content: counter(brew-step);
+    position: absolute;
+    left: 0;
+    top: 0.1rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    color: #66D8D0;
+}

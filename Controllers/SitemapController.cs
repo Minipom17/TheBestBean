@@ -33,7 +33,7 @@ namespace TheBestBean.Controllers
             var staticPages = new[]
             {
                 ("/", "1.0", "weekly"),
-                ("/GreenBeans", "0.9", "weekly"),
+                ("/Coffee", "0.9", "weekly"),
                 ("/Experiences", "0.9", "weekly"),
                 ("/BrewMethods", "0.8", "monthly"),
                 ("/Wholesale", "0.8", "monthly"),

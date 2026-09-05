@@ -53,8 +53,21 @@
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
-
           gtag('config', '@gaId');
+          window.pbEmitGaEvents = function (events) {
+            if (!events || typeof gtag !== 'function') return;
+            events.forEach(function (e) {
+              if (!e || !e.event) return;
+              if (e.event === 'purchase' && e.params && e.params.transaction_id) {
+                var key = 'pb_ga_purchase_' + e.params.transaction_id;
+                try {
+                  if (sessionStorage.getItem(key)) return;
+                  sessionStorage.setItem(key, '1');
+                } catch (err) {}
+              }
+              gtag('event', e.event, e.params || {});
+            });
+          };
         </script>
     }
 
@@ -153,6 +166,10 @@
             if (saved === 'dark' || (!saved && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                 document.documentElement.classList.add('dark');
             }
+            var brandFont = localStorage.getItem('brandFont');
+            var brandOk = { 'varela-round': 1, 'instrument-serif': 1, 'syne': 1, 'fraunces': 1 };
+            if (!brandFont || !brandOk[brandFont]) brandFont = 'varela-round';
+            document.documentElement.setAttribute('data-brand-font', brandFont);
         })();
     </script>
 
@@ -168,6 +185,12 @@
                         'v-black': 'var(--color-v-black)',
                         'v-gray': 'var(--color-v-gray)',
                         'v-light-gray': 'var(--color-v-light-gray)',
+                        'night': '#121014',
+                        'night-2': '#1C191F',
+                        'cream': '#D6D0C8',
+                        'mist': '#8B8490',
+                        'sun': '#B9A3C9',
+                        'ember': '#8B6FA0',
                         'v-yellow': '#FACC15', // Accent
                         'v-blue': '#2563EB',   // Accent
                         'v-green': '#16A34A',  // Accent
@@ -182,7 +205,6 @@
                         'mono': ['"JetBrains Mono"', 'monospace'],
                         'grotesk': ['"Space Grotesk"', 'sans-serif'],
                         'mono-jb': ['"JetBrains Mono"', 'monospace'],
-                        'cousine': ['"Cousine"', 'monospace'],
                     },
                     letterSpacing: {
                         'tighter': '-0.04em',
@@ -197,8 +219,8 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cousine:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@200;300;400;600;700&family=Patrick+Hand&display=swap" as="style">
-    <link href="https://fonts.googleapis.com/css2?family=Cousine:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@200;300;400;600;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Instrument+Serif&family=Syne:wght@600;700;800&family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@200;300;400;600;700&family=Patrick+Hand&display=swap" as="style">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Instrument+Serif&family=Syne:wght@600;700;800&family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@200;300;400;600;700&family=Patrick+Hand&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     
@@ -217,7 +239,17 @@
         }
 
         html.dark {
-            --color-v-gray: #dbdbdb;
+            --color-v-white: #121014;
+            --color-v-black: #D6D0C8;
+            --color-v-gray: #8B8490;
+            --color-v-light-gray: #2A262C;
+            --night: #121014;
+            --night-2: #1C191F;
+            --cream: #D6D0C8;
+            --mist: #8B8490;
+            --sun: #B9A3C9;
+            --ember: #8B6FA0;
+            --line: rgba(214, 208, 200, 0.12);
         }
         
         body {
@@ -229,6 +261,15 @@
             overflow-x: hidden;
             margin: 0;
             padding: 0;
+        }
+
+        html.dark body {
+            background-color: var(--night);
+            color: var(--cream);
+        }
+        html.dark ::selection {
+            background: var(--ember);
+            color: var(--night);
         }
         
         .edit-mode-only { display: none !important; }
@@ -244,6 +285,129 @@
         
         .rule-thin {
             border-bottom: 1px solid #E5E5E5;
+        }
+        html.dark .rule-thin {
+            border-bottom-color: var(--line);
+        }
+
+        header .brand-mark-stack,
+        #mobile-nav-menu .brand-mark-stack {
+            position: relative;
+            display: inline-flex;
+            width: 2.5rem;
+            height: 2.5rem;
+            flex-shrink: 0;
+        }
+        header img.brand-mark,
+        #mobile-nav-menu img.brand-mark {
+            height: 2.5rem !important;
+            width: 2.5rem !important;
+            max-height: 2.5rem !important;
+            object-fit: contain;
+            transition: filter 0.15s ease;
+        }
+        .brand-mark--dark { display: none; }
+        html.dark .brand-mark--light { display: none; }
+        html.dark .brand-mark--dark { display: block; }
+        #mobile-nav-menu .brand-mark--light { display: none !important; }
+        #mobile-nav-menu .brand-mark--dark { display: block !important; }
+        .brand-lockup {
+            color: #111;
+        }
+        html.dark .brand-lockup,
+        #mobile-nav-menu .brand-lockup {
+            color: #F4F4F4;
+        }
+        header .brand-wordmark,
+        #mobile-nav-menu .brand-wordmark {
+            position: relative;
+            display: inline-block;
+            height: 1.4rem;
+            line-height: 0;
+        }
+        .brand-wordmark-img {
+            display: block;
+            height: 1.4rem;
+            width: auto;
+            max-height: 1.4rem;
+        }
+        .brand-wordmark-img--dark,
+        .brand-wordmark-img--green {
+            display: none;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        html.dark .brand-wordmark-img--light { display: none; }
+        html.dark .brand-wordmark-img--dark { display: block; }
+        #mobile-nav-menu .brand-wordmark-img--light { display: none; }
+        #mobile-nav-menu .brand-wordmark-img--dark { display: block; }
+        #mobile-nav-menu .brand-wordmark-img--green { display: none; }
+        html.dark .brand-lockup:hover .brand-wordmark-img--dark,
+        html.dark .brand-lockup:focus-visible .brand-wordmark-img--dark,
+        html.dark .brand-lockup:active .brand-wordmark-img--dark,
+        #mobile-nav-menu .brand-lockup:hover .brand-wordmark-img--dark,
+        #mobile-nav-menu .brand-lockup:focus-visible .brand-wordmark-img--dark,
+        #mobile-nav-menu .brand-lockup:active .brand-wordmark-img--dark {
+            display: none;
+        }
+        html.dark .brand-lockup:hover .brand-wordmark-img--green,
+        html.dark .brand-lockup:focus-visible .brand-wordmark-img--green,
+        html.dark .brand-lockup:active .brand-wordmark-img--green,
+        #mobile-nav-menu .brand-lockup:hover .brand-wordmark-img--green,
+        #mobile-nav-menu .brand-lockup:focus-visible .brand-wordmark-img--green,
+        #mobile-nav-menu .brand-lockup:active .brand-wordmark-img--green {
+            display: block;
+        }
+        .lab-recipe-card__name {
+            font-family: 'Comfortaa', 'Varela Round', sans-serif !important;
+            font-weight: 700 !important;
+            font-style: normal;
+            letter-spacing: -0.01em;
+            text-transform: lowercase !important;
+            font-size: 16px !important;
+            line-height: 1;
+        }
+        html[data-brand-font="instrument-serif"] .lab-recipe-card__name {
+            font-family: 'Instrument Serif', Georgia, serif !important;
+            font-weight: 400 !important;
+            letter-spacing: -0.02em;
+            font-size: 16px !important;
+        }
+        html[data-brand-font="syne"] .lab-recipe-card__name {
+            font-family: 'Syne', sans-serif !important;
+            font-weight: 700 !important;
+            letter-spacing: -0.04em;
+            font-size: 14px !important;
+        }
+        html[data-brand-font="fraunces"] .lab-recipe-card__name {
+            font-family: 'Fraunces', Georgia, serif !important;
+            font-weight: 500 !important;
+            font-variation-settings: "opsz" 48, "SOFT" 20, "WONK" 1;
+            letter-spacing: -0.025em;
+            font-size: 15px !important;
+        }
+        html.dark .brand-lockup:hover .brand-mark--dark,
+        html.dark .brand-lockup:focus-visible .brand-mark--dark,
+        html.dark .brand-lockup:active .brand-mark--dark,
+        #mobile-nav-menu .brand-lockup:hover .brand-mark--dark,
+        #mobile-nav-menu .brand-lockup:focus-visible .brand-mark--dark,
+        #mobile-nav-menu .brand-lockup:active .brand-mark--dark {
+            filter: hue-rotate(-191deg) saturate(1.7) brightness(1.2);
+        }
+        .brand-font-cycle {
+            border: 0;
+            background: transparent;
+            cursor: pointer;
+            padding: 0 0.15rem;
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-size: 12px;
+            letter-spacing: 0.02em;
+            color: inherit;
+            opacity: 0.4;
+        }
+        .brand-font-cycle:hover {
+            opacity: 1;
         }
 
         /* Minimalist structural scrollbar */
@@ -301,11 +465,149 @@
             color: #FFFFFF;
             transform: none;
         }
+
+        html.dark .delivery-float {
+            background-color: #8B6FA0;
+            color: #121014;
+            border: 1px solid #8B6FA0;
+        }
+        html.dark .delivery-float:hover {
+            background-color: #B9A3C9;
+            color: #121014;
+            border-color: #B9A3C9;
+        }
+
+        html.dark header.sticky,
+        html.dark footer {
+            background-color: var(--night) !important;
+            color: var(--cream);
+            border-color: var(--line);
+        }
+
+        html.dark h1, html.dark h2, html.dark h3, html.dark h4, html.dark h5, html.dark h6 {
+            color: var(--cream);
+        }
+
+        html.dark a:hover {
+            color: var(--sun);
+        }
+
+        html.dark .filter-btn {
+            color: var(--mist);
+        }
+        html.dark .filter-btn.active {
+            color: var(--cream);
+            border-color: var(--ember);
+        }
+        html.dark .filter-btn:hover {
+            color: var(--sun);
+        }
+
+        html.dark button,
+        html.dark .btn,
+        html.dark [class*="btn-lab"],
+        html.dark a.inline-flex,
+        html.dark a[class*="uppercase"][class*="font-bold"] {
+            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+        }
+
+        html.dark .btn-lab,
+        html.dark button.border-2,
+        html.dark a.border-2 {
+            border-color: var(--cream);
+            color: var(--cream);
+            background: transparent;
+        }
+        html.dark .btn-lab:hover,
+        html.dark button.border-2:hover,
+        html.dark a.border-2:hover {
+            background: var(--ember);
+            border-color: var(--ember);
+            color: var(--night);
+        }
+
+        html.dark .bg-v-green,
+        html.dark .bg-v-yellow,
+        html.dark [class*="bg-v-green"] {
+            background-color: var(--ember) !important;
+            color: var(--night) !important;
+        }
+        html.dark .bg-v-green:hover,
+        html.dark .hover\:bg-green-700:hover {
+            background-color: var(--sun) !important;
+            color: var(--night) !important;
+        }
+
+        html.dark .lab-title {
+            color: var(--cream);
+            border-bottom-color: var(--ember);
+        }
+
+        html.dark .lab-card {
+            background-color: var(--night-2);
+            color: var(--cream);
+            border-left-color: var(--ember);
+        }
+
+        html.dark ::-webkit-scrollbar-thumb { background: var(--mist); }
+        html.dark ::-webkit-scrollbar-thumb:hover { background: var(--sun); }
+
+        html.dark header img.brand-mark,
+        html.dark #mobile-nav-menu img.brand-mark {
+            filter: none;
+        }
+
+        html.dark input, html.dark textarea, html.dark select {
+            background-color: var(--night-2);
+            color: var(--cream);
+            border-color: var(--line);
+        }
+
+        /* Nothing stays paper-white in dark mode */
+        html.dark .bg-white,
+        html.dark .bg-paper-white,
+        html.dark .bg-gray-50,
+        html.dark .bg-gray-100,
+        html.dark .bg-slate-50,
+        html.dark .bg-slate-100,
+        html.dark .bg-off-white {
+            background-color: var(--night-2) !important;
+        }
+        html.dark .bg-v-white {
+            background-color: var(--night) !important;
+        }
+        html.dark .dark\:bg-white {
+            background-color: var(--cream) !important;
+        }
+        html.dark .text-white {
+            color: var(--cream) !important;
+        }
+        html.dark .dark\:text-black {
+            color: var(--night) !important;
+        }
+        html.dark .border-white,
+        html.dark .border-v-white {
+            border-color: var(--cream) !important;
+        }
+        html.dark .hover\:bg-white:hover {
+            background-color: var(--cream) !important;
+            color: var(--night) !important;
+        }
+        html.dark .hover\:text-white:hover {
+            color: var(--cream) !important;
+        }
+        html.dark [style*="background: white"],
+        html.dark [style*="background:white"],
+        html.dark [style*="background: #fff"],
+        html.dark [style*="background: #ffffff"],
+        html.dark [style*="background: #f3f4f6"] {
+            background-color: var(--night-2) !important;
+        }
     </style>
     
     @await RenderSectionAsync("Styles", required: false)
 </head>
-<body class="min-h-screen flex flex-col font-sans text-sm selection:bg-v-black selection:text-v-white relative bg-v-white dark:bg-[#3C4A33] text-v-black dark:text-[#FAF3DD] transition-colors duration-300">
+<body class="min-h-screen flex flex-col font-sans text-sm selection:bg-v-black selection:text-v-white relative bg-v-white dark:bg-night text-v-black dark:text-cream transition-colors duration-300">
     @{
         var cartCount = 0;
         try {
@@ -323,7 +625,7 @@
 
     <!-- Unified Delivery & WhatsApp Float Button -->
     <a href="https://wa.me/51993779381" target="_blank" class="delivery-float" title="Delivery & WhatsApp Dispatch"
-       onclick="if (typeof gtag === 'function') { gtag('event', 'whatsapp_click', { event_category: 'engagement', event_label: location.pathname, page_path: location.pathname, transport_type: 'beacon' }); }">
+       onclick="if (typeof gtag === 'function') { gtag('event', 'whatsapp_click', { event_category: 'engagement', event_label: location.pathname, page_path: location.pathname, transport_type: 'beacon' }); gtag('event', 'generate_lead', { event_category: 'engagement', method: 'whatsapp', page_path: location.pathname, transport_type: 'beacon' }); }">
         <i class="bi bi-truck text-xl"></i>
         <span>//</span>
         <i class="bi bi-whatsapp text-xl"></i>
@@ -355,14 +657,14 @@
     
     <!-- Image Crop Modal (Hidden by default) -->
     <div id="crop-modal-overlay" class="fixed inset-0 bg-black/80 z-[99999] hidden flex items-center justify-center">
-        <div class="bg-white dark:bg-[#2F3A28] rounded-lg p-6 max-w-4xl w-full mx-4 flex flex-col max-h-[90vh]">
-            <h3 class="text-xl font-bold mb-4 font-grotesk dark:text-[#FAF3DD]">Crop Image</h3>
-            <div class="flex-1 overflow-hidden min-h-[400px] bg-gray-100 dark:bg-black/50 relative flex items-center justify-center">
+        <div class="bg-white dark:bg-night-2 rounded-none p-6 max-w-4xl w-full mx-4 flex flex-col max-h-[90vh] border border-transparent dark:border-[rgba(214, 208, 200, 0.12)]">
+            <h3 class="text-xl font-bold mb-4 font-grotesk dark:text-cream">Crop Image</h3>
+            <div class="flex-1 overflow-hidden min-h-[400px] bg-gray-100 dark:bg-night relative flex items-center justify-center">
                 <img id="crop-image-target" src="" class="max-w-full max-h-full block">
             </div>
             <div class="mt-6 flex justify-end gap-4">
-                <button id="crop-cancel-btn" class="px-6 py-2 border-2 border-v-black dark:border-[#FAF3DD] rounded-none font-mono text-sm font-bold uppercase hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">Cancel</button>
-                <button id="crop-save-btn" class="px-6 py-2 bg-v-green text-white rounded-none font-mono text-sm font-bold uppercase flex items-center gap-2 hover:bg-green-700 transition-colors"><i class="bi bi-crop"></i> Crop & Upload</button>
+                <button id="crop-cancel-btn" class="px-6 py-2 border-2 border-v-black dark:border-cream rounded-none font-mono text-sm font-bold uppercase hover:bg-gray-100 dark:hover:bg-ember dark:hover:text-night dark:hover:border-ember transition-colors">Cancel</button>
+                <button id="crop-save-btn" class="px-6 py-2 bg-v-green dark:bg-ember text-white dark:text-night rounded-none font-mono text-sm font-bold uppercase flex items-center gap-2 hover:bg-green-700 dark:hover:bg-sun transition-colors"><i class="bi bi-crop"></i> Crop & Upload</button>
             </div>
         </div>
     </div>
@@ -391,6 +693,25 @@
 
             // Also attach it to window so we can trigger it from other pages (like Product page)
             window.updateCurrencyPrices = updatePrices;
+            window.renderYapePrice = function (root, usd, pen) {
+                if (!root) return;
+                const yapeRate = 3.75;
+                const cardRate = 4.10;
+                const yape = Math.round((pen > 0 ? pen : usd * yapeRate));
+                const cardPen = Math.round(usd * cardRate);
+                const save = Math.max(0, cardPen - yape);
+                const from = root.getAttribute('data-from') || '';
+                const soles = root.querySelector('[data-yape-soles]');
+                const cardUsd = root.querySelector('[data-card-usd]');
+                const cardPenEl = root.querySelector('[data-card-pen]');
+                const saveEl = root.querySelector('[data-yape-save]');
+                if (soles) soles.textContent = from + 'S/ ' + yape;
+                if (cardUsd) cardUsd.textContent = '$' + Number(usd).toFixed(2);
+                if (cardPenEl) cardPenEl.textContent = '≈ S/ ' + cardPen;
+                if (saveEl) saveEl.textContent = save > 0
+                    ? 'Save S/ ' + save + ' paying with Yape — no card FX.'
+                    : '';
+            };
 
             const storedCurrency = localStorage.getItem('Currency');
             if (!storedCurrency) {
@@ -428,5 +749,23 @@
 
     <!-- Inline Editor Logic -->
     <script src="~/js/inline-editor.js" asp-append-version="true"></script>
+    @{
+        var ga4Queued = TempData[TheBestBean.Services.Ga4Ecommerce.TempKey] as string;
+        var ga4Page = ViewData[TheBestBean.Services.Ga4Ecommerce.ViewKey] as string;
+    }
+    @if (!string.IsNullOrEmpty(ga4Queued) || !string.IsNullOrEmpty(ga4Page))
+    {
+        <script>
+            (function () {
+                var queued = @Html.Raw(string.IsNullOrEmpty(ga4Queued) ? "[]" : ga4Queued);
+                var pageEvents = @Html.Raw(string.IsNullOrEmpty(ga4Page) ? "[]" : ga4Page);
+                var emit = window.pbEmitGaEvents || function (events) {
+                    if (!events || typeof gtag !== 'function') return;
+                    events.forEach(function (e) { gtag('event', e.event, e.params || {}); });
+                };
+                emit(pageEvents.concat(queued));
+            })();
+        </script>
+    }
 </body>
 </html>

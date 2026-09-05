@@ -788,17 +788,17 @@
             </div>
         </div>
         
-        <div id="beanForm" class="max-w-4xl mx-auto bg-[#f8f6f2] p-8 shadow-2xl rounded-sm text-black dark:text-[#FAF3DD] mb-12" style="display:none;">
+        <div id="beanForm" class="max-w-4xl mx-auto bg-[#f8f6f2] p-8 shadow-2xl rounded-sm text-black dark:text-[#D6D0C8] mb-12" style="display:none;">
             <div class="bg-[#fcfbf9] border-[3px] border-black p-6 relative">
                 <div class="flex justify-between items-end mb-6">
                     <h2 id="formTitle" class="text-3xl font-black text-red-500 uppercase tracking-widest m-0">NEW SHIPMENT</h2>
-                    <button class="text-xs font-mono font-bold border-2 border-black px-4 py-1 hover:bg-black hover:text-white transition-colors bg-white dark:bg-[#3C4A33] text-black dark:text-[#FAF3DD] cursor-pointer" onclick="toggleBeanForm()">CLOSE</button>
+                    <button class="text-xs font-mono font-bold border-2 border-black px-4 py-1 hover:bg-black hover:text-white transition-colors bg-white dark:bg-[#121014] text-black dark:text-[#D6D0C8] cursor-pointer" onclick="toggleBeanForm()">CLOSE</button>
                 </div>
                 
                 <input type="hidden" id="invId">
                 
-                <div class="border-[3px] border-black flex flex-col font-mono text-xs font-bold uppercase bg-white dark:bg-[#3C4A33]">
-                    <div class="bg-gray-100 dark:bg-[#2F3A28] p-1 border-b-[3px] border-black text-[10px] text-center tracking-widest font-black uppercase">Green Stock Specs</div>
+                <div class="border-[3px] border-black flex flex-col font-mono text-xs font-bold uppercase bg-white dark:bg-[#121014]">
+                    <div class="bg-gray-100 dark:bg-[#1C191F] p-1 border-b-[3px] border-black text-[10px] text-center tracking-widest font-black uppercase">Green Stock Specs</div>
                     
                     <div class="flex flex-col md:flex-row border-b-[3px] border-black">
                         <div class="flex-[2] md:border-r-[3px] border-b-[3px] md:border-b-0 border-black p-2 flex flex-col">
@@ -847,8 +847,8 @@
                 </div>
                 
                 <div class="mt-6 flex justify-end gap-4">
-                    <button class="text-xs font-mono font-bold px-6 py-2 bg-transparent text-black dark:text-[#FAF3DD] border-none cursor-pointer hover:underline" onclick="toggleBeanForm()">CANCEL</button>
-                    <button class="text-xs font-mono font-bold border-2 border-black px-8 py-2 bg-black text-white hover:bg-transparent hover:text-black dark:text-[#FAF3DD] transition-colors cursor-pointer" onclick="saveBean()">SAVE GREEN STOCK</button>
+                    <button class="text-xs font-mono font-bold px-6 py-2 bg-transparent text-black dark:text-[#D6D0C8] border-none cursor-pointer hover:underline" onclick="toggleBeanForm()">CANCEL</button>
+                    <button class="text-xs font-mono font-bold border-2 border-black px-8 py-2 bg-black text-white hover:bg-transparent hover:text-black dark:text-[#D6D0C8] transition-colors cursor-pointer" onclick="saveBean()">SAVE GREEN STOCK</button>
                 </div>
             </div>
         </div>
@@ -863,23 +863,23 @@
             <a href="/" class="lang-btn home-icon-right" style="text-decoration: none; display: inline-flex; align-items: center; margin-left: auto;"><img src="/Media/home_icon.svg" alt="Home" style="width: 14px; height: 14px;"></a>
         </div>
 
-        <div class="max-w-5xl mx-auto bg-[#f8f6f2] p-4 md:p-8 shadow-2xl rounded-sm mb-8 text-black dark:text-[#FAF3DD]" id="roastPlannerCard">
+        <div class="max-w-5xl mx-auto bg-[#f8f6f2] p-4 md:p-8 shadow-2xl rounded-sm mb-8 text-black dark:text-[#D6D0C8]" id="roastPlannerCard">
             <div class="bg-[#fcfbf9] border-[3px] border-black p-4 md:p-6 relative">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 gap-4">
                     <h2 class="text-3xl font-black text-red-500 uppercase tracking-widest m-0">ROAST PLANNER</h2>
                     <div class="flex gap-4 w-full md:w-auto">
-                        <select id="roastBeanSelect" onchange="loadBeanDetails()" class="text-xs font-mono font-bold border-2 border-black px-4 py-2 bg-white dark:bg-[#3C4A33] text-black dark:text-[#FAF3DD] uppercase cursor-pointer w-full md:w-auto">
+                        <select id="roastBeanSelect" onchange="loadBeanDetails()" class="text-xs font-mono font-bold border-2 border-black px-4 py-2 bg-white dark:bg-[#121014] text-black dark:text-[#D6D0C8] uppercase cursor-pointer w-full md:w-auto">
                             <option value="">-- SELECT GREEN BEAN --</option>
                         </select>
                     </div>
                 </div>
 
                 <div id="plannerDetails" style="display:none;">
-                    <div class="border-[3px] border-black flex flex-col font-mono text-xs font-bold uppercase bg-white dark:bg-[#3C4A33]">
-                        <div class="bg-gray-100 dark:bg-[#2F3A28] p-1 border-b-[3px] border-black text-[10px] text-center tracking-widest font-black uppercase">Roast Architecture</div>
+                    <div class="border-[3px] border-black flex flex-col font-mono text-xs font-bold uppercase bg-white dark:bg-[#121014]">
+                        <div class="bg-gray-100 dark:bg-[#1C191F] p-1 border-b-[3px] border-black text-[10px] text-center tracking-widest font-black uppercase">Roast Architecture</div>
                         
                         <div class="flex flex-col border-b-[3px] border-black">
-                            <div class="p-4 bg-white dark:bg-[#3C4A33]">
+                            <div class="p-4 bg-white dark:bg-[#121014]">
                                 <div class="flex justify-between items-end mb-2">
                                     <span class="text-[10px] text-gray-500 uppercase font-black tracking-widest">COLOR SPECTROMETRY (AGTRON)</span>
                                     <span id="agtron-value" class="text-sm font-black text-red-500">#55</span>
@@ -909,9 +909,9 @@
                             <div class="flex-[2] border-b-[3px] md:border-b-0 md:border-r-[3px] border-black p-4">
                                 <span class="text-[9px] text-gray-400 mb-3 block">DEV STRATEGY</span>
                                 <div class="flex gap-2 w-full">
-                                    <button class="flex-1 py-2 border-2 border-black text-[10px] bg-transparent text-black dark:text-[#FAF3DD]" onclick="setDevStrategy('FAST', this)">FAST</button>
+                                    <button class="flex-1 py-2 border-2 border-black text-[10px] bg-transparent text-black dark:text-[#D6D0C8]" onclick="setDevStrategy('FAST', this)">FAST</button>
                                     <button class="flex-1 py-2 border-2 border-black text-[10px] bg-black text-white" onclick="setDevStrategy('STND', this)">STND</button>
-                                    <button class="flex-1 py-2 border-2 border-black text-[10px] bg-transparent text-black dark:text-[#FAF3DD]" onclick="setDevStrategy('LONG', this)">LONG</button>
+                                    <button class="flex-1 py-2 border-2 border-black text-[10px] bg-transparent text-black dark:text-[#D6D0C8]" onclick="setDevStrategy('LONG', this)">LONG</button>
                                 </div>
                                 <input type="hidden" id="plannerDevStrategy" value="STND" />
                             </div>
@@ -927,7 +927,7 @@
                             </div>
                         </div>
 
-                        <div class="bg-gray-100 dark:bg-[#2F3A28] p-1 border-b-[3px] border-black text-[10px] text-center tracking-widest font-black uppercase">Batch Settings</div>
+                        <div class="bg-gray-100 dark:bg-[#1C191F] p-1 border-b-[3px] border-black text-[10px] text-center tracking-widest font-black uppercase">Batch Settings</div>
                         <div class="flex flex-col md:flex-row bg-stone-50">
                             <div class="flex-1 md:border-r-[3px] border-black p-4">
                                 <span class="text-[9px] text-gray-400 mb-1 block">GHOST OVERLAY</span>
@@ -935,7 +935,7 @@
                                     <select id="overlaySelect" class="w-full bg-transparent border-b-2 border-black outline-none font-black uppercase focus:ring-0 p-0 m-0 shadow-none">
                                         <option value="">-- NONE --</option>
                                     </select>
-                                    <button class="border-2 border-black bg-white dark:bg-[#3C4A33] text-black dark:text-[#FAF3DD] px-3 py-1 text-lg leading-none cursor-pointer hover:bg-black hover:text-white transition-colors" onclick="addOverlay()">+</button>
+                                    <button class="border-2 border-black bg-white dark:bg-[#121014] text-black dark:text-[#D6D0C8] px-3 py-1 text-lg leading-none cursor-pointer hover:bg-black hover:text-white transition-colors" onclick="addOverlay()">+</button>
                                 </div>
                             </div>
                             <div class="flex-[2] p-4 flex gap-8 justify-end">
@@ -1375,8 +1375,8 @@
             const imgSrc = defaultImages[(b.id || 0) % defaultImages.length];
             const imageHtml = `<img src="${imgSrc}" alt="${b.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />`; 
             c.innerHTML += `
-                <div onclick="editBean(${b.id})" class="group cursor-pointer border border-transparent hover:border-gray-200 transition-colors p-4 -m-4 bg-white dark:bg-[#3C4A33] text-black dark:text-[#FAF3DD]">
-                    <div class="w-full aspect-square bg-gray-100 dark:bg-[#2F3A28] mb-6 overflow-hidden relative">
+                <div onclick="editBean(${b.id})" class="group cursor-pointer border border-transparent hover:border-gray-200 transition-colors p-4 -m-4 bg-white dark:bg-[#121014] text-black dark:text-[#D6D0C8]">
+                    <div class="w-full aspect-square bg-gray-100 dark:bg-[#1C191F] mb-6 overflow-hidden relative">
                         <img src="/Media/Green_bean.svg" alt="Green Bean" class="absolute top-4 right-4 w-8 h-8 opacity-50 z-10" />
                         ${imageHtml}
                     </div>
@@ -1386,8 +1386,8 @@
                     </div>
                     <p class="text-xs text-gray-500 uppercase tracking-widest font-bold mb-4">${b.country || 'Unknown'}</p>
                     <div class="border-t border-dotted border-gray-300 pt-4 font-mono text-[10px] uppercase font-bold text-gray-500 space-y-2">
-                        <div class="flex justify-between"><span>PROCESS</span><span class="text-black dark:text-[#FAF3DD]">${b.process || '-'}</span></div>
-                        <div class="flex justify-between"><span>COST/KG</span><span class="text-black dark:text-[#FAF3DD]">$${b.costPerKg || '0.00'}</span></div>
+                        <div class="flex justify-between"><span>PROCESS</span><span class="text-black dark:text-[#D6D0C8]">${b.process || '-'}</span></div>
+                        <div class="flex justify-between"><span>COST/KG</span><span class="text-black dark:text-[#D6D0C8]">$${b.costPerKg || '0.00'}</span></div>
                     </div>
                 </div>`; 
         }); 
@@ -1453,9 +1453,9 @@
     function setDevStrategy(strat, btn) {
         document.getElementById('plannerDevStrategy').value = strat;
         const siblings = btn.parentElement.querySelectorAll('button');
-        siblings.forEach(b => { b.classList.remove('bg-black', 'text-white'); b.classList.add('bg-transparent', 'text-black dark:text-[#FAF3DD]'); });
+        siblings.forEach(b => { b.classList.remove('bg-black', 'text-white'); b.classList.add('bg-transparent', 'text-black dark:text-[#D6D0C8]'); });
         btn.classList.add('bg-black', 'text-white');
-        btn.classList.remove('bg-transparent', 'text-black dark:text-[#FAF3DD]');
+        btn.classList.remove('bg-transparent', 'text-black dark:text-[#D6D0C8]');
     }
 
     function startRoastingWorkflow() {
@@ -1706,7 +1706,7 @@
             }
             
             let html = `
-                <div class="text-center my-16 text-black dark:text-[#FAF3DD]">
+                <div class="text-center my-16 text-black dark:text-[#D6D0C8]">
                     <h2 class="text-5xl md:text-6xl font-black uppercase tracking-tight mb-4">BATCH ARCHIVE</h2>
                     <div class="flex items-center justify-center gap-2">
                         <div class="h-[1px] w-12 bg-black"></div>
@@ -1721,8 +1721,8 @@
                 let dtr = r.dTRPercent || '0.0';
                 
                 html += `
-                <div onclick="viewRoastDetails(${r.id})" class="group cursor-pointer border border-transparent hover:border-gray-200 transition-colors p-4 -m-4 bg-white dark:bg-[#3C4A33] text-black dark:text-[#FAF3DD]">
-                    <div class="w-full aspect-square bg-gray-100 dark:bg-[#2F3A28] mb-6 overflow-hidden">
+                <div onclick="viewRoastDetails(${r.id})" class="group cursor-pointer border border-transparent hover:border-gray-200 transition-colors p-4 -m-4 bg-white dark:bg-[#121014] text-black dark:text-[#D6D0C8]">
+                    <div class="w-full aspect-square bg-gray-100 dark:bg-[#1C191F] mb-6 overflow-hidden">
                         ${imageHtml}
                     </div>
                     <div class="flex justify-between items-baseline mb-2">
@@ -1732,8 +1732,8 @@
                     <p class="text-xs text-gray-500 uppercase tracking-widest font-bold mb-4"><span class="text-[#A3C8FF]">P</span>urple Bean Coffee</p>
                     <p class="text-sm text-gray-600 mb-6 line-clamp-2 min-h-[40px]">${r.notes || 'No notes.'}</p>
                     <div class="border-t border-dotted border-gray-300 pt-4 font-mono text-[10px] uppercase font-bold text-gray-500 space-y-2">
-                        <div class="flex justify-between"><span>DATE</span><span class="text-black dark:text-[#FAF3DD]">${r.date}</span></div>
-                        <div class="flex justify-between"><span>DTR / TIME</span><span class="text-black dark:text-[#FAF3DD]">${dtr}% / ${r.roastTime ? formatTime(r.roastTime) : '-'}</span></div>
+                        <div class="flex justify-between"><span>DATE</span><span class="text-black dark:text-[#D6D0C8]">${r.date}</span></div>
+                        <div class="flex justify-between"><span>DTR / TIME</span><span class="text-black dark:text-[#D6D0C8]">${dtr}% / ${r.roastTime ? formatTime(r.roastTime) : '-'}</span></div>
                     </div>
                 </div>`;
             });

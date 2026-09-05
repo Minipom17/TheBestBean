@@ -16,6 +16,7 @@ namespace TheBestBean.Models
         public string ZipCode { get; set; } = string.Empty;
         public string DeliveryMethod { get; set; } = string.Empty;
         public string OrderNotes { get; set; } = string.Empty;
+        public string PaymentMethod { get; set; } = "Yape";
         public decimal TotalAmount { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

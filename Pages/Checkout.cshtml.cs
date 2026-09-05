@@ -60,6 +60,9 @@ namespace TheBestBean.Pages
         public string DeliveryMethod { get; set; } = "ship";
 
         [BindProperty]
+        public string PaymentMethod { get; set; } = "Yape";
+
+        [BindProperty]
         public string OrderNotes { get; set; } = string.Empty;
 
         public IActionResult OnGet()
@@ -72,6 +75,7 @@ namespace TheBestBean.Pages
                 return RedirectToPage("/GreenBeans");
             }
 
+            Ga4Ecommerce.SetPageEvent(ViewData, "begin_checkout", Ga4Ecommerce.Payload(CartItems, CartTotal));
             return Page();
         }
 
@@ -91,12 +95,22 @@ namespace TheBestBean.Pages
                 FullName = $"{FirstName} {LastName}".Trim();
             }
 
+            if (string.IsNullOrWhiteSpace(State))
+            {
+                State = string.IsNullOrWhiteSpace(City) ? "Cusco" : City;
+                ModelState.Remove(nameof(State));
+            }
+
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
             var orderNumber = $"ORD-{DateTime.Now:yyyyMMddHHmmss}";
+
+            var payment = string.Equals(PaymentMethod, "Card", StringComparison.OrdinalIgnoreCase)
+                ? "Card"
+                : "Yape";
 
             var order = new Order
             {
@@ -106,9 +120,10 @@ namespace TheBestBean.Pages
                 Phone = Phone,
                 Address = Address,
                 City = City,
-                State = State,
+                State = State ?? string.Empty,
                 ZipCode = ZipCode,
                 DeliveryMethod = DeliveryMethod,
+                PaymentMethod = payment,
                 OrderNotes = OrderNotes,
                 TotalAmount = CartTotal,
                 CreatedAt = DateTime.UtcNow
@@ -135,6 +150,7 @@ namespace TheBestBean.Pages
             TempData["CustomerEmail"] = Email;
             TempData["OrderTotal"] = CartTotal.ToString(); // TempData can't reliably store decimal sometimes
             TempData["DeliveryMethod"] = DeliveryMethod;
+            TempData["PaymentMethod"] = payment;
             TempData["OrderItems"] = System.Text.Json.JsonSerializer.Serialize(CartItems);
 
             // Clear the cart

@@ -19,59 +19,64 @@
 @if (Model.Product != null)
 {
     <!-- Back Button -->
-    <article class="container-fluid px-6 py-8" style="max-width: 1400px; margin: 0 auto;">
-        <a href="/Coffee" class="flex items-center gap-2 text-xs font-mono font-bold mb-8 hover:text-swiss-red transition-colors" style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; font-family: 'JetBrains Mono', monospace; font-weight: 700; margin-bottom: 2rem; color: #111; text-decoration: none; transition: color 0.3s; background: none; border: none; cursor: pointer; padding: 0;">
+    <article class="container-fluid px-6 py-4" style="max-width: 1400px; margin: 0 auto;">
+        <a href="/Coffee" class="flex items-center gap-2 text-xs font-mono font-bold mb-3 hover:text-swiss-red transition-colors" style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; font-family: 'JetBrains Mono', monospace; font-weight: 700; margin-bottom: 0.75rem; color: #111; text-decoration: none; background: none; border: none; cursor: pointer; padding: 0;">
             <i class="bi bi-arrow-left"></i> BACK TO CATALOG
         </a>
 
         <!-- 1. Main Header -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-start mb-24 relative" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 3rem; align-items: start; margin-bottom: 6rem; position: relative;">
+        @{
+            var heroPosKey = $"Product_{Model.Product.Id}_ImageUrl_Position";
+            var isAngelPhoto = (Model.Product.ImageUrl ?? "").Contains("angel-cajamarca", StringComparison.OrdinalIgnoreCase);
+            var heroPos = Model.PageContent != null && Model.PageContent.ContainsKey(heroPosKey)
+                ? Model.PageContent[heroPosKey]
+                : (isAngelPhoto ? "50% 32%" : "50% 50%");
+        }
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 items-start mb-10 relative">
             <div class="w-full">
-                <div class="w-full aspect-square overflow-hidden bg-white dark:bg-[#313A29] relative rounded-2xl md:rounded-3xl shadow-sm border border-gray-100 dark:border-[#445239] mb-4" style="margin-bottom: 1rem;">
-                    <img src="@Model.Product.ImageUrl" alt="@Model.Product.Name" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="ImageUrl" data-position-key="Product_@(Model.Product.Id)_ImageUrl_Position" class="w-full h-full object-cover transition-transform duration-700 hover:scale-105" style="width: 100%; height: 100%; object-fit: cover; object-position: @(Model.PageContent != null && Model.PageContent.ContainsKey($"Product_{Model.Product.Id}_ImageUrl_Position") ? Model.PageContent[$"Product_{Model.Product.Id}_ImageUrl_Position"] : "50% 50%"); transition: transform 0.7s;">
+                <div class="product-hero-frame w-full overflow-hidden bg-white dark:bg-[#1C191F] relative rounded-2xl border border-gray-100 dark:border-[#3A353C]">
+                    <img src="@Model.Product.ImageUrl" alt="@Model.Product.Name" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="ImageUrl" data-position-key="Product_@(Model.Product.Id)_ImageUrl_Position" class="w-full h-full object-cover" style="width: 100%; height: 100%; object-fit: cover; object-position: @heroPos;">
                 </div>
                 @if (Model.Product.Name.Contains("Chuncho"))
                 {
                     <!-- Image Gallery for Chuncho -->
                     <div class="grid grid-cols-3 gap-4 mt-4" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1rem;">
-                        <div class="flex items-center justify-center relative overflow-hidden bg-white dark:bg-[#3C4A33] dark:bg-[#111]" style="display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; background: white;">
+                        <div class="flex items-center justify-center relative overflow-hidden bg-white dark:bg-[#121014] dark:bg-[#111]" style="display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; background: white;">
                             <img src="/Media/Cacao/Llama_Cacao_paper.webp" alt="Chuncho Cacao - Paper Wrapper" class="w-full h-full object-contain transition-transform duration-700 hover:scale-105" style="width: 100%; height: 100%; object-fit: contain; transition: transform 0.7s;" loading="lazy">
                         </div>
-                        <div class="flex items-center justify-center relative overflow-hidden bg-white dark:bg-[#3C4A33] dark:bg-[#111]" style="display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; background: white;">
+                        <div class="flex items-center justify-center relative overflow-hidden bg-white dark:bg-[#121014] dark:bg-[#111]" style="display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; background: white;">
                             <img src="/Media/Cacao/naked_cacao.webp" alt="Chuncho Cacao - Unwrapped" class="w-full h-full object-contain transition-transform duration-700 hover:scale-105" style="width: 100%; height: 100%; object-fit: contain; transition: transform 0.7s;" loading="lazy">
                         </div>
-                        <div class="flex items-center justify-center relative overflow-hidden bg-white dark:bg-[#3C4A33] dark:bg-[#111]" style="display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; background: white;">
+                        <div class="flex items-center justify-center relative overflow-hidden bg-white dark:bg-[#121014] dark:bg-[#111]" style="display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; background: white;">
                             <img src="/Media/Cacao/Chunco_naked_broken.webp" alt="Chuncho Cacao - Broken Open" class="w-full h-full object-contain transition-transform duration-700 hover:scale-105" style="width: 100%; height: 100%; object-fit: contain; transition: transform 0.7s;" loading="lazy">
                         </div>
                     </div>
                 }
             </div>
             
-            <div class="flex flex-col w-full" style="display: flex; flex-direction: column;">
-                <div class="mb-6 font-mono-jb">
-                    <p class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="Producer">
+            <div class="flex flex-col w-full justify-center">
+                <div class="mb-2 font-mono-jb text-[10px] font-bold text-gray-500 uppercase tracking-widest leading-relaxed">
+                    <p class="mb-0.5" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="Producer">
                         @(string.IsNullOrEmpty(Model.Product.Producer) ? "Guiliar Pérez Cuéllar" : Model.Product.Producer)
                     </p>
-                    <p class="text-sm font-bold text-black dark:text-white uppercase tracking-widest mb-1" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="Origin">
+                    <p class="text-black dark:text-white mb-0.5" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="Origin">
                         @(string.IsNullOrEmpty(Model.Product.Origin) ? "LA GRANJA" : Model.Product.Origin)
-                    </p>
-                    <p class="text-xs text-gray-500 uppercase tracking-widest mb-1">
-                        @(string.IsNullOrEmpty(Model.Product.Variety) ? "PINK BOURBON" : Model.Product.Variety) - @(string.IsNullOrEmpty(Model.Product.ProcessingMethod) ? "WASHED" : Model.Product.ProcessingMethod)
-                    </p>
-                    <p class="text-xs text-gray-500 uppercase tracking-widest" data-entity-id="Product_@(Model.Product.Id)_Country" data-entity-type="SiteContent" data-editable="Value">
-                        @(Model.PageContent != null && Model.PageContent.ContainsKey($"Product_{Model.Product.Id}_Country") ? Model.PageContent[$"Product_{Model.Product.Id}_Country"] : "Colombia")
+                        · @(string.IsNullOrEmpty(Model.Product.Variety) ? "PINK BOURBON" : Model.Product.Variety) — @(string.IsNullOrEmpty(Model.Product.ProcessingMethod) ? "WASHED" : Model.Product.ProcessingMethod)
+                        · @(Model.PageContent != null && Model.PageContent.ContainsKey($"Product_{Model.Product.Id}_Country") ? Model.PageContent[$"Product_{Model.Product.Id}_Country"] : (Model.Product.Origin.Contains("Colombia") ? "Colombia" : "Peru"))
                     </p>
                 </div>
                 
-                <span class="font-mono text-xs text-swiss-red font-bold mb-2 uppercase tracking-widest" style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #FF3B30; font-weight: 700; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.1em;">@Model.Product.Type</span>
-                <div class="flex items-center gap-4 mb-4 flex-wrap">
-                    <h1 class="font-grotesk text-4xl md:text-6xl font-bold leading-tight m-0" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="Name" style="font-family: 'Space Grotesk', sans-serif; font-size: 3rem; font-weight: 700; line-height: 1.1;">@Model.Product.Name</h1>
-                    <span class="bg-black text-white px-3 py-1 text-sm font-bold font-mono tracking-widest rounded-sm whitespace-nowrap" style="font-family: 'JetBrains Mono', monospace;">SCA @Model.Product.ScaScore.ToString("0.##")</span>
+                <span class="font-mono text-[10px] text-swiss-red font-bold uppercase tracking-widest mb-1" style="font-family: 'JetBrains Mono', monospace; color: #FF3B30;">@Model.Product.Type</span>
+                <div class="flex items-center gap-3 mb-2 flex-wrap">
+                    <h1 class="font-grotesk text-3xl md:text-4xl font-bold leading-tight m-0" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="Name" style="font-family: 'Space Grotesk', sans-serif;">@Model.Product.Name</h1>
+                    <span class="bg-black text-white px-2 py-0.5 text-xs font-bold font-mono tracking-widest rounded-sm whitespace-nowrap" style="font-family: 'JetBrains Mono', monospace;">SCA @Model.Product.ScaScore.ToString("0.##")</span>
                 </div>
-                <p class="font-grotesk text-2xl font-bold mb-8 price-display" id="main-product-price" data-base-usd="@Model.Product.BasePriceUSD" data-base-pen="@Model.Product.BasePricePEN" data-price-usd="@Model.Product.BasePriceUSD" data-price-pen="@Model.Product.BasePricePEN" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 2rem;">$@Model.Product.BasePriceUSD.ToString("F2")</p>
-                <p class="font-sans text-gray-600 dark:text-gray-300 mb-8 leading-relaxed text-lg" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="FlavorProfile" style="font-family: 'Inter', sans-serif; color: #4b5563; margin-bottom: 2rem; line-height: 1.75; font-size: 1.125rem;">@Model.Product.Description</p>
+                <div class="mb-3" id="main-product-price" data-base-usd="@Model.Product.BasePriceUSD" data-base-pen="@Model.Product.BasePricePEN">
+                    <partial name="_YapePrice" model="new DualPriceModel { Usd = Model.Product.BasePriceUSD, Pen = Model.Product.BasePricePEN }" />
+                </div>
+                <p class="font-sans text-gray-600 dark:text-gray-300 mb-3 leading-snug text-sm" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="FlavorProfile" style="font-family: 'Inter', sans-serif;">@Model.Product.Description</p>
                 
-                <div class="border-t border-gray-200 dark:border-dark-border pt-8" style="border-top: 1px solid #e5e7eb; padding-top: 2rem;">
+                <div class="border-t border-gray-200 dark:border-dark-border pt-3">
                     <form method="post" asp-page-handler="AddToCart">
                         <input type="hidden" name="productId" value="@Model.Product.Id" />
                         <input type="hidden" name="productName" value="@Model.Product.Name" />
@@ -82,24 +87,24 @@
                         <input type="hidden" name="description" value="@Model.Product.Description" />
 
                         <!-- Weight Selection -->
-                        <div class="mb-6 font-mono-jb">
-                            <label class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-3 block">Size / Weight</label>
+                        <div class="mb-3 font-mono-jb">
+                            <label class="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2 block">Size / Weight</label>
                             <div class="flex gap-2">
                                 <label class="cursor-pointer">
                                     <input type="radio" name="weight-select" value="100g" checked class="peer sr-only" onchange="updateProductWeight('100g', 1)" />
-                                    <div class="px-4 py-2 border border-black bg-transparent text-black peer-checked:bg-black peer-checked:text-white dark:border-[#FAF3DD] dark:text-[#FAF3DD] dark:peer-checked:bg-[#FAF3DD] dark:peer-checked:text-black transition-all font-bold text-xs font-mono">100g</div>
+                                    <div class="px-4 py-2 border border-black bg-transparent text-black peer-checked:bg-black peer-checked:text-white dark:border-[#D6D0C8] dark:text-[#D6D0C8] dark:peer-checked:bg-[#D6D0C8] dark:peer-checked:text-black transition-all font-bold text-xs font-mono">100g</div>
                                 </label>
                                 <label class="cursor-pointer">
                                     <input type="radio" name="weight-select" value="200g" class="peer sr-only" onchange="updateProductWeight('200g', 2)" />
-                                    <div class="px-4 py-2 border border-black bg-transparent text-black peer-checked:bg-black peer-checked:text-white dark:border-[#FAF3DD] dark:text-[#FAF3DD] dark:peer-checked:bg-[#FAF3DD] dark:peer-checked:text-black transition-all font-bold text-xs font-mono">200g</div>
+                                    <div class="px-4 py-2 border border-black bg-transparent text-black peer-checked:bg-black peer-checked:text-white dark:border-[#D6D0C8] dark:text-[#D6D0C8] dark:peer-checked:bg-[#D6D0C8] dark:peer-checked:text-black transition-all font-bold text-xs font-mono">200g</div>
                                 </label>
                                 <label class="cursor-pointer">
                                     <input type="radio" name="weight-select" value="500g" class="peer sr-only" onchange="updateProductWeight('500g', 4.5)" />
-                                    <div class="px-4 py-2 border border-black bg-transparent text-black peer-checked:bg-black peer-checked:text-white dark:border-[#FAF3DD] dark:text-[#FAF3DD] dark:peer-checked:bg-[#FAF3DD] dark:peer-checked:text-black transition-all font-bold text-xs font-mono">500g</div>
+                                    <div class="px-4 py-2 border border-black bg-transparent text-black peer-checked:bg-black peer-checked:text-white dark:border-[#D6D0C8] dark:text-[#D6D0C8] dark:peer-checked:bg-[#D6D0C8] dark:peer-checked:text-black transition-all font-bold text-xs font-mono">500g</div>
                                 </label>
                                 <label class="cursor-pointer">
                                     <input type="radio" name="weight-select" value="1kg" class="peer sr-only" onchange="updateProductWeight('1kg', 8)" />
-                                    <div class="px-4 py-2 border border-black bg-transparent text-black peer-checked:bg-black peer-checked:text-white dark:border-[#FAF3DD] dark:text-[#FAF3DD] dark:peer-checked:bg-[#FAF3DD] dark:peer-checked:text-black transition-all font-bold text-xs font-mono flex flex-col items-center">
+                                    <div class="px-4 py-2 border border-black bg-transparent text-black peer-checked:bg-black peer-checked:text-white dark:border-[#D6D0C8] dark:text-[#D6D0C8] dark:peer-checked:bg-[#D6D0C8] dark:peer-checked:text-black transition-all font-bold text-xs font-mono flex flex-col items-center">
                                         1kg <span class="text-[9px] text-[#FF6464] leading-none mt-1">-20%</span>
                                     </div>
                                 </label>
@@ -113,40 +118,36 @@
                                 const priceEl = document.getElementById('main-product-price');
                                 const baseUsd = parseFloat(priceEl.getAttribute('data-base-usd'));
                                 const basePen = parseFloat(priceEl.getAttribute('data-base-pen'));
+                                const newUsd = baseUsd * multiplier;
+                                const newPen = basePen * multiplier;
                                 
-                                const newUsd = (baseUsd * multiplier).toFixed(2);
-                                const newPen = (basePen * multiplier).toFixed(2);
-                                
-                                priceEl.setAttribute('data-price-usd', newUsd);
-                                priceEl.setAttribute('data-price-pen', newPen);
-                                
-                                // update form price input (always store USD base to backend)
-                                document.getElementById('product-base-price').value = newUsd;
-                                
-                                if (window.updateCurrencyPrices) {
-                                    window.updateCurrencyPrices();
+                                document.getElementById('product-base-price').value = newUsd.toFixed(2);
+
+                                const dual = priceEl.querySelector('.yape-price');
+                                if (dual && window.renderYapePrice) {
+                                    window.renderYapePrice(dual, newUsd, newPen);
                                 }
                             }
                         </script>
 
                         <!-- Purchase Type Selection: One-time vs Subscription -->
-                        <div class="mb-6 font-mono-jb">
-                            <label class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-3 block">Purchase Type</label>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="mb-3 font-mono-jb">
+                            <label class="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2 block">Purchase Type</label>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                 <!-- One-Time Purchase Option -->
-                                <label id="onetime-card" class="cursor-pointer border border-black p-4 flex flex-col justify-between transition-all bg-transparent">
+                                <label id="onetime-card" class="cursor-pointer border border-black px-3 py-2 flex flex-col justify-between transition-all bg-transparent">
                                     <div class="flex items-center justify-between mb-1">
-                                        <span class="font-bold text-xs text-black dark:text-[#FAF3DD] uppercase tracking-wider font-mono">One-Time Purchase</span>
+                                        <span class="font-bold text-xs text-black dark:text-[#D6D0C8] uppercase tracking-wider font-mono">One-Time Purchase</span>
                                         <input type="radio" name="purchaseType" value="OneTime" checked onchange="handlePurchaseTypeChange('OneTime')" class="accent-[#FF6464]">
                                     </div>
                                     <span class="text-[10px] text-gray-500 font-normal font-mono">Standard price</span>
                                 </label>
 
                                 <!-- Subscribe & Save Option -->
-                                <label id="sub-card" class="cursor-pointer border border-gray-300 dark:border-white/20 p-4 flex flex-col justify-between transition-all hover:border-black">
+                                <label id="sub-card" class="cursor-pointer border border-gray-300 dark:border-white/20 px-3 py-2 flex flex-col justify-between transition-all hover:border-black">
                                     <div class="flex items-center justify-between mb-1">
                                         <div class="flex items-center gap-1.5">
-                                            <span class="font-bold text-xs text-black dark:text-[#FAF3DD] uppercase tracking-wider font-mono">Subscribe</span>
+                                            <span class="font-bold text-xs text-black dark:text-[#D6D0C8] uppercase tracking-wider font-mono">Subscribe</span>
                                             <span class="bg-[#FF6464] text-white text-[9px] font-bold px-1.5 py-0.5 uppercase tracking-wider font-mono">10% OFF</span>
                                         </div>
                                         <input type="radio" name="purchaseType" value="Subscribe" onchange="handlePurchaseTypeChange('Subscribe')" class="accent-[#FF6464]">
@@ -158,7 +159,7 @@
                             <!-- Subscription Frequency Selector -->
                             <div id="sub-frequency-container" class="mt-3 hidden p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-300 dark:border-yellow-700/50">
                                 <label class="text-[10px] font-bold uppercase tracking-widest text-yellow-900 dark:text-yellow-200 mb-1.5 block">Delivery Frequency</label>
-                                <select name="subscriptionFrequency" class="w-full p-2.5 bg-white dark:bg-[#3C4A33] border border-yellow-400 dark:border-yellow-600 text-xs font-mono-jb text-black dark:text-[#FAF3DD] outline-none">
+                                <select name="subscriptionFrequency" class="w-full p-2.5 bg-white dark:bg-[#121014] border border-yellow-400 dark:border-yellow-600 text-xs font-mono-jb text-black dark:text-[#D6D0C8] outline-none">
                                     <option value="Every 2 Weeks">Every 2 Weeks (10% Discount applied)</option>
                                     <option value="Every 4 Weeks" selected>Every 4 Weeks (10% Discount applied)</option>
                                     <option value="Every 6 Weeks">Every 6 Weeks (10% Discount applied)</option>
@@ -192,9 +193,9 @@
                             }
                         </script>
 
-                        <div class="flex gap-4" style="display: flex; gap: 1rem;">
-                            <input type="number" value="1" min="1" class="w-16 p-3 bg-transparent border border-black text-center font-mono focus:outline-none" name="quantity" style="width: 4rem; padding: 0.75rem; background: transparent; border: 1px solid #111111; text-align: center; font-family: 'JetBrains Mono', monospace; outline: none; -moz-appearance: textfield;">
-                            <button type="submit" class="btn-lab flex-grow" style="padding: 0.75rem 0;">Add to Cart</button>
+                        <div class="flex gap-3">
+                            <input type="number" value="1" min="1" class="w-14 p-2 bg-transparent border border-black text-center font-mono focus:outline-none" name="quantity" style="width: 3.5rem; padding: 0.5rem; background: transparent; border: 1px solid #111111; text-align: center; font-family: 'JetBrains Mono', monospace; outline: none; -moz-appearance: textfield;">
+                            <button type="submit" class="btn-lab flex-grow" style="padding: 0.5rem 0;">Add to Cart</button>
                         </div>
                     </form>
                 </div>
@@ -229,7 +230,7 @@
                     <dd class="text-black dark:text-white" data-entity-id="Product_@(Model.Product.Id)_Country" data-entity-type="SiteContent" data-editable="Value">@(Model.PageContent != null && Model.PageContent.ContainsKey($"Product_{Model.Product.Id}_Country") ? Model.PageContent[$"Product_{Model.Product.Id}_Country"] : "Colombia")</dd>
                     
                     <dt class="text-gray-400 uppercase tracking-wider">Region</dt>
-                    <dd class="text-black dark:text-white" data-entity-id="Product_@(Model.Product.Id)_Region" data-entity-type="SiteContent" data-editable="Value">@(Model.PageContent != null && Model.PageContent.ContainsKey($"Product_{Model.Product.Id}_Region") ? Model.PageContent[$"Product_{Model.Product.Id}_Region"] : (Model.Product.Origin.Contains("Cusco") ? "Cusco" : Model.Product.Origin.Contains("La Convención") ? "La Convención, Cusco" : Model.Product.Origin.Split(',').Length > 0 ? Model.Product.Origin.Split(',')[0].Trim() : "Cusco"))</dd>
+                    <dd class="text-black dark:text-white" data-entity-id="Product_@(Model.Product.Id)_Region" data-entity-type="SiteContent" data-editable="Value">@(Model.PageContent != null && Model.PageContent.ContainsKey($"Product_{Model.Product.Id}_Region") ? Model.PageContent[$"Product_{Model.Product.Id}_Region"] : (Model.Product.Origin.Contains("Cajamarca") ? Model.Product.Origin : Model.Product.Origin.Contains("Cusco") ? "Cusco" : Model.Product.Origin.Contains("La Convención") ? "La Convención, Cusco" : Model.Product.Origin))</dd>
                     
                     @if (Model.Product.Type != "Cacao")
                     {
@@ -257,18 +258,30 @@
             </div>
         </div>
 
+        @if (Model.Product.GalleryImages != null && Model.Product.GalleryImages.Count > 0)
+        {
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                @foreach (var img in Model.Product.GalleryImages)
+                {
+                    <div class="aspect-[4/3] overflow-hidden bg-gray-100 dark:bg-[#1C191F] relative rounded-2xl">
+                        <img src="@img" alt="@Model.Product.Name" class="w-full h-full object-cover" loading="lazy" />
+                    </div>
+                }
+            </div>
+        }
+
         @if (Model.Product.Type == "Bean" || Model.Product.Type == "Cacao" || Model.Product.Name.Contains("Roast") || Model.Product.Name.Contains("SL09"))
         {
             <!-- 2. Producer Info -->
             <div class="border-t border-gray-200 dark:border-dark-border py-16" style="border-top: 1px solid #e5e7eb; padding: 4rem 0;">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 3rem; align-items: center;">
-                    <div class="h-[400px] w-full bg-gray-100 dark:bg-[#2F3A28] dark:bg-[#111] overflow-hidden relative" style="height: 400px; width: 100%; background: #f3f4f6; overflow: hidden; position: relative;">
+                    <div class="aspect-[4/3] w-full bg-gray-100 dark:bg-[#1C191F] overflow-hidden relative">
                         @{
                             var producerImageFallback = string.IsNullOrEmpty(Model.Product.ProducerImageUrl) 
                                 ? "https://images.unsplash.com/photo-1596627689932-349099c26d7c?q=80&w=1600&auto=format&fit=crop" 
                                 : Model.Product.ProducerImageUrl;
                         }
-                        <img src="@producerImageFallback" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt="Producer" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="ProducerImageUrl" style="width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%); transition: all 0.7s;" loading="lazy">
+                        <img src="@producerImageFallback" class="w-full h-full object-cover object-center grayscale hover:grayscale-0 transition-all duration-700" alt="@(string.IsNullOrEmpty(Model.Product.Producer) ? "Producer" : Model.Product.Producer)" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="ProducerImageUrl" style="width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%); transition: all 0.7s;" loading="lazy">
                     </div>
                     <div class="bg-[#1a3c2f] text-white p-12 h-full flex flex-col justify-center" style="background: #1a3c2f; color: white; padding: 3rem; height: 100%; display: flex; flex-direction: column; justify-content: center;">
                         <h3 class="font-grotesk text-3xl font-bold mb-6" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.875rem; font-weight: 700; margin-bottom: 1.5rem;">About the Producers</h3>
@@ -335,8 +348,8 @@
                             @Html.Raw(Model.PageContent != null && Model.PageContent.ContainsKey($"Product_{Model.Product.Id}_FlavorWheelText") ? Model.PageContent[$"Product_{Model.Product.Id}_FlavorWheelText"] : flavorWheelFallback)
                         </p>
                     </div>
-                    <div class="flex justify-center" style="display: flex; justify-content: center;">
-                        <div class="flavor-wheel" style="width: 300px; height: 300px; max-width: 100%; border-radius: 50%; background: conic-gradient(#194d33 0% 25%, #f0f0f0 25% 50%, #111111 50% 75%, #e5e5e5 75% 100%); position: relative; margin: 0 auto; border: 1px solid #e5e7eb; box-shadow: none !important;">
+                    <div class="flex justify-center items-center w-full">
+                        <div class="flavor-wheel" style="width: min(100%, 28rem); aspect-ratio: 1; border-radius: 50%; background: conic-gradient(#194d33 0% 25%, #f0f0f0 25% 50%, #111111 50% 75%, #e5e5e5 75% 100%); position: relative; margin: 0 auto; border: 1px solid #e5e7eb; box-shadow: none !important;">
                             @if (Model.Product.Type == "Cacao")
                             {
                                 <!-- Fruity - Top Right -->
@@ -383,8 +396,20 @@
                         <div class="absolute bottom-2 right-2 bg-black text-white px-3 py-1 font-mono text-xs opacity-0 group-hover:opacity-100 transition-opacity rounded-sm shadow pointer-events-none hidden md:block">Click for Interactive Map</div>
                     </a>
                     <div class="w-full md:w-1/2 pl-0 md:pl-12">
+                        @{
+                            var originTitle = Model.Product.Name.Contains("SL09")
+                                ? "La Convención, Cusco"
+                                : Model.Product.Origin.Contains("Cajamarca")
+                                    ? Model.Product.Origin
+                                    : Model.Product.Origin.Contains("Cusco")
+                                        ? "Cusco Region"
+                                        : Model.Product.Origin.Contains("La Convención")
+                                            ? "La Convención, Cusco"
+                                            : Model.Product.Origin;
+                            var originCta = Model.Product.Origin.Contains("Cajamarca") ? "Explore Cajamarca" : "Explore Cusco Regions";
+                        }
                         <h4 class="font-grotesk text-2xl font-bold mb-4" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">
-                            About @(Model.Product.Name.Contains("SL09") ? "La Convención, Cusco" : Model.Product.Origin.Contains("Cusco") ? "Cusco Region" : Model.Product.Origin.Contains("La Convención") ? "La Convención, Cusco" : "Cusco, Peru")
+                            About @originTitle
                         </h4>
                         <p class="font-sans text-gray-600 dark:text-gray-400 mb-8" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="OriginDescription" style="font-family: 'Inter', sans-serif; color: #4b5563; margin-bottom: 2rem;">
                             @{
@@ -404,7 +429,7 @@
                             }
                             @(string.IsNullOrEmpty(Model.Product.OriginDescription) ? originDescFallback : Model.Product.OriginDescription)
                         </p>
-                        <a href="/Experiences" class="px-6 py-3 border border-black dark:border-white font-mono text-xs uppercase hover:bg-black hover:text-white dark:hover:bg-white dark:bg-[#3C4A33] dark:hover:text-black dark:text-[#FAF3DD] transition-colors inline-block" style="padding: 0.75rem 1.5rem; border: 1px solid #111; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; text-transform: uppercase; transition: all 0.3s; text-decoration: none; color: #111;">Explore Cusco Regions</a>
+                        <a href="/Experiences" class="px-6 py-3 border border-black dark:border-white font-mono text-xs uppercase hover:bg-black hover:text-white dark:hover:bg-white dark:bg-[#121014] dark:hover:text-black dark:text-[#D6D0C8] transition-colors inline-block" style="padding: 0.75rem 1.5rem; border: 1px solid #111; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; text-transform: uppercase; transition: all 0.3s; text-decoration: none; color: #111;">@originCta</a>
                     </div>
                 </div>
             </div>
@@ -421,7 +446,7 @@
                 {
                     <div class="border border-gray-200 dark:border-dark-border hover:bg-off-white dark:hover:bg-white/5 transition-colors group cursor-pointer" style="border: 1px solid #e5e7eb; transition: background-color 0.3s; cursor: pointer;">
                         <a href="@Url.Page("/Product", new { id = product.Id })" class="text-decoration-none" style="text-decoration: none; color: inherit;">
-                            <div class="h-48 bg-gray-100 dark:bg-[#2F3A28] dark:bg-[#111] overflow-hidden" style="height: 12rem; background: #f3f4f6; overflow: hidden;">
+                            <div class="h-48 bg-gray-100 dark:bg-[#1C191F] dark:bg-[#111] overflow-hidden" style="height: 12rem; background: #f3f4f6; overflow: hidden;">
                                 <img src="@product.ImageUrl" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="@product.Name" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s;" loading="lazy">
                             </div>
                             <div class="p-6" style="padding: 1.5rem;">
@@ -446,11 +471,23 @@ else
     <div class="container-fluid px-6 py-12 text-center" style="max-width: 1400px; margin: 0 auto; padding: 3rem 1.5rem; text-align: center;">
         <h2 class="font-grotesk text-3xl font-bold mb-4" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.875rem; font-weight: 700; margin-bottom: 1rem;">Product Not Found</h2>
         <p class="font-sans text-gray-600 dark:text-gray-400 mb-8" style="font-family: 'Inter', sans-serif; color: #4b5563; margin-bottom: 2rem;">The product you're looking for doesn't exist or has been removed.</p>
-        <a href="/GreenBeans" class="px-6 py-3 bg-charcoal dark:bg-white text-white dark:text-black font-mono text-xs uppercase hover:bg-swiss-red dark:hover:bg-gray-200 transition-colors inline-block" style="padding: 0.75rem 1.5rem; background: #111111; color: white; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; text-transform: uppercase; transition: background-color 0.3s; text-decoration: none;">Back to Green Beans</a>
+        <a href="/Coffee" class="px-6 py-3 bg-charcoal dark:bg-white text-white dark:text-black font-mono text-xs uppercase hover:bg-swiss-red dark:hover:bg-gray-200 transition-colors inline-block" style="padding: 0.75rem 1.5rem; background: #111111; color: white; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; text-transform: uppercase; transition: background-color 0.3s; text-decoration: none;">Back to Coffee</a>
     </div>
 }
 
 <style>
+    img[src*="angel-cajamarca"] {
+        object-position: 50% 32% !important;
+    }
+    .product-hero-frame {
+        height: min(52vh, 28rem);
+    }
+    @@media (min-width: 1024px) {
+        .product-hero-frame {
+            height: calc(100vh - 7.25rem);
+            max-height: 36rem;
+        }
+    }
     /* Dark mode support for flavor wheel */
     .dark .flavor-wheel {
         background: conic-gradient(#194d33 0% 25%, #333333 25% 50%, #000000 50% 75%, #444444 75% 100%) !important;
@@ -594,8 +631,8 @@ else
       }},{{
         ""@type"": ""ListItem"",
         ""position"": 2,
-        ""name"": ""Shop"",
-        ""item"": ""https://purplebean.coffee/GreenBeans""
+        ""name"": ""Coffee"",
+        ""item"": ""https://purplebean.coffee/Coffee""
       }},{{
         ""@type"": ""ListItem"",
         ""position"": 3,

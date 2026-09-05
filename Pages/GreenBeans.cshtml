@@ -1,7 +1,7 @@
-@page
+@page "/Coffee"
 @model GreenBeansModel
 @{
-    ViewData["Title"] = "All Coffees";
+    ViewData["Title"] = "Coffee";
     ViewData["MetaDescription"] = "Shop specialty Peruvian coffee from Purple Bean Coffee. Single-origin beans from La Convención and Cajamarca, SCA scored, roasted in Cusco. Available roasted or as wholesale green beans.";
 }
 @Html.AntiForgeryToken()
@@ -104,59 +104,268 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #E5E5E5; }
         
+        .flavor-map {
+            width: 100%;
+            max-width: 280px;
+            margin: 0 auto;
+        }
+        .flavor-map__top {
+            text-align: center;
+            border-bottom: 1px solid #111;
+            padding-bottom: 0.25rem;
+            margin: 0 auto 0.75rem;
+            width: fit-content;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: #111;
+        }
+        html.dark .flavor-map__top {
+            color: #D6D0C8;
+            border-bottom-color: rgba(214, 208, 200, 0.22);
+        }
         .flavor-triangle {
             width: 100%;
-            max-width: 400px;
+            max-width: 280px;
             aspect-ratio: 1.15 / 1;
             clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
             position: relative;
             margin: 0 auto;
+            cursor: crosshair;
         }
 
         .triangle-marker {
             position: absolute;
-            width: 12px;
-            height: 12px;
+            width: 9px;
+            height: 9px;
             border-radius: 50%;
             transform: translate(-50%, -50%);
-            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            cursor: grab;
+            z-index: 2;
+        }
+        .triangle-marker:active { cursor: grabbing; }
+
+        .flavor-triangle-wrap {
+            position: relative;
+            width: 100%;
+            overflow: visible;
+        }
+        .flavor-triangle-stage {
+            position: relative;
+            width: 100%;
+            max-width: 280px;
+            margin: 0 auto;
+            overflow: visible;
+        }
+        .flavor-click-arrow {
+            position: absolute;
+            right: calc(100% + 8px);
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 4;
+            pointer-events: none;
+            color: #111;
+            display: block;
+            line-height: 0;
+            animation: flavor-arrow-nudge 1.1s ease-in-out infinite;
+        }
+        html.dark .flavor-click-arrow {
+            color: #D6D0C8;
+        }
+        @@keyframes flavor-arrow-nudge {
+            0%, 100% { transform: translate(-2px, -50%); }
+            50% { transform: translate(3px, -50%); }
+        }
+        @@media (prefers-reduced-motion: reduce) {
+            .flavor-click-arrow { animation: none; transform: translateY(-50%); }
+        }
+        .flavor-prompt {
+            position: absolute;
+            left: 50%;
+            top: 58%;
+            transform: translate(-50%, -50%);
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            pointer-events: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #111;
+            background: rgb(137 215 255 / 70%);
+            padding: 4px 8px 4px 6px;
+            white-space: nowrap;
+            transition: opacity 0.3s ease;
+        }
+        html.dark .flavor-prompt {
+            color: #D6D0C8;
+            background: rgba(18, 16, 20, 0.88);
+        }
+        .flavor-prompt-cursor {
+            width: 7px;
+            height: 12px;
+            background: currentColor;
+            animation: offerings-blink 0.7s step-end infinite;
+            flex-shrink: 0;
+        }
+        .flavor-prompt.is-hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .flavor-hint-mouse { display: none; }
+        .flavor-hint-touch { display: none; }
+        @@media (hover: hover) and (pointer: fine) {
+            .flavor-hint-mouse { display: flex; }
+        }
+        @@media (hover: none), (pointer: coarse) {
+            .flavor-hint-touch { display: flex; }
+        }
+        .flavor-map__base {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin: 0.5rem 0 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #111;
+        }
+        html.dark .flavor-map__base { color: #D6D0C8; }
+        .flavor-map__base span:first-child { text-align: left; max-width: 46%; }
+        .flavor-map__base span:last-child { text-align: right; max-width: 46%; }
+
+        .flavor-legend-block {
+            width: 100%;
+            max-width: 360px;
+            margin: 0 auto 1rem;
+            position: relative;
+        }
+        .flavor-legend-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .flavor-note-help-btn {
+            width: 32px;
+            min-width: 32px;
+            height: 32px;
+            border: 1px solid #111;
+            background: transparent;
             cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 1;
+            color: #111;
+            padding: 0;
+        }
+        html.dark .flavor-note-help-btn {
+            border-color: rgba(214, 208, 200, 0.35);
+            color: #D6D0C8;
+        }
+        .flavor-note-help-btn[aria-expanded="true"] {
+            background: #111;
+            color: #fff;
+        }
+        html.dark .flavor-note-help-btn[aria-expanded="true"] {
+            background: #8B6FA0;
+            color: #121014;
+            border-color: #8B6FA0;
+        }
+        .flavor-note-help-text {
+            display: none;
+            margin: 0.6rem 0 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(17, 17, 17, 0.6);
+            text-align: center;
+            line-height: 1.5;
+        }
+        html.dark .flavor-note-help-text { color: #8B8490; }
+        .flavor-note-help-text.is-open { display: block; }
+
+        .flavor-legend-btn.legend-selected {
+            background-color: #111 !important;
+            color: #fff !important;
+        }
+        html.dark .flavor-legend-btn.legend-selected {
+            background-color: #8B6FA0 !important;
+            color: #121014 !important;
+            border-color: #8B6FA0 !important;
         }
     
 </style>
 
 
 <!-- Section: Flavor Explorer (Receipt Style & Paper Background) -->
-        <section class="w-full bg-[rgb(255,255,137)] border-y border-black flex items-center justify-center py-4 lg:py-6 min-h-[calc(100vh-64px)]">
+        <section class="flavor-explorer w-full dark:bg-night-2 border-y border-black dark:border-[rgba(214,208,200,0.12)] flex items-center justify-center py-4 lg:py-6 min-h-[calc(100vh-64px)]">
             <div class="max-w-[1400px] mx-auto px-4 lg:px-6 grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 items-center w-full">
                 
                 <!-- Left Col: Interactive Triangle -->
                 <div class="relative flex flex-col items-center">
-                    <div class="text-center border-b border-black pb-1 px-2 font-mono text-[10px] font-bold tracking-widest uppercase text-black mb-4">
-                        Bright & Fruity
-                    </div>
-                    
-                    <div class="w-full flex justify-center py-2 relative">
-                        <div class="flavor-triangle !max-w-[240px] md:!max-w-[280px]" style="background: linear-gradient(160deg, #FF5A36 0%, #ffcba4 50%, #e0e0d8 100%);">
-                            <div id="triangle-marker-0" class="triangle-marker" style="background: #FF5A36; top: 25%; left: 50%;"></div>
-                            <div id="triangle-marker-1" class="triangle-marker" style="background: #CCCCCC; top: 25%; left: 50%; display: none;"></div>
-                            <div id="triangle-marker-2" class="triangle-marker" style="background: #CCCCCC; top: 25%; left: 50%; display: none;"></div>
+                    <div class="flavor-map">
+                        <div class="flavor-map__top">Bright & Fruity</div>
+                        <div class="flavor-triangle-wrap">
+                            <div class="flavor-triangle-stage">
+                                <div id="flavor-prompt" class="flavor-prompt">
+                                    <span class="flavor-click-arrow" aria-hidden="true">
+                                        <svg width="28" height="10" viewBox="0 0 28 10" fill="none">
+                                            <path d="M0 5 H22 M22 5 L16 1 M22 5 L16 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/>
+                                        </svg>
+                                    </span>
+                                    <span class="flavor-prompt-cursor" aria-hidden="true"></span>
+                                    <span class="flavor-hint-mouse">Click to choose flavour</span>
+                                    <span class="flavor-hint-touch">Tap flavor</span>
+                                </div>
+                                <div class="flavor-triangle" style="background: linear-gradient(160deg, #FF5A36 0%, #ffcba4 50%, #e0e0d8 100%);" role="button" tabindex="0" aria-label="Flavor map — click or tap to place your note">
+                                    <div id="triangle-marker-0" class="triangle-marker" style="background: #FF5A36; top: 25%; left: 50%;"></div>
+                                    <div id="triangle-marker-1" class="triangle-marker" style="background: #CCCCCC; top: 25%; left: 50%; display: none;"></div>
+                                    <div id="triangle-marker-2" class="triangle-marker" style="background: #CCCCCC; top: 25%; left: 50%; display: none;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flavor-map__base">
+                            <span>Rich & Chocolatey</span>
+                            <span>Funky & Boozy</span>
                         </div>
                     </div>
 
-                    <div class="w-full max-w-[320px] flex justify-between px-4 font-mono text-[9px] font-bold tracking-widest uppercase text-black mt-2 mb-6">
-                        <span>Rich & Chocolatey</span>
-                        <span>Funky & Boozy</span>
+                    <div class="flavor-legend-block">
+                        <div class="flavor-legend-row font-mono text-[9px] tracking-widest uppercase text-black">
+                            <button type="button" id="legend-0" class="flavor-legend-btn legend-selected border border-black bg-transparent px-3 py-1.5 flex items-center gap-2 font-bold transition-colors rounded-none cursor-pointer">
+                                <span id="dot-0" class="w-2 h-2 bg-[#FF5A36] inline-block border border-black"></span> <span id="text-0">Primary</span>
+                            </button>
+                            <button type="button" id="legend-1" class="flavor-legend-btn border border-black bg-transparent px-3 py-1.5 flex items-center gap-2 font-bold hover:bg-black hover:text-white transition-colors rounded-none cursor-pointer">
+                                <span id="dot-1">+</span> <span id="text-1">Add Note</span>
+                            </button>
+                            <button type="button" id="legend-2" class="flavor-legend-btn border border-black bg-transparent px-3 py-1.5 flex items-center gap-2 font-bold hover:bg-black hover:text-white transition-colors rounded-none cursor-pointer">
+                                <span id="dot-2">+</span> <span id="text-2">Add Note</span>
+                            </button>
+                            <button type="button" id="flavor-note-help-toggle" class="flavor-note-help-btn" aria-expanded="false" aria-controls="flavor-note-help-text" title="How to add a note">+</button>
+                        </div>
+                        <p id="flavor-note-help-text" class="flavor-note-help-text">
+                            Add Note for a 2nd or 3rd flavour — select a button, then click or tap the triangle
+                        </p>
                     </div>
 
-                    <div class="flex flex-wrap justify-center gap-3 font-mono text-[9px] tracking-widest uppercase text-black">
-                        <button id="legend-0" class="border border-black bg-transparent px-3 py-1.5 flex items-center gap-2 font-bold transition-colors rounded-none cursor-default">
-                            <span id="dot-0" class="w-2 h-2 bg-[#FF5A36] inline-block border border-black"></span> <span id="text-0">Primary</span>
-                        </button>
-                        <button id="legend-1" class="border border-black bg-transparent px-3 py-1.5 flex items-center gap-2 font-bold hover:bg-black hover:text-white transition-colors rounded-none">
-                            <span id="dot-1">+</span> <span id="text-1">Add Note</span>
-                        </button>
-                    </div>
+                    <p class="lg:hidden font-mono text-[8px] font-bold tracking-widest uppercase text-black/50 dark:text-mist text-center mb-2 flex items-center justify-center gap-1">
+                        Your match appears below
+                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M5 1 L5 8 M5 8 L2 5 M5 8 L8 5" stroke="currentColor" stroke-width="1.2" stroke-linecap="square"/></svg>
+                    </p>
 
                     <!-- Specs Sliders -->
                     <div class="w-full max-w-[320px] mt-4">
@@ -209,7 +418,7 @@
                 </div>
 
                 <!-- Right Col: Description Block -->
-                <div id="active-profile-details" class="flex flex-col justify-center fade-transition">
+                <div id="active-profile-details" class="flex flex-col justify-center fade-transition relative">
                     <div class="font-mono text-[10px] font-bold text-[#FF5A36] tracking-widest uppercase mb-2" data-entity-id="GreenBeans_Subtitle" data-entity-type="SiteContent" data-editable="Value">
                         @Html.Raw(Model.PageContent.GetValueOrDefault("GreenBeans_Subtitle", "04 // ROAST"))
                     </div>
@@ -280,30 +489,31 @@
         <!-- END FLAVOR EXPLORER -->
 
         <section aria-label="Coffee Products" class="container mx-auto px-4 md:px-8 py-16">
-            <!-- Simple Filters -->
-            <div class="flex flex-wrap justify-center gap-4 mb-16">
-            @{
-                var initialFilter = !string.IsNullOrEmpty(Model.Type) ? Model.Type.ToLower() : (!string.IsNullOrEmpty(Model.Filter) ? Model.Filter : "All");
-                var filters = new Dictionary<string, string> 
-                { 
-                    { "All", "All" }, 
-                    { "green", "Green Coffee" },
-                    { "roasted", "Roasted Coffee" },
-                    { "Peru", "Peru" }, 
-                    { "Colombia", "Colombia (Coming Soon)" }, 
-                    { "Washed", "Washed" }, 
-                    { "Natural", "Natural" } 
-                };
-                foreach (var filter in filters)
-                {
-                    var isSelected = filter.Key.Equals(initialFilter, StringComparison.OrdinalIgnoreCase);
-                    <button type="button" data-filter="@filter.Key"
-                       class="filter-btn px-6 py-2 border rounded-full text-xs font-bold font-mono-jb uppercase tracking-widest transition-all @(isSelected ? "bg-black text-white border-black" : "bg-transparent text-gray-600 border-gray-200 hover:border-gray-400 hover:text-black dark:text-[#B8C9A9] dark:border-[#445239] dark:hover:border-[#F2F5EB]")">
-                        @filter.Value
-                    </button>
+            <!-- Filters — horizontal scroll strip matching product stat tags -->
+            <div class="relative mb-12">
+                <div class="flex overflow-x-auto gap-0 scrollbar-hide snap-x snap-mandatory -mx-4 px-4 md:mx-0 md:px-0 md:flex-wrap md:justify-center md:gap-2">
+                @{
+                    var initialFilter = !string.IsNullOrEmpty(Model.Type) ? Model.Type.ToLower() : (!string.IsNullOrEmpty(Model.Filter) ? Model.Filter : "All");
+                    var filters = new Dictionary<string, string> 
+                    { 
+                        { "All", "All" }, 
+                        { "green", "Green Coffee" },
+                        { "roasted", "Roasted Coffee" },
+                        { "Peru", "Peru" }, 
+                        { "Colombia", "Colombia (Coming Soon)" }, 
+                        { "Washed", "Washed" }, 
+                        { "Natural", "Natural" } 
+                    };
+                    foreach (var filter in filters)
+                    {
+                        var isSelected = filter.Key.Equals(initialFilter, StringComparison.OrdinalIgnoreCase);
+                        <button type="button" data-filter="@filter.Key" class="filter-btn snap-start shrink-0 md:shrink whitespace-nowrap px-3 py-1.5 font-mono-jb text-[8px] uppercase tracking-widest font-bold border-r border-gray-300 dark:border-[#2A262C] transition-all last:border-r-0 md:border md:rounded-none md:last:border-r @(isSelected ? "bg-black text-white dark:bg-cream dark:text-night" : "bg-white text-black dark:bg-[#1C191F] dark:text-mist hover:bg-gray-100 dark:hover:bg-[#2A262C]")">
+                            @filter.Value
+                        </button>
+                    }
                 }
-            }
-        </div>
+                </div>
+            </div>
 
         <script>
             document.addEventListener('DOMContentLoaded', function() {
@@ -315,11 +525,11 @@
                     // Update button styles
                     buttons.forEach(b => {
                         if (b.getAttribute('data-filter').toLowerCase() === lowerFilter) {
-                            b.classList.remove('bg-white dark:bg-[#3C4A33]', 'hover:bg-gray-100 dark:bg-[#2F3A28]');
+                            b.classList.remove('bg-white dark:bg-[#121014]', 'hover:bg-gray-100 dark:bg-[#1C191F]');
                             b.classList.add('bg-black', 'text-white');
                         } else {
                             b.classList.remove('bg-black', 'text-white');
-                            b.classList.add('bg-white dark:bg-[#3C4A33]', 'hover:bg-gray-100 dark:bg-[#2F3A28]');
+                            b.classList.add('bg-white dark:bg-[#121014]', 'hover:bg-gray-100 dark:bg-[#1C191F]');
                         }
                     });
 
@@ -362,7 +572,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
             @if (User.Identity?.IsAuthenticated == true)
             {
-                <a href="/Admin/Coffees/Create" class="add-coffee-card flex-col justify-center items-center border-2 border-dashed border-gray-300 dark:border-[#445239] rounded-2xl md:rounded-3xl hover:border-black dark:hover:border-white transition-colors h-full min-h-[400px] text-gray-400 hover:text-black dark:hover:text-white text-decoration-none group cursor-pointer bg-white/50 dark:bg-[#313A29]/50 backdrop-blur-sm">
+                <a href="/Admin/Coffees/Create" class="add-coffee-card flex-col justify-center items-center border-2 border-dashed border-gray-300 dark:border-[#3A353C] rounded-2xl md:rounded-3xl hover:border-black dark:hover:border-white transition-colors h-full min-h-[400px] text-gray-400 hover:text-black dark:hover:text-white text-decoration-none group cursor-pointer bg-white/50 dark:bg-[#1C191F]/50 backdrop-blur-sm">
                     <div class="flex flex-col items-center justify-center gap-4 transition-transform duration-300 group-hover:scale-110">
                         <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -410,6 +620,8 @@
             { id: 1, active: false, color: '#CCCCCC', x: 40, y: 35 },
             { id: 2, active: false, color: '#CCCCCC', x: 60, y: 35 }
         ];
+        let selectedIdx = 0;
+        const legendLabels = ['Primary', 'Secondary', 'Tertiary'];
 
         // Flavor Zones from Backend
         const rawFlavorZones = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.FlavorZones));
@@ -608,11 +820,43 @@
             updateUI(activeZones, activeNodes);
         }
 
-        // Toggling Nodes
-        document.getElementById('legend-1')?.addEventListener('click', () => toggleNode(1));
+        // Legend selection & node toggling
+        function updateLegendSelection() {
+            [0, 1, 2].forEach(i => {
+                const legendEl = document.getElementById(`legend-${i}`);
+                if (!legendEl) return;
+                legendEl.classList.toggle('legend-selected', i === selectedIdx);
+            });
+        }
+
+        function selectNode(index) {
+            if (index > 0 && !nodes[index].active) {
+                toggleNode(index, true);
+            }
+            selectedIdx = index;
+            updateLegendSelection();
+        }
+
+        document.getElementById('legend-0')?.addEventListener('click', () => selectNode(0));
+        document.getElementById('flavor-note-help-toggle')?.addEventListener('click', function () {
+            var open = this.getAttribute('aria-expanded') === 'true';
+            this.setAttribute('aria-expanded', open ? 'false' : 'true');
+            this.textContent = open ? '+' : '×';
+            document.getElementById('flavor-note-help-text')?.classList.toggle('is-open', !open);
+        });
+        document.getElementById('legend-1')?.addEventListener('click', () => {
+            if (nodes[1].active) selectNode(1);
+            else toggleNode(1);
+        });
+        document.getElementById('legend-2')?.addEventListener('click', () => {
+            if (nodes[2].active) selectNode(2);
+            else toggleNode(2);
+        });
         
-        function toggleNode(index) {
+        function toggleNode(index, keepSelected = false) {
             const node = nodes[index];
+            if (index === 0) return;
+
             node.active = !node.active;
             
             const legendEl = document.getElementById(`legend-${index}`);
@@ -621,38 +865,66 @@
             const markerEl = document.getElementById(`triangle-marker-${index}`);
 
             if (node.active) {
-                // place near primary node
                 node.x = Math.max(0, Math.min(100, nodes[0].x + (index === 1 ? -15 : 15)));
                 node.y = Math.max(0, Math.min(100, nodes[0].y + 15));
                 markerEl.style.left = `${node.x}%`;
                 markerEl.style.top = `${node.y}%`;
                 
-                legendEl.classList.remove('text-black', 'bg-transparent');
-                legendEl.classList.add('bg-black', 'text-white');
                 dotEl.innerHTML = '';
                 dotEl.classList.remove('bg-transparent');
-                dotEl.classList.add('bg-white');
-                textEl.textContent = 'Secondary';
+                dotEl.classList.add('bg-white', 'w-2', 'h-2', 'inline-block', 'border', 'border-black');
+                textEl.textContent = legendLabels[index];
                 markerEl.style.display = 'block';
+                selectedIdx = index;
             } else {
-                legendEl.classList.add('text-black', 'bg-transparent');
-                legendEl.classList.remove('bg-black', 'text-white');
                 dotEl.innerHTML = '+';
-                dotEl.classList.remove('bg-white');
+                dotEl.classList.remove('bg-white', 'w-2', 'h-2', 'inline-block', 'border', 'border-black');
                 dotEl.classList.add('bg-transparent');
                 textEl.textContent = 'Add Note';
                 markerEl.style.display = 'none';
+                if (selectedIdx === index) selectedIdx = 0;
             }
+
+            if (!keepSelected) updateLegendSelection();
+            else updateLegendSelection();
             processCurrentPosition();
         }
 
-        // Drag functionality
+        // Drag & click on triangle
         const triangleEl = document.querySelector('.flavor-triangle');
         let draggingIdx = -1;
+        let dragMoved = false;
+        let dragStartX = 0;
+        let dragStartY = 0;
+
+        function placeNodeAt(index, clientX, clientY) {
+            if (index === 0 || nodes[index].active) {
+                const rect = triangleEl.getBoundingClientRect();
+                let px = ((clientX - rect.left) / rect.width) * 100;
+                let py = ((clientY - rect.top) / rect.height) * 100;
+                const clamped = clampToTriangle(px, py);
+
+                nodes[index].x = clamped.x;
+                nodes[index].y = clamped.y;
+
+                const marker = document.getElementById(`triangle-marker-${index}`);
+                marker.style.left = `${clamped.x}%`;
+                marker.style.top = `${clamped.y}%`;
+
+                processCurrentPosition();
+            }
+        }
 
         function startDrag(e, idx) {
             e.preventDefault();
+            e.stopPropagation();
             draggingIdx = idx;
+            dragMoved = false;
+            const pt = e.touches ? e.touches[0] : e;
+            dragStartX = pt.clientX;
+            dragStartY = pt.clientY;
+            selectNode(idx);
+            hideFlavorPrompt();
         }
 
         nodes.forEach((n, idx) => {
@@ -665,22 +937,31 @@
 
         function updateDrag(clientX, clientY) {
             if (draggingIdx === -1) return;
-            const rect = triangleEl.getBoundingClientRect();
-            // Get percentage
-            let px = ((clientX - rect.left) / rect.width) * 100;
-            let py = ((clientY - rect.top) / rect.height) * 100;
-            
-            const clamped = clampToTriangle(px, py);
-            
-            nodes[draggingIdx].x = clamped.x;
-            nodes[draggingIdx].y = clamped.y;
-            
-            const marker = document.getElementById(`triangle-marker-${draggingIdx}`);
-            marker.style.left = `${clamped.x}%`;
-            marker.style.top = `${clamped.y}%`;
-            
-            processCurrentPosition();
+            if (Math.abs(clientX - dragStartX) > 4 || Math.abs(clientY - dragStartY) > 4) {
+                dragMoved = true;
+            }
+            placeNodeAt(draggingIdx, clientX, clientY);
         }
+
+        function hideFlavorPrompt() {
+            document.getElementById('flavor-prompt')?.classList.add('is-hidden');
+        }
+
+        triangleEl?.addEventListener('click', (e) => {
+            hideFlavorPrompt();
+            if (dragMoved) return;
+            if (e.target.classList.contains('triangle-marker')) return;
+            placeNodeAt(selectedIdx, e.clientX, e.clientY);
+        });
+
+        triangleEl?.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                hideFlavorPrompt();
+                const rect = triangleEl.getBoundingClientRect();
+                placeNodeAt(selectedIdx, rect.left + rect.width / 2, rect.top + rect.height * 0.35);
+            }
+        });
 
         window.addEventListener('mousemove', (e) => updateDrag(e.clientX, e.clientY));
         window.addEventListener('touchmove', (e) => {
@@ -692,6 +973,8 @@
 
         window.addEventListener('mouseup', () => { draggingIdx = -1; });
         window.addEventListener('touchend', () => { draggingIdx = -1; });
+
+        updateLegendSelection();
 
         // Initial setup
         if (flavorZones.length > 0) {

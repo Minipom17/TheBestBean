@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using TheBestBean.Models;
+using TheBestBean.Services;
 
 namespace TheBestBean.Pages
 {
@@ -33,6 +34,7 @@ namespace TheBestBean.Pages
             };
 
             _cartService.AddToCart(HttpContext.Session, cartItem);
+            Ga4Ecommerce.QueueAddToCart(TempData, cartItem);
 
             return RedirectToPage("/Cart");
         }

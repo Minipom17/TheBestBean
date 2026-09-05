@@ -173,8 +173,8 @@ app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Redirect /Shop to /GreenBeans (Shop page was removed)
-app.MapGet("/Shop", () => Results.Redirect("/GreenBeans", permanent: true));
+app.MapGet("/Shop", () => Results.Redirect("/Coffee", permanent: true));
+app.MapGet("/GreenBeans", () => Results.Redirect("/Coffee", permanent: true));
 
 app.MapRazorPages();
 app.MapControllers();

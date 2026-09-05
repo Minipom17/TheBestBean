@@ -368,8 +368,380 @@ namespace TheBestBean.Models
             }
 
             // Also clean up regions/farms if possible, but beans/countries is the visible part.
+            await SeedNewOriginLotsAsync();
+            await ApplyAngelCatarataPhotosAsync();
+            await ApplyOriginExpeditionsAsync();
+
             // Let's just save changes now to be safe.
             await _context.SaveChangesAsync();
+        }
+
+        private static async Task SeedNewOriginLotsAsync()
+        {
+            var newLotNames = new[]
+            {
+                "Cajamarca SL28 [72h]",
+                "La Catarata [Geisha]",
+                "Cajamarca [Bourbon]",
+                "Cusco [Bourbon]",
+                "Cajamarca [Marsellesa]"
+            };
+            var existing = await _context.CoffeeBean
+                .Where(b => newLotNames.Contains(b.Name))
+                .Select(b => b.Name)
+                .ToListAsync();
+            if (existing.Count == newLotNames.Length) return;
+
+            var peru = await _context.OriginCountry.FirstOrDefaultAsync(c => c.Name == "Peru");
+            if (peru == null)
+            {
+                peru = new OriginCountry { Name = "Peru" };
+                _context.OriginCountry.Add(peru);
+                await _context.SaveChangesAsync();
+            }
+
+            async Task<CoffeeRegion> RegionAsync(string name)
+            {
+                var region = await _context.CoffeeRegion.FirstOrDefaultAsync(r => r.Name == name);
+                if (region != null) return region;
+                region = new CoffeeRegion { Name = name };
+                _context.CoffeeRegion.Add(region);
+                await _context.SaveChangesAsync();
+                return region;
+            }
+
+            async Task<CoffeeFarm> FarmAsync(string name)
+            {
+                var farm = await _context.CoffeeFarm.FirstOrDefaultAsync(f => f.Name == name);
+                if (farm != null) return farm;
+                farm = new CoffeeFarm { Name = name };
+                _context.CoffeeFarm.Add(farm);
+                await _context.SaveChangesAsync();
+                return farm;
+            }
+
+            var cajamarca = await RegionAsync("Jaén, Cajamarca");
+            var cusco = await RegionAsync("La Convención, Cusco");
+            var laCatarata = await FarmAsync("La Catarata");
+            var cajamarcaHighlands = await FarmAsync("Cajamarca Highlands");
+            var convencion = await FarmAsync("Inkawasi");
+
+            var lots = new List<CoffeeBean>();
+
+            if (!existing.Contains("Cajamarca SL28 [72h]"))
+            {
+                lots.Add(new CoffeeBean
+                {
+                    Name = "Cajamarca SL28 [72h]",
+                    FlavorProfile = "Blackcurrant, red berries, tropical fruit",
+                    FlavorProfileES = "Grosella negra, frutos rojos, fruta tropical",
+                    Rating = 4.8m,
+                    ScaScore = 87.50m,
+                    BasePriceUSD = 32.00m,
+                    BasePricePEN = 120.00m,
+                    ProcessingMethod = "Washed",
+                    Producer = "Cajamarca smallholders",
+                    Variety = "SL28",
+                    Altitude = "1700–1950 msnm",
+                    ImageUrl = "/Media/Green_bean.svg",
+                    ProducerDescription = "SL28 is a Kenyan selection now planted in Peru’s northern highlands. This lot comes from Cajamarca, where cool nights and high altitude slow cherry ripening and concentrate the variety’s blackcurrant character.",
+                    ProducerDescriptionES = "SL28 es una selección keniana ahora cultivada en la sierra norte del Perú. Este lote proviene de Cajamarca, donde las noches frías y la altura alargan la maduración y concentran el carácter a grosella negra de la variedad.",
+                    ProcessingDescription = "Ripe cherries are sorted, then held for a 72-hour fermentation before drying. The extended fermentation builds tropical fruit and berry intensity on top of SL28’s classic blackcurrant acidity.",
+                    ProcessingDescriptionES = "Las cerezas maduras se seleccionan y fermentan durante 72 horas antes del secado. La fermentación prolongada suma intensidad a fruta tropical y frutos rojos sobre la acidez clásica a grosella negra del SL28.",
+                    OriginDescription = "Cajamarca — especially Jaén and San Ignacio — is Peru’s competition corridor: farms from 1,500 to over 2,200 msnm, with washed and experimental fermentations that show clean citric structure and fruit.",
+                    OriginDescriptionES = "Cajamarca — sobre todo Jaén y San Ignacio — es el corredor de competencia del Perú: fincas de 1.500 a más de 2.200 msnm, con lavados y fermentaciones experimentales de estructura cítrica y fruta limpia.",
+                    CoffeeFarm = cajamarcaHighlands,
+                    CoffeeRegion = cajamarca,
+                    OriginCountry = peru
+                });
+            }
+
+            if (!existing.Contains("La Catarata [Geisha]"))
+            {
+                lots.Add(new CoffeeBean
+                {
+                    Name = "La Catarata [Geisha]",
+                    FlavorProfile = "Citrus, lemongrass, lavender, stone fruit",
+                    FlavorProfileES = "Cítricos, lemongrass, lavanda, fruta de hueso",
+                    Rating = 5.0m,
+                    ScaScore = 90.64m,
+                    BasePriceUSD = 48.00m,
+                    BasePricePEN = 180.00m,
+                    ProcessingMethod = "Washed",
+                    Producer = "Ángel Antonio Manosalva Palomino",
+                    Variety = "Geisha",
+                    Altitude = "1950 msnm",
+                    ImageUrl = "/Media/producers/angel-cajamarca/catarata-sign.jpg?v=4",
+                    ProducerImageUrl = "/Media/producers/angel-cajamarca/angel-portrait.jpg?v=4",
+                    ProducerDescription = "Ángel Antonio Manosalva Palomino farms La Catarata and La Pomarrosa with his wife Luz Marita González Rojas in La Cascarilla, Jaén, Cajamarca. A Cenfrocafé member, he took over a neglected 1.75-hectare plot in 2020, completed ownership in 2023, and replanted nearly 8,000 Geisha trees. In 2025 his washed Geisha won Taza de Excelencia Perú with 90.64 points — first among ~300 samples.",
+                    ProducerDescriptionES = "Ángel Antonio Manosalva Palomino cultiva La Catarata y La Pomarrosa junto a su esposa Luz Marita González Rojas en La Cascarilla, Jaén, Cajamarca. Socio de Cenfrocafé, tomó un predio de 1,75 ha en 2020, consolidó la propiedad en 2023 y replantó cerca de 8.000 árboles de Geisha. En 2025 su Geisha lavado ganó la Taza de Excelencia Perú con 90,64 puntos.",
+                    ProcessingDescription = "Fully washed Geisha. Ángel has spent seven years refining fermentations for a floral, clean cup. The winning 2025 lot was harvested around August and processed as a washed microlot from this tiny Jaén plot.",
+                    ProcessingDescriptionES = "Geisha totalmente lavado. Ángel lleva siete años afinando fermentaciones para una taza floral y limpia. El lote ganador de 2025 se cosechó hacia agosto y se procesó como microlote lavado de esta parcela en Jaén.",
+                    OriginDescription = "La Cascarilla sits in the mountains above Jaén, one of Cajamarca’s coffee hubs. At 1,950 msnm the diurnal swing and Andean soils give washed Geisha citrus, lemongrass, lavender, caramel, and stone fruit.",
+                    OriginDescriptionES = "La Cascarilla está en las montañas sobre Jaén, uno de los centros cafetaleros de Cajamarca. A 1.950 msnm, el rango diurno y los suelos andinos dan al Geisha lavado cítricos, lemongrass, lavanda, caramelo y fruta de hueso.",
+                    CoffeeFarm = laCatarata,
+                    CoffeeRegion = cajamarca,
+                    OriginCountry = peru
+                });
+            }
+
+            if (!existing.Contains("Cajamarca [Bourbon]"))
+            {
+                lots.Add(new CoffeeBean
+                {
+                    Name = "Cajamarca [Bourbon]",
+                    FlavorProfile = "Brown sugar, citrus, stone fruit",
+                    FlavorProfileES = "Azúcar morena, cítricos, fruta de hueso",
+                    Rating = 4.6m,
+                    ScaScore = 86.50m,
+                    BasePriceUSD = 26.00m,
+                    BasePricePEN = 98.00m,
+                    ProcessingMethod = "Washed",
+                    Producer = "Cajamarca producers",
+                    Variety = "Bourbon",
+                    Altitude = "1600–2000 msnm",
+                    ImageUrl = "/Media/Green_bean.svg",
+                    ProducerDescription = "Bourbon sits on Cajamarca’s higher slopes in Jaén and San Ignacio, typically 1,600–2,000 msnm, beside Typica. Smallholders in cooperatives such as Cenfrocafé and APROCASSI deliver cherry to central mills for consistent washed lots.",
+                    ProducerDescriptionES = "El Borbón ocupa las laderas altas de Cajamarca en Jaén y San Ignacio, entre 1.600 y 2.000 msnm, junto al Típica. Pequeños productores de cooperativas como Cenfrocafé y APROCASSI entregan cereza a molinos centrales para lotes lavados consistentes.",
+                    ProcessingDescription = "Fully washed: depulped, fermented 18–36 hours, washed, and dried on patios or raised beds. The process keeps fruit influence off the cup so Bourbon’s brown-sugar sweetness and Cajamarca citric structure can read clearly.",
+                    ProcessingDescriptionES = "Totalmente lavado: despulpado, fermentado 18–36 horas, lavado y secado en patios o camas africanas. El proceso deja fuera la fruta de la cereza para que brille el dulzor a azúcar morena del Borbón y la estructura cítrica de Cajamarca.",
+                    OriginDescription = "Northern Cajamarca is Peru’s competition highlands. Dual Pacific/Amazon moisture and altitude produce clean, citric washed cups. Bourbon here adds body and brown-sugar sweetness under the region’s citrus and stone-fruit acidity.",
+                    OriginDescriptionES = "El norte de Cajamarca es la sierra de competencia del Perú. La humedad del Pacífico y la Amazonía, más la altura, dan tazas lavadas cítricas y limpias. El Borbón aporta cuerpo y dulzor a azúcar morena bajo la acidez a cítricos y fruta de hueso.",
+                    CoffeeFarm = cajamarcaHighlands,
+                    CoffeeRegion = cajamarca,
+                    OriginCountry = peru
+                });
+            }
+
+            if (!existing.Contains("Cusco [Bourbon]"))
+            {
+                lots.Add(new CoffeeBean
+                {
+                    Name = "Cusco [Bourbon]",
+                    FlavorProfile = "Floral, caramel, soft acidity",
+                    FlavorProfileES = "Floral, caramelo, acidez suave",
+                    Rating = 4.6m,
+                    ScaScore = 86.25m,
+                    BasePriceUSD = 26.00m,
+                    BasePricePEN = 98.00m,
+                    ProcessingMethod = "Washed",
+                    Producer = "La Convención producers",
+                    Variety = "Bourbon",
+                    Altitude = "1600–2000 msnm",
+                    ImageUrl = "/Media/Green_bean.svg",
+                    ProducerDescription = "Bourbon plantings in Cusco are older and less common than in the north. They sit on steep La Convención slopes above about 1,600 msnm, often under native shade, with families processing cherry on-farm.",
+                    ProducerDescriptionES = "Las plantaciones de Borbón en Cusco son más antiguas y menos comunes que en el norte. Están en laderas empinadas de La Convención sobre unos 1.600 msnm, a menudo bajo sombra nativa, con familias que procesan en finca.",
+                    ProcessingDescription = "Fully washed after selective picking. Fermentation is typically 16–36 hours, then parchment is dried on raised beds. Some Cusco farms extend fermentation; this lot is a classic washed Bourbon to show the valley’s gentler, floral cup.",
+                    ProcessingDescriptionES = "Totalmente lavado tras cosecha selectiva. La fermentación suele durar 16–36 horas y el pergamino se seca en camas africanas. Algunas fincas alargan la fermentación; este lote es un Borbón lavado clásico para mostrar la taza más floral del valle.",
+                    OriginDescription = "Cusco’s coffee belt is La Convención — Quillabamba, Echarate, Vilcabamba — from the high Andes toward the Amazon. Cups here are softer and more floral than Cajamarca: slower Andean ripening, less centralized mills, and Bourbon sweetness as caramel and florals.",
+                    OriginDescriptionES = "El cinturón cafetero del Cusco es La Convención — Quillabamba, Echarate, Vilcabamba — de los Andes altos hacia la Amazonía. La taza es más suave y floral que en Cajamarca: maduración andina lenta, menos molinos centrales y el dulzor del Borbón como caramelo y florales.",
+                    CoffeeFarm = convencion,
+                    CoffeeRegion = cusco,
+                    OriginCountry = peru
+                });
+            }
+
+            if (!existing.Contains("Cajamarca [Marsellesa]"))
+            {
+                lots.Add(new CoffeeBean
+                {
+                    Name = "Cajamarca [Marsellesa]",
+                    FlavorProfile = "Cacao, citrus, honey, stone fruit",
+                    FlavorProfileES = "Cacao, cítricos, miel, fruta de hueso",
+                    Rating = 4.7m,
+                    ScaScore = 87.00m,
+                    BasePriceUSD = 28.00m,
+                    BasePricePEN = 105.00m,
+                    ProcessingMethod = "Washed",
+                    Producer = "Cajamarca producers",
+                    Variety = "Marsellesa",
+                    Altitude = "1400–1800 msnm",
+                    ImageUrl = "/Media/Green_bean.svg",
+                    ProducerDescription = "Marsellesa is a Sarchimor (Timor Hybrid 832/2 × Villa Sarchi) released by CIRAD-ECOM in 2009. Cenfrocafé and the Junta Nacional del Café promoted it in Peru for rust resistance without giving up cup quality. In Cajamarca it is planted from about 1,400–1,800 msnm in Jaén, San Ignacio, and Cutervo.",
+                    ProducerDescriptionES = "Marsellesa es un Sarchimor (Timor Hybrid 832/2 × Villa Sarchi) liberado por CIRAD-ECOM en 2009. Cenfrocafé y la Junta Nacional del Café la impulsaron en el Perú por resistencia a la roya sin sacrificar taza. En Cajamarca se planta entre unos 1.400 y 1.800 msnm en Jaén, San Ignacio y Cutervo.",
+                    ProcessingDescription = "Washed, in the Cajamarca mill style: depulped, fermented, washed clean, and dried. At altitude Marsellesa shows the chocolate-citrus cup World Coffee Research flags for this variety — cleaner than older Catimors.",
+                    ProcessingDescriptionES = "Lavado, al estilo de los molinos de Cajamarca: despulpado, fermentado, lavado y secado. En altura la Marsellesa muestra la taza cacao-cítrica que World Coffee Research destaca — más limpia que los Catimor antiguos.",
+                    OriginDescription = "Cajamarca has been renewing rust-hit Caturra and Typica plots with Marsellesa and H1. Tabaconas (San Ignacio) trials above 1,400 msnm showed good yield, rust resistance, and specialty cupping. Expect cacao, citrus, honey, and stone fruit.",
+                    OriginDescriptionES = "Cajamarca renueva parcelas de Caturra y Típica afectadas por roya con Marsellesa y H1. Ensayos en Tabaconas (San Ignacio) sobre 1.400 msnm mostraron buen rendimiento, resistencia y taza de especialidad. Cacao, cítricos, miel y fruta de hueso.",
+                    CoffeeFarm = cajamarcaHighlands,
+                    CoffeeRegion = cajamarca,
+                    OriginCountry = peru
+                });
+            }
+
+            if (lots.Count > 0)
+            {
+                _context.CoffeeBean.AddRange(lots);
+            }
+        }
+
+        private static async Task ApplyAngelCatarataPhotosAsync()
+        {
+            var angel = await _context.CoffeeBean.FirstOrDefaultAsync(b => b.Name == "La Catarata [Geisha]");
+            if (angel == null)
+            {
+                return;
+            }
+
+            var hero = "/Media/producers/angel-cajamarca/catarata-sign.jpg?v=4";
+            var farmer = "/Media/producers/angel-cajamarca/angel-portrait.jpg?v=4";
+            var changed = false;
+            if (angel.ImageUrl != hero)
+            {
+                angel.ImageUrl = hero;
+                changed = true;
+            }
+            if (angel.ProducerImageUrl != farmer)
+            {
+                angel.ProducerImageUrl = farmer;
+                changed = true;
+            }
+            if (changed)
+            {
+                _context.CoffeeBean.Update(angel);
+            }
+        }
+
+        private static async Task ApplyOriginExpeditionsAsync()
+        {
+            const string v = "?v=1";
+            var santaGallery = new List<string>
+            {
+                $"/Media/tours/santa-teresa/10-visitor-and-producer.jpg{v}",
+                $"/Media/tours/santa-teresa/01-cloud-forest-morning.jpg{v}",
+                $"/Media/tours/santa-teresa/02-farm-walk.jpg{v}",
+                $"/Media/tours/santa-teresa/03-coffee-trees.jpg{v}",
+                $"/Media/tours/santa-teresa/04-cherries-on-branch.jpg{v}",
+                $"/Media/tours/santa-teresa/05-harvest.jpg{v}",
+                $"/Media/tours/santa-teresa/06-cloud-forest-canopy.jpg{v}",
+                $"/Media/tours/santa-teresa/07-afternoon-farm.jpg{v}",
+                $"/Media/tours/santa-teresa/08-valley-light.jpg{v}",
+                $"/Media/tours/santa-teresa/09-hidroelectrica-route.jpg{v}",
+                $"/Media/tours/santa-teresa/11-cup-at-the-farm.jpg{v}",
+                $"/Media/tours/santa-teresa/12-ripe-cherries.jpg{v}",
+                $"/Media/tours/santa-teresa/13-washed-parchment-drying.jpg{v}",
+            };
+            var cajamarcaGallery = new List<string>
+            {
+                $"/Media/tours/cajamarca-jaen/01-la-catarata-sign.jpg{v}",
+                $"/Media/tours/cajamarca-jaen/02-farmer-angel.jpg{v}",
+                $"/Media/tours/cajamarca-jaen/03-angel-in-the-plot.jpg{v}",
+                $"/Media/tours/cajamarca-jaen/04-cherries-on-the-tree.jpg{v}",
+                $"/Media/tours/cajamarca-jaen/05-brix-sweetness.jpg{v}",
+                $"/Media/tours/cajamarca-jaen/06-measuring-ripeness.jpg{v}",
+                $"/Media/tours/cajamarca-jaen/07-cherry-clusters.jpg{v}",
+                $"/Media/tours/cajamarca-jaen/08-fruit-on-the-stem.jpg{v}",
+                $"/Media/tours/cajamarca-jaen/09-ph-meter.jpg{v}",
+                $"/Media/tours/cajamarca-jaen/10-process-check.jpg{v}",
+                $"/Media/tours/cajamarca-jaen/11-fermentation.jpg{v}",
+                $"/Media/tours/cajamarca-jaen/12-wet-mill.jpg{v}",
+                $"/Media/tours/cajamarca-jaen/13-pulping-station.jpg{v}",
+                $"/Media/tours/cajamarca-jaen/14-depulper-and-pulp.jpg{v}",
+                $"/Media/tours/cajamarca-jaen/15-washing-channel.jpg{v}",
+                $"/Media/tours/cajamarca-jaen/16-parchment-drying.jpg{v}",
+                $"/Media/tours/cajamarca-jaen/17-dried-parchment.jpg{v}",
+                $"/Media/tours/cajamarca-jaen/18-bagged-lots.jpg{v}",
+                $"/Media/tours/cajamarca-jaen/19-angel-with-finished-beans.jpg{v}",
+            };
+
+            var santa = await _context.Experiences.FirstOrDefaultAsync(e => e.Id == 1 || e.Title.Contains("Inkawasi"));
+            if (santa != null)
+            {
+                santa.Title = "Santa Teresa [Cloud Forest]";
+                santa.TitleES = "Santa Teresa [Bosque de nubes]";
+                santa.Category = "Expedition";
+                santa.Location = "Santa Teresa";
+                santa.Month = "Year-round";
+                santa.Difficulty = "Intermediate";
+                santa.Duration = "1 DAY";
+                santa.Price = 150;
+                santa.Tag = "MACHU PICCHU ROUTE";
+                santa.ImageUrl = $"/Media/tours/santa-teresa/10-visitor-and-producer.jpg{v}";
+                santa.Description = "Cloud-forest farm day on the Santa Teresa / Hidroeléctrica corridor most travelers use to reach Machu Picchu. Walk the plantation, pick ripe cherry, and see washed parchment drying with the family — then continue to Aguas Calientes.";
+                santa.DescriptionES = "Día de finca en el bosque de nubes de Santa Teresa, en el corredor de Hidroeléctrica que usa la mayoría para llegar a Machu Picchu. Recorre el cafetal, cosecha cereza y ve el pergamino lavado secándose con la familia.";
+                santa.LongDescription = "Santa Teresa sits in the cloud forest of La Convención, on the same road and rail corridor that takes you to Machu Picchu via Hidroeléctrica. This is the origin day that fits a trekking itinerary: leave Cusco (or stay in Santa Teresa), walk shade-grown plots, taste cherry at the tree, and watch washed parchment dry on raised beds. You meet the producers who pick and process the lot — not a show farm. Combine it with the walk or train into Aguas Calientes the same day or the next morning.";
+                santa.LongDescriptionES = "Santa Teresa está en el bosque de nubes de La Convención, en el mismo corredor hacia Machu Picchu por Hidroeléctrica. Es el día de origen que encaja en un itinerario de trekking: caminas cafetales bajo sombra, pruebas la cereza en el árbol y ves el pergamino lavado en camas. Conoces a quienes cosechan y procesan el lote. Se combina con el tren o la caminata a Aguas Calientes.";
+                santa.Syllabus = new List<string>
+                {
+                    "Cusco or Santa Teresa pickup — Hidroeléctrica corridor",
+                    "Cloud-forest walk — trees, cherry, and shade canopy",
+                    "Harvest and washed processing with the family",
+                    "Parchment drying beds + cup at the farm",
+                    "Continue toward Machu Picchu or return to Cusco"
+                };
+                santa.ProvidedEquipment = new List<string>
+                {
+                    "Farm walk with a producer",
+                    "Harvest and processing demonstration",
+                    "Lunch at the farm",
+                    "Cup of the day’s lot"
+                };
+                santa.RequiredGear = new List<string>
+                {
+                    "Closed-toe shoes",
+                    "Rain layer (cloud forest)",
+                    "Sun hat"
+                };
+                santa.GalleryImages = santaGallery;
+                _context.Experiences.Update(santa);
+            }
+
+            var cajamarca = await _context.Experiences.FirstOrDefaultAsync(e => e.Id == 2 || e.Title.Contains("Huayopata"));
+            if (cajamarca != null)
+            {
+                cajamarca.Title = "La Catarata [Jaén, Cajamarca]";
+                cajamarca.TitleES = "La Catarata [Jaén, Cajamarca]";
+                cajamarca.Category = "Expedition";
+                cajamarca.Location = "Jaén, Cajamarca";
+                cajamarca.Month = "Harvest";
+                cajamarca.Difficulty = "Intermediate";
+                cajamarca.Duration = "2 DAYS";
+                cajamarca.Price = 300;
+                cajamarca.Tag = "CUP OF EXCELLENCE #1";
+                cajamarca.ImageUrl = $"/Media/tours/cajamarca-jaen/01-la-catarata-sign.jpg{v}";
+                cajamarca.Description = "Not a Cusco day trip — Jaén is in Cajamarca, northern Peru. Visit Ángel Manosalva at La Catarata: 2025 Cup of Excellence Perú first place, 90.64 points. Follow the lot from tree to parchment: Brix on cherry, pH in process, pulping, fermentation, dried bags.";
+                cajamarca.DescriptionES = "No es un día desde Cusco: Jaén está en Cajamarca, en el norte del Perú. Visita a Ángel Manosalva en La Catarata, primer lugar Taza de Excelencia Perú 2025 (90,64). Recorres el lote del árbol al pergamino: Brix, pH, despulpado, fermentación y sacos secos.";
+                cajamarca.LongDescription = "Ángel Antonio Manosalva Palomino farms La Catarata (and La Pomarrosa) in La Cascarilla above Jaén — a different province from Cusco, in Peru’s northern competition belt. In 2025 his washed Geisha took first at Taza de Excelencia Perú with 90.64 points. This expedition is the farm journey in order: the Catarata La Momia sign, Ángel in the plot, cherry on the tree, Brix for sweetness, pH at the mill, pulping and fermentation, then parchment drying and Ángel standing with the finished bags. Fly Lima–Jaén (or overnight bus); this is not a same-day return from Cusco.";
+                cajamarca.LongDescriptionES = "Ángel Antonio Manosalva Palomino cultiva La Catarata (y La Pomarrosa) en La Cascarilla, sobre Jaén — otra región, el corredor de competencia del norte. En 2025 su Geisha lavado ganó la Taza de Excelencia Perú con 90,64 puntos. El recorrido sigue el lote: letrero de Catarata La Momia, Ángel en la parcela, cereza, Brix, pH, despulpado, fermentación, pergamino y los sacos terminados. Se vuela Lima–Jaén; no es un ida y vuelta desde Cusco.";
+                cajamarca.Syllabus = new List<string>
+                {
+                    "Arrive Jaén (flight from Lima or overnight bus)",
+                    "La Catarata — farm sign, plot walk with Ángel",
+                    "Ripeness work — Brix on cherry, fruit on the tree",
+                    "Mill — pH, pulping, fermentation, wash",
+                    "Parchment drying and bagged lots — cup the CoE Geisha"
+                };
+                cajamarca.ProvidedEquipment = new List<string>
+                {
+                    "Farm and mill walk with Ángel",
+                    "Brix and pH demonstration",
+                    "Overnight in Jaén",
+                    "Cup of the Cup of Excellence Geisha"
+                };
+                cajamarca.RequiredGear = new List<string>
+                {
+                    "Closed-toe shoes",
+                    "Light rain jacket",
+                    "Passport for domestic flights"
+                };
+                cajamarca.GalleryImages = cajamarcaGallery;
+                _context.Experiences.Update(cajamarca);
+            }
+
+            var subtitle = await _context.SiteContent.FirstOrDefaultAsync(c => c.Key == "Experiences_Expeditions_Subtitle");
+            if (subtitle != null)
+            {
+                subtitle.Value = "SANTA TERESA · CAJAMARCA";
+            }
+            else
+            {
+                _context.SiteContent.Add(new SiteContent
+                {
+                    Key = "Experiences_Expeditions_Subtitle",
+                    Value = "SANTA TERESA · CAJAMARCA",
+                    Page = "Experiences"
+                });
+            }
         }
     }
 }

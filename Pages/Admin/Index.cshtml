@@ -4,7 +4,7 @@
     ViewData["Title"] = "Admin Dashboard";
 }
 
-<div class="pt-32 pb-20 bg-white dark:bg-[#3C4A33] min-h-[70vh]">
+<div class="pt-32 pb-20 bg-white dark:bg-[#121014] min-h-[70vh]">
     <div class="container mx-auto px-4 md:px-8">
         <h1 class="text-4xl md:text-6xl font-grotesk font-bold tracking-tighter mb-12 uppercase">
             @ViewData["Title"]
@@ -12,33 +12,33 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <!-- Coffee Beans -->
-            <div class="bg-gray-50 dark:bg-[#2F3A28] border border-gray-100 dark:border-[#4F6044] p-8 flex flex-col justify-between">
+            <div class="bg-gray-50 dark:bg-[#1C191F] border border-gray-100 dark:border-[#2A262C] p-8 flex flex-col justify-between">
                 <div>
                     <h2 class="text-2xl font-grotesk font-bold mb-4">Coffee Beans</h2>
                     <p class="text-gray-500 dark:text-gray-300 font-light mb-8">
                         Manage your coffee catalog. Add new beans, edit existing ones, upload images, and update inventory details.
                     </p>
                 </div>
-                <a asp-page="/Admin/Coffees/Index" class="inline-block bg-black text-white dark:bg-[#FAF3DD] dark:text-black px-8 py-4 font-mono-jb font-bold text-xs uppercase tracking-widest text-center hover:bg-v-red transition-colors border border-black dark:border-[#FAF3DD] text-decoration-none">
+                <a asp-page="/Admin/Coffees/Index" class="inline-block bg-black text-white dark:bg-[#D6D0C8] dark:text-black px-8 py-4 font-mono-jb font-bold text-xs uppercase tracking-widest text-center hover:bg-v-red transition-colors border border-black dark:border-[#D6D0C8] text-decoration-none">
                     Manage Coffees
                 </a>
             </div>
 
             <!-- Experiences -->
-            <div class="bg-gray-50 dark:bg-[#2F3A28] border border-gray-100 dark:border-[#4F6044] p-8 flex flex-col justify-between">
+            <div class="bg-gray-50 dark:bg-[#1C191F] border border-gray-100 dark:border-[#2A262C] p-8 flex flex-col justify-between">
                 <div>
                     <h2 class="text-2xl font-grotesk font-bold mb-4">Experiences</h2>
                     <p class="text-gray-500 dark:text-gray-300 font-light mb-8">
                         Manage the Origin Expeditions and Urban Workshops. Add new experiences, edit pricing, dates, and locations.
                     </p>
                 </div>
-                <a asp-page="/Admin/Experiences/Index" class="inline-block bg-black text-white dark:bg-[#FAF3DD] dark:text-black px-8 py-4 font-mono-jb font-bold text-xs uppercase tracking-widest text-center hover:bg-v-red transition-colors border border-black dark:border-[#FAF3DD] text-decoration-none">
+                <a asp-page="/Admin/Experiences/Index" class="inline-block bg-black text-white dark:bg-[#D6D0C8] dark:text-black px-8 py-4 font-mono-jb font-bold text-xs uppercase tracking-widest text-center hover:bg-v-red transition-colors border border-black dark:border-[#D6D0C8] text-decoration-none">
                     Manage Experiences
                 </a>
             </div>
 
             <!-- QR Code Generator -->
-            <div class="bg-gray-50 dark:bg-[#2F3A28] border border-gray-100 dark:border-[#4F6044] p-8 flex flex-col justify-between md:col-span-2 lg:col-span-1">
+            <div class="bg-gray-50 dark:bg-[#1C191F] border border-gray-100 dark:border-[#2A262C] p-8 flex flex-col justify-between md:col-span-2 lg:col-span-1">
                 <div>
                     <h2 class="text-2xl font-grotesk font-bold mb-4">QR Generator</h2>
                     <p class="text-gray-500 dark:text-gray-300 font-light mb-6">
@@ -47,19 +47,19 @@
                     
                     <div class="flex flex-col gap-4 mb-6">
                         <label class="text-xs font-mono-jb uppercase font-bold text-gray-500">Target URL</label>
-                        <input type="text" id="qr-url-input" value="https://purplebean.coffee/GreenBeans" class="w-full px-4 py-3 bg-white dark:bg-[#3C4A33] border border-gray-300 dark:border-[#4F6044] rounded text-sm font-mono-jb text-black dark:text-[#FAF3DD] focus:outline-none focus:border-v-red transition-colors" />
+                        <input type="text" id="qr-url-input" value="https://purplebean.coffee/Coffee" class="w-full px-4 py-3 bg-white dark:bg-[#121014] border border-gray-300 dark:border-[#2A262C] rounded text-sm font-mono-jb text-black dark:text-[#D6D0C8] focus:outline-none focus:border-v-red transition-colors" />
                         
                         <div class="flex gap-2">
-                            <button id="qr-generate-btn" class="flex-1 bg-black text-white dark:bg-[#FAF3DD] dark:text-black px-4 py-3 font-mono-jb font-bold text-[10px] uppercase tracking-widest text-center hover:bg-v-red transition-colors border border-black dark:border-[#FAF3DD] cursor-pointer">
+                            <button id="qr-generate-btn" class="flex-1 bg-black text-white dark:bg-[#D6D0C8] dark:text-black px-4 py-3 font-mono-jb font-bold text-[10px] uppercase tracking-widest text-center hover:bg-v-red transition-colors border border-black dark:border-[#D6D0C8] cursor-pointer">
                                 Generate
                             </button>
-                            <button id="qr-download-btn" class="flex-1 bg-white text-black dark:bg-[#2F3A28] dark:text-[#FAF3DD] px-4 py-3 font-mono-jb font-bold text-[10px] uppercase tracking-widest text-center hover:bg-gray-100 dark:hover:bg-[#4F6044] transition-colors border border-black dark:border-[#FAF3DD] cursor-pointer disabled:opacity-50" disabled>
+                            <button id="qr-download-btn" class="flex-1 bg-white text-black dark:bg-[#1C191F] dark:text-[#D6D0C8] px-4 py-3 font-mono-jb font-bold text-[10px] uppercase tracking-widest text-center hover:bg-gray-100 dark:hover:bg-[#2A262C] transition-colors border border-black dark:border-[#D6D0C8] cursor-pointer disabled:opacity-50" disabled>
                                 Download PNG
                             </button>
                         </div>
                     </div>
                 </div>
-                <div class="flex justify-center items-center p-6 bg-white dark:bg-[#3C4A33] border border-dashed border-gray-300 dark:border-[#4F6044] min-h-[250px]" id="qr-container">
+                <div class="flex justify-center items-center p-6 bg-white dark:bg-[#121014] border border-dashed border-gray-300 dark:border-[#2A262C] min-h-[250px]" id="qr-container">
                     <span class="text-gray-400 text-xs font-mono-jb uppercase tracking-widest" id="qr-placeholder">QR Code Preview</span>
                 </div>
             </div>

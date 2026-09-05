@@ -58,6 +58,7 @@ namespace TheBestBean.Pages
             };
 
             _cartService.AddToCart(HttpContext.Session, cartItem);
+            Ga4Ecommerce.QueueAddToCart(TempData, cartItem);
             return RedirectToPage();
         }
     }

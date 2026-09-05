@@ -4,247 +4,185 @@
     ViewData["Title"] = "Brew Guides";
     ViewData["MetaDescription"] = "Learn how to brew specialty coffee at home. Pour-over, French press, AeroPress, espresso guides with grind size charts and brew ratios from Purple Bean Coffee in Cusco, Peru.";
 }
-<div class="flex-grow max-w-[1600px] mx-auto w-full px-6 md:px-12 relative pb-40 md:pb-24 font-sans text-v-black dark:text-[#FAF3DD] bg-v-white dark:bg-[#3C4A33]">
 
-    <main class="flex flex-col font-sans mb-32">
-        
-        <!-- EMIL RUDER SWISS TYPOGRAPHY HEADER -->
-        <section class="grid grid-cols-1 lg:grid-cols-12 border-b border-v-black/10 dark:border-[#4F6044] pb-12 mb-12 lg:mb-16">
-            <div class="lg:col-span-12 flex flex-col items-start px-4 md:px-0 mt-12">
-                <h1 class="text-4xl md:text-6xl font-bold tracking-tighter text-v-black dark:text-[#FAF3DD] leading-[0.9] mb-6 uppercase">
-                    BREW<br>GUIDES
-                </h1>
-                <div class="grid grid-cols-2 md:grid-cols-4 w-full gap-4 md:gap-8 mt-6">
-                    <div class="col-span-1 border-t border-v-black/20 dark:border-[#4F6044] pt-4">
-                        <span class="text-xs md:text-[10px] font-bold uppercase tracking-widest text-v-black dark:text-[#FAF3DD] font-mono-jb block mb-4"><span class="text-[#FF3B1F]">01.</span> VARIABLES</span>
-                    </div>
-                    <div class="col-span-1 border-t border-v-black/20 dark:border-[#4F6044] pt-4">
-                        <span class="text-xs md:text-[10px] font-bold uppercase tracking-widest text-v-black dark:text-[#FAF3DD] font-mono-jb block mb-4"><span class="text-[#0055FF]">02.</span> PHYSICS</span>
-                    </div>
-                    <div class="col-span-1 border-t border-v-black/20 dark:border-[#4F6044] pt-4">
-                        <span class="text-xs md:text-[10px] font-bold uppercase tracking-widest text-v-black dark:text-[#FAF3DD] font-mono-jb block mb-4"><span class="text-[#16A34A]">03.</span> CHEMISTRY</span>
-                    </div>
-                    <div class="col-span-1 border-t border-v-black/20 dark:border-[#4F6044] pt-4">
-                        <span class="text-xs md:text-[10px] font-bold uppercase tracking-widest text-v-black dark:text-[#FAF3DD] font-mono-jb block mb-4"><span class="text-[#FFB800]">04.</span> TECHNIQUE</span>
-                    </div>
-                </div>
-            </div>
-        </section>
+<div class="brew-guides font-sans text-v-black dark:text-[#D6D0C8] pb-40 md:pb-24">
 
-        <!-- EMIL RUDER CONTENT GRID -->
-        <section class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 relative px-4 md:px-0 mb-32">
-            
-            <!-- Left Grid: Typographic Anchor -->
-            <div class="lg:col-span-4 flex flex-col items-start lg:sticky lg:top-32 h-max z-10">
-                <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-v-black dark:text-[#FAF3DD] leading-none mb-4 uppercase">
-                    THE<br>VARIABLES
+    <section class="max-w-[1600px] mx-auto w-full px-6 md:px-12 pt-10 md:pt-16 pb-10 md:pb-14">
+        <p class="font-mono-jb text-[10px] font-bold uppercase tracking-[0.22em] text-v-gray mb-5">Lab notes · Cusco</p>
+        <h1 class="text-[clamp(3.2rem,12vw,8.5rem)] font-bold tracking-tighter leading-[0.82] uppercase m-0">
+            Brew<br>Guides
+        </h1>
+        <p class="mt-8 max-w-xl text-base md:text-lg text-v-gray leading-relaxed">
+            Four levers. One cup. The same recipes we run in the Cusco Coffee Lab — ratio, heat, water, grind — then the methods to take home.
+        </p>
+
+        <nav class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 mt-12 border-t border-v-black/15 dark:border-[#2A262C] pt-5" aria-label="Guide index">
+            <a href="#variables" class="text-decoration-none group">
+                <span class="font-mono-jb text-xs md:text-[10px] font-bold uppercase tracking-widest text-v-black dark:text-[#D6D0C8] block"><span class="text-[#FF3B1F]">01.</span> Variables</span>
+            </a>
+            <a href="#methods" class="text-decoration-none">
+                <span class="font-mono-jb text-xs md:text-[10px] font-bold uppercase tracking-widest text-v-black dark:text-[#D6D0C8] block"><span class="text-[#0055FF]">02.</span> Physics</span>
+            </a>
+            <a href="#methods" class="text-decoration-none">
+                <span class="font-mono-jb text-xs md:text-[10px] font-bold uppercase tracking-widest text-v-black dark:text-[#D6D0C8] block"><span class="text-[#16A34A]">03.</span> Chemistry</span>
+            </a>
+            <a href="#methods" class="text-decoration-none">
+                <span class="font-mono-jb text-xs md:text-[10px] font-bold uppercase tracking-widest text-v-black dark:text-[#D6D0C8] block"><span class="text-[#FFB800]">04.</span> Technique</span>
+            </a>
+        </nav>
+    </section>
+
+    <section id="variables" class="brew-variables-band">
+        <div class="max-w-[1600px] mx-auto w-full px-6 md:px-12 py-16 md:py-24 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
+            <div class="lg:col-span-4 flex flex-col items-start lg:sticky lg:top-28 h-max">
+                <span class="font-mono-jb text-[10px] font-bold uppercase tracking-[0.2em] text-black/60 mb-4">01 // Extraction physics</span>
+                <h2 class="text-4xl md:text-5xl font-bold tracking-tight leading-[0.9] uppercase text-black m-0">
+                    The<br>Variables
                 </h2>
-                <span class="text-xs md:text-[10px] font-bold uppercase tracking-[0.2em] text-v-gray font-mono-jb">EXTRACTION PHYSICS</span>
-                <p class="text-v-gray text-sm mt-8 max-w-xs leading-relaxed">
-                    Calibration relies on the systematic isolation and control of extraction variables.
+                <p class="text-black/70 text-sm md:text-base mt-8 max-w-xs leading-relaxed">
+                    Calibration is isolating one lever at a time. Change grind or ratio — not both — then taste.
                 </p>
             </div>
 
-            <!-- Right Grid: Variables List -->
-            <div class="lg:col-span-8 flex flex-col gap-12">
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 border-b border-v-black/10 dark:border-[#4F6044] pb-12">
-                    <!-- Ratio -->
-                    <article class="flex flex-col group relative border border-[#FF3B1F]/30 hover:border-[#FF3B1F] p-6 transition-colors bg-white dark:bg-[#3C4A33]">
-                        <div class="absolute -top-[3px] -left-[3px] w-1.5 h-1.5 bg-[#FF3B1F] opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <div class="absolute -top-[3px] -right-[3px] w-1.5 h-1.5 bg-[#FF3B1F] opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <div class="absolute -bottom-[3px] -left-[3px] w-1.5 h-1.5 bg-[#FF3B1F] opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <div class="absolute -bottom-[3px] -right-[3px] w-1.5 h-1.5 bg-[#FF3B1F] opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        
-                        <div class="flex justify-between items-baseline mb-6">
-                            <h3 class="text-xl font-bold uppercase tracking-tight text-v-black dark:text-[#FAF3DD] m-0 font-sans group-hover:text-[#FF3B1F] transition-colors">RATIO</h3>
-                            <span class="text-2xl font-bold uppercase tracking-widest text-[#FF3B1F] font-mono-jb">01</span>
-                        </div>
-                        <p class="text-v-gray text-sm md:text-base leading-relaxed font-normal mb-6">
-                            Consistency demands precision mass measurement. Our volumetric baseline dictates a rigid 1:16 ratio (1g dry mass to 16g solvent).
-                        </p>
-                        <div class="mt-auto text-xs md:text-[10px] font-bold uppercase tracking-widest text-[#FF3B1F] font-mono-jb bg-[#FF3B1F]/10 px-2 py-1 self-start">
-                            INPUT VS OUTPUT YIELD
-                        </div>
-                    </article>
+            <div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+                <article class="brew-var-card">
+                    <div class="flex justify-between items-start mb-6">
+                        <h3 class="text-xl font-bold uppercase tracking-tight m-0">Ratio</h3>
+                        <span class="font-mono-jb text-2xl font-bold text-[#FF3B1F]">01</span>
+                    </div>
+                    <p class="text-sm leading-relaxed text-black/70 mb-8">
+                        Baseline is <strong>1:16</strong> — 1 g coffee to 16 g water. Weigh both. Volume guesses are how cups drift.
+                    </p>
+                    <div class="brew-var-spec" style="--brew-accent:#FF3B1F">1 g : 16 g</div>
+                </article>
 
-                    <!-- Temp -->
-                    <article class="flex flex-col group relative border border-[#0055FF]/30 hover:border-[#0055FF] p-6 transition-colors bg-white dark:bg-[#3C4A33]">
-                        <div class="absolute -top-[3px] -left-[3px] w-1.5 h-1.5 bg-[#0055FF] opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <div class="absolute -top-[3px] -right-[3px] w-1.5 h-1.5 bg-[#0055FF] opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <div class="absolute -bottom-[3px] -left-[3px] w-1.5 h-1.5 bg-[#0055FF] opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <div class="absolute -bottom-[3px] -right-[3px] w-1.5 h-1.5 bg-[#0055FF] opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        
-                        <div class="flex justify-between items-baseline mb-6">
-                            <h3 class="text-xl font-bold uppercase tracking-tight text-v-black dark:text-[#FAF3DD] m-0 font-sans group-hover:text-[#0055FF] transition-colors">HEAT</h3>
-                            <span class="text-2xl font-bold uppercase tracking-widest text-[#0055FF] font-mono-jb">02</span>
-                        </div>
-                        <p class="text-v-gray text-sm md:text-base leading-relaxed font-normal mb-6">
-                            Thermal kinetic energy dictates solubility. High-density light roasts require elevated temperatures (96°C). Darker molecular profiles require cooling (90°C).
-                        </p>
-                        <div class="mt-auto text-xs md:text-[10px] font-bold uppercase tracking-widest text-[#0055FF] font-mono-jb bg-[#0055FF]/10 px-2 py-1 self-start">
-                            THERMAL DYNAMICS
-                        </div>
-                    </article>
-                </div>
+                <article class="brew-var-card">
+                    <div class="flex justify-between items-start mb-6">
+                        <h3 class="text-xl font-bold uppercase tracking-tight m-0">Heat</h3>
+                        <span class="font-mono-jb text-2xl font-bold text-[#0055FF]">02</span>
+                    </div>
+                    <p class="text-sm leading-relaxed text-black/70 mb-8">
+                        Light, dense roasts want ~<strong>96°C</strong>. Darker, more soluble coffees sit closer to <strong>90°C</strong>. Off-boil is not a temperature.
+                    </p>
+                    <div class="brew-var-spec" style="--brew-accent:#0055FF">90–96 °C</div>
+                </article>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                    <!-- Water -->
-                    <article class="flex flex-col group relative border border-[#16A34A]/30 hover:border-[#16A34A] p-6 transition-colors bg-white dark:bg-[#3C4A33]">
-                        <div class="absolute -top-[3px] -left-[3px] w-1.5 h-1.5 bg-[#16A34A] opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <div class="absolute -top-[3px] -right-[3px] w-1.5 h-1.5 bg-[#16A34A] opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <div class="absolute -bottom-[3px] -left-[3px] w-1.5 h-1.5 bg-[#16A34A] opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <div class="absolute -bottom-[3px] -right-[3px] w-1.5 h-1.5 bg-[#16A34A] opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        
-                        <div class="flex justify-between items-baseline mb-6">
-                            <h3 class="text-xl font-bold uppercase tracking-tight text-v-black dark:text-[#FAF3DD] m-0 font-sans group-hover:text-[#16A34A] transition-colors">SOLVENT</h3>
-                            <span class="text-2xl font-bold uppercase tracking-widest text-[#16A34A] font-mono-jb">03</span>
-                        </div>
-                        <p class="text-v-gray text-sm md:text-base leading-relaxed font-normal mb-6">
-                            Solvent composition (H2O) comprises 98% of the final yield. Utilize filtered water with controlled mineral content (magnesium/calcium).
-                        </p>
-                        <div class="mt-auto text-xs md:text-[10px] font-bold uppercase tracking-widest text-[#16A34A] font-mono-jb bg-[#16A34A]/10 px-2 py-1 self-start">
-                            100-150 PPM TDS
-                        </div>
-                    </article>
+                <article class="brew-var-card">
+                    <div class="flex justify-between items-start mb-6">
+                        <h3 class="text-xl font-bold uppercase tracking-tight m-0">Solvent</h3>
+                        <span class="font-mono-jb text-2xl font-bold text-[#16A34A]">03</span>
+                    </div>
+                    <p class="text-sm leading-relaxed text-black/70 mb-8">
+                        Water is 98% of the cup. Filtered, with some mineral — <strong>100–150 ppm TDS</strong>. Distilled tastes hollow; hard water tastes chalky.
+                    </p>
+                    <div class="brew-var-spec" style="--brew-accent:#16A34A">100–150 ppm</div>
+                </article>
 
-                    <!-- Time -->
-                    <article class="flex flex-col group relative border border-[#FFB800]/30 hover:border-[#FFB800] p-6 transition-colors bg-white dark:bg-[#3C4A33]">
-                        <div class="absolute -top-[3px] -left-[3px] w-1.5 h-1.5 bg-[#FFB800] opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <div class="absolute -top-[3px] -right-[3px] w-1.5 h-1.5 bg-[#FFB800] opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <div class="absolute -bottom-[3px] -left-[3px] w-1.5 h-1.5 bg-[#FFB800] opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <div class="absolute -bottom-[3px] -right-[3px] w-1.5 h-1.5 bg-[#FFB800] opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        
-                        <div class="flex justify-between items-baseline mb-6">
-                            <h3 class="text-xl font-bold uppercase tracking-tight text-v-black dark:text-[#FAF3DD] m-0 font-sans group-hover:text-[#FFB800] transition-colors">KINEMATICS</h3>
-                            <span class="text-2xl font-bold uppercase tracking-widest text-[#FFB800] font-mono-jb">04</span>
-                        </div>
-                        <p class="text-v-gray text-sm md:text-base leading-relaxed font-normal mb-6">
-                            Particle surface area regulates flow resistance. Excessive acidity necessitates finer micron distribution. Excessive bitterness requires coarser particles.
-                        </p>
-                        <div class="mt-auto text-xs md:text-[10px] font-bold uppercase tracking-widest text-[#FFB800] font-mono-jb bg-[#FFB800]/10 px-2 py-1 self-start">
-                            CONTACT TIME CALIBRATION
-                        </div>
-                    </article>
-                </div>
-
+                <article class="brew-var-card">
+                    <div class="flex justify-between items-start mb-6">
+                        <h3 class="text-xl font-bold uppercase tracking-tight m-0">Grind</h3>
+                        <span class="font-mono-jb text-2xl font-bold text-[#FFB800]">04</span>
+                    </div>
+                    <p class="text-sm leading-relaxed text-black/70 mb-8">
+                        Surface area is contact time. Sour and thin → finer. Bitter and heavy → coarser. Change this first, then ratio.
+                    </p>
+                    <div class="brew-var-spec" style="--brew-accent:#C99200">Fine ↔ Coarse</div>
+                </article>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- METHODS GRID -->
-        <section class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 relative px-4 md:px-0">
-            
-            <!-- Left Grid: Typographic Anchor -->
-            <div class="lg:col-span-4 flex flex-col items-start lg:sticky lg:top-32 h-max z-10">
-                <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-v-black dark:text-[#FAF3DD] leading-none mb-4 uppercase">
-                    CLINICAL<br>METHODS
+    <section id="methods" class="max-w-[1600px] mx-auto w-full px-6 md:px-12 pt-20 md:pt-28">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
+            <div class="lg:col-span-4 flex flex-col items-start lg:sticky lg:top-28 h-max">
+                <span class="font-mono-jb text-[10px] font-bold uppercase tracking-[0.2em] text-v-gray mb-4">02 // Standard recipes</span>
+                <h2 class="text-4xl md:text-5xl font-bold tracking-tight leading-[0.9] uppercase m-0">
+                    The<br>Methods
                 </h2>
-                <span class="text-xs md:text-[10px] font-bold uppercase tracking-[0.2em] text-v-gray font-mono-jb">STANDARD OPERATING PROCEDURES</span>
+                <p class="text-v-gray text-sm mt-8 max-w-xs leading-relaxed">
+                    Same coffees as the lab. Same numbers. Print the guest cards from the Cusco Coffee Lab tour if you want paper.
+                </p>
             </div>
 
-            <!-- Right Grid: Methods List -->
-            <div class="lg:col-span-8 flex flex-col w-full">
-                <div class="flex flex-col gap-16 mt-8">
-                    
-                    <!-- Method V60 -->
-                    <div class="relative border border-[#FF3B1F] p-8 md:p-10 bg-white/50 dark:bg-v-black/20">
-                        <!-- Corner Nodes -->
-                        <div class="absolute -top-[3px] -left-[3px] w-1.5 h-1.5 bg-[#FF3B1F]"></div>
-                        <div class="absolute -top-[3px] -right-[3px] w-1.5 h-1.5 bg-[#FF3B1F]"></div>
-                        <div class="absolute -bottom-[3px] -left-[3px] w-1.5 h-1.5 bg-[#FF3B1F]"></div>
-                        <div class="absolute -bottom-[3px] -right-[3px] w-1.5 h-1.5 bg-[#FF3B1F]"></div>
-                        
-                        <!-- Top Label -->
-                        <div class="absolute -top-3 left-6 bg-[#FF3B1F] text-white font-mono-jb text-xs md:text-[10px] font-bold tracking-widest px-3 py-1 uppercase">
-                            V60 / HARIO
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 font-mono-jb text-sm text-v-black dark:text-[#FAF3DD] mt-2">
-                            <div class="md:col-span-4 flex flex-col justify-between border-b md:border-b-0 md:border-r border-v-black/10 dark:border-[#4F6044] pb-6 md:pb-0 md:pr-6">
-                                <span class="text-xs md:text-[10px] font-bold uppercase tracking-widest text-v-gray mb-4 block">PERCOLATION</span>
-                                <div class="grid grid-cols-3 gap-2 text-xs">
-                                    <div><span class="text-v-gray block text-[11px] md:text-[9px] mb-1">DOSE</span>15G</div>
-                                    <div><span class="text-v-gray block text-[11px] md:text-[9px] mb-1">YIELD</span>250G</div>
-                                    <div><span class="text-v-gray block text-[11px] md:text-[9px] mb-1">TIME</span>2:45</div>
-                                </div>
-                            </div>
-                            <div class="md:col-span-8">
-                                <p class="leading-relaxed m-0 text-sm">
-                                    1. Clean, articulate, and unforgiving. The 60-degree conical geometry produces a pristine cup highlighting floral and citrus notes.<br><br>
-                                    2. Pre-wet the filter. Bloom with 45g of water for 45 seconds.<br><br>
-                                    3. Pour in concentric circles until reaching target mass.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+            <div class="lg:col-span-8 flex flex-col gap-8">
 
-                    <!-- Method AeroPress -->
-                    <div class="relative border border-[#FF3B1F] p-8 md:p-10 bg-white/50 dark:bg-v-black/20">
-                        <!-- Corner Nodes -->
-                        <div class="absolute -top-[3px] -left-[3px] w-1.5 h-1.5 bg-[#FF3B1F]"></div>
-                        <div class="absolute -top-[3px] -right-[3px] w-1.5 h-1.5 bg-[#FF3B1F]"></div>
-                        <div class="absolute -bottom-[3px] -left-[3px] w-1.5 h-1.5 bg-[#FF3B1F]"></div>
-                        <div class="absolute -bottom-[3px] -right-[3px] w-1.5 h-1.5 bg-[#FF3B1F]"></div>
-                        
-                        <!-- Top Label -->
-                        <div class="absolute -top-3 left-6 bg-[#FF3B1F] text-white font-mono-jb text-xs md:text-[10px] font-bold tracking-widest px-3 py-1 uppercase">
-                            AEROPRESS
+                <article class="brew-method-card">
+                    <header class="brew-method-card__head">
+                        <div>
+                            <span class="brew-method-card__tag">Percolation</span>
+                            <h3>V60 / Hario</h3>
                         </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 font-mono-jb text-sm text-v-black dark:text-[#FAF3DD] mt-2">
-                            <div class="md:col-span-4 flex flex-col justify-between border-b md:border-b-0 md:border-r border-v-black/10 dark:border-[#4F6044] pb-6 md:pb-0 md:pr-6">
-                                <span class="text-xs md:text-[10px] font-bold uppercase tracking-widest text-v-gray mb-4 block">IMMERSION / PRESSURE</span>
-                                <div class="grid grid-cols-3 gap-2 text-xs">
-                                    <div><span class="text-v-gray block text-[11px] md:text-[9px] mb-1">DOSE</span>18G</div>
-                                    <div><span class="text-v-gray block text-[11px] md:text-[9px] mb-1">YIELD</span>200G</div>
-                                    <div><span class="text-v-gray block text-[11px] md:text-[9px] mb-1">TIME</span>2:00</div>
-                                </div>
-                            </div>
-                            <div class="md:col-span-8">
-                                <p class="leading-relaxed m-0 text-sm">
-                                    1. Hybrid immersion with pneumatic filtration. Inverted method: Add medium-fine grounds.<br><br>
-                                    2. Pour 200g water. Agitate aggressively. Steep 90s.<br><br>
-                                    3. Cap, flip, and press steadily for 30s. Produces high body and robust extraction.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                        <dl class="brew-method-card__stats">
+                            <div><dt>Dose</dt><dd>15 g</dd></div>
+                            <div><dt>Yield</dt><dd>250 g</dd></div>
+                            <div><dt>Time</dt><dd>2:45</dd></div>
+                        </dl>
+                    </header>
+                    <ol class="brew-method-card__steps">
+                        <li>Rinse the paper. Warm the carafe. Dump the rinse water.</li>
+                        <li>Bloom with 45 g water for 45 seconds.</li>
+                        <li>Pour slow concentric circles to 250 g. Let it drain ~2:45.</li>
+                    </ol>
+                </article>
 
-                    <!-- Method French Press -->
-                    <div class="relative border border-[#FF3B1F] p-8 md:p-10 bg-white/50 dark:bg-v-black/20">
-                        <!-- Corner Nodes -->
-                        <div class="absolute -top-[3px] -left-[3px] w-1.5 h-1.5 bg-[#FF3B1F]"></div>
-                        <div class="absolute -top-[3px] -right-[3px] w-1.5 h-1.5 bg-[#FF3B1F]"></div>
-                        <div class="absolute -bottom-[3px] -left-[3px] w-1.5 h-1.5 bg-[#FF3B1F]"></div>
-                        <div class="absolute -bottom-[3px] -right-[3px] w-1.5 h-1.5 bg-[#FF3B1F]"></div>
-                        
-                        <!-- Top Label -->
-                        <div class="absolute -top-3 left-6 bg-[#FF3B1F] text-white font-mono-jb text-xs md:text-[10px] font-bold tracking-widest px-3 py-1 uppercase">
-                            FRENCH PRESS
+                <article class="brew-method-card">
+                    <header class="brew-method-card__head">
+                        <div>
+                            <span class="brew-method-card__tag">Pressure</span>
+                            <h3>Espresso</h3>
                         </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 font-mono-jb text-sm text-v-black dark:text-[#FAF3DD] mt-2">
-                            <div class="md:col-span-4 flex flex-col justify-between border-b md:border-b-0 md:border-r border-v-black/10 dark:border-[#4F6044] pb-6 md:pb-0 md:pr-6">
-                                <span class="text-xs md:text-[10px] font-bold uppercase tracking-widest text-v-gray mb-4 block">FULL IMMERSION</span>
-                                <div class="grid grid-cols-3 gap-2 text-xs">
-                                    <div><span class="text-v-gray block text-[11px] md:text-[9px] mb-1">DOSE</span>30G</div>
-                                    <div><span class="text-v-gray block text-[11px] md:text-[9px] mb-1">YIELD</span>500G</div>
-                                    <div><span class="text-v-gray block text-[11px] md:text-[9px] mb-1">TIME</span>4:00</div>
-                                </div>
-                            </div>
-                            <div class="md:col-span-8">
-                                <p class="leading-relaxed m-0 text-sm">
-                                    1. Heavy, textured, and maximalist. Coarse grind.<br><br>
-                                    2. Add all water simultaneously. Break the crust at 4:00.<br><br>
-                                    3. Scoop remaining foam and floating particles, and let steep an additional 5 minutes for suspended solids to settle. Do not plunge fully.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                        <dl class="brew-method-card__stats">
+                            <div><dt>Dose</dt><dd>18 g</dd></div>
+                            <div><dt>Yield</dt><dd>36 g</dd></div>
+                            <div><dt>Time</dt><dd>28–32 s</dd></div>
+                        </dl>
+                    </header>
+                    <ol class="brew-method-card__steps">
+                        <li>Dose 18 g, distribute, tamp level.</li>
+                        <li>Pull 36 g in 28–32 seconds (1:2).</li>
+                        <li>Gush → grind finer. Choke → grind coarser. Change one thing.</li>
+                    </ol>
+                </article>
 
-                </div>
+                <article class="brew-method-card">
+                    <header class="brew-method-card__head">
+                        <div>
+                            <span class="brew-method-card__tag">Immersion</span>
+                            <h3>AeroPress</h3>
+                        </div>
+                        <dl class="brew-method-card__stats">
+                            <div><dt>Dose</dt><dd>18 g</dd></div>
+                            <div><dt>Yield</dt><dd>200 g</dd></div>
+                            <div><dt>Time</dt><dd>2:00</dd></div>
+                        </dl>
+                    </header>
+                    <ol class="brew-method-card__steps">
+                        <li>Inverted: 18 g coffee, 200 g water at ~92°C.</li>
+                        <li>Stir hard 10 seconds. Steep to 1:30.</li>
+                        <li>Cap, flip, press 30 seconds. Stop at the hiss.</li>
+                    </ol>
+                </article>
+
+                <article class="brew-method-card">
+                    <header class="brew-method-card__head">
+                        <div>
+                            <span class="brew-method-card__tag">Full immersion</span>
+                            <h3>French Press</h3>
+                        </div>
+                        <dl class="brew-method-card__stats">
+                            <div><dt>Dose</dt><dd>30 g</dd></div>
+                            <div><dt>Yield</dt><dd>500 g</dd></div>
+                            <div><dt>Time</dt><dd>4:00</dd></div>
+                        </dl>
+                    </header>
+                    <ol class="brew-method-card__steps">
+                        <li>Coarse grind. Add all 500 g water at once.</li>
+                        <li>Break the crust at 4:00. Skim foam and floaters.</li>
+                        <li>Rest 5 minutes more. Plunge just to the surface — don’t mash the bed.</li>
+                    </ol>
+                </article>
+
             </div>
-        </section>
-
-    </main>
+        </div>
+    </section>
 </div>

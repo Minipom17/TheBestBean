@@ -3,28 +3,16 @@
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Coffee Experiences in Cusco";
-    ViewData["MetaDescription"] = "Book hands-on coffee experiences in Cusco, Peru. Workshops near San Pedro Market, coffee tastings, roasting labs, and farm visits to La Convención. Perfect for travelers exploring Cusco and Machu Picchu.";
+    ViewData["MetaDescription"] = "Book coffee experiences in Peru: Cusco workshops, a Santa Teresa cloud-forest farm on the Machu Picchu corridor, and a Cup of Excellence farm visit in Jaén, Cajamarca.";
     ViewData["MetaImage"] = "https://purplebean.coffee/images/og-logo.png";
 }
 @Html.AntiForgeryToken()
 
 <!-- MAIN CONTENT CONTAINER (Swiss Master Architecture) -->
-<div class="flex-grow max-w-[1600px] mx-auto w-full px-6 md:px-12 relative pb-24 font-sans text-v-black dark:text-[#FAF3DD]">
-    
-    <!-- HEADER -->
-    <header class="pt-6 md:pt-10 mb-20 md:mb-32 flex flex-col items-center w-full">
-        <div class="inline-flex flex-col max-w-full text-center">
-            <h1 class="text-[clamp(2.5rem,12vw,10rem)] md:text-[clamp(4.5rem,12vw,10rem)] break-words font-bold tracking-tighter text-v-black dark:text-[#FAF3DD] leading-[0.85] mb-4" data-entity-id="Experiences_Title" data-entity-type="SiteContent" data-editable="Value">
-                @Html.Raw(Model.PageContent.GetValueOrDefault("Experiences_Title", "EXPERIENCES"))
-            </h1>
-            <div class="flex justify-between w-[80%] mx-auto text-[9px] sm:text-[11px] md:text-[13px] font-bold uppercase text-v-gray tracking-widest sm:tracking-[0.2em] font-mono-jb" data-entity-id="Experiences_Subtitle" data-entity-type="SiteContent" data-editable="Value">
-                @Html.Raw(Model.PageContent.GetValueOrDefault("Experiences_Subtitle", "<span>Specialty</span> <span class=\"hidden sm:inline\">Coffee</span> <span>Laboratory</span> <span class=\"text-v-red\">&amp;</span> <span>Field</span> <span>Expeditions</span>"))
-            </div>
-        </div>
-    </header>
+<div class="flex-grow max-w-[1600px] mx-auto w-full px-6 md:px-12 relative pb-24 font-sans text-v-black dark:text-[#D6D0C8]">
 
     <!-- MAIN CONTENT GRID -->
-    <main class="flex flex-col gap-32 md:gap-48">
+    <main class="flex flex-col gap-32 md:gap-48 pt-8">
         
         <!-- SECTION: URBAN LABS -->
         <section aria-labelledby="workshops-heading" class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 relative">
@@ -32,7 +20,7 @@
             <!-- Sticky Left Title & Filters (4 Columns) -->
             <div class="lg:col-span-4 flex flex-col items-start lg:sticky lg:top-32 h-max z-10">
                 <div class="w-16 h-4 bg-v-yellow mb-8"></div>
-                <h2 id="workshops-heading" class="text-4xl md:text-5xl font-bold tracking-tighter text-v-black dark:text-[#FAF3DD] leading-[0.9]" data-entity-id="Experiences_UrbanLabs_Title" data-entity-type="SiteContent" data-editable="Value">
+                <h2 id="workshops-heading" class="text-4xl md:text-5xl font-bold tracking-tighter text-v-black dark:text-[#D6D0C8] leading-[0.9]" data-entity-id="Experiences_UrbanLabs_Title" data-entity-type="SiteContent" data-editable="Value">
                     @Html.Raw(Model.PageContent.GetValueOrDefault("Experiences_UrbanLabs_Title", "WORKSHOPS"))
                 </h2>
                 <span class="text-[10px] font-bold uppercase tracking-widest text-v-gray mt-6 font-mono-jb block" data-entity-id="Experiences_UrbanLabs_Subtitle" data-entity-type="SiteContent" data-editable="Value">CUSCO, LIMA</span>
@@ -42,10 +30,10 @@
                     <div class="flex flex-col gap-3">
                         <span class="text-[9px] font-bold uppercase tracking-widest text-v-gray font-mono-jb">LOCATION</span>
                         <div class="flex flex-wrap gap-4" id="urban-location-filters">
-                            <button class="filter-btn active border-b border-v-black dark:border-[#4F6044] pb-1 mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-black dark:text-[#FAF3DD] transition-colors bg-transparent" data-filter="all">All</button>
+                            <button class="filter-btn active border-b border-v-black dark:border-[#2A262C] pb-1 mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-black dark:text-[#D6D0C8] transition-colors bg-transparent" data-filter="all">All</button>
                             @foreach (var loc in Model.ExperiencesList.Where(e => e.Category == "Urban Workshops" && !string.IsNullOrEmpty(e.Location)).Select(e => e.Location.Trim().ToUpper()).Distinct())
                             {
-                                <button class="filter-btn mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-gray hover:text-v-black dark:text-[#FAF3DD] transition-colors bg-transparent border-none p-0 cursor-pointer" data-filter="@loc.ToLower()">@loc</button>
+                                <button class="filter-btn mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-gray hover:text-v-black dark:text-[#D6D0C8] transition-colors bg-transparent border-none p-0 cursor-pointer" data-filter="@loc.ToLower()">@loc</button>
                             }
                         </div>
                     </div>
@@ -54,10 +42,10 @@
                     <div class="flex flex-col gap-3">
                         <span class="text-[9px] font-bold uppercase tracking-widest text-v-gray font-mono-jb">DIFFICULTY</span>
                         <div class="flex flex-wrap gap-4" id="urban-difficulty-filters">
-                            <button class="filter-btn active border-b border-v-black dark:border-[#4F6044] pb-1 mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-black dark:text-[#FAF3DD] transition-colors bg-transparent" data-filter="all">All Levels</button>
-                            <button class="filter-btn mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-gray hover:text-v-black dark:text-[#FAF3DD] transition-colors bg-transparent border-none p-0 cursor-pointer" data-filter="beginner">Beginner</button>
-                            <button class="filter-btn mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-gray hover:text-v-black dark:text-[#FAF3DD] transition-colors bg-transparent border-none p-0 cursor-pointer" data-filter="intermediate">Intermediate</button>
-                            <button class="filter-btn mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-gray hover:text-v-black dark:text-[#FAF3DD] transition-colors bg-transparent border-none p-0 cursor-pointer" data-filter="advanced">Advanced</button>
+                            <button class="filter-btn active border-b border-v-black dark:border-[#2A262C] pb-1 mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-black dark:text-[#D6D0C8] transition-colors bg-transparent" data-filter="all">All Levels</button>
+                            <button class="filter-btn mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-gray hover:text-v-black dark:text-[#D6D0C8] transition-colors bg-transparent border-none p-0 cursor-pointer" data-filter="beginner">Beginner</button>
+                            <button class="filter-btn mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-gray hover:text-v-black dark:text-[#D6D0C8] transition-colors bg-transparent border-none p-0 cursor-pointer" data-filter="intermediate">Intermediate</button>
+                            <button class="filter-btn mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-gray hover:text-v-black dark:text-[#D6D0C8] transition-colors bg-transparent border-none p-0 cursor-pointer" data-filter="advanced">Advanced</button>
                         </div>
                     </div>
 
@@ -65,10 +53,10 @@
                     <div class="flex flex-col gap-3 mt-4">
                         <span class="text-[9px] font-bold uppercase tracking-widest text-v-gray font-mono-jb">FREQUENCY</span>
                         <div class="flex flex-wrap gap-4" id="urban-frequency-filters">
-                            <button class="filter-btn active border-b border-v-black dark:border-[#4F6044] pb-1 mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-black dark:text-[#FAF3DD] transition-colors bg-transparent" data-filter="all">All</button>
+                            <button class="filter-btn active border-b border-v-black dark:border-[#2A262C] pb-1 mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-black dark:text-[#D6D0C8] transition-colors bg-transparent" data-filter="all">All</button>
                             @foreach (var m in Model.ExperiencesList.Where(e => e.Category == "Urban Workshops" && !string.IsNullOrEmpty(e.Month)).Select(e => e.Month.Trim().ToUpper()).Distinct())
                             {
-                                <button class="filter-btn mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-gray hover:text-v-black dark:text-[#FAF3DD] transition-colors bg-transparent border-none p-0 cursor-pointer" data-filter="@m.ToLower()">@m</button>
+                                <button class="filter-btn mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-gray hover:text-v-black dark:text-[#D6D0C8] transition-colors bg-transparent border-none p-0 cursor-pointer" data-filter="@m.ToLower()">@m</button>
                             }
                         </div>
                     </div>
@@ -87,7 +75,7 @@
                 {
                     <article class="lab-item flex flex-col group w-full" data-location="@(featuredLab.Location?.Trim().ToLower() ?? "")" data-difficulty="@(featuredLab.Difficulty?.Trim().ToLower() ?? "")" data-frequency="@(featuredLab.Month?.Trim().ToLower() ?? "")">
                         <!-- Carousel Container -->
-                        <div class="w-full aspect-[21/9] bg-gray-100 dark:bg-[#2F3A28] mb-8 overflow-hidden rounded-3xl relative">
+                        <div class="w-full aspect-[21/9] bg-gray-100 dark:bg-[#1C191F] mb-8 overflow-hidden rounded-3xl relative">
                             <div class="carousel-container absolute inset-0 w-full h-full flex transition-transform duration-500 ease-in-out" id="carousel-@featuredLab.Id" data-current="0">
                                 @if (featuredLab.GalleryImages != null && featuredLab.GalleryImages.Any())
                                 {
@@ -113,14 +101,14 @@
                         </div>
 
                         <!-- Data Grid splits inside -->
-                        <a asp-page="/Tour" asp-route-id="@featuredLab.Id" class="text-decoration-none text-slate-900 dark:text-[#FAF3DD] flex flex-col h-full group">
+                        <a asp-page="/Tour" asp-route-id="@featuredLab.Id" class="text-decoration-none text-slate-900 dark:text-[#D6D0C8] flex flex-col h-full group">
                             <div class="grid grid-cols-1 md:grid-cols-12 gap-12 flex-grow">
                                 <!-- Left: Content & Button -->
                                 <div class="md:col-span-7 flex flex-col">
                                     <div class="flex items-center gap-3 mb-4 font-mono-jb">
                                         <div class="w-3 h-3 bg-v-yellow"></div>
-                                        <span class="text-[10px] font-bold uppercase tracking-widest text-v-black dark:text-[#FAF3DD]">@featuredLab.Duration</span>
-                                        <span class="px-2 py-0.5 bg-slate-100 dark:bg-[#2F3A28] text-slate-800 rounded-full text-[10px] font-bold tracking-widest uppercase">@featuredLab.Month</span>
+                                        <span class="text-[10px] font-bold uppercase tracking-widest text-v-black dark:text-[#D6D0C8]">@featuredLab.Duration</span>
+                                        <span class="px-2 py-0.5 bg-slate-100 dark:bg-[#1C191F] text-slate-800 rounded-full text-[10px] font-bold tracking-widest uppercase">@featuredLab.Month</span>
                                         <span class="text-[10px] font-bold tracking-widest uppercase">@featuredLab.Location</span>
                                     </div>
                                     <h3 class="text-3xl md:text-4xl font-semibold tracking-tight mb-4 m-0">@featuredLab.Title</h3>
@@ -150,7 +138,7 @@
                                                     @for (int i = 0; i < featuredLab.ProvidedEquipment.Count; i++)
                                                     {
                                                         <li class="flex items-start gap-2">
-                                                            <span class="text-v-black dark:text-[#FAF3DD] font-bold mt-0.5">@(i + 1).</span>
+                                                            <span class="text-v-black dark:text-[#D6D0C8] font-bold mt-0.5">@(i + 1).</span>
                                                             <span class="leading-relaxed">@featuredLab.ProvidedEquipment[i]</span>
                                                         </li>
                                                     }
@@ -162,14 +150,14 @@
                                         <span class="bg-v-black text-v-white px-8 py-4 font-bold uppercase tracking-widest text-[10px] group-hover:bg-v-yellow group-hover:text-v-black transition-colors font-mono-jb">
                                             VIEW DETAILS
                                         </span>
-                                        <span class="text-2xl font-semibold text-v-black dark:text-[#FAF3DD] font-mono-jb price-display" data-price-usd="@featuredLab.Price" data-price-pen="@(Math.Round(featuredLab.Price * 3.6m))">$@featuredLab.Price USD</span>
+                                        <span class="text-2xl font-semibold text-v-black dark:text-[#D6D0C8] font-mono-jb">S/ @LocalPricing.YapeSoles(featuredLab.Price).ToString("0") <span class="text-xs font-normal text-v-gray">Yape</span> · $@featuredLab.Price.ToString("0") card</span>
                                     </div>
                                 </div>
 
                                 <!-- Right: Syllabus -->
                                 <div class="md:col-span-5 flex flex-col pt-2 md:pt-0 font-mono-jb">
                                     <h4 class="text-[10px] font-bold uppercase tracking-widest text-v-gray mb-4">SYLLABUS</h4>
-                                    <div class="flex flex-col border-t border-v-black dark:border-[#4F6044] font-sans">
+                                    <div class="flex flex-col border-t border-v-black dark:border-[#2A262C] font-sans">
                                         @if (featuredLab.Syllabus != null && featuredLab.Syllabus.Any())
                                         {
                                             for (int i = 0; i < featuredLab.Syllabus.Count; i++)
@@ -177,8 +165,8 @@
                                                 var isLast = i == featuredLab.Syllabus.Count - 1;
                                                 var paddingClasses = isLast ? "pt-4 pb-0" : "py-4 border-b border-v-light-gray";
                                                 <div class="flex flex-col gap-1 @paddingClasses">
-                                                    <span class="font-mono text-[10px] font-bold text-v-black dark:text-[#FAF3DD] uppercase tracking-widest">PART 0@(i + 1)</span>
-                                                    <span class="text-sm @(isLast ? "font-semibold text-v-black dark:text-[#FAF3DD]" : "font-normal text-v-gray")">@featuredLab.Syllabus[i]</span>
+                                                    <span class="font-mono text-[10px] font-bold text-v-black dark:text-[#D6D0C8] uppercase tracking-widest">PART 0@(i + 1)</span>
+                                                    <span class="text-sm @(isLast ? "font-semibold text-v-black dark:text-[#D6D0C8]" : "font-normal text-v-gray")">@featuredLab.Syllabus[i]</span>
                                                 </div>
                                             }
                                         }
@@ -195,8 +183,8 @@
                         @foreach (var exp in regularLabs)
                         {
                             <article class="lab-item flex flex-col group" data-location="@(exp.Location?.Trim().ToLower() ?? "")" data-difficulty="@(exp.Difficulty?.Trim().ToLower() ?? "")" data-frequency="@(exp.Month?.Trim().ToLower() ?? "")">
-                                <a asp-page="/Tour" asp-route-id="@exp.Id" class="text-decoration-none text-slate-900 dark:text-[#FAF3DD] flex flex-col h-full group">
-                                    <div class="w-full aspect-[3/2] bg-gray-100 dark:bg-[#2F3A28] mb-6 overflow-hidden rounded-3xl relative @(exp.Tag != null ? "border border-red-200" : "")">
+                                <a asp-page="/Tour" asp-route-id="@exp.Id" class="text-decoration-none text-slate-900 dark:text-[#D6D0C8] flex flex-col h-full group">
+                                    <div class="w-full aspect-[3/2] bg-gray-100 dark:bg-[#1C191F] mb-6 overflow-hidden rounded-3xl relative @(exp.Tag != null ? "border border-red-200" : "")">
                                         <img src="@exp.ImageUrl" alt="@exp.Title" class="img-stark absolute inset-0 w-full h-full object-cover" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="ImageUrl" loading="lazy" />
                                         @if (exp.Tag != null)
                                         {
@@ -207,19 +195,19 @@
                                         <div class="flex items-center gap-2 font-mono-jb text-[10px] font-bold tracking-widest uppercase mb-2">
                                             <div class="w-1.5 h-1.5 bg-[#F05A28]"></div>
                                             <span class="text-gray-300">/</span>
-                                            <span class="text-v-black dark:text-[#FAF3DD]" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Location">@exp.Location</span>
+                                            <span class="text-v-black dark:text-[#D6D0C8]" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Location">@exp.Location</span>
                                             <span class="text-gray-500" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Month">@exp.Month</span>
                                             <span class="text-gray-300">/</span>
                                             <span class="text-[#F05A28]" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Difficulty">@exp.Difficulty</span>
                                         </div>
-                                        <h3 class="text-2xl md:text-3xl font-semibold tracking-tight text-v-black dark:text-[#FAF3DD] m-0" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Title">@exp.Title</h3>
+                                        <h3 class="text-2xl md:text-3xl font-semibold tracking-tight text-v-black dark:text-[#D6D0C8] m-0" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Title">@exp.Title</h3>
                                     </div>
-                                    <p class="text-v-gray text-sm md:text-base leading-relaxed mb-6 pb-6 border-b border-v-black/10 dark:border-[#4F6044] font-normal flex-grow" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Description">
+                                    <p class="text-v-gray text-sm md:text-base leading-relaxed mb-6 pb-6 border-b border-v-black/10 dark:border-[#2A262C] font-normal flex-grow" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Description">
                                         @exp.Description
                                     </p>
                                     <div class="flex items-center justify-between mt-auto pt-4 font-mono-jb">
-                                        <span class="text-2xl font-bold text-v-black dark:text-[#FAF3DD] price-display" data-price-usd="@exp.Price" data-price-pen="@(Math.Round(exp.Price * 3.6m))">$<span data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Price">@exp.Price</span></span>
-                                        <span class="text-sm font-bold text-v-black dark:text-[#FAF3DD] hover:text-v-gray transition-colors flex items-center">
+                                        <span class="text-2xl font-bold text-v-black dark:text-[#D6D0C8]">S/ @LocalPricing.YapeSoles(exp.Price).ToString("0") <span class="text-xs font-normal text-v-gray">Yape</span> <span class="text-sm font-normal text-v-gray">/ $<span data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Price">@exp.Price</span></span></span>
+                                        <span class="text-sm font-bold text-v-black dark:text-[#D6D0C8] hover:text-v-gray transition-colors flex items-center">
                                             Reserve <span class="ml-2 transform group-hover:translate-x-1 transition-transform">&rarr;</span>
                                         </span>
                                     </div>
@@ -236,20 +224,20 @@
             <!-- Sticky Left Title & Filters (4 Columns) -->
             <div class="lg:col-span-4 flex flex-col items-start lg:sticky lg:top-32 h-max z-10">
                 <div class="w-16 h-4 bg-v-red mb-8"></div>
-                <h2 id="expeditions-heading" class="text-5xl md:text-6xl font-bold tracking-tighter text-v-black dark:text-[#FAF3DD] leading-[0.9]" data-entity-id="Experiences_Expeditions_Title" data-entity-type="SiteContent" data-editable="Value">
+                <h2 id="expeditions-heading" class="text-5xl md:text-6xl font-bold tracking-tighter text-v-black dark:text-[#D6D0C8] leading-[0.9]" data-entity-id="Experiences_Expeditions_Title" data-entity-type="SiteContent" data-editable="Value">
                     @Html.Raw(Model.PageContent.GetValueOrDefault("Experiences_Expeditions_Title", "ORIGIN <span class=\"text-lg md:text-2xl text-gray-400 dark:text-gray-500 font-light font-mono-tech tracking-widest uppercase inline-block ml-2\">EXPEDITIONS</span>"))
                 </h2>
-                <a asp-page="/OriginMap" class="text-[12px] md:text-[10px] font-bold uppercase tracking-widest text-v-gray hover:text-v-red mt-6 font-mono-jb text-decoration-none cursor-pointer transition-colors" data-entity-id="Experiences_Expeditions_Subtitle" data-entity-type="SiteContent" data-editable="Value">@Html.Raw(Model.PageContent.GetValueOrDefault("Experiences_Expeditions_Subtitle", "LA CONVENCIÓN VALLEY"))</a>
+                <a asp-page="/OriginMap" class="text-[12px] md:text-[10px] font-bold uppercase tracking-widest text-v-gray hover:text-v-red mt-6 font-mono-jb text-decoration-none cursor-pointer transition-colors" data-entity-id="Experiences_Expeditions_Subtitle" data-entity-type="SiteContent" data-editable="Value">@Html.Raw(Model.PageContent.GetValueOrDefault("Experiences_Expeditions_Subtitle", "SANTA TERESA · CAJAMARCA"))</a>
 
                 <div class="mt-8 flex flex-col w-full pr-8">
                     <!-- Location Filter -->
                     <div class="flex flex-col gap-3">
                         <span class="text-[9px] font-bold uppercase tracking-widest text-v-gray font-mono-jb">LOCATION</span>
                         <div class="flex flex-wrap gap-4" id="expedition-location-filters">
-                            <button class="filter-btn active border-b border-v-black dark:border-[#4F6044] pb-1 mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-black dark:text-[#FAF3DD] transition-colors bg-transparent" data-filter="all">All</button>
+                            <button class="filter-btn active border-b border-v-black dark:border-[#2A262C] pb-1 mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-black dark:text-[#D6D0C8] transition-colors bg-transparent" data-filter="all">All</button>
                             @foreach (var loc in Model.ExperiencesList.Where(e => e.Category == "Expedition" && !string.IsNullOrEmpty(e.Location)).Select(e => e.Location.Trim().ToUpper()).Distinct())
                             {
-                                <button class="filter-btn mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-gray hover:text-v-black dark:text-[#FAF3DD] transition-colors bg-transparent border-none p-0 cursor-pointer" data-filter="@loc.ToLower()">@loc</button>
+                                <button class="filter-btn mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-gray hover:text-v-black dark:text-[#D6D0C8] transition-colors bg-transparent border-none p-0 cursor-pointer" data-filter="@loc.ToLower()">@loc</button>
                             }
                         </div>
                     </div>
@@ -258,10 +246,10 @@
                     <div class="flex flex-col gap-3 mt-4">
                         <span class="text-[9px] font-bold uppercase tracking-widest text-v-gray font-mono-jb">DIFFICULTY</span>
                         <div class="flex flex-wrap gap-4" id="expedition-difficulty-filters">
-                            <button class="filter-btn active border-b border-v-black dark:border-[#4F6044] pb-1 mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-black dark:text-[#FAF3DD] transition-colors bg-transparent" data-filter="all">All Levels</button>
-                            <button class="filter-btn mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-gray hover:text-v-black dark:text-[#FAF3DD] transition-colors bg-transparent border-none p-0 cursor-pointer" data-filter="beginner">Beginner</button>
-                            <button class="filter-btn mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-gray hover:text-v-black dark:text-[#FAF3DD] transition-colors bg-transparent border-none p-0 cursor-pointer" data-filter="intermediate">Intermediate</button>
-                            <button class="filter-btn mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-gray hover:text-v-black dark:text-[#FAF3DD] transition-colors bg-transparent border-none p-0 cursor-pointer" data-filter="advanced">Advanced</button>
+                            <button class="filter-btn active border-b border-v-black dark:border-[#2A262C] pb-1 mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-black dark:text-[#D6D0C8] transition-colors bg-transparent" data-filter="all">All Levels</button>
+                            <button class="filter-btn mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-gray hover:text-v-black dark:text-[#D6D0C8] transition-colors bg-transparent border-none p-0 cursor-pointer" data-filter="beginner">Beginner</button>
+                            <button class="filter-btn mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-gray hover:text-v-black dark:text-[#D6D0C8] transition-colors bg-transparent border-none p-0 cursor-pointer" data-filter="intermediate">Intermediate</button>
+                            <button class="filter-btn mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-gray hover:text-v-black dark:text-[#D6D0C8] transition-colors bg-transparent border-none p-0 cursor-pointer" data-filter="advanced">Advanced</button>
                         </div>
                     </div>
 
@@ -269,10 +257,10 @@
                     <div class="flex flex-col gap-3 mt-4">
                         <span class="text-[9px] font-bold uppercase tracking-widest text-v-gray font-mono-jb">FREQUENCY</span>
                         <div class="flex flex-wrap gap-4" id="expedition-frequency-filters">
-                            <button class="filter-btn active border-b border-v-black dark:border-[#4F6044] pb-1 mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-black dark:text-[#FAF3DD] transition-colors bg-transparent" data-filter="all">All</button>
+                            <button class="filter-btn active border-b border-v-black dark:border-[#2A262C] pb-1 mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-black dark:text-[#D6D0C8] transition-colors bg-transparent" data-filter="all">All</button>
                             @foreach (var m in Model.ExperiencesList.Where(e => e.Category == "Expedition" && !string.IsNullOrEmpty(e.Month)).Select(e => e.Month.Trim().ToUpper()).Distinct())
                             {
-                                <button class="filter-btn mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-gray hover:text-v-black dark:text-[#FAF3DD] transition-colors bg-transparent border-none p-0 cursor-pointer" data-filter="@m.ToLower()">@m</button>
+                                <button class="filter-btn mr-2 text-[12px] md:text-[10px] font-bold font-mono-jb uppercase tracking-widest text-v-gray hover:text-v-black dark:text-[#D6D0C8] transition-colors bg-transparent border-none p-0 cursor-pointer" data-filter="@m.ToLower()">@m</button>
                             }
                         </div>
                     </div>
@@ -284,24 +272,41 @@
                 @foreach (var exp in Model.ExperiencesList.Where(e => e.Category == "Expedition"))
                 {
                     <article class="expedition-item flex flex-col group" data-difficulty="@(exp.Difficulty?.Trim().ToLower() ?? "")" data-location="@(exp.Location?.Trim().ToLower() ?? "")" data-frequency="@(exp.Month?.Trim().ToLower() ?? "")">
-                        <a asp-page="/Tour" asp-route-id="@exp.Id" class="text-decoration-none text-slate-900 dark:text-[#FAF3DD] flex flex-col h-full group">
-                            <!-- Image Block spans full 8 cols -->
-                            <div class="w-full aspect-[21/9] bg-gray-100 dark:bg-[#2F3A28] mb-8 overflow-hidden rounded-3xl relative">
-                                 <img src="@exp.ImageUrl" alt="@exp.Title" class="img-stark absolute inset-0 w-full h-full object-cover" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="ImageUrl" loading="lazy" />
-                                 @if (exp.Tag != null)
-                                 {
-                                     <div class="absolute top-3 right-3 bg-red-600 text-white rounded-full px-3 py-1 text-[9px] font-mono-jb font-bold uppercase tracking-widest shadow-sm" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Tag">@exp.Tag</div>
-                                 }
+                        @{
+                            var expeditionPhotos = (exp.GalleryImages != null && exp.GalleryImages.Any())
+                                ? exp.GalleryImages
+                                : (string.IsNullOrWhiteSpace(exp.ImageUrl) ? new List<string>() : new List<string> { exp.ImageUrl });
+                        }
+                        <div class="w-full aspect-[21/9] bg-gray-100 dark:bg-[#1C191F] mb-8 overflow-hidden rounded-3xl relative">
+                            <div class="carousel-container absolute inset-0 w-full h-full flex transition-transform duration-500 ease-in-out" id="carousel-@exp.Id" data-current="0">
+                                @foreach (var img in expeditionPhotos)
+                                {
+                                    <img src="@img" alt="@exp.Title" class="img-stark w-full h-full object-cover flex-shrink-0" loading="lazy" />
+                                }
                             </div>
+                            @if (exp.Tag != null)
+                            {
+                                <div class="absolute top-3 right-3 bg-red-600 text-white rounded-full px-3 py-1 text-[9px] font-mono-jb font-bold uppercase tracking-widest shadow-sm z-10" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Tag">@exp.Tag</div>
+                            }
+                            @if (expeditionPhotos.Count > 1)
+                            {
+                                <button type="button" aria-label="Previous Image" onclick="moveCarousel(@exp.Id, -1)" class="absolute left-4 top-1/2 -translate-y-1/2 bg-black/40 text-white w-10 h-10 rounded-full hover:bg-black/70 transition flex items-center justify-center z-10 border-0 cursor-pointer">
+                                    <i class="bi bi-chevron-left text-xl"></i>
+                                </button>
+                                <button type="button" aria-label="Next Image" onclick="moveCarousel(@exp.Id, 1)" class="absolute right-4 top-1/2 -translate-y-1/2 bg-black/40 text-white w-10 h-10 rounded-full hover:bg-black/70 transition flex items-center justify-center z-10 border-0 cursor-pointer">
+                                    <i class="bi bi-chevron-right text-xl"></i>
+                                </button>
+                            }
+                        </div>
 
-                            <!-- Data Grid splits inside -->
+                        <a asp-page="/Tour" asp-route-id="@exp.Id" class="text-decoration-none text-slate-900 dark:text-[#D6D0C8] flex flex-col h-full group">
                             <div class="grid grid-cols-1 md:grid-cols-12 gap-12 flex-grow">
                                 <!-- Left: Content & Button -->
                                 <div class="md:col-span-7 flex flex-col">
                                     <div class="flex items-center gap-3 mb-4 font-mono-jb">
                                         <div class="w-3 h-3 bg-v-red"></div>
-                                        <span class="text-[10px] font-bold uppercase tracking-widest text-v-black dark:text-[#FAF3DD]" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Duration">@exp.Duration</span>
-                                        <span class="px-2 py-0.5 bg-slate-100 dark:bg-[#2F3A28] text-slate-800 rounded-full text-[10px] font-bold tracking-widest uppercase" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Month">@exp.Month</span>
+                                        <span class="text-[10px] font-bold uppercase tracking-widest text-v-black dark:text-[#D6D0C8]" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Duration">@exp.Duration</span>
+                                        <span class="px-2 py-0.5 bg-slate-100 dark:bg-[#1C191F] text-slate-800 rounded-full text-[10px] font-bold tracking-widest uppercase" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Month">@exp.Month</span>
                                         <span class="text-[10px] font-bold tracking-widest uppercase" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Location">@exp.Location</span>
                                     </div>
                                     <h3 class="text-3xl md:text-4xl font-semibold tracking-tight mb-4 m-0" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Title">@exp.Title</h3>
@@ -312,14 +317,14 @@
                                         <span class="bg-v-black text-v-white px-8 py-4 font-bold uppercase tracking-widest text-[10px] group-hover:bg-v-red transition-colors font-mono-jb" data-entity-id="Experiences_ViewDossierButton" data-entity-type="SiteContent" data-editable="Value">
                                             @Html.Raw(Model.PageContent.GetValueOrDefault("Experiences_ViewDossierButton", "VIEW DOSSIER"))
                                         </span>
-                                        <span class="text-2xl font-semibold text-v-black dark:text-[#FAF3DD] font-mono-jb">$<span data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Price">@exp.Price</span> USD</span>
+                                        <span class="text-2xl font-semibold text-v-black dark:text-[#D6D0C8] font-mono-jb">$<span data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Price">@exp.Price</span> USD</span>
                                     </div>
                                 </div>
 
                                 <!-- Right: Timeline / Syllabus -->
                                 <div class="md:col-span-5 flex flex-col pt-2 md:pt-0 font-mono-jb">
                                     <h4 class="text-[10px] font-bold uppercase tracking-widest text-v-gray mb-4">SYLLABUS</h4>
-                                    <div class="flex flex-col border-t border-v-black dark:border-[#4F6044] font-sans">
+                                    <div class="flex flex-col border-t border-v-black dark:border-[#2A262C] font-sans">
                                         @if (exp.Syllabus != null && exp.Syllabus.Any())
                                         {
                                             for (int i = 0; i < exp.Syllabus.Count; i++)
@@ -328,8 +333,8 @@
                                                 var paddingClasses = isLast ? "pt-4 pb-0" : "py-4 border-b border-v-light-gray";
                                                 
                                                 <div class="flex flex-col gap-1 @paddingClasses">
-                                                    <span class="font-mono text-[10px] font-bold text-v-black dark:text-[#FAF3DD] uppercase tracking-widest">DAY 0@(i + 1)</span>
-                                                    <span class="text-sm @(isLast ? "font-semibold text-v-black dark:text-[#FAF3DD]" : "font-normal text-v-gray")">@exp.Syllabus[i]</span>
+                                                    <span class="font-mono text-[10px] font-bold text-v-black dark:text-[#D6D0C8] uppercase tracking-widest">STEP 0@(i + 1)</span>
+                                                    <span class="text-sm @(isLast ? "font-semibold text-v-black dark:text-[#D6D0C8]" : "font-normal text-v-gray")">@exp.Syllabus[i]</span>
                                                 </div>
                                             }
                                         }
@@ -384,11 +389,11 @@
                 btn.addEventListener('click', () => {
                     // Update active state styling
                     urbanLocationFilters.forEach(b => {
-                        b.classList.remove('active', 'border-b', 'border-v-black dark:border-[#4F6044]', 'pb-1', 'text-v-black dark:text-[#FAF3DD]');
-                        b.classList.add('text-v-gray', 'hover:text-v-black dark:text-[#FAF3DD]');
+                        b.classList.remove('active', 'border-b', 'border-v-black dark:border-[#2A262C]', 'pb-1', 'text-v-black dark:text-[#D6D0C8]');
+                        b.classList.add('text-v-gray', 'hover:text-v-black dark:text-[#D6D0C8]');
                     });
-                    btn.classList.add('active', 'border-b', 'border-v-black dark:border-[#4F6044]', 'pb-1', 'text-v-black dark:text-[#FAF3DD]');
-                    btn.classList.remove('text-v-gray', 'hover:text-v-black dark:text-[#FAF3DD]');
+                    btn.classList.add('active', 'border-b', 'border-v-black dark:border-[#2A262C]', 'pb-1', 'text-v-black dark:text-[#D6D0C8]');
+                    btn.classList.remove('text-v-gray', 'hover:text-v-black dark:text-[#D6D0C8]');
                     
                     currentUrbanLocation = btn.getAttribute('data-filter');
                     filterUrbanLabs();
@@ -399,11 +404,11 @@
                 btn.addEventListener('click', () => {
                     // Update active state styling
                     urbanDifficultyFilters.forEach(b => {
-                        b.classList.remove('active', 'border-b', 'border-v-black dark:border-[#4F6044]', 'pb-1', 'text-v-black dark:text-[#FAF3DD]');
-                        b.classList.add('text-v-gray', 'hover:text-v-black dark:text-[#FAF3DD]');
+                        b.classList.remove('active', 'border-b', 'border-v-black dark:border-[#2A262C]', 'pb-1', 'text-v-black dark:text-[#D6D0C8]');
+                        b.classList.add('text-v-gray', 'hover:text-v-black dark:text-[#D6D0C8]');
                     });
-                    btn.classList.add('active', 'border-b', 'border-v-black dark:border-[#4F6044]', 'pb-1', 'text-v-black dark:text-[#FAF3DD]');
-                    btn.classList.remove('text-v-gray', 'hover:text-v-black dark:text-[#FAF3DD]');
+                    btn.classList.add('active', 'border-b', 'border-v-black dark:border-[#2A262C]', 'pb-1', 'text-v-black dark:text-[#D6D0C8]');
+                    btn.classList.remove('text-v-gray', 'hover:text-v-black dark:text-[#D6D0C8]');
                     
                     currentUrbanDifficulty = btn.getAttribute('data-filter');
                     filterUrbanLabs();
@@ -414,11 +419,11 @@
                 btn.addEventListener('click', () => {
                     // Update active state styling
                     urbanFrequencyFilters.forEach(b => {
-                        b.classList.remove('active', 'border-b', 'border-v-black dark:border-[#4F6044]', 'pb-1', 'text-v-black dark:text-[#FAF3DD]');
-                        b.classList.add('text-v-gray', 'hover:text-v-black dark:text-[#FAF3DD]');
+                        b.classList.remove('active', 'border-b', 'border-v-black dark:border-[#2A262C]', 'pb-1', 'text-v-black dark:text-[#D6D0C8]');
+                        b.classList.add('text-v-gray', 'hover:text-v-black dark:text-[#D6D0C8]');
                     });
-                    btn.classList.add('active', 'border-b', 'border-v-black dark:border-[#4F6044]', 'pb-1', 'text-v-black dark:text-[#FAF3DD]');
-                    btn.classList.remove('text-v-gray', 'hover:text-v-black dark:text-[#FAF3DD]');
+                    btn.classList.add('active', 'border-b', 'border-v-black dark:border-[#2A262C]', 'pb-1', 'text-v-black dark:text-[#D6D0C8]');
+                    btn.classList.remove('text-v-gray', 'hover:text-v-black dark:text-[#D6D0C8]');
                     
                     currentUrbanFrequency = btn.getAttribute('data-filter');
                     filterUrbanLabs();
@@ -457,11 +462,11 @@
                 expeditionLocationFilters.forEach(btn => {
                     btn.addEventListener('click', () => {
                         expeditionLocationFilters.forEach(b => {
-                            b.classList.remove('active', 'border-b', 'border-v-black dark:border-[#4F6044]', 'pb-1', 'text-v-black dark:text-[#FAF3DD]');
-                            b.classList.add('text-v-gray', 'hover:text-v-black dark:text-[#FAF3DD]');
+                            b.classList.remove('active', 'border-b', 'border-v-black dark:border-[#2A262C]', 'pb-1', 'text-v-black dark:text-[#D6D0C8]');
+                            b.classList.add('text-v-gray', 'hover:text-v-black dark:text-[#D6D0C8]');
                         });
-                        btn.classList.add('active', 'border-b', 'border-v-black dark:border-[#4F6044]', 'pb-1', 'text-v-black dark:text-[#FAF3DD]');
-                        btn.classList.remove('text-v-gray', 'hover:text-v-black dark:text-[#FAF3DD]');
+                        btn.classList.add('active', 'border-b', 'border-v-black dark:border-[#2A262C]', 'pb-1', 'text-v-black dark:text-[#D6D0C8]');
+                        btn.classList.remove('text-v-gray', 'hover:text-v-black dark:text-[#D6D0C8]');
                         
                         currentExpeditionLocation = btn.getAttribute('data-filter');
                         filterExpeditions();
@@ -474,11 +479,11 @@
                     btn.addEventListener('click', () => {
                         // Update active state styling
                         expeditionDifficultyFilters.forEach(b => {
-                            b.classList.remove('active', 'border-b', 'border-v-black dark:border-[#4F6044]', 'pb-1', 'text-v-black dark:text-[#FAF3DD]');
-                            b.classList.add('text-v-gray', 'hover:text-v-black dark:text-[#FAF3DD]');
+                            b.classList.remove('active', 'border-b', 'border-v-black dark:border-[#2A262C]', 'pb-1', 'text-v-black dark:text-[#D6D0C8]');
+                            b.classList.add('text-v-gray', 'hover:text-v-black dark:text-[#D6D0C8]');
                         });
-                        btn.classList.add('active', 'border-b', 'border-v-black dark:border-[#4F6044]', 'pb-1', 'text-v-black dark:text-[#FAF3DD]');
-                        btn.classList.remove('text-v-gray', 'hover:text-v-black dark:text-[#FAF3DD]');
+                        btn.classList.add('active', 'border-b', 'border-v-black dark:border-[#2A262C]', 'pb-1', 'text-v-black dark:text-[#D6D0C8]');
+                        btn.classList.remove('text-v-gray', 'hover:text-v-black dark:text-[#D6D0C8]');
                         
                         currentExpeditionDifficulty = btn.getAttribute('data-filter');
                         filterExpeditions();
@@ -490,11 +495,11 @@
                 expeditionFrequencyFilters.forEach(btn => {
                     btn.addEventListener('click', () => {
                         expeditionFrequencyFilters.forEach(b => {
-                            b.classList.remove('active', 'border-b', 'border-v-black dark:border-[#4F6044]', 'pb-1', 'text-v-black dark:text-[#FAF3DD]');
-                            b.classList.add('text-v-gray', 'hover:text-v-black dark:text-[#FAF3DD]');
+                            b.classList.remove('active', 'border-b', 'border-v-black dark:border-[#2A262C]', 'pb-1', 'text-v-black dark:text-[#D6D0C8]');
+                            b.classList.add('text-v-gray', 'hover:text-v-black dark:text-[#D6D0C8]');
                         });
-                        btn.classList.add('active', 'border-b', 'border-v-black dark:border-[#4F6044]', 'pb-1', 'text-v-black dark:text-[#FAF3DD]');
-                        btn.classList.remove('text-v-gray', 'hover:text-v-black dark:text-[#FAF3DD]');
+                        btn.classList.add('active', 'border-b', 'border-v-black dark:border-[#2A262C]', 'pb-1', 'text-v-black dark:text-[#D6D0C8]');
+                        btn.classList.remove('text-v-gray', 'hover:text-v-black dark:text-[#D6D0C8]');
                         
                         currentExpeditionFrequency = btn.getAttribute('data-filter');
                         filterExpeditions();

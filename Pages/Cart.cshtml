@@ -4,7 +4,7 @@
     ViewData["Title"] = "Shopping Bag";
 }
 
-<div class="pt-32 pb-20 bg-white dark:bg-[#3C4A33] min-h-[70vh]">
+<div class="pt-32 pb-20 bg-white dark:bg-[#121014] min-h-[70vh]">
     <div class="container mx-auto px-4 md:px-8">
         <h1 class="text-4xl md:text-6xl font-grotesk font-bold tracking-tighter mb-12 uppercase">
             Your Bag
@@ -25,7 +25,9 @@
                                 <div>
                                     <div class="flex justify-between items-start">
                                         <h3 class="text-xl font-grotesk font-bold">@item.ProductName</h3>
-                                        <div class="font-mono-jb font-bold price-display" data-price-usd="@item.Price" data-price-pen="@(item.Price * 3.75m)">$@item.Price.ToString("F2")</div>
+                                        <div>
+                                            <partial name="_YapePrice" model="new DualPriceModel { Usd = item.Price, Pen = LocalPricing.YapeSoles(item.Price), Compact = true }" />
+                                        </div>
                                     </div>
                                     <p class="text-xs text-gray-500 font-mono-jb uppercase tracking-widest mt-1">@item.ProductType @(string.IsNullOrEmpty(item.Weight) ? "" : $"| {item.Weight}")</p>
                                     <p class="text-sm text-gray-600 mt-2 font-light line-clamp-2">@item.Description</p>
@@ -37,21 +39,21 @@
                                                 <input type="hidden" name="productId" value="@item.ProductId" />
                                                 <input type="hidden" name="productType" value="@item.ProductType" />
                                                 <input type="hidden" name="quantity" value="@(item.Quantity - 1)" />
-                                                <button type="submit" class="w-8 h-8 flex items-center justify-center hover:bg-gray-100 dark:bg-[#2F3A28] transition-colors border-0 bg-transparent">−</button>
+                                                <button type="submit" class="w-8 h-8 flex items-center justify-center hover:bg-gray-100 dark:bg-[#1C191F] transition-colors border-0 bg-transparent">−</button>
                                             </form>
                                             <span class="w-10 text-center font-mono-jb text-sm font-bold">@item.Quantity</span>
                                             <form method="post" asp-page-handler="UpdateQuantity">
                                                 <input type="hidden" name="productId" value="@item.ProductId" />
                                                 <input type="hidden" name="productType" value="@item.ProductType" />
                                                 <input type="hidden" name="quantity" value="@(item.Quantity + 1)" />
-                                                <button type="submit" class="w-8 h-8 flex items-center justify-center hover:bg-gray-100 dark:bg-[#2F3A28] transition-colors border-0 bg-transparent">+</button>
+                                                <button type="submit" class="w-8 h-8 flex items-center justify-center hover:bg-gray-100 dark:bg-[#1C191F] transition-colors border-0 bg-transparent">+</button>
                                             </form>
                                         </div>
                                     </div>
                                     <form method="post" asp-page-handler="RemoveItem">
                                         <input type="hidden" name="productId" value="@item.ProductId" />
                                         <input type="hidden" name="productType" value="@item.ProductType" />
-                                        <button type="submit" class="text-[10px] font-mono-jb font-bold uppercase tracking-widest text-gray-400 hover:text-black dark:text-[#FAF3DD] transition-colors border-0 bg-transparent">
+                                        <button type="submit" class="text-[10px] font-mono-jb font-bold uppercase tracking-widest text-gray-400 hover:text-black dark:text-[#D6D0C8] transition-colors border-0 bg-transparent">
                                             Remove
                                         </button>
                                     </form>
@@ -61,7 +63,7 @@
                     }
 
                     <div class="flex gap-4 pt-8">
-                        <a asp-page="/GreenBeans" class="text-xs font-mono-jb font-bold uppercase tracking-widest text-gray-400 hover:text-black dark:text-[#FAF3DD] transition-colors text-decoration-none border-b border-transparent hover:border-black">
+                        <a asp-page="/GreenBeans" class="text-xs font-mono-jb font-bold uppercase tracking-widest text-gray-400 hover:text-black dark:text-[#D6D0C8] transition-colors text-decoration-none border-b border-transparent hover:border-black">
                             <i class="bi bi-arrow-left"></i> Keep Shopping
                         </a>
                         <form method="post" asp-page-handler="ClearCart">
@@ -74,35 +76,44 @@
 
                 <!-- Right: Summary -->
                 <div class="w-full lg:w-[400px]">
-                    <div class="bg-gray-50 dark:bg-[#2F3A28] p-8 border border-gray-100 dark:border-[#4F6044] sticky top-32">
+                    <div class="bg-gray-50 dark:bg-[#1C191F] p-8 border border-gray-100 dark:border-[#2A262C] sticky top-32">
                         <h2 class="text-lg font-mono-jb font-bold uppercase tracking-widest mb-6 border-b border-black pb-2">Order Summary</h2>
                         <div class="space-y-4 mb-8">
                             <div class="flex justify-between text-sm">
                                 <span class="text-gray-500 font-light">Subtotal (@Model.ItemCount items)</span>
-                                <span class="font-mono-jb font-bold price-display" data-price-usd="@Model.CartTotal" data-price-pen="@(Model.CartTotal * 3.75m)">$@Model.CartTotal.ToString("F2")</span>
+                                <span class="font-mono-jb font-bold">$@Model.CartTotal.ToString("F2")</span>
                             </div>
                             <div class="flex justify-between text-sm">
                                 <span class="text-gray-500 font-light">Shipping</span>
                                 <span class="text-green-600 font-mono-jb font-bold">FREE</span>
                             </div>
-                            <div class="pt-4 border-t border-gray-200">
-                                <div class="flex justify-between items-baseline">
-                                    <span class="text-xl font-grotesk font-bold">Total</span>
-                                    <span class="text-2xl font-grotesk font-bold price-display" data-price-usd="@Model.CartTotal" data-price-pen="@(Model.CartTotal * 3.75m)">$@Model.CartTotal.ToString("F2")</span>
+                            <div class="pt-4 border-t border-gray-200 space-y-4">
+                                <div class="yape-price yape-price--stack">
+                                    <div class="yape-price__yape">
+                                        <span class="yape-price__badge">Yape</span>
+                                        <span class="yape-price__soles">S/ @LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</span>
+                                    </div>
+                                    <p class="yape-price__save mb-0">Local price in soles · recommended in Perú</p>
+                                    <div class="yape-price__card mt-3">
+                                        <span class="yape-price__card-label">Card / PayPal</span>
+                                        <span class="yape-price__card-usd">$@Model.CartTotal.ToString("F2")</span>
+                                        <span class="yape-price__card-pen">≈ S/ @LocalPricing.CardSoles(Model.CartTotal).ToString("0")</span>
+                                    </div>
+                                    @if (LocalPricing.YapeSavings(Model.CartTotal) > 0)
+                                    {
+                                        <p class="yape-price__save">Save S/ @LocalPricing.YapeSavings(Model.CartTotal).ToString("0") with Yape vs card FX.</p>
+                                    }
                                 </div>
-                                <p class="text-[10px] text-gray-400 font-mono-jb mt-1 uppercase tracking-widest">Taxes included</p>
                             </div>
                         </div>
 
                         <a asp-page="/Checkout" class="block w-full bg-black text-white text-center py-4 font-mono-jb font-bold text-xs uppercase tracking-widest hover:bg-v-red transition-colors border border-black text-decoration-none">
-                            Go to Checkout
+                            Pay with Yape — S/ @LocalPricing.YapeSoles(Model.CartTotal).ToString("0")
                         </a>
                         
-                        <div class="mt-6 flex items-center justify-center gap-4 text-gray-300">
-                            <i class="bi bi-credit-card fs-4"></i>
-                            <i class="bi bi-paypal fs-4"></i>
-                            <i class="bi bi-google fs-4"></i>
-                        </div>
+                        <p class="mt-4 text-center text-[10px] font-mono-jb uppercase tracking-widest text-gray-400">
+                            Or card / PayPal at checkout · $@Model.CartTotal.ToString("F2")
+                        </p>
                     </div>
                 </div>
             </div>
