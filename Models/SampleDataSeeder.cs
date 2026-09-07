@@ -757,7 +757,7 @@ namespace TheBestBean.Models
         /// Urban workshop catalog: keep The Cusco Coffee Laboratory featured,
         /// insert San Blas Pour-Over as the short alternative, and send Latte Art to the bottom.
         /// Price: $35 / S/131 Yape (same tier as Home Brewing 101). Duration: 1.5 hours door to door.
-        /// Venue hotel pin is a placeholder until the Plaza San Blas hotel is confirmed.
+        /// Venue: Casa Montes Boutique, Plaza San Blas 606, Cusco 08002.
         /// </summary>
         private static async Task ApplyUrbanWorkshopsCatalogAsync()
         {
@@ -833,7 +833,7 @@ namespace TheBestBean.Models
             workshop.Title = title;
             workshop.TitleES = "Taller de Pour-Over en San Blas";
             workshop.Category = "Urban Workshops";
-            workshop.Location = "San Blas";
+            workshop.Location = "Casa Montes, San Blas";
             workshop.Month = "Weekly";
             workshop.Difficulty = "All Levels";
             workshop.Duration = "1.5 HOURS";
@@ -841,13 +841,13 @@ namespace TheBestBean.Models
             workshop.Tag = null;
             workshop.SortOrder = 10;
             workshop.ImageUrl = "https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&w=1200&q=80";
-            workshop.Description = "The shorter pour-over path if you don’t have a full afternoon for the Lab. Meet Alex at San Pedro Market, walk to a hotel on Plaza San Blas (exact pin TBD), and brew your own V60. English and Spanish.";
-            workshop.DescriptionES = "La vía corta de pour-over si no tienes la tarde completa para el Laboratorio. Quedamos con Alex en el mercado San Pedro, caminamos a un hotel en la Plaza San Blas (pin exacto por confirmar) y cada quien prepara su V60. Inglés y español.";
-            workshop.LongDescription = "This is Purple Bean Coffee’s time-pressed alternative to The Cusco Coffee Laboratory — a real specialty pour-over class, not a clone of the 2.5-hour lab. No espresso machine, no roast session, no 200g take-home roast. Alex, the host, meets you at San Pedro Market for a short orientation on what you can find there (coffee and a little market context for travelers — not a food tour). You walk together to a hotel right on Plaza San Blas (exact pin TBD; we confirm on WhatsApp). In the room: about ten minutes on coffee in Peru and high-altitude coffee — varieties that grow worldwide at height, the ones Peru has grown for generations and the newer ones, and coffee’s origin in Ethiopia — then the rest of the hour is hands-on V60. Temperature, water composition, and the brew variables that change the cup. Each guest makes their own pour-over. About 1.5 hours door to door, including the meet and the walk. All levels. English and Spanish.";
-            workshop.LongDescriptionES = "La alternativa corta de Purple Bean Coffee al Laboratorio de Café del Cusco: una clase de pour-over de especialidad, no una copia del lab de 2,5 horas. Sin espresso, sin tostión, sin bolsa de 200 g. Alex, el anfitrión, te espera en el mercado San Pedro para una orientación breve (contexto de café para viajeros, no un tour gastronómico). Caminan juntos a un hotel en la Plaza San Blas (pin exacto por confirmar; lo mandamos por WhatsApp). En la sala: unos diez minutos sobre el café en el Perú y el café de altura — variedades que crecen en el mundo a gran altitud, las tradicionales y las nuevas del Perú, y el origen del café en Etiopía — y el resto de la hora es V60 en tus manos. Temperatura, composición del agua y las variables que cambian la taza. Cada invitado prepara su propio pour-over. Unas 1,5 horas en total, incluyendo el encuentro y la caminata. Todos los niveles. Inglés y español.";
+            workshop.Description = "The shorter pour-over path if you don’t have a full afternoon for the Lab. Meet Alex at San Pedro Market, walk to Casa Montes Boutique on Plaza San Blas, and brew your own V60. English and Spanish.";
+            workshop.DescriptionES = "La vía corta de pour-over si no tienes la tarde completa para el Laboratorio. Quedamos con Alex en el mercado San Pedro, caminamos a Casa Montes Boutique en la Plaza San Blas y cada quien prepara su V60. Inglés y español.";
+            workshop.LongDescription = "This is Purple Bean Coffee’s time-pressed alternative to The Cusco Coffee Laboratory — a real specialty pour-over class, not a clone of the 2.5-hour lab. No espresso machine, no roast session, no 200g take-home roast. Alex, the host, meets you at San Pedro Market for a short orientation on what you can find there (coffee and a little market context for travelers — not a food tour). You walk together to Casa Montes Boutique, Plaza San Blas 606, Cusco 08002. In the room: about ten minutes on coffee in Peru and high-altitude coffee — varieties that grow worldwide at height, the ones Peru has grown for generations and the newer ones, and coffee’s origin in Ethiopia — then the rest of the hour is hands-on V60. Temperature, water composition, and the brew variables that change the cup. Each guest makes their own pour-over. About 1.5 hours door to door, including the meet and the walk. All levels. English and Spanish.";
+            workshop.LongDescriptionES = "La alternativa corta de Purple Bean Coffee al Laboratorio de Café del Cusco: una clase de pour-over de especialidad, no una copia del lab de 2,5 horas. Sin espresso, sin tostión, sin bolsa de 200 g. Alex, el anfitrión, te espera en el mercado San Pedro para una orientación breve (contexto de café para viajeros, no un tour gastronómico). Caminan juntos a Casa Montes Boutique, Plaza San Blas 606, Cusco 08002. En la sala: unos diez minutos sobre el café en el Perú y el café de altura — variedades que crecen en el mundo a gran altitud, las tradicionales y las nuevas del Perú, y el origen del café en Etiopía — y el resto de la hora es V60 en tus manos. Temperatura, composición del agua y las variables que cambian la taza. Cada invitado prepara su propio pour-over. Unas 1,5 horas en total, incluyendo el encuentro y la caminata. Todos los niveles. Inglés y español.";
             workshop.Syllabus = new List<string>
             {
-                "Meet — San Pedro Market: Short orientation on coffee and related stalls — traveler context, not a food tour. Then we walk together to a hotel on Plaza San Blas (exact pin TBD).",
+                "Meet — San Pedro Market: Short orientation on coffee and related stalls — traveler context, not a food tour. Then we walk together to Casa Montes Boutique, Plaza San Blas 606.",
                 "10 min — Coffee in Peru: High-altitude coffee, popular varieties that grow worldwide at height, Peru’s traditional and newer cultivars, and coffee’s origin in Ethiopia.",
                 "V60 block — 60–75 min: How to use a V60; temperature, water composition, and brew variables. Each attendee makes their own pour-over with Alex."
             };
@@ -855,13 +855,14 @@ namespace TheBestBean.Models
             {
                 "V60, kettle, scale, and filters for every guest",
                 "High-altitude Peruvian coffee for the class",
-                "Guided walk from San Pedro Market to Plaza San Blas",
+                "Guided walk from San Pedro Market to Casa Montes Boutique on Plaza San Blas",
                 "Hosted by Alex — English and Spanish"
             };
             workshop.RequiredGear = new List<string>
             {
-                "Meeting point: San Pedro Market (exact pin on WhatsApp)",
-                "Venue: hotel on Plaza San Blas (exact pin TBD)",
+                "Meeting point: San Pedro Market (pin on WhatsApp)",
+                "Venue: Casa Montes Boutique, Plaza San Blas 606, Cusco 08002, Peru",
+                "Maps: https://maps.app.goo.gl/agDoinNt4MPnxhx48?g_st=ac",
                 "Comfortable shoes for the walk up to San Blas",
                 "Arrive ready to brew — you make your own cup"
             };

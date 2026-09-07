@@ -100,7 +100,7 @@
 | Experience | Location | Duration | Status |
 |-----------|----------|----------|--------|
 | **The Cusco Coffee Laboratory** | Cusco (near San Pedro Market) | ~2.5 hours | ✅ Active |
-| **San Blas Pour-Over Workshop** | Meet San Pedro Market → hotel on Plaza San Blas (exact pin TBD) | ~1.5 hours | ✅ Active |
+| **San Blas Pour-Over Workshop** | Meet San Pedro Market → Casa Montes Boutique, Plaza San Blas 606 | ~1.5 hours | ✅ Active |
 
 ### In Development
 

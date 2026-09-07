@@ -139,6 +139,20 @@ namespace TheBestBean.Pages
                 listing["duration"] = tour.Duration;
             }
 
+            if (tour.IsSanBlasPourOver)
+            {
+                listing["hasMap"] = Experience.SanBlasVenueMapsUrl;
+                listing["address"] = new Dictionary<string, object?>
+                {
+                    ["@type"] = "PostalAddress",
+                    ["name"] = Experience.SanBlasVenueName,
+                    ["streetAddress"] = "Plaza San Blas 606",
+                    ["addressLocality"] = "Cusco",
+                    ["postalCode"] = "08002",
+                    ["addressCountry"] = "PE"
+                };
+            }
+
             var faq = new Dictionary<string, object?>
             {
                 ["@context"] = "https://schema.org",
@@ -153,7 +167,7 @@ namespace TheBestBean.Pages
                             : $"{tour.Title} lasts {tour.Duration}."),
                     Q("Where is the Cusco coffee workshop?",
                         tour.IsSanBlasPourOver
-                            ? $"{tour.Title} meets at San Pedro Market, then walks to a hotel on Plaza San Blas in Cusco, Peru (exact hotel pin TBD). Book on purplebean.coffee or WhatsApp +51 993 779 381."
+                            ? $"{tour.Title} meets at San Pedro Market, then walks to {Experience.SanBlasVenueName}, {Experience.SanBlasVenueAddress}. Maps: {Experience.SanBlasVenueMapsUrl}. Book on purplebean.coffee or WhatsApp +51 993 779 381."
                             : $"{tour.Title} is hosted by Purple Bean Coffee near San Pedro Market in Cusco, Peru. Book on purplebean.coffee or WhatsApp +51 993 779 381.")
                 }
             };

@@ -103,6 +103,10 @@ namespace TheBestBean.Models
         public bool IsFeaturedWorkshop =>
             string.Equals(Tag, "FEATURED", StringComparison.OrdinalIgnoreCase);
 
+        public const string SanBlasVenueName = "Casa Montes Boutique";
+        public const string SanBlasVenueAddress = "Plaza San Blas 606, Cusco 08002, Peru";
+        public const string SanBlasVenueMapsUrl = "https://maps.app.goo.gl/agDoinNt4MPnxhx48?g_st=ac";
+
         public bool IsSanBlasPourOver =>
             (Title ?? string.Empty).Contains("San Blas", StringComparison.OrdinalIgnoreCase);
 
