@@ -644,6 +644,9 @@ namespace TheBestBean.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnName("RequiredGear");
 
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("SyllabusJson")
                         .IsRequired()
                         .HasColumnType("TEXT")

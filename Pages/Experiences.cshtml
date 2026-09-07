@@ -5,6 +5,7 @@
     ViewData["Title"] = "Coffee Experiences in Cusco";
     ViewData["MetaDescription"] = "Book coffee experiences in Peru: Cusco workshops, a Santa Teresa cloud-forest farm on the Machu Picchu corridor, and a Cup of Excellence farm visit in Jaén, Cajamarca.";
     ViewData["MetaImage"] = "https://purplebean.coffee/images/og-logo.png";
+    var isEs = Model.IsSpanish;
 }
 @Html.AntiForgeryToken()
 
@@ -64,8 +65,8 @@
             <div class="lg:col-span-8 flex flex-col gap-16" id="urban-labs-container">
                 @{
                     var urbanLabs = Model.ExperiencesList.Where(e => e.Category == "Urban Workshops").ToList();
-                    var featuredLab = urbanLabs.FirstOrDefault(e => e.Tag == "FEATURED");
-                    var regularLabs = urbanLabs.Where(e => e.Tag != "FEATURED").ToList();
+                    var featuredLab = urbanLabs.FirstOrDefault(e => e.IsFeaturedWorkshop);
+                    var regularLabs = urbanLabs.Where(e => !e.IsFeaturedWorkshop).ToList();
                 }
 
                 @if (featuredLab != null)
@@ -78,12 +79,12 @@
                                 {
                                     foreach (var img in featuredLab.GalleryImages)
                                     {
-                                        <img src="@img" alt="@featuredLab.Title" class="img-stark w-full h-full object-cover flex-shrink-0" loading="lazy" />
+                                        <img src="@img" alt="@featuredLab.LocalizedTitle(isEs)" class="img-stark w-full h-full object-cover flex-shrink-0" loading="lazy" />
                                     }
                                 }
                                 else
                                 {
-                                    <img src="@featuredLab.ImageUrl" alt="@featuredLab.Title" class="img-stark w-full h-full object-cover flex-shrink-0" loading="lazy" />
+                                    <img src="@featuredLab.ImageUrl" alt="@featuredLab.LocalizedTitle(isEs)" class="img-stark w-full h-full object-cover flex-shrink-0" loading="lazy" />
                                 }
                             </div>
                             <div class="absolute top-3 right-3 bg-v-yellow text-v-black rounded-full px-3 py-1 text-[9px] font-mono-jb font-bold uppercase tracking-widest shadow-sm">FEATURED</div>
@@ -108,9 +109,9 @@
                                         <span class="px-2 py-0.5 bg-slate-100 dark:bg-[#1C191F] text-slate-800 rounded-full text-[10px] font-bold tracking-widest uppercase">@featuredLab.Month</span>
                                         <span class="text-[10px] font-bold tracking-widest uppercase">@featuredLab.Location</span>
                                     </div>
-                                    <h3 class="text-3xl md:text-4xl font-semibold tracking-tight mb-4 m-0">@featuredLab.Title</h3>
+                                    <h3 class="text-3xl md:text-4xl font-semibold tracking-tight mb-4 m-0">@featuredLab.LocalizedTitle(isEs)</h3>
                                     <p class="text-v-gray text-base leading-relaxed mb-6 font-normal max-w-xl">
-                                        @featuredLab.Description
+                                        @featuredLab.LocalizedDescription(isEs)
                                     </p>
 
                                     <!-- What You Get Box -->
@@ -182,7 +183,7 @@
                             <article class="lab-item flex flex-col group" data-location="@(exp.Location?.Trim().ToLower() ?? "")" data-difficulty="@(exp.Difficulty?.Trim().ToLower() ?? "")" data-frequency="@(exp.Month?.Trim().ToLower() ?? "")">
                                 <a asp-page="/Tour" asp-route-id="@exp.Id" class="text-decoration-none text-slate-900 dark:text-[#D6D0C8] flex flex-col h-full group">
                                     <div class="w-full aspect-[3/2] bg-gray-100 dark:bg-[#1C191F] mb-6 overflow-hidden rounded-3xl relative @(exp.Tag != null ? "border border-red-200" : "")">
-                                        <img src="@exp.ImageUrl" alt="@exp.Title" class="img-stark absolute inset-0 w-full h-full object-cover" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="ImageUrl" loading="lazy" />
+                                        <img src="@exp.ImageUrl" alt="@exp.LocalizedTitle(isEs)" class="img-stark absolute inset-0 w-full h-full object-cover" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="ImageUrl" loading="lazy" />
                                         @if (exp.Tag != null)
                                         {
                                             <div class="absolute top-3 right-3 bg-red-600 text-white rounded-full px-3 py-1 text-[9px] font-mono-jb font-bold uppercase tracking-widest shadow-sm" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Tag">@exp.Tag</div>
@@ -197,10 +198,10 @@
                                             <span class="text-gray-300">/</span>
                                             <span class="text-[#F05A28]" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Difficulty">@exp.Difficulty</span>
                                         </div>
-                                        <h3 class="text-2xl md:text-3xl font-semibold tracking-tight text-v-black dark:text-[#D6D0C8] m-0" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Title">@exp.Title</h3>
+                                        <h3 class="text-2xl md:text-3xl font-semibold tracking-tight text-v-black dark:text-[#D6D0C8] m-0" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="@(isEs ? "TitleES" : "Title")">@exp.LocalizedTitle(isEs)</h3>
                                     </div>
-                                    <p class="text-v-gray text-sm md:text-base leading-relaxed mb-6 pb-6 border-b border-v-black/10 dark:border-[#2A262C] font-normal flex-grow" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Description">
-                                        @exp.Description
+                                    <p class="text-v-gray text-sm md:text-base leading-relaxed mb-6 pb-6 border-b border-v-black/10 dark:border-[#2A262C] font-normal flex-grow" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="@(isEs ? "DescriptionES" : "Description")">
+                                        @exp.LocalizedDescription(isEs)
                                     </p>
                                     <div class="flex items-center justify-between mt-auto pt-4 font-mono-jb">
                                         <span class="text-2xl font-bold text-v-black dark:text-[#D6D0C8]">S/ @LocalPricing.YapeSoles(exp.Price).ToString("0") <span class="text-xs font-normal text-v-gray">Yape</span> <span class="text-sm font-normal text-v-gray">/ $<span data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Price">@exp.Price</span></span></span>
@@ -275,7 +276,7 @@
                             <div class="carousel-container absolute inset-0 w-full h-full flex transition-transform duration-500 ease-in-out" id="carousel-@exp.Id" data-current="0">
                                 @foreach (var img in expeditionPhotos)
                                 {
-                                    <img src="@img" alt="@exp.Title" class="img-stark w-full h-full object-cover flex-shrink-0" loading="lazy" />
+                                    <img src="@img" alt="@exp.LocalizedTitle(isEs)" class="img-stark w-full h-full object-cover flex-shrink-0" loading="lazy" />
                                 }
                             </div>
                             @if (exp.Tag != null)
@@ -303,9 +304,9 @@
                                         <span class="px-2 py-0.5 bg-slate-100 dark:bg-[#1C191F] text-slate-800 rounded-full text-[10px] font-bold tracking-widest uppercase" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Month">@exp.Month</span>
                                         <span class="text-[10px] font-bold tracking-widest uppercase" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Location">@exp.Location</span>
                                     </div>
-                                    <h3 class="text-3xl md:text-4xl font-semibold tracking-tight mb-4 m-0" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Title">@exp.Title</h3>
-                                    <p class="text-v-gray text-base leading-relaxed mb-10 font-normal max-w-xl" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Description">
-                                        @exp.Description
+                                    <h3 class="text-3xl md:text-4xl font-semibold tracking-tight mb-4 m-0" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="@(isEs ? "TitleES" : "Title")">@exp.LocalizedTitle(isEs)</h3>
+                                    <p class="text-v-gray text-base leading-relaxed mb-10 font-normal max-w-xl" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="@(isEs ? "DescriptionES" : "Description")">
+                                        @exp.LocalizedDescription(isEs)
                                     </p>
                                     <div class="flex items-center gap-6 mt-auto">
                                         <span class="bg-v-black text-v-white px-8 py-4 font-bold uppercase tracking-widest text-[10px] group-hover:bg-v-red transition-colors font-mono-jb" data-entity-id="Experiences_ViewDossierButton" data-entity-type="SiteContent" data-editable="Value">

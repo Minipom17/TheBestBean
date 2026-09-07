@@ -47,6 +47,12 @@ namespace TheBestBean.Models
         [StringLength(50)]
         public string? Tag { get; set; } // E.g. "GUEST EVENT"
 
+        /// <summary>
+        /// Listing rank. Lower comes first. Featured lab = 0, San Blas pour-over = 10, Latte Art last among urban workshops.
+        /// </summary>
+        [Display(Name = "Sort order")]
+        public int SortOrder { get; set; } = 100;
+
         [StringLength(50)]
         public string Duration { get; set; } = string.Empty;
 
@@ -93,5 +99,24 @@ namespace TheBestBean.Models
             get => JsonSerializer.Deserialize<List<string>>(GalleryImagesJson) ?? new List<string>();
             set => GalleryImagesJson = JsonSerializer.Serialize(value);
         }
+
+        public bool IsFeaturedWorkshop =>
+            string.Equals(Tag, "FEATURED", StringComparison.OrdinalIgnoreCase);
+
+        public bool IsSanBlasPourOver =>
+            (Title ?? string.Empty).Contains("San Blas", StringComparison.OrdinalIgnoreCase);
+
+        public bool IsCuscoCoffeeLab =>
+            (Title ?? string.Empty).Contains("Coffee Lab", StringComparison.OrdinalIgnoreCase)
+            || (Title ?? string.Empty).Contains("Coffee Laboratory", StringComparison.OrdinalIgnoreCase);
+
+        public string LocalizedTitle(bool spanish) =>
+            spanish && !string.IsNullOrWhiteSpace(TitleES) ? TitleES : Title;
+
+        public string LocalizedDescription(bool spanish) =>
+            spanish && !string.IsNullOrWhiteSpace(DescriptionES) ? DescriptionES : Description;
+
+        public string LocalizedLongDescription(bool spanish) =>
+            spanish && !string.IsNullOrWhiteSpace(LongDescriptionES) ? LongDescriptionES : LongDescription;
     }
 }
