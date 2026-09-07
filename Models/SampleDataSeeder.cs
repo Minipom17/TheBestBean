@@ -235,8 +235,10 @@ namespace TheBestBean.Models
                         Location = "Cusco City Center",
                         Duration = "3 Hours",
                         Month = "August",
+                        Difficulty = "All Levels",
                         Description = "Learn the fundamentals of milk texturing and latte art pouring from our award-winning baristas. Includes unlimited milk and coffee practice.",
                         Price = 45.00M,
+                        SortOrder = 200,
                         ImageUrl = "https://images.unsplash.com/photo-1541167760496-1628856ab772?auto=format&fit=crop&w=600&q=80"
                     },
                     new Experience
@@ -248,6 +250,7 @@ namespace TheBestBean.Models
                         Month = "September",
                         Description = "A deep dive into SCA cupping protocols, defect identification, and advanced palate development. Ideal for aspiring coffee professionals.",
                         Price = 75.00M,
+                        SortOrder = 30,
                         ImageUrl = "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&w=600&q=80"
                     },
                     new Experience
@@ -259,6 +262,7 @@ namespace TheBestBean.Models
                         Month = "October",
                         Description = "Master the V60, AeroPress, and French Press. Understand extraction variables and how to troubleshoot your morning cup.",
                         Price = 35.00M,
+                        SortOrder = 20,
                         ImageUrl = "https://images.unsplash.com/photo-1495474472207-464a4f54e156?auto=format&fit=crop&w=600&q=80"
                     },
                     new Experience
@@ -270,7 +274,8 @@ namespace TheBestBean.Models
                         Difficulty = "ADVANCED",
                         Description = "Detailed cupping sessions comparing rare lots. Discuss senses, share notes, and calibrate your palate alongside professionals.",
                         ImageUrl = "https://images.unsplash.com/photo-1611162458324-aae1eb4129a4?auto=format&fit=crop&w=1200&q=80",
-                        Price = 55
+                        Price = 55,
+                        SortOrder = 40
                     },
                     new Experience {
                         Title = "SCA Flavor Profiling",
@@ -280,7 +285,8 @@ namespace TheBestBean.Models
                         Difficulty = "INTERMEDIATE",
                         Description = "Train your palate using industry-standard protocols. Blind-taste, score, and chart acidity, body, and tasting notes of exotic Peruvian varietals.",
                         ImageUrl = "https://images.unsplash.com/photo-1581007871115-f14bc016e0a4?auto=format&fit=crop&w=1200&q=80",
-                        Price = 75
+                        Price = 75,
+                        SortOrder = 50
                     },
                     new Experience {
                         Title = "Espresso Machines Lab",
@@ -290,7 +296,8 @@ namespace TheBestBean.Models
                         Difficulty = "INTERMEDIATE",
                         Description = "Master the craft of precision extraction. Refine your volumetric parameters and sensory dynamics to build the perfect cup.",
                         ImageUrl = "/images/brewer_withGrinds.webp",
-                        Price = 65
+                        Price = 65,
+                        SortOrder = 60
                     },
                     new Experience {
                         Title = "Roasting Foundations",
@@ -301,7 +308,8 @@ namespace TheBestBean.Models
                         Description = "Official SCA Sensory Skills Foundation certification. Includes rigorous blind triangulation and professional cupping protocol exams.",
                         ImageUrl = "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1200&q=80",
                         Price = 250,
-                        Tag = "GUEST EVENT"
+                        Tag = "GUEST EVENT",
+                        SortOrder = 70
                     }
                 );
                 await _context.SaveChangesAsync();
@@ -371,6 +379,7 @@ namespace TheBestBean.Models
             await SeedNewOriginLotsAsync();
             await ApplyAngelCatarataPhotosAsync();
             await ApplyOriginExpeditionsAsync();
+            await ApplyUrbanWorkshopsCatalogAsync();
 
             // Let's just save changes now to be safe.
             await _context.SaveChangesAsync();
@@ -741,6 +750,173 @@ namespace TheBestBean.Models
                     Value = "SANTA TERESA · CAJAMARCA",
                     Page = "Experiences"
                 });
+            }
+        }
+
+        /// <summary>
+        /// Urban workshop catalog: keep The Cusco Coffee Laboratory featured,
+        /// insert San Blas Pour-Over as the short alternative, and send Latte Art to the bottom.
+        /// Price: $35 / S/131 Yape (same tier as Home Brewing 101). Duration: 1.5 hours door to door.
+        /// Venue: Casa Montes Boutique, Plaza San Blas 606, Cusco 08002.
+        /// </summary>
+        private static async Task ApplyUrbanWorkshopsCatalogAsync()
+        {
+            await EnsureCuscoCoffeeLabAsync();
+            await UpsertSanBlasPourOverAsync();
+            await ApplyUrbanWorkshopSortOrderAsync();
+        }
+
+        private static async Task EnsureCuscoCoffeeLabAsync()
+        {
+            var lab = await _context.Experiences.FirstOrDefaultAsync(e =>
+                e.Title.Contains("Coffee Laboratory") || e.Title.Contains("Coffee Lab"));
+            if (lab != null)
+            {
+                lab.SortOrder = 0;
+                if (string.IsNullOrWhiteSpace(lab.Tag))
+                {
+                    lab.Tag = "FEATURED";
+                }
+                _context.Experiences.Update(lab);
+                return;
+            }
+
+            _context.Experiences.Add(new Experience
+            {
+                Title = "The Cusco Coffee Laboratory",
+                TitleES = "El Laboratorio de Café del Cusco",
+                Category = "Urban Workshops",
+                Location = "Cusco",
+                Month = "Weekly",
+                Difficulty = "All Levels",
+                Duration = "2.5 HOURS",
+                Price = 50.00m,
+                Tag = "FEATURED",
+                SortOrder = 0,
+                ImageUrl = "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&w=1200&q=80",
+                Description = "Join us in our Cusco lab for a 2.5-hour workshop from bean evaluation and sensory work to espresso and pour-over. Guided by 2025 National Brewers Champion Herber Huamani.",
+                DescriptionES = "Laboratorio de 2,5 horas en el Cusco: evaluación, sensorial, espresso y pour-over. Guiado por Herber Huamani, campeón nacional de barismo 2025.",
+                LongDescription = "Our Cusco Coffee Laboratory workshop is designed to elevate your coffee journey. We begin with a theoretical foundation in coffee agronomy and processing, followed by an intensive sensory session where you will learn to identify key flavor notes and defects. Finally, you will get hands-on experience dialing in espresso and perfecting pour-over recipes under the guidance of our master baristas.",
+                LongDescriptionES = "El Laboratorio de Café del Cusco empieza con agronomía y proceso, sigue con una cata sensorial y termina con espresso y pour-over en manos de nuestros baristas.",
+                Syllabus = new List<string>
+                {
+                    "Intro: Explanation of varieties in Peru. Everything is set (brewer, grinder + setting, coffee + ratio basic recipe). All brews will come out different. - 15 mins",
+                    "V60 Filtration & Sensory: Intro to V60 and grinding. Sensory evaluation - aroma (compare to other drinks), taste notes (with spoons), and feel (acidity). - 30 mins",
+                    "Espresso Experience: Intro to the espresso machine. Demonstrate grinding, weighing, tamping, and ratio extraction. Froth milk for a cappuccino. Taste and evaluate. - 30 mins",
+                    "Roasting Experience: We do a big roast together, learning the fundamentals of the roasting process. At the end, everyone gets to take home 200 grams of fresh roasted coffee each. - 1 hour"
+                },
+                ProvidedEquipment = new List<string>
+                {
+                    "Fundamental knowledge of creating and dialing in a V60 pour-over recipe.",
+                    "Understanding espresso extraction ratios and microfoam milk texturing techniques.",
+                    "A hands-on roasting session with the Roast Master, plus 200g of your fresh roast to take home."
+                },
+                RequiredGear = new List<string> { "Comfortable clothing" },
+                GalleryImages = new List<string>
+                {
+                    "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&w=1200&q=80",
+                    "https://images.unsplash.com/photo-1495474472207-464a4f54e156?auto=format&fit=crop&w=1200&q=80",
+                    "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1200&q=80"
+                }
+            });
+        }
+
+        private static async Task UpsertSanBlasPourOverAsync()
+        {
+            const string title = "San Blas Pour-Over Workshop";
+            var workshop = await _context.Experiences.FirstOrDefaultAsync(e =>
+                e.Title == title || e.Title.Contains("San Blas Pour-Over") || e.Title.Contains("San Blas Pour Over"));
+
+            var created = workshop == null;
+            workshop ??= new Experience();
+
+            workshop.Title = title;
+            workshop.TitleES = "Taller de Pour-Over en San Blas";
+            workshop.Category = "Urban Workshops";
+            workshop.Location = "Casa Montes, San Blas";
+            workshop.Month = "Weekly";
+            workshop.Difficulty = "All Levels";
+            workshop.Duration = "1.5 HOURS";
+            workshop.Price = 35.00m;
+            workshop.Tag = null;
+            workshop.SortOrder = 10;
+            workshop.ImageUrl = "https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&w=1200&q=80";
+            workshop.Description = "The shorter pour-over path if you don’t have a full afternoon for the Lab. Meet Alex at San Pedro Market, walk to Casa Montes Boutique on Plaza San Blas, and brew your own V60. English and Spanish.";
+            workshop.DescriptionES = "La vía corta de pour-over si no tienes la tarde completa para el Laboratorio. Quedamos con Alex en el mercado San Pedro, caminamos a Casa Montes Boutique en la Plaza San Blas y cada quien prepara su V60. Inglés y español.";
+            workshop.LongDescription = "This is Purple Bean Coffee’s time-pressed alternative to The Cusco Coffee Laboratory — a real specialty pour-over class, not a clone of the 2.5-hour lab. No espresso machine, no roast session, no 200g take-home roast. Alex, the host, meets you at San Pedro Market for a short orientation on what you can find there (coffee and a little market context for travelers — not a food tour). You walk together to Casa Montes Boutique, Plaza San Blas 606, Cusco 08002. In the room: about ten minutes on coffee in Peru and high-altitude coffee — varieties that grow worldwide at height, the ones Peru has grown for generations and the newer ones, and coffee’s origin in Ethiopia — then the rest of the hour is hands-on V60. Temperature, water composition, and the brew variables that change the cup. Each guest makes their own pour-over. About 1.5 hours door to door, including the meet and the walk. All levels. English and Spanish.";
+            workshop.LongDescriptionES = "La alternativa corta de Purple Bean Coffee al Laboratorio de Café del Cusco: una clase de pour-over de especialidad, no una copia del lab de 2,5 horas. Sin espresso, sin tostión, sin bolsa de 200 g. Alex, el anfitrión, te espera en el mercado San Pedro para una orientación breve (contexto de café para viajeros, no un tour gastronómico). Caminan juntos a Casa Montes Boutique, Plaza San Blas 606, Cusco 08002. En la sala: unos diez minutos sobre el café en el Perú y el café de altura — variedades que crecen en el mundo a gran altitud, las tradicionales y las nuevas del Perú, y el origen del café en Etiopía — y el resto de la hora es V60 en tus manos. Temperatura, composición del agua y las variables que cambian la taza. Cada invitado prepara su propio pour-over. Unas 1,5 horas en total, incluyendo el encuentro y la caminata. Todos los niveles. Inglés y español.";
+            workshop.Syllabus = new List<string>
+            {
+                "Meet — San Pedro Market: Short orientation on coffee and related stalls — traveler context, not a food tour. Then we walk together to Casa Montes Boutique, Plaza San Blas 606.",
+                "10 min — Coffee in Peru: High-altitude coffee, popular varieties that grow worldwide at height, Peru’s traditional and newer cultivars, and coffee’s origin in Ethiopia.",
+                "V60 block — 60–75 min: How to use a V60; temperature, water composition, and brew variables. Each attendee makes their own pour-over with Alex."
+            };
+            workshop.ProvidedEquipment = new List<string>
+            {
+                "V60, kettle, scale, and filters for every guest",
+                "High-altitude Peruvian coffee for the class",
+                "Guided walk from San Pedro Market to Casa Montes Boutique on Plaza San Blas",
+                "Hosted by Alex — English and Spanish"
+            };
+            workshop.RequiredGear = new List<string>
+            {
+                "Meeting point: San Pedro Market (pin on WhatsApp)",
+                "Venue: Casa Montes Boutique, Plaza San Blas 606, Cusco 08002, Peru",
+                "Maps: https://maps.app.goo.gl/agDoinNt4MPnxhx48?g_st=ac",
+                "Comfortable shoes for the walk up to San Blas",
+                "Arrive ready to brew — you make your own cup"
+            };
+            workshop.GalleryImages = new List<string>
+            {
+                "https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1495474472207-464a4f54e156?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=1200&q=80"
+            };
+
+            if (created)
+            {
+                _context.Experiences.Add(workshop);
+            }
+            else
+            {
+                _context.Experiences.Update(workshop);
+            }
+        }
+
+        private static async Task ApplyUrbanWorkshopSortOrderAsync()
+        {
+            var ranks = new (string Match, int Order)[]
+            {
+                ("Coffee Laboratory", 0),
+                ("Coffee Lab", 0),
+                ("San Blas", 10),
+                ("Home Brewing", 20),
+                ("Advanced Sensory", 30),
+                ("Espresso Fundamentals", 40),
+                ("SCA Flavor", 50),
+                ("Espresso Machines", 60),
+                ("Roasting Foundations", 70),
+                ("Latte Art", 200)
+            };
+
+            var urban = await _context.Experiences
+                .Where(e => e.Category == "Urban Workshops")
+                .ToListAsync();
+
+            foreach (var workshop in urban)
+            {
+                var title = workshop.Title ?? string.Empty;
+                var match = ranks.FirstOrDefault(r => title.Contains(r.Match, StringComparison.OrdinalIgnoreCase));
+                if (match.Match != null)
+                {
+                    workshop.SortOrder = match.Order;
+                    _context.Experiences.Update(workshop);
+                }
+                else if (workshop.SortOrder == 0 && !workshop.IsFeaturedWorkshop)
+                {
+                    workshop.SortOrder = 100;
+                    _context.Experiences.Update(workshop);
+                }
             }
         }
     }

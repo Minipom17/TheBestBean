@@ -23,7 +23,10 @@ namespace TheBestBean.Pages_Admin_Experiences
 
         public async Task OnGetAsync()
         {
-            Experience = await _context.Experiences.ToListAsync();
+            Experience = await _context.Experiences
+                .OrderBy(e => e.SortOrder)
+                .ThenBy(e => e.Id)
+                .ToListAsync();
         }
     }
 }

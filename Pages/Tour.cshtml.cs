@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using TheBestBean.Models;
@@ -25,10 +26,13 @@ namespace TheBestBean.Pages
         public Dictionary<string, string> PageContent { get; set; } = new Dictionary<string, string>();
         public List<string> JsonLdBlocks { get; set; } = new();
         public bool IsCoffeeLab { get; set; }
+        public bool IsSpanish { get; set; }
         public IReadOnlyList<LabRecipeCard> LabRecipes { get; set; } = Array.Empty<LabRecipeCard>();
 
         public IActionResult OnGet(string id)
         {
+            IsSpanish = HttpContext.Features.Get<IRequestCultureFeature>()?.RequestCulture.UICulture.TwoLetterISOLanguageName == "es";
+
             if (string.IsNullOrEmpty(id) || !int.TryParse(id, out int tourId))
             {
                 return NotFound();
@@ -40,10 +44,12 @@ namespace TheBestBean.Pages
             {
                 RelatedTours = _context.Experiences
                     .Where(t => t.Id != Tour.Id && t.Category == Tour.Category)
+                    .OrderBy(t => t.SortOrder)
+                    .ThenBy(t => t.Id)
                     .Take(2)
                     .ToList();
 
-                IsCoffeeLab = IsCuscoCoffeeLab(Tour);
+                IsCoffeeLab = Tour.IsCuscoCoffeeLab;
                 if (IsCoffeeLab)
                 {
                     LabRecipes = CoffeeLabRecipes;
@@ -133,6 +139,20 @@ namespace TheBestBean.Pages
                 listing["duration"] = tour.Duration;
             }
 
+            if (tour.IsSanBlasPourOver)
+            {
+                listing["hasMap"] = Experience.SanBlasVenueMapsUrl;
+                listing["address"] = new Dictionary<string, object?>
+                {
+                    ["@type"] = "PostalAddress",
+                    ["name"] = Experience.SanBlasVenueName,
+                    ["streetAddress"] = "Plaza San Blas 606",
+                    ["addressLocality"] = "Cusco",
+                    ["postalCode"] = "08002",
+                    ["addressCountry"] = "PE"
+                };
+            }
+
             var faq = new Dictionary<string, object?>
             {
                 ["@context"] = "https://schema.org",
@@ -146,7 +166,9 @@ namespace TheBestBean.Pages
                             ? "Workshop length varies by experience. Check the listing on purplebean.coffee for duration."
                             : $"{tour.Title} lasts {tour.Duration}."),
                     Q("Where is the Cusco coffee workshop?",
-                        $"{tour.Title} is hosted by Purple Bean Coffee near San Pedro Market in Cusco, Peru. Book on purplebean.coffee or WhatsApp +51 993 779 381.")
+                        tour.IsSanBlasPourOver
+                            ? $"{tour.Title} meets at San Pedro Market, then walks to {Experience.SanBlasVenueName}, {Experience.SanBlasVenueAddress}. Maps: {Experience.SanBlasVenueMapsUrl}. Book on purplebean.coffee or WhatsApp +51 993 779 381."
+                            : $"{tour.Title} is hosted by Purple Bean Coffee near San Pedro Market in Cusco, Peru. Book on purplebean.coffee or WhatsApp +51 993 779 381.")
                 }
             };
 
@@ -181,19 +203,6 @@ namespace TheBestBean.Pages
                 ["text"] = answer
             }
         };
-
-        private static bool IsCuscoCoffeeLab(Experience tour)
-        {
-            var title = tour.Title ?? string.Empty;
-            if (title.Contains("Coffee Lab", StringComparison.OrdinalIgnoreCase)
-                || title.Contains("Coffee Laboratory", StringComparison.OrdinalIgnoreCase))
-            {
-                return true;
-            }
-
-            return string.Equals(tour.Tag, "FEATURED", StringComparison.OrdinalIgnoreCase)
-                && (tour.Category ?? string.Empty).Contains("Urban", StringComparison.OrdinalIgnoreCase);
-        }
 
         public static readonly IReadOnlyList<LabRecipeCard> CoffeeLabRecipes =
         [

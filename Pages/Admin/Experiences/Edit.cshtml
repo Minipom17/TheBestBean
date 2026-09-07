@@ -68,6 +68,12 @@
                 <span asp-validation-for="Experience.Tag" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Experience.SortOrder" class="control-label"></label>
+                <input asp-for="Experience.SortOrder" class="form-control" />
+                <span class="text-muted small">Lower numbers appear first on Experiences. Lab = 0, San Blas pour-over = 10, Latte Art = 200.</span>
+                <span asp-validation-for="Experience.SortOrder" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>

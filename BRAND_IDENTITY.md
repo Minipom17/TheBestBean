@@ -99,13 +99,13 @@
 
 | Experience | Location | Duration | Status |
 |-----------|----------|----------|--------|
-| **Urban Coffee Workshop** | Near San Pedro Market, Cusco | ~2.5 hours | ✅ Active |
+| **The Cusco Coffee Laboratory** | Cusco (near San Pedro Market) | ~2.5 hours | ✅ Active |
+| **San Blas Pour-Over Workshop** | Meet San Pedro Market → Casa Montes Boutique, Plaza San Blas 606 | ~1.5 hours | ✅ Active |
 
 ### In Development
 
 | Experience | Location | Duration | Status |
 |-----------|----------|----------|--------|
-| **San Blas Workshop** | San Blas, Cusco | TBD | 🟡 In progress |
 | **Farm Visit — Santa Teresa** | La Convención (route to Machu Picchu) | Full day | 🟡 Contacts set up, planning |
 
 ### Planned / Vision
