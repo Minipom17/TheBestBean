@@ -19,24 +19,30 @@ CLEANUP_KEY=0
 
 die() { echo "error: $*" >&2; exit 1; }
 
-if [[ -z "${DEPLOY_SSH_KEY:-}" && -z "${DEPLOY_SSH_KEY_FILE:-}" ]]; then
-  die "No SSH key. Cloud agents need a Cursor Runtime Secret named DEPLOY_SSH_KEY (the private key text). Local PC: set DEPLOY_SSH_KEY_FILE to your key path."
-fi
-
+USE_AGENT=0
 if [[ -n "${DEPLOY_SSH_KEY_FILE:-}" ]]; then
   KEY_FILE="$DEPLOY_SSH_KEY_FILE"
-elif [[ -f "${DEPLOY_SSH_KEY}" ]]; then
+elif [[ -n "${DEPLOY_SSH_KEY:-}" && -f "${DEPLOY_SSH_KEY}" ]]; then
   KEY_FILE="$DEPLOY_SSH_KEY"
-else
+elif [[ -n "${DEPLOY_SSH_KEY:-}" ]]; then
   KEY_FILE="$(mktemp)"
   CLEANUP_KEY=1
   printf '%s\n' "$DEPLOY_SSH_KEY" > "$KEY_FILE"
+elif [[ -n "${SSH_AUTH_SOCK:-}" ]]; then
+  USE_AGENT=1
+else
+  die "No SSH key. Set DEPLOY_SSH_KEY / DEPLOY_SSH_KEY_FILE, or use an ssh-agent (SSH_AUTH_SOCK)."
 fi
-chmod 600 "$KEY_FILE"
-trap '[[ "$CLEANUP_KEY" == 1 ]] && rm -f "$KEY_FILE"' EXIT
 
-SSH=(ssh -o StrictHostKeyChecking=no -o IdentitiesOnly=yes -i "$KEY_FILE" "$HOST")
-SCP=(scp -o StrictHostKeyChecking=no -o IdentitiesOnly=yes -i "$KEY_FILE")
+if [[ "$USE_AGENT" == 1 ]]; then
+  SSH=(ssh -o StrictHostKeyChecking=no -o BatchMode=yes "$HOST")
+  SCP=(scp -o StrictHostKeyChecking=no -o BatchMode=yes)
+else
+  chmod 600 "$KEY_FILE"
+  trap '[[ "$CLEANUP_KEY" == 1 ]] && rm -f "$KEY_FILE"' EXIT
+  SSH=(ssh -o StrictHostKeyChecking=no -o IdentitiesOnly=yes -i "$KEY_FILE" "$HOST")
+  SCP=(scp -o StrictHostKeyChecking=no -o IdentitiesOnly=yes -i "$KEY_FILE")
+fi
 
 echo "==> checking SSH"
 "${SSH[@]}" "test -d $REMOTE && systemctl is-enabled coffee-app.service >/dev/null"
