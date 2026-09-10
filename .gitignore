@@ -68,4 +68,5 @@ build_diag.txt
 # SSH keys / secrets
 *.pem
 *.key
-Coffe_Cacoa_Coca.txt
+Coffe_Cacoa_Caca.txt
+scripts/deploy_key

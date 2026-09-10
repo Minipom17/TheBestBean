@@ -25,9 +25,14 @@ die() { echo "error: $*" >&2; exit 1; }
 
 # Cursor sometimes injects secrets under different names or not at all (mobile/web agents).
 DEPLOY_SSH_KEY="${DEPLOY_SSH_KEY:-${deploy_ssh_key:-}}"
+DEFAULT_KEY_FILE="$ROOT/scripts/deploy_key"
 
 if [[ -z "${DEPLOY_SSH_KEY:-}" && -z "${DEPLOY_SSH_KEY_FILE:-}" ]]; then
-  die "DEPLOY_SSH_KEY is unset. Cursor's ssh-agent cannot sign for the droplet (agent refused operation). Add a Personal secret named DEPLOY_SSH_KEY with the deploy private key, start a NEW cloud agent, then run ./scripts/deploy-diagnose.sh to confirm it shows SET."
+  if [[ -f "$DEFAULT_KEY_FILE" ]]; then
+    DEPLOY_SSH_KEY_FILE="$DEFAULT_KEY_FILE"
+  else
+    die "No deploy key. Put the private key at scripts/deploy_key (never commit to a public repo) or set DEPLOY_SSH_KEY."
+  fi
 fi
 
 if [[ -n "${DEPLOY_SSH_KEY_FILE:-}" ]]; then
