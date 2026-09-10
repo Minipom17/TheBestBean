@@ -911,6 +911,43 @@ namespace TheBestBean.Models
                 GalleryImages = odarGallery.Skip(1).Take(3).ToList()
             });
 
+            await UpsertWorkshopAsync("Coffee Laboratory", new Experience
+            {
+                Title = "The Cusco Coffee Laboratory",
+                TitleES = "El Laboratorio de Café de Cusco",
+                Location = "Cusco",
+                Month = "Year-round",
+                Difficulty = "All Levels",
+                Duration = "2.5 HOURS",
+                Price = 50,
+                Tag = "FEATURED",
+                ImageUrl = "/images/experiences/cusco_workshop_1.jpg",
+                Description = "Join us in our laboratory in the heart of Cusco. This 2.5-hour workshop covers bean evaluation, sensory development, and extraction — from cupping to espresso and pour-over.",
+                DescriptionES = "Únete a nuestro laboratorio en el centro de Cusco. Taller de 2.5 horas: evaluación del grano, desarrollo sensorial y extracción — de la catación al espresso y pour-over.",
+                LongDescription = "Our Cusco Coffee Laboratory workshop elevates your coffee journey. We start with agronomy and processing, move into sensory work to identify flavor notes and defects, then dial in espresso and pour-over under guidance from our baristas.",
+                LongDescriptionES = "El taller del Laboratorio de Café de Cusco eleva tu viaje. Empezamos con agronomía y proceso, pasamos a lo sensorial, y cerramos dialando espresso y pour-over con nuestros baristas.",
+                Syllabus = new List<string>
+                {
+                    "Sensory Evaluation: Train your palate on Peruvian specialty coffee.",
+                    "The Science of Extraction: Grind, water temperature, and yield.",
+                    "Hands-on Brewing: Dial in espresso and pour-over technique."
+                },
+                ProvidedEquipment = new List<string>
+                {
+                    "Cupping spoons",
+                    "Brewing equipment",
+                    "Aprons",
+                    "Tasting notebook"
+                },
+                RequiredGear = new List<string> { "Comfortable clothing" },
+                GalleryImages = new List<string>
+                {
+                    "/images/experiences/cusco_workshop_1.jpg",
+                    "/images/experiences/cusco_workshop_2.jpg",
+                    "/images/experiences/cusco_workshop_3.jpg"
+                }
+            });
+
             await UpsertWorkshopAsync("Odar", new Experience
             {
                 Title = "Odar Lab [Sensory & Roast]",
