@@ -23,17 +23,31 @@ jobs:
           rm -f publish/coffee.db publish/coffee.db-shm publish/coffee.db-wal
           rm -rf publish/wwwroot/Media
           tar -czf deploy.tar.gz -C publish .
+          ls -lh deploy.tar.gz
 
-      - name: Deploy to droplet
+      - name: Setup SSH key
         env:
           DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
         run: |
           set -euo pipefail
-          install -m 600 /dev/null ~/.ssh/deploy_key
-          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" | tr -d '\r' > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keygen -y -f ~/.ssh/deploy_key > /dev/null
           ssh-keyscan -H 45.55.236.179 >> ~/.ssh/known_hosts 2>/dev/null || true
-          scp -o IdentitiesOnly=yes -o IdentityAgent=none -i ~/.ssh/deploy_key deploy.tar.gz "$DEPLOY_HOST:/root/deploy_temp.tar.gz"
-          ssh -o IdentitiesOnly=yes -o IdentityAgent=none -i ~/.ssh/deploy_key "$DEPLOY_HOST" bash -s <<'REMOTE'
+          ssh -o BatchMode=yes -o IdentitiesOnly=yes -o IdentityAgent=none -i ~/.ssh/deploy_key "$DEPLOY_HOST" "echo ssh ok"
+
+      - name: Upload and extract on droplet
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" | tr -d '\r' > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          scp -o BatchMode=yes -o IdentitiesOnly=yes -o IdentityAgent=none -i ~/.ssh/deploy_key deploy.tar.gz "$DEPLOY_HOST:/root/deploy_temp.tar.gz"
+          ssh -o BatchMode=yes -o IdentitiesOnly=yes -o IdentityAgent=none -i ~/.ssh/deploy_key "$DEPLOY_HOST" bash -s <<'REMOTE'
           set -euo pipefail
           systemctl stop coffee-app.service
           cp -a /srv/coffee_app/coffee.db "/root/coffee.db.bak-gha-$(date +%Y%m%d%H%M)"
