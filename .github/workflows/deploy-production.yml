@@ -1,0 +1,48 @@
+name: Deploy production
+
+on:
+  workflow_dispatch:
+
+env:
+  DEPLOY_HOST: root@45.55.236.179
+  REMOTE_DIR: /srv/coffee_app
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.0.x"
+
+      - name: Publish
+        run: |
+          dotnet publish -c Release -o publish --nologo
+          rm -f publish/coffee.db publish/coffee.db-shm publish/coffee.db-wal
+          rm -rf publish/wwwroot/Media
+          tar -czf deploy.tar.gz -C publish .
+
+      - name: Deploy to droplet
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+        run: |
+          set -euo pipefail
+          install -m 600 /dev/null ~/.ssh/deploy_key
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key
+          ssh-keyscan -H 45.55.236.179 >> ~/.ssh/known_hosts 2>/dev/null || true
+          scp -o IdentitiesOnly=yes -o IdentityAgent=none -i ~/.ssh/deploy_key deploy.tar.gz "$DEPLOY_HOST:/root/deploy_temp.tar.gz"
+          ssh -o IdentitiesOnly=yes -o IdentityAgent=none -i ~/.ssh/deploy_key "$DEPLOY_HOST" bash -s <<'REMOTE'
+          set -euo pipefail
+          systemctl stop coffee-app.service
+          cp -a /srv/coffee_app/coffee.db "/root/coffee.db.bak-gha-$(date +%Y%m%d%H%M)"
+          cd /srv/coffee_app
+          tar -xzf /root/deploy_temp.tar.gz --exclude=coffee.db
+          rm -f /root/deploy_temp.tar.gz
+          chown -R www-data:www-data /srv/coffee_app
+          systemctl start coffee-app.service
+          systemctl is-active coffee-app.service
+          test -f /srv/coffee_app/coffee.db
+          echo deploy ok
+          REMOTE
