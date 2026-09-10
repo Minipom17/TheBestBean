@@ -337,11 +337,13 @@ html.dark .hover\:border-\[\#FF3B1F\]:hover {
 
 .exp-filter-label {
     flex: 0 0 auto;
-    width: 4.4rem;
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
+    width: 1.25rem;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+    line-height: 1;
+    text-align: center;
     color: #543A55;
 }
 

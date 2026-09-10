@@ -27,7 +27,7 @@
                 
                 <div class="mt-3 md:mt-5 exp-filters font-mono-jb lg:w-full" aria-label="Workshop filters">
                     <div class="exp-filter-row">
-                        <span class="exp-filter-label">Location</span>
+                        <span class="exp-filter-label" title="Location" aria-label="Location">📍</span>
                         <div class="exp-geo" id="urban-location-filters" role="group" aria-label="Filter by location">
                             <button type="button" class="exp-geo-all filter-btn active" data-filter="all">All</button>
                             <div class="exp-geo-region">
@@ -54,7 +54,7 @@
                     </div>
 
                     <div class="exp-filter-row">
-                        <span class="exp-filter-label">When</span>
+                        <span class="exp-filter-label" title="When" aria-label="When">📅</span>
                         <div class="exp-when" id="urban-frequency-filters" role="group" aria-label="Filter by schedule">
                             <button type="button" class="exp-when-btn filter-btn active" data-filter="all">All</button>
                             @foreach (var when in Model.ExperiencesList
@@ -296,7 +296,7 @@
 
                 <div class="mt-3 md:mt-5 exp-filters font-mono-jb w-full" aria-label="Expedition filters">
                     <div class="exp-filter-row">
-                        <span class="exp-filter-label">Location</span>
+                        <span class="exp-filter-label" title="Location" aria-label="Location">📍</span>
                         <div class="exp-geo" id="expedition-location-filters" role="group" aria-label="Filter by location">
                             <button type="button" class="exp-geo-all filter-btn active" data-filter="all">All</button>
                             <div class="exp-geo-region">
@@ -323,7 +323,7 @@
                     </div>
 
                     <div class="exp-filter-row">
-                        <span class="exp-filter-label">When</span>
+                        <span class="exp-filter-label" title="When" aria-label="When">📅</span>
                         <div class="exp-when" id="expedition-frequency-filters" role="group" aria-label="Filter by schedule">
                             <button type="button" class="exp-when-btn filter-btn active" data-filter="all">All</button>
                             @foreach (var when in Model.ExperiencesList
