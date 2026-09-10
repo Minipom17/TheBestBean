@@ -27,7 +27,7 @@
                 
                 <div class="mt-3 md:mt-5 exp-filters font-mono-jb lg:w-full" aria-label="Workshop filters">
                     <div class="exp-filter-row">
-                        <span class="exp-filter-label">Location</span>
+                        <span class="exp-filter-label" title="Location" aria-label="Location">📍</span>
                         <div class="exp-geo" id="urban-location-filters" role="group" aria-label="Filter by location">
                             <button type="button" class="exp-geo-all filter-btn active" data-filter="all">All</button>
                             <div class="exp-geo-region">
@@ -54,7 +54,7 @@
                     </div>
 
                     <div class="exp-filter-row">
-                        <span class="exp-filter-label">When</span>
+                        <span class="exp-filter-label" title="When" aria-label="When">📅</span>
                         <div class="exp-when" id="urban-frequency-filters" role="group" aria-label="Filter by schedule">
                             <button type="button" class="exp-when-btn filter-btn active" data-filter="all">All</button>
                             @foreach (var when in Model.ExperiencesList
@@ -75,53 +75,19 @@
                 @{
                     var hourOrder = new[] { "Peru Tasting Hour", "Brew Your Own", "Introduction to Cupping" };
                     var urbanLabs = Model.ExperiencesList.Where(e => e.Category == "Urban Workshops").ToList();
+                    // Cusco Coffee Laboratory always leads the workshops list
+                    var featuredLab = urbanLabs.FirstOrDefault(e =>
+                            !string.IsNullOrEmpty(e.Title)
+                            && e.Title.Contains("Coffee Laboratory", StringComparison.OrdinalIgnoreCase))
+                        ?? urbanLabs.FirstOrDefault(e => e.Tag == "FEATURED");
                     var hourLabs = hourOrder
-                        .Select(title => urbanLabs.FirstOrDefault(e => e.Title == title))
+                        .Select(title => urbanLabs.FirstOrDefault(e => e.Title == title && e != featuredLab))
                         .Where(e => e != null)
                         .Cast<Experience>()
                         .ToList();
-                    var featuredLab = urbanLabs.FirstOrDefault(e => e.Tag == "FEATURED");
-                    var regularLabs = urbanLabs.Where(e => e.Tag != "FEATURED" && !hourOrder.Contains(e.Title)).ToList();
-                }
-
-                @if (hourLabs.Any())
-                {
-                    <div class="flex flex-col gap-6">
-                        <div class="font-mono-jb text-[10px] font-bold uppercase tracking-widest text-v-gray">1-hour workshops · Cusco</div>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-12">
-                            @foreach (var exp in hourLabs)
-                            {
-                                var labGeo = ExperienceGeo.Locate(exp);
-                                <article class="lab-item flex flex-col group" data-region="@labGeo.Region" data-place="@labGeo.PlaceKey" data-frequency="@ExperienceGeo.WhenKey(exp.Month)">
-                                    <a asp-page="/Tour" asp-route-id="@exp.Id" class="text-decoration-none text-slate-900 dark:text-[#D6D0C8] flex flex-col h-full group">
-                                        <div class="w-full aspect-[3/2] bg-gray-100 dark:bg-[#1C191F] mb-5 overflow-hidden rounded-3xl relative">
-                                            @if (!string.IsNullOrWhiteSpace(exp.ImageUrl))
-                                            {
-                                                <img src="@exp.ImageUrl" alt="@exp.Title" class="img-stark absolute inset-0 w-full h-full object-cover" loading="lazy" />
-                                            }
-                                            else
-                                            {
-                                                <div class="absolute inset-0 flex items-center justify-center font-mono-jb text-[10px] font-bold uppercase tracking-widest text-v-gray">Photos soon</div>
-                                            }
-                                            <div class="absolute top-3 right-3 bg-v-yellow text-v-black rounded-full px-3 py-1 text-[9px] font-mono-jb font-bold uppercase tracking-widest">1 HOUR</div>
-                                        </div>
-                                        <div class="flex items-center gap-2 font-mono-jb text-[10px] font-bold tracking-widest uppercase mb-2">
-                                            <div class="w-1.5 h-1.5 bg-v-yellow"></div>
-                                            <span class="text-v-black dark:text-[#D6D0C8]">@exp.Duration</span>
-                                            <span class="text-gray-300">/</span>
-                                            <span class="text-v-gray">@exp.Difficulty</span>
-                                        </div>
-                                        <h3 class="text-xl md:text-2xl font-semibold tracking-tight text-v-black dark:text-[#D6D0C8] m-0 mb-3">@exp.Title</h3>
-                                        <p class="text-v-gray text-sm leading-relaxed mb-5 pb-5 border-b border-v-black/10 dark:border-[#2A262C] font-normal flex-grow">@exp.Description</p>
-                                        <div class="flex items-center justify-between mt-auto font-mono-jb">
-                                            <span class="text-lg font-bold text-v-black dark:text-[#D6D0C8]">S/ @LocalPricing.YapeSoles(exp.Price).ToString("0") <span class="text-xs font-normal text-v-gray">Yape</span> <span class="text-sm font-normal text-v-gray">/ $@exp.Price</span></span>
-                                            <span class="text-sm font-bold">Reserve <span class="ml-1">&rarr;</span></span>
-                                        </div>
-                                    </a>
-                                </article>
-                            }
-                        </div>
-                    </div>
+                    var regularLabs = urbanLabs
+                        .Where(e => e != featuredLab && !hourOrder.Contains(e.Title))
+                        .ToList();
                 }
 
                 @if (featuredLab != null)
@@ -234,6 +200,46 @@
                     </article>
                 }
 
+                @if (hourLabs.Any())
+                {
+                    <div class="flex flex-col gap-6">
+                        <div class="font-mono-jb text-[10px] font-bold uppercase tracking-widest text-v-gray">1-hour workshops · Cusco</div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-12">
+                            @foreach (var exp in hourLabs)
+                            {
+                                var labGeo = ExperienceGeo.Locate(exp);
+                                <article class="lab-item flex flex-col group" data-region="@labGeo.Region" data-place="@labGeo.PlaceKey" data-frequency="@ExperienceGeo.WhenKey(exp.Month)">
+                                    <a asp-page="/Tour" asp-route-id="@exp.Id" class="text-decoration-none text-slate-900 dark:text-[#D6D0C8] flex flex-col h-full group">
+                                        <div class="w-full aspect-[3/2] bg-gray-100 dark:bg-[#1C191F] mb-5 overflow-hidden rounded-3xl relative">
+                                            @if (!string.IsNullOrWhiteSpace(exp.ImageUrl))
+                                            {
+                                                <img src="@exp.ImageUrl" alt="@exp.Title" class="img-stark absolute inset-0 w-full h-full object-cover" loading="lazy" />
+                                            }
+                                            else
+                                            {
+                                                <div class="absolute inset-0 flex items-center justify-center font-mono-jb text-[10px] font-bold uppercase tracking-widest text-v-gray">Photos soon</div>
+                                            }
+                                            <div class="absolute top-3 right-3 bg-v-yellow text-v-black rounded-full px-3 py-1 text-[9px] font-mono-jb font-bold uppercase tracking-widest">1 HOUR</div>
+                                        </div>
+                                        <div class="flex items-center gap-2 font-mono-jb text-[10px] font-bold tracking-widest uppercase mb-2">
+                                            <div class="w-1.5 h-1.5 bg-v-yellow"></div>
+                                            <span class="text-v-black dark:text-[#D6D0C8]">@exp.Duration</span>
+                                            <span class="text-gray-300">/</span>
+                                            <span class="text-v-gray">@exp.Difficulty</span>
+                                        </div>
+                                        <h3 class="text-xl md:text-2xl font-semibold tracking-tight text-v-black dark:text-[#D6D0C8] m-0 mb-3">@exp.Title</h3>
+                                        <p class="text-v-gray text-sm leading-relaxed mb-5 pb-5 border-b border-v-black/10 dark:border-[#2A262C] font-normal flex-grow">@exp.Description</p>
+                                        <div class="flex items-center justify-between mt-auto font-mono-jb">
+                                            <span class="text-lg font-bold text-v-black dark:text-[#D6D0C8]">S/ @LocalPricing.YapeSoles(exp.Price).ToString("0") <span class="text-xs font-normal text-v-gray">Yape</span> <span class="text-sm font-normal text-v-gray">/ $@exp.Price</span></span>
+                                            <span class="text-sm font-bold">Reserve <span class="ml-1">&rarr;</span></span>
+                                        </div>
+                                    </a>
+                                </article>
+                            }
+                        </div>
+                    </div>
+                }
+
                 @if (regularLabs.Any())
                 {
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16" id="urban-labs-grid">
@@ -296,7 +302,7 @@
 
                 <div class="mt-3 md:mt-5 exp-filters font-mono-jb w-full" aria-label="Expedition filters">
                     <div class="exp-filter-row">
-                        <span class="exp-filter-label">Location</span>
+                        <span class="exp-filter-label" title="Location" aria-label="Location">📍</span>
                         <div class="exp-geo" id="expedition-location-filters" role="group" aria-label="Filter by location">
                             <button type="button" class="exp-geo-all filter-btn active" data-filter="all">All</button>
                             <div class="exp-geo-region">
@@ -323,7 +329,7 @@
                     </div>
 
                     <div class="exp-filter-row">
-                        <span class="exp-filter-label">When</span>
+                        <span class="exp-filter-label" title="When" aria-label="When">📅</span>
                         <div class="exp-when" id="expedition-frequency-filters" role="group" aria-label="Filter by schedule">
                             <button type="button" class="exp-when-btn filter-btn active" data-filter="all">All</button>
                             @foreach (var when in Model.ExperiencesList
