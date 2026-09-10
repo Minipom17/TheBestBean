@@ -1,16 +1,11 @@
 #!/usr/bin/env bash
 # Deploy Purple Bean to the DigitalOcean droplet without wiping photos or the live DB.
 #
-# Cloud agent / Linux:
-#   DEPLOY_SSH_KEY must be set (Cursor secret: full private key text)
-#   DEPLOY_HOST defaults to root@45.55.236.179
-#   ./scripts/deploy-production.sh
+# Uses scripts/deploy_key.txt in the repo (cloud agents read this file).
+# Optional override: DEPLOY_SSH_KEY env var or DEPLOY_SSH_KEY_FILE path.
+# DEPLOY_HOST defaults to root@45.55.236.179
 #
-# Cursor's ssh-agent only signs for git hosts — it will NOT work for the droplet
-# ("agent refused operation"). This script always uses an explicit key file and
-# disables the agent (SSH_AUTH_SOCK=, IdentityAgent=none).
-#
-# Never prints the key. Never copies a local coffee.db over production.
+# Never copies a local coffee.db over production.
 # Never deletes wwwroot/Media on the server.
 
 set -euo pipefail
@@ -23,15 +18,14 @@ CLEANUP_KEY=0
 
 die() { echo "error: $*" >&2; exit 1; }
 
-# Cursor sometimes injects secrets under different names or not at all (mobile/web agents).
 DEPLOY_SSH_KEY="${DEPLOY_SSH_KEY:-${deploy_ssh_key:-}}"
-DEFAULT_KEY_FILE="$ROOT/scripts/deploy_key"
+DEFAULT_KEY_FILE="$ROOT/scripts/deploy_key.txt"
 
 if [[ -z "${DEPLOY_SSH_KEY:-}" && -z "${DEPLOY_SSH_KEY_FILE:-}" ]]; then
   if [[ -f "$DEFAULT_KEY_FILE" ]]; then
     DEPLOY_SSH_KEY_FILE="$DEFAULT_KEY_FILE"
   else
-    die "No deploy key. Put the private key at scripts/deploy_key (never commit to a public repo) or set DEPLOY_SSH_KEY."
+    die "No deploy key at scripts/deploy_key.txt"
   fi
 fi
 
@@ -47,14 +41,13 @@ fi
 chmod 600 "$KEY_FILE"
 trap '[[ "$CLEANUP_KEY" == 1 ]] && rm -f "$KEY_FILE"' EXIT
 
-# Never use Cursor's ssh-agent — it refuses to sign for arbitrary hosts.
 SSH_AUTH_SOCK=
 SSH=(ssh -o StrictHostKeyChecking=no -o IdentitiesOnly=yes -o IdentityAgent=none -i "$KEY_FILE" "$HOST")
 SCP=(env SSH_AUTH_SOCK= scp -o StrictHostKeyChecking=no -o IdentitiesOnly=yes -o IdentityAgent=none -i "$KEY_FILE")
 
-echo "==> checking SSH (explicit key, agent disabled)"
+echo "==> checking SSH"
 if ! SSH_AUTH_SOCK= "${SSH[@]}" -o BatchMode=yes -o ConnectTimeout=15 "true" 2>/dev/null; then
-  die "SSH login failed with DEPLOY_SSH_KEY. Check the secret value (full private key) and that its public key is in the droplet authorized_keys. Run ./scripts/deploy-diagnose.sh"
+  die "SSH login failed. Check scripts/deploy_key.txt and droplet authorized_keys."
 fi
 "${SSH[@]}" "test -d $REMOTE && systemctl is-enabled coffee-app.service >/dev/null"
 

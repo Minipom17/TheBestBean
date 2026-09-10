@@ -29,10 +29,29 @@ fi
 echo "  note: even with the pubkey on the droplet, Cursor's agent refuses to sign"
 echo "  for $HOST (agent refused operation). Use DEPLOY_SSH_KEY instead."
 
+echo "==> local key file"
+for f in scripts/deploy_key.txt scripts/deploy_key; do
+  if [[ -f "$f" ]]; then
+    echo "  $f: present"
+  else
+    echo "  $f: missing"
+  fi
+done
+
 echo "==> explicit-key ssh test to $HOST"
 DEPLOY_SSH_KEY="${DEPLOY_SSH_KEY:-${deploy_ssh_key:-}}"
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 if [[ -z "${DEPLOY_SSH_KEY:-}" && -z "${DEPLOY_SSH_KEY_FILE:-}" ]]; then
-  echo "  skipped — DEPLOY_SSH_KEY unset"
+  if [[ -f "$ROOT/scripts/deploy_key.txt" ]]; then
+    DEPLOY_SSH_KEY_FILE="$ROOT/scripts/deploy_key.txt"
+  elif [[ -f "$ROOT/scripts/deploy_key" ]]; then
+    DEPLOY_SSH_KEY_FILE="$ROOT/scripts/deploy_key"
+  else
+    echo "  skipped — no env secret and no scripts/deploy_key.txt"
+  fi
+fi
+if [[ -z "${DEPLOY_SSH_KEY:-}" && -z "${DEPLOY_SSH_KEY_FILE:-}" ]]; then
+  :
 else
   KEY_FILE=""
   CLEANUP=0
