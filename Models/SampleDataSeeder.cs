@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using TheBestBean.Data;
 using Microsoft.EntityFrameworkCore;
+using TheBestBean.Services;
 
 namespace TheBestBean.Models
 {
@@ -370,7 +371,9 @@ namespace TheBestBean.Models
             // Also clean up regions/farms if possible, but beans/countries is the visible part.
             await SeedNewOriginLotsAsync();
             await ApplyAngelCatarataPhotosAsync();
+            await ApplyCoffeeRetailAsync();
             await ApplyOriginExpeditionsAsync();
+            await ApplyCuscoWorkshopRosterAsync();
 
             // Let's just save changes now to be safe.
             await _context.SaveChangesAsync();
@@ -575,6 +578,35 @@ namespace TheBestBean.Models
             }
         }
 
+        private static async Task ApplyCoffeeRetailAsync()
+        {
+            var beans = await _context.CoffeeBean.Include(b => b.CoffeeRegion).ToListAsync();
+            foreach (var bean in beans)
+            {
+                var pen = LocalPricing.CoffeeHundredGramsPen(bean.ScaScore);
+                bean.BasePricePEN = pen;
+                bean.BasePriceUSD = LocalPricing.CoffeeBagUsd(bean.ScaScore, "100g");
+
+                var region = bean.CoffeeRegion?.Name ?? "";
+                var name = bean.Name ?? "";
+                var isCajamarca = region.Contains("Cajamarca", StringComparison.OrdinalIgnoreCase)
+                    || name.Contains("Cajamarca", StringComparison.OrdinalIgnoreCase)
+                    || name.Contains("Catarata", StringComparison.OrdinalIgnoreCase);
+                if (isCajamarca)
+                {
+                    bean.MapImageUrl = "/images/maps/cajamarca-jaen.svg";
+                }
+                else if (region.Contains("Convención", StringComparison.OrdinalIgnoreCase)
+                    || region.Contains("Cusco", StringComparison.OrdinalIgnoreCase)
+                    || name.Contains("Cusco", StringComparison.OrdinalIgnoreCase)
+                    || name.Contains("SL09", StringComparison.OrdinalIgnoreCase)
+                    || name.Contains("HIGHLAND", StringComparison.OrdinalIgnoreCase))
+                {
+                    bean.MapImageUrl = "/Media/LaConvencionMap.svg";
+                }
+            }
+        }
+
         private static async Task ApplyAngelCatarataPhotosAsync()
         {
             var angel = await _context.CoffeeBean.FirstOrDefaultAsync(b => b.Name == "La Catarata [Geisha]");
@@ -739,6 +771,235 @@ namespace TheBestBean.Models
                 {
                     Key = "Experiences_Expeditions_Subtitle",
                     Value = "SANTA TERESA · CAJAMARCA",
+                    Page = "Experiences"
+                });
+            }
+        }
+
+        private static async Task ApplyCuscoWorkshopRosterAsync()
+        {
+            var v = "?v=1";
+            var odarGallery = new List<string>
+            {
+                $"/Media/tours/odar/01-lab-cupping-table.jpg{v}",
+                $"/Media/tours/odar/02-odar-cupping-spoon.jpg{v}",
+                $"/Media/tours/odar/03-cupping-forms.jpg{v}",
+                $"/Media/tours/odar/04-guided-cupping.jpg{v}",
+                $"/Media/tours/odar/05-flavor-wheel.jpg{v}",
+            };
+
+            async Task<Experience> UpsertWorkshopAsync(string titleMatch, Experience values)
+            {
+                var row = await _context.Experiences.FirstOrDefaultAsync(e => e.Title.Contains(titleMatch));
+                if (row == null)
+                {
+                    row = new Experience { Title = values.Title };
+                    _context.Experiences.Add(row);
+                }
+                row.Title = values.Title;
+                row.TitleES = values.TitleES;
+                row.Category = "Urban Workshops";
+                row.Location = values.Location;
+                row.Month = values.Month;
+                row.Difficulty = values.Difficulty;
+                row.Duration = values.Duration;
+                row.Price = values.Price;
+                row.Tag = values.Tag;
+                row.ImageUrl = values.ImageUrl;
+                row.Description = values.Description;
+                row.DescriptionES = values.DescriptionES;
+                row.LongDescription = values.LongDescription;
+                row.LongDescriptionES = values.LongDescriptionES;
+                row.Syllabus = values.Syllabus;
+                row.ProvidedEquipment = values.ProvidedEquipment;
+                row.RequiredGear = values.RequiredGear;
+                row.GalleryImages = values.GalleryImages;
+                return row;
+            }
+
+            await UpsertWorkshopAsync("Tasting Hour", new Experience
+            {
+                Title = "Peru Tasting Hour",
+                TitleES = "Hora de cata del Perú",
+                Location = "Cusco",
+                Month = "Year-round",
+                Difficulty = "Beginner",
+                Duration = "1 HOUR",
+                Price = 25,
+                Tag = "1 HOUR",
+                ImageUrl = odarGallery.ElementAtOrDefault(0) ?? "",
+                Description = "Sit down for an hour of conversation over coffee. We brew lots from around Peru for you — no gear, just tasting, talking, and comparing cups from different regions.",
+                DescriptionES = "Una hora de conversación y café. Preparamos lotes de distintas regiones del Perú; tú pruebas y hablamos. Sin equipo: el café se hace para ti.",
+                LongDescription = "The easy hour: you sit, we brew. Cups from different regions of Peru land in front of you while we talk altitude, process, and why one farm tastes nothing like the next. No grinding, no pouring — the coffee is made for you. Leave with a map of the country on your palate.",
+                LongDescriptionES = "La hora fácil: tú te sientas, nosotros preparamos. Llegan tazas de distintas regiones del Perú y hablamos de altitud, proceso y por qué una finca no sabe a la otra. El café se hace para ti.",
+                Syllabus = new List<string>
+                {
+                    "Welcome: conversation — Peru is not one coffee",
+                    "Around the country: we brew, you taste and compare",
+                    "Close: favorite lot, what to buy, questions"
+                },
+                ProvidedEquipment = new List<string>
+                {
+                    "Coffees from around Peru, brewed for you",
+                    "Guided tasting conversation",
+                    "Water and a quiet table"
+                },
+                RequiredGear = new List<string>(),
+                GalleryImages = odarGallery.Take(2).ToList()
+            });
+
+            await UpsertWorkshopAsync("Brew Your Own", new Experience
+            {
+                Title = "Brew Your Own",
+                TitleES = "Prepara tu café",
+                Location = "Cusco",
+                Month = "Year-round",
+                Difficulty = "All Levels",
+                Duration = "1 HOUR",
+                Price = 25,
+                Tag = "1 HOUR",
+                ImageUrl = odarGallery.ElementAtOrDefault(4) ?? odarGallery.ElementAtOrDefault(0) ?? "",
+                Description = "An hour on the bar. We explain roast levels and brew ratios, hand you a recipe, then you brew it yourself — and run it again to sharpen your technique.",
+                DescriptionES = "Una hora en la barra. Explicamos tuestes y ratios, te damos una receta, preparas tu taza y afinamos la técnica.",
+                LongDescription = "Hands-on hour. We start with why a light roast and a more developed roast need different water and grind, then lock a ratio. You get a written recipe and brew it yourself. We watch the pour, adjust, and you brew a second time so your technique is better when you leave.",
+                LongDescriptionES = "Hora práctica. Empezamos con por qué un tueste claro y uno más desarrollado piden distinta agua y molienda, y fijamos un ratio. Te damos la receta, preparas tu taza, y la repetimos para mejorar la técnica.",
+                Syllabus = new List<string>
+                {
+                    "Roast & ratio: light vs developed, water, grind, and the recipe we give you",
+                    "You brew: prepare your own cup from that recipe",
+                    "Technique: second pass — pour, timing, and what to change at home"
+                },
+                ProvidedEquipment = new List<string>
+                {
+                    "Written brew recipe",
+                    "V60 or the day’s brewer",
+                    "Coffee to brew and to take notes on"
+                },
+                RequiredGear = new List<string>(),
+                GalleryImages = odarGallery.Skip(4).Take(1).ToList()
+            });
+
+            await UpsertWorkshopAsync("Introduction to Cupping", new Experience
+            {
+                Title = "Introduction to Cupping",
+                TitleES = "Introducción a la catación",
+                Location = "Cusco",
+                Month = "Year-round",
+                Difficulty = "Beginner",
+                Duration = "1 HOUR",
+                Price = 25,
+                Tag = "1 HOUR",
+                ImageUrl = odarGallery.ElementAtOrDefault(3) ?? odarGallery.ElementAtOrDefault(1) ?? "",
+                Description = "Four rounds of cupping in one hour. We start with how to smell — crack the crust, steam, nose — then four coffees: a basic 81, two specialty lots around 85 and 86–87, and one super lot.",
+                DescriptionES = "Cuatro rondas de catación en una hora. Primero cómo oler; luego cuatro cafés: un 81 básico, dos especialidad (~85 y 86–87) y un súper lote.",
+                LongDescription = "A first cupping, paced for travelers. We open with how to smell: break the crust, use the steam, and wake up the nose before any sip. Then four coffees in four rounds — an 81-point everyday cup, two specialty lots (about 85 and 86–87), and one super coffee so you feel the jump. Same protocol each round: smell, slurp, score what you can, talk.",
+                LongDescriptionES = "Primera catación, a ritmo de viajero. Abrimos con el olfato: romper la costra, usar el vapor, despertar la nariz. Luego cuatro cafés: un 81 cotidiano, dos de especialidad (~85 y 86–87) y un súper café. Misma pauta en cada ronda: oler, sorber, anotar, hablar.",
+                Syllabus = new List<string>
+                {
+                    "Smell first: how to smell, crack the crust, activate the senses",
+                    "Round 1: the 81-point cup — everyday coffee as a baseline",
+                    "Rounds 2–3: specialty lots around 85 and 86–87",
+                    "Round 4: the super coffee — what a high score tastes like"
+                },
+                ProvidedEquipment = new List<string>
+                {
+                    "Four cupping rounds",
+                    "Spoons, bowls, and a cupping form",
+                    "Four coffees: 81 · ~85 · 86–87 · super lot"
+                },
+                RequiredGear = new List<string>(),
+                GalleryImages = odarGallery.Skip(1).Take(3).ToList()
+            });
+
+            await UpsertWorkshopAsync("Odar", new Experience
+            {
+                Title = "Odar Lab [Sensory & Roast]",
+                TitleES = "Lab Odar [Sensorial y tueste]",
+                Location = "Cusco",
+                Month = "Year-round",
+                Difficulty = "All Levels",
+                Duration = "2.5 HOURS",
+                Price = 50,
+                ImageUrl = odarGallery[0],
+                Description = "Hosted by Odar, a certified Q grader, at his factory and café two minutes apart in Cusco. Same craft as the main lab, with more time on sensory: Peruvian varieties, V60 at the factory, a guided SCA cupping, then roast-floor work — sorting greens, spotting quakers, and tasting acidity in the bean.",
+                DescriptionES = "Con Odar, Q grader certificado, en su fábrica y café a dos minutos en Cusco. Más tiempo en lo sensorial: variedades del Perú, V60 en fábrica, catación SCA guiada y trabajo en tueste.",
+                LongDescription = "Odar owns a factory and a café a two-minute walk apart in Cusco. He covers the same ground as the featured laboratory — brew, sensory, roast — with the emphasis on tasting. Ten minutes on varieties in Peru and Cusco and why altitude matters, then a V60 at the factory: how the cone works, ratio, and a cup. After that, the flavor wheel, what the SCA is, how a cupping form is scored, and a guided cupping with Odar. Close on the roast floor: sort green beans before they go in, pick quakers and defects after, and bite a bean to feel acidity.",
+                LongDescriptionES = "Odar tiene fábrica y café a dos minutos en Cusco. Diez minutos de variedades y altitud, V60 en la fábrica, rueda de sabores y catación guiada, y al final clasificación de verde, quakers y morder el grano para la acidez.",
+                Syllabus = new List<string>
+                {
+                    "Intro & V60: Peru and Cusco varieties, high altitude (10 min), then how the cone works, ratio, and a brew at the factory",
+                    "Sensory: flavor wheel, the SCA, cupping forms, then a guided cupping with Odar (Q grader)",
+                    "Roast: sort greens with the roast master, pick quakers and defects, bite the bean for acidity"
+                },
+                ProvidedEquipment = new List<string>
+                {
+                    "V60 brew at the factory",
+                    "Guided SCA cupping with a Q grader",
+                    "Green-bean sorting and roast-floor tasting",
+                    "Apron and cupping spoons"
+                },
+                RequiredGear = new List<string> { "Closed-toe shoes" },
+                GalleryImages = odarGallery
+            });
+
+            await UpsertWorkshopAsync("Cinthya", new Experience
+            {
+                Title = "Cinthya Lab [V60, Espresso & Cupping]",
+                TitleES = "Lab Cinthya [V60, espresso y catación]",
+                Location = "Cusco",
+                Month = "Year-round",
+                Difficulty = "All Levels",
+                Duration = "2.5 HOURS",
+                Price = 50,
+                ImageUrl = "",
+                Description = "Hosted by Cinthya, a Q grader, competition judge, and roaster. Her roaster sits away from the tasting room, so this session stays on the bar: V60 pour-over, espresso, and a guided cupping. A strong option when the main laboratory is full.",
+                DescriptionES = "Con Cinthya, Q grader, jueza y tostadora. El tostador queda lejos del área de cata, así que la sesión es V60, espresso y catación guiada. Alternativa cuando el laboratorio principal está lleno.",
+                LongDescription = "Cinthya is a roaster, a Q grader, and a judge. Her roaster is not next to the presentation space, so this tour does not walk the roast floor. You stay with brew and sensory: V60 pour-over, espresso on the machine, and a cupping she leads. Photos of her space will go up when we have them.",
+                LongDescriptionES = "Cinthya es tostadora, Q grader y jueza. El tostador no está junto al espacio de presentación, así que el recorrido es V60, espresso y catación. Subiremos fotos de su local cuando las tengamos.",
+                Syllabus = new List<string>
+                {
+                    "V60 pour-over: grind, ratio, and a cup you brew",
+                    "Espresso: extraction, tasting, and how the bar works",
+                    "Guided cupping: SCA palate work with a Q grader and judge"
+                },
+                ProvidedEquipment = new List<string>
+                {
+                    "V60 pour-over",
+                    "Espresso tasting",
+                    "Guided cupping"
+                },
+                RequiredGear = new List<string>(),
+                GalleryImages = new List<string>()
+            });
+
+            var keep = new[]
+            {
+                "Peru Tasting Hour",
+                "Brew Your Own",
+                "Introduction to Cupping",
+                "The Cusco Coffee Laboratory",
+                "Odar Lab [Sensory & Roast]",
+                "Cinthya Lab [V60, Espresso & Cupping]"
+            };
+            var extras = await _context.Experiences
+                .Where(e => (e.Category == "Urban Workshops" || e.Category == "Urban Labs") && !keep.Contains(e.Title))
+                .ToListAsync();
+            foreach (var extra in extras)
+            {
+                extra.Category = "Archived";
+            }
+
+            var labsSubtitle = await _context.SiteContent.FirstOrDefaultAsync(c => c.Key == "Experiences_UrbanLabs_Subtitle");
+            if (labsSubtitle != null)
+            {
+                labsSubtitle.Value = "CUSCO";
+            }
+            else
+            {
+                _context.SiteContent.Add(new SiteContent
+                {
+                    Key = "Experiences_UrbanLabs_Subtitle",
+                    Value = "CUSCO",
                     Page = "Experiences"
                 });
             }

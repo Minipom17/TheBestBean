@@ -39,6 +39,7 @@ namespace TheBestBean.Controllers
                 ("/Wholesale", "0.8", "monthly"),
                 ("/Blog", "0.8", "weekly"),
                 ("/About", "0.7", "monthly"),
+                ("/Resources", "0.7", "monthly"),
                 ("/Subscriptions", "0.7", "monthly"),
                 ("/SocialCoffee", "0.7", "monthly"),
                 ("/OriginMap", "0.7", "monthly"),
@@ -69,7 +70,9 @@ namespace TheBestBean.Controllers
             }
 
             // Experiences (public URLs are /Tour/{id}, not /Experiences/{id})
-            var experiences = await _context.Experiences.ToListAsync();
+            var experiences = await _context.Experiences
+                .Where(e => e.Category != "Archived")
+                .ToListAsync();
             foreach (var exp in experiences)
             {
                 var loc = $"{baseUrl}/Tour/{exp.Id}";

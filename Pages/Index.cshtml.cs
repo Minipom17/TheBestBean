@@ -28,6 +28,10 @@ namespace TheBestBean.Pages
                 .ToListAsync();
 
             FeaturedExperiences = await _context.Experiences
+                .Where(e => e.Category != "Archived")
+                .OrderBy(e => e.Tag == "1 HOUR" ? 0 : e.Tag == "FEATURED" ? 1 : 2)
+                .ThenBy(e => e.Category == "Urban Workshops" ? 0 : 1)
+                .ThenBy(e => e.Id)
                 .Take(5)
                 .ToListAsync();
                 

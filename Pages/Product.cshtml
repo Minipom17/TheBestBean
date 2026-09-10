@@ -68,7 +68,7 @@
                 
                 <span class="font-mono text-[10px] text-swiss-red font-bold uppercase tracking-widest mb-1" style="font-family: 'JetBrains Mono', monospace; color: #FF3B30;">@Model.Product.Type</span>
                 <div class="flex items-center gap-3 mb-2 flex-wrap">
-                    <h1 class="font-grotesk text-3xl md:text-4xl font-bold leading-tight m-0" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="Name" style="font-family: 'Space Grotesk', sans-serif;">@Model.Product.Name</h1>
+                    <h1 class="font-grotesk text-3xl md:text-4xl font-bold leading-tight m-0" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="Name" style="font-family: 'Inter', sans-serif;">@Model.Product.Name</h1>
                     <span class="bg-black text-white px-2 py-0.5 text-xs font-bold font-mono tracking-widest rounded-sm whitespace-nowrap" style="font-family: 'JetBrains Mono', monospace;">SCA @Model.Product.ScaScore.ToString("0.##")</span>
                 </div>
                 <div class="mb-3" id="main-product-price" data-base-usd="@Model.Product.BasePriceUSD" data-base-pen="@Model.Product.BasePricePEN">
@@ -91,36 +91,36 @@
                             <label class="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2 block">Size / Weight</label>
                             <div class="flex gap-2">
                                 <label class="cursor-pointer">
-                                    <input type="radio" name="weight-select" value="100g" checked class="peer sr-only" onchange="updateProductWeight('100g', 1)" />
+                                    <input type="radio" name="weight-select" value="100g" checked class="peer sr-only" onchange="updateProductWeight('100g')" />
                                     <div class="px-4 py-2 border border-black bg-transparent text-black peer-checked:bg-black peer-checked:text-white dark:border-[#D6D0C8] dark:text-[#D6D0C8] dark:peer-checked:bg-[#D6D0C8] dark:peer-checked:text-black transition-all font-bold text-xs font-mono">100g</div>
                                 </label>
                                 <label class="cursor-pointer">
-                                    <input type="radio" name="weight-select" value="200g" class="peer sr-only" onchange="updateProductWeight('200g', 2)" />
+                                    <input type="radio" name="weight-select" value="200g" class="peer sr-only" onchange="updateProductWeight('200g')" />
                                     <div class="px-4 py-2 border border-black bg-transparent text-black peer-checked:bg-black peer-checked:text-white dark:border-[#D6D0C8] dark:text-[#D6D0C8] dark:peer-checked:bg-[#D6D0C8] dark:peer-checked:text-black transition-all font-bold text-xs font-mono">200g</div>
                                 </label>
                                 <label class="cursor-pointer">
-                                    <input type="radio" name="weight-select" value="500g" class="peer sr-only" onchange="updateProductWeight('500g', 4.5)" />
+                                    <input type="radio" name="weight-select" value="500g" class="peer sr-only" onchange="updateProductWeight('500g')" />
                                     <div class="px-4 py-2 border border-black bg-transparent text-black peer-checked:bg-black peer-checked:text-white dark:border-[#D6D0C8] dark:text-[#D6D0C8] dark:peer-checked:bg-[#D6D0C8] dark:peer-checked:text-black transition-all font-bold text-xs font-mono">500g</div>
                                 </label>
                                 <label class="cursor-pointer">
-                                    <input type="radio" name="weight-select" value="1kg" class="peer sr-only" onchange="updateProductWeight('1kg', 8)" />
-                                    <div class="px-4 py-2 border border-black bg-transparent text-black peer-checked:bg-black peer-checked:text-white dark:border-[#D6D0C8] dark:text-[#D6D0C8] dark:peer-checked:bg-[#D6D0C8] dark:peer-checked:text-black transition-all font-bold text-xs font-mono flex flex-col items-center">
-                                        1kg <span class="text-[9px] text-[#FF6464] leading-none mt-1">-20%</span>
-                                    </div>
+                                    <input type="radio" name="weight-select" value="1kg" class="peer sr-only" onchange="updateProductWeight('1kg')" />
+                                    <div class="px-4 py-2 border border-black bg-transparent text-black peer-checked:bg-black peer-checked:text-white dark:border-[#D6D0C8] dark:text-[#D6D0C8] dark:peer-checked:bg-[#D6D0C8] dark:peer-checked:text-black transition-all font-bold text-xs font-mono">1kg</div>
                                 </label>
                             </div>
                         </div>
 
                         <script>
-                            function updateProductWeight(weightLabel, multiplier) {
+                            function updateProductWeight(weightLabel) {
                                 document.getElementById('product-selected-weight').value = weightLabel;
-                                
+                                const multipliers = { '100g': 1, '200g': 50 / 30, '500g': 4, '1kg': 200 / 30 };
+                                const multiplier = multipliers[weightLabel] || 1;
+
                                 const priceEl = document.getElementById('main-product-price');
                                 const baseUsd = parseFloat(priceEl.getAttribute('data-base-usd'));
                                 const basePen = parseFloat(priceEl.getAttribute('data-base-pen'));
-                                const newUsd = baseUsd * multiplier;
-                                const newPen = basePen * multiplier;
-                                
+                                const newUsd = Math.round(baseUsd * multiplier * 100) / 100;
+                                const newPen = Math.round(basePen * multiplier);
+
                                 document.getElementById('product-base-price').value = newUsd.toFixed(2);
 
                                 const dual = priceEl.querySelector('.yape-price');
@@ -205,7 +205,7 @@
         <!-- Moved Processing & Fact Sheet Section -->
         <div class="mb-24 flex flex-col md:flex-row gap-12 border-t border-gray-200 dark:border-dark-border pt-16" style="margin-bottom: 6rem; display: flex; gap: 3rem; border-top: 1px solid #e5e7eb; padding-top: 4rem;">
             <div class="w-full md:w-1/2">
-                <h4 class="font-grotesk text-2xl font-bold mb-6" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem;">About the Processing</h4>
+                <h4 class="font-grotesk text-2xl font-bold mb-6" style="font-family: 'Inter', sans-serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem;">About the Processing</h4>
                 <p class="font-sans text-gray-600 dark:text-gray-400 leading-relaxed" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="ProcessingDescription" style="font-family: 'Inter', sans-serif; color: #4b5563; line-height: 1.75;">
                     @{
                         var processDescFallback = Model.Product.Type == "Cacao"
@@ -284,7 +284,7 @@
                         <img src="@producerImageFallback" class="w-full h-full object-cover object-center grayscale hover:grayscale-0 transition-all duration-700" alt="@(string.IsNullOrEmpty(Model.Product.Producer) ? "Producer" : Model.Product.Producer)" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="ProducerImageUrl" style="width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%); transition: all 0.7s;" loading="lazy">
                     </div>
                     <div class="bg-[#1a3c2f] text-white p-12 h-full flex flex-col justify-center" style="background: #1a3c2f; color: white; padding: 3rem; height: 100%; display: flex; flex-direction: column; justify-content: center;">
-                        <h3 class="font-grotesk text-3xl font-bold mb-6" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.875rem; font-weight: 700; margin-bottom: 1.5rem;">About the Producers</h3>
+                        <h3 class="font-grotesk text-3xl font-bold mb-6" style="font-family: 'Inter', sans-serif; font-size: 1.875rem; font-weight: 700; margin-bottom: 1.5rem;">About the Producers</h3>
                         <p class="font-sans text-white/80 leading-relaxed mb-6" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="ProducerDescription" style="font-family: 'Inter', sans-serif; color: rgba(255,255,255,0.8); line-height: 1.75; margin-bottom: 1.5rem;">
                             @{
                                 var producerDescFallback = Model.Product.Type == "Cacao" || Model.Product.Name.Contains("Cacao")
@@ -308,7 +308,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-start" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 3rem; align-items: start;">
                     <div class="lab-card">
                         <span class="lab-title" style="border-bottom:none; margin-bottom: 4px; color: #FF6464; display: block; font-size: 8px;">02 // LABORATORY ANALYSIS</span>
-                        <h4 class="font-grotesk text-4xl font-bold mb-6" style="font-family: 'Space Grotesk', sans-serif; font-size: 2.25rem; font-weight: 700; margin-bottom: 1.5rem; letter-spacing: -0.02em;">Flavor<br><span class="text-gray-500 font-normal">Explorer.</span></h4>
+                        <h4 class="font-grotesk text-4xl font-bold mb-6" style="font-family: 'Inter', sans-serif; font-size: 2.25rem; font-weight: 700; margin-bottom: 1.5rem; letter-spacing: -0.02em;">Flavor<br><span class="text-gray-500 font-normal">Explorer.</span></h4>
                         <span class="lab-title">@(Model.Product.Type == "Cacao" ? "Sensory Profile" : "Bright & Fruity")</span>
                         <h5 class="text-xl font-bold mb-4 font-grotesk">@(Model.Product.FlavorProfile)</h5>
                         @{
@@ -372,7 +372,7 @@
                                 <!-- Sweet - Top Left -->
                                 <div class="flavor-label dark-text" data-entity-id="Product_@(Model.Product.Id)_FlavorWheelLabel4" data-entity-type="SiteContent" data-editable="Value" style="position: absolute; top: 25%; left: 25%; transform: translate(-50%, -50%); font-family: 'Inter', monospace; font-size: 0.8rem; text-transform: uppercase; font-weight: 700; color: #111; text-align: center; white-space: nowrap; z-index: 5; pointer-events: none;">@(Model.PageContent != null && Model.PageContent.ContainsKey($"Product_{Model.Product.Id}_FlavorWheelLabel4") ? Model.PageContent[$"Product_{Model.Product.Id}_FlavorWheelLabel4"] : "Sweet")</div>
                             }
-                            <div class="flavor-inner" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 120px; height: 120px; max-width: 40%; max-height: 40%; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-align: center; font-family: 'Space Grotesk', sans-serif; font-weight: bold; font-size: 0.8rem; z-index: 10; border: 1px solid #e5e7eb; box-shadow: none !important;">
+                            <div class="flavor-inner" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 120px; height: 120px; max-width: 40%; max-height: 40%; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-align: center; font-family: 'Inter', sans-serif; font-weight: bold; font-size: 0.8rem; z-index: 10; border: 1px solid #e5e7eb; box-shadow: none !important;">
                                 <div>
                                     <div class="text-[10px] text-gray-400 uppercase tracking-widest" data-entity-id="Product_@(Model.Product.Id)_FlavorIntensityLabel" data-entity-type="SiteContent" data-editable="Value" style="font-size: 10px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.1em;">@(Model.PageContent != null && Model.PageContent.ContainsKey($"Product_{Model.Product.Id}_FlavorIntensityLabel") ? Model.PageContent[$"Product_{Model.Product.Id}_FlavorIntensityLabel"] : (Model.Product.Type == "Cacao" ? "Intensity" : "Body"))</div>
                                     <div class="text-xl" data-entity-id="Product_@(Model.Product.Id)_FlavorIntensityValue" data-entity-type="SiteContent" data-editable="Value" style="font-size: 1.25rem;">@(Model.PageContent != null && Model.PageContent.ContainsKey($"Product_{Model.Product.Id}_FlavorIntensityValue") ? Model.PageContent[$"Product_{Model.Product.Id}_FlavorIntensityValue"] : (Model.Product.Type == "Cacao" ? "Rich" : "Medium"))</div>
@@ -388,11 +388,15 @@
                 <div class="flex flex-col md:flex-row gap-12 items-center w-full">
                     <a href="/OriginMap" class="map-container w-full md:w-1/2 aspect-[4/3] md:aspect-square overflow-hidden group relative flex items-center justify-center transition-all duration-300" style="display: flex; align-items: center; justify-content: center; text-decoration: none; cursor: pointer;">
                         @{
-                            var mapImageFallback = string.IsNullOrEmpty(Model.Product.MapImageUrl)
-                                ? "/Media/LaConvencionMap.svg"
-                                : Model.Product.MapImageUrl;
+                            var originText = Model.Product.Origin ?? "";
+                            var isCajamarcaLot = originText.Contains("Cajamarca", StringComparison.OrdinalIgnoreCase)
+                                || (Model.Product.Name ?? "").Contains("Cajamarca", StringComparison.OrdinalIgnoreCase)
+                                || (Model.Product.Name ?? "").Contains("Catarata", StringComparison.OrdinalIgnoreCase);
+                            var mapImageFallback = isCajamarcaLot
+                                ? "/images/maps/cajamarca-jaen.svg"
+                                : (string.IsNullOrWhiteSpace(Model.Product.MapImageUrl) ? "/Media/LaConvencionMap.svg" : Model.Product.MapImageUrl);
                         }
-                        <img src="@mapImageFallback" alt="Map" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="MapImageUrl" data-position-key="Product_@(Model.Product.Id)_MapImageUrl_Position" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" style="width: 100%; height: 100%; object-fit: cover; object-position: @(Model.PageContent != null && Model.PageContent.ContainsKey($"Product_{Model.Product.Id}_MapImageUrl_Position") ? Model.PageContent[$"Product_{Model.Product.Id}_MapImageUrl_Position"] : "50% 50%");" loading="lazy">
+                        <img src="@mapImageFallback" alt="@(isCajamarcaLot ? "Cajamarca coffee map — Jaén and San Ignacio" : "Map")" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="MapImageUrl" data-position-key="Product_@(Model.Product.Id)_MapImageUrl_Position" class="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105" style="width: 100%; height: 100%; object-fit: contain; object-position: @(Model.PageContent != null && Model.PageContent.ContainsKey($"Product_{Model.Product.Id}_MapImageUrl_Position") ? Model.PageContent[$"Product_{Model.Product.Id}_MapImageUrl_Position"] : "50% 50%");" loading="lazy">
                         <div class="absolute bottom-2 right-2 bg-black text-white px-3 py-1 font-mono text-xs opacity-0 group-hover:opacity-100 transition-opacity rounded-sm shadow pointer-events-none hidden md:block">Click for Interactive Map</div>
                     </a>
                     <div class="w-full md:w-1/2 pl-0 md:pl-12">
@@ -408,7 +412,7 @@
                                             : Model.Product.Origin;
                             var originCta = Model.Product.Origin.Contains("Cajamarca") ? "Explore Cajamarca" : "Explore Cusco Regions";
                         }
-                        <h4 class="font-grotesk text-2xl font-bold mb-4" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">
+                        <h4 class="font-grotesk text-2xl font-bold mb-4" style="font-family: 'Inter', sans-serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">
                             About @originTitle
                         </h4>
                         <p class="font-sans text-gray-600 dark:text-gray-400 mb-8" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="OriginDescription" style="font-family: 'Inter', sans-serif; color: #4b5563; margin-bottom: 2rem;">
@@ -421,6 +425,10 @@
                                 else if (Model.Product.Name.Contains("SL09"))
                                 {
                                     originDescFallback = "SL09 comes from La Convención province in Cusco, Peru's premier coffee-producing region. This area stretches from the high Andes to the edge of the Amazon rainforest, producing some of the world's finest organic coffee at altitudes between 1000-1600 meters.";
+                                }
+                                else if (isCajamarcaLot)
+                                {
+                                    originDescFallback = "Jaén and San Ignacio sit in Cajamarca, northern Peru — not a Cusco day trip. Farms here run from about 1,400 to over 2,000 msnm and produce the citric, high-grown cups Peru sends to competition.";
                                 }
                                 else
                                 {
@@ -440,7 +448,7 @@
     @if (Model.RelatedProducts.Any())
     {
         <section aria-label="Related Products" class="container-fluid px-6 py-12 border-t border-gray-200 dark:border-dark-border" style="max-width: 1400px; margin: 0 auto; padding: 3rem 1.5rem; border-top: 1px solid #e5e7eb;">
-            <h3 class="font-grotesk text-3xl font-bold mb-8 text-center" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.875rem; font-weight: 700; margin-bottom: 2rem; text-align: center;">Related Products</h3>
+            <h3 class="font-grotesk text-3xl font-bold mb-8 text-center" style="font-family: 'Inter', sans-serif; font-size: 1.875rem; font-weight: 700; margin-bottom: 2rem; text-align: center;">Related Products</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
                 @foreach (var product in Model.RelatedProducts.Take(6))
                 {
@@ -450,7 +458,7 @@
                                 <img src="@product.ImageUrl" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="@product.Name" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s;" loading="lazy">
                             </div>
                             <div class="p-6" style="padding: 1.5rem;">
-                                <h5 class="font-grotesk font-bold text-lg mb-2 group-hover:text-swiss-red transition-colors" style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.125rem; margin-bottom: 0.5rem; transition: color 0.3s;">@product.Name</h5>
+                                <h5 class="font-grotesk font-bold text-lg mb-2 group-hover:text-swiss-red transition-colors" style="font-family: 'Inter', sans-serif; font-weight: 700; font-size: 1.125rem; margin-bottom: 0.5rem; transition: color 0.3s;">@product.Name</h5>
                                 <p class="font-mono text-xs text-gray-500 mb-4" style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #6b7280; margin-bottom: 1rem;">@product.Origin</p>
                                 <div class="flex justify-between items-center border-t border-gray-200 dark:border-dark-border pt-4" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #e5e7eb; padding-top: 1rem;">
                                     <span class="font-bold text-lg" style="font-weight: 700; font-size: 1.125rem;">S/ @((product.Price * 3.8m).ToString("F2"))</span>
@@ -469,7 +477,7 @@
 else
 {
     <div class="container-fluid px-6 py-12 text-center" style="max-width: 1400px; margin: 0 auto; padding: 3rem 1.5rem; text-align: center;">
-        <h2 class="font-grotesk text-3xl font-bold mb-4" style="font-family: 'Space Grotesk', sans-serif; font-size: 1.875rem; font-weight: 700; margin-bottom: 1rem;">Product Not Found</h2>
+        <h2 class="font-grotesk text-3xl font-bold mb-4" style="font-family: 'Inter', sans-serif; font-size: 1.875rem; font-weight: 700; margin-bottom: 1rem;">Product Not Found</h2>
         <p class="font-sans text-gray-600 dark:text-gray-400 mb-8" style="font-family: 'Inter', sans-serif; color: #4b5563; margin-bottom: 2rem;">The product you're looking for doesn't exist or has been removed.</p>
         <a href="/Coffee" class="px-6 py-3 bg-charcoal dark:bg-white text-white dark:text-black font-mono text-xs uppercase hover:bg-swiss-red dark:hover:bg-gray-200 transition-colors inline-block" style="padding: 0.75rem 1.5rem; background: #111111; color: white; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; text-transform: uppercase; transition: background-color 0.3s; text-decoration: none;">Back to Coffee</a>
     </div>

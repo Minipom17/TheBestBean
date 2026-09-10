@@ -39,7 +39,7 @@ namespace TheBestBean.Pages
             if (Tour != null)
             {
                 RelatedTours = _context.Experiences
-                    .Where(t => t.Id != Tour.Id && t.Category == Tour.Category)
+                    .Where(t => t.Id != Tour.Id && t.Category == Tour.Category && t.Category != "Archived")
                     .Take(2)
                     .ToList();
 
@@ -187,6 +187,11 @@ namespace TheBestBean.Pages
             var title = tour.Title ?? string.Empty;
             if (title.Contains("Coffee Lab", StringComparison.OrdinalIgnoreCase)
                 || title.Contains("Coffee Laboratory", StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            if (title.Contains("Brew Your Own", StringComparison.OrdinalIgnoreCase))
             {
                 return true;
             }

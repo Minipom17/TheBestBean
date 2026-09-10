@@ -29,10 +29,12 @@
    TYPOGRAPHY UTILITIES
    ============================================ */
 .font-grotesk {
-    font-family: 'Space Grotesk', sans-serif !important;
+    font-family: 'Inter', sans-serif !important;
 }
 
-.font-mono {
+.font-mono,
+.font-mono-jb,
+.font-mono-tech {
     font-family: 'JetBrains Mono', 'Courier New', monospace !important;
 }
 

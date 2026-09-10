@@ -20,7 +20,14 @@
             var heroPos = Model.PageContent.GetValueOrDefault($"Tour_Hero_Pos_{Model.Tour.Id}", "50% 50%");
         }
         <div class="w-full aspect-[21/9] md:aspect-[3/1] bg-gray-100 dark:bg-[#1C191F] overflow-hidden rounded-3xl relative shadow-sm">
-             <img src="@Model.Tour.ImageUrl" alt="@Model.Tour.Title" class="absolute inset-0 w-full h-full object-cover" style="object-position: @heroPos;" data-entity-id="@Model.Tour.Id" data-entity-type="Experience" data-editable="ImageUrl" data-position-key="Tour_Hero_Pos_@Model.Tour.Id" />
+             @if (!string.IsNullOrWhiteSpace(Model.Tour.ImageUrl))
+             {
+                 <img src="@Model.Tour.ImageUrl" alt="@Model.Tour.Title" class="absolute inset-0 w-full h-full object-cover" style="object-position: @heroPos;" data-entity-id="@Model.Tour.Id" data-entity-type="Experience" data-editable="ImageUrl" data-position-key="Tour_Hero_Pos_@Model.Tour.Id" />
+             }
+             else
+             {
+                 <div class="absolute inset-0 flex items-center justify-center font-mono-jb text-[10px] font-bold uppercase tracking-widest text-v-gray">Photos soon</div>
+             }
         </div>
     </div>
 

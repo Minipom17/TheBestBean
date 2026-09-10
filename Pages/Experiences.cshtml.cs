@@ -21,7 +21,9 @@ namespace TheBestBean.Pages
 
         public async Task OnGetAsync()
         {
-            ExperiencesList = await _context.Experiences.ToListAsync();
+            ExperiencesList = await _context.Experiences
+                .Where(e => e.Category != "Archived")
+                .ToListAsync();
             PageContent = await _context.SiteContent.Where(c => c.Page == "Experiences").ToDictionaryAsync(c => c.Key, c => c.Value);
         }
     }

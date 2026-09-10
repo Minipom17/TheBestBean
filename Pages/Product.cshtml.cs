@@ -101,8 +101,18 @@ namespace TheBestBean.Pages
 
 
 
-        public IActionResult OnPostAddToCart(int productId, string productName, string productType, decimal price, string imageUrl, string description, int quantity = 1, string? purchaseType = null, string? subscriptionFrequency = null)
+        public IActionResult OnPostAddToCart(int productId, string productName, string productType, decimal price, string imageUrl, string description, int quantity = 1, string? purchaseType = null, string? subscriptionFrequency = null, string? weight = "100g")
         {
+            var bean = _context.CoffeeBean.Find(productId);
+            if (bean != null)
+            {
+                price = LocalPricing.CoffeeBagUsd(bean.ScaScore, weight);
+                if (!string.IsNullOrWhiteSpace(weight))
+                {
+                    productName = $"{productName} ({weight})";
+                }
+            }
+
             var finalPrice = price;
             var finalName = productName;
             var finalDesc = description;

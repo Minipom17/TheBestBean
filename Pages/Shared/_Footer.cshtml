@@ -1,35 +1,18 @@
-<footer class="mt-auto bg-v-white dark:bg-night-2 border-t border-v-light-gray dark:border-[rgba(214, 208, 200, 0.12)] text-v-black dark:text-cream py-8 px-6 md:px-12 font-mono-jb text-[10px] uppercase tracking-widest leading-loose">
-    <div class="max-w-[1600px] mx-auto w-full flex flex-col md:flex-row justify-between gap-16 md:gap-24">
-        
-        <!-- Left Side: Brand & Logistics -->
-        <div class="flex-1 max-w-2xl flex flex-col justify-between">
-            <div>
-            </div>
-
-            <div class="flex flex-col gap-2 font-bold max-w-xl">
-                <p><span class="text-v-gray">HQ:</span> CUSCO, PERU</p>
-                <p><span class="text-v-gray">SOURCING:</span> WE SOURCE MOST OF OUR COFFEE DIRECTLY FROM LA CONVENCIÓN (SANTA TERESA, ECHARATI, INCAWASI).</p>
-                <p><span class="text-v-gray">LOGISTICS:</span> WE DELIVER ANYWHERE IN CUSCO, LIMA, AND THROUGHOUT PERU.</p>
-            </div>
-            
-
+<footer class="site-footer mt-auto bg-v-white dark:bg-night-2 border-t border-v-light-gray dark:border-[rgba(214,208,200,0.12)] text-v-black dark:text-cream">
+    <div class="site-footer__inner">
+        <div class="site-footer__copy">
+            <p><span>HQ:</span> CUSCO, PERU</p>
+            <p><span>SOURCING:</span> WE SOURCE MOST OF OUR COFFEE DIRECTLY FROM LA CONVENCIÓN (SANTA TERESA, ECHARATI, INCAWASI).</p>
+            <p><span>LOGISTICS:</span> WE DELIVER ANYWHERE IN CUSCO, LIMA, AND THROUGHOUT PERU.</p>
         </div>
 
-        <!-- Right Side: Links -->
-        <div class="flex flex-col justify-between items-start md:items-end w-full md:w-auto">
-            <div class="grid grid-cols-2 gap-x-12 gap-y-6 font-bold">
-                <a asp-page="/GreenBeans" class="hover:text-v-gray transition-colors text-decoration-none border-b border-transparent hover:border-v-black dark:hover:border-sun">COFFEE</a>
-                <a asp-page="/About" class="hover:text-v-gray transition-colors text-decoration-none border-b border-transparent hover:border-v-black dark:hover:border-sun pb-1 border-v-black dark:border-cream">ABOUT THE LAB</a>
-                
-                <a asp-page="/Wholesale" class="hover:text-v-gray transition-colors text-decoration-none border-b border-transparent hover:border-v-black dark:hover:border-sun">WHOLESALE</a>
-                <a asp-page="/Experiences" class="hover:text-v-gray transition-colors text-decoration-none border-b border-transparent hover:border-v-black dark:hover:border-sun">EXPERIENCES</a>
-                
-                <a asp-page="/BrewGuides" class="hover:text-v-gray transition-colors text-decoration-none border-b border-transparent hover:border-v-black dark:hover:border-sun">BREW GUIDES</a>
-                <a asp-page="/Privacy" class="hover:text-v-gray transition-colors text-decoration-none border-b border-transparent hover:border-v-black dark:hover:border-sun">PRIVACY POLICY</a>
-            </div>
-
-
-        </div>
-
+        <nav class="site-footer__grid" aria-label="Footer">
+            <a asp-page="/GreenBeans">Coffee</a>
+            <a asp-page="/About">About the Lab</a>
+            <a asp-page="/Wholesale">Wholesale</a>
+            <a asp-page="/Experiences">Experiences</a>
+            <a asp-page="/BrewMethods">Brew Guides</a>
+            <a asp-page="/Resources">Resources</a>
+        </nav>
     </div>
 </footer>

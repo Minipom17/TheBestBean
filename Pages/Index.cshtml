@@ -20,11 +20,11 @@
             <!-- Glassmorphism Text Container -->
             <div class="max-w-xl mt-10">
                 <div class="bg-[#16A34A]/10 backdrop-blur-md p-4 mb-8">
-                    <h1 class="text-2xl md:text-3xl lg:text-4xl font-light tracking-tight text-white dark:text-cream mb-6 font-sans capitalize leading-tight" data-entity-id="Home_Hero_Title" data-entity-type="SiteContent" data-editable="Value">
+                    <h1 class="text-2xl md:text-3xl lg:text-4xl font-light tracking-tight text-white dark:text-cream mb-6 font-mono-jb capitalize leading-tight" data-entity-id="Home_Hero_Title" data-entity-type="SiteContent" data-editable="Value">
                         @Html.Raw(Model.PageContent.GetValueOrDefault("Home_Hero_Title", "Elevate Your Senses"))
                     </h1>
                     
-                    <p class="text-white dark:text-cream text-sm md:text-base leading-relaxed font-mono-jb font-extralight" data-entity-id="Home_Hero_Desc" data-entity-type="SiteContent" data-editable="Value">
+                    <p class="text-white dark:text-cream text-sm md:text-base leading-relaxed font-outfit" data-entity-id="Home_Hero_Desc" data-entity-type="SiteContent" data-editable="Value" style="font-family: 'Outfit', sans-serif; font-weight: 500;">
                         @Html.Raw(Model.PageContent.GetValueOrDefault("Home_Hero_Desc", "Unlock the wild, nuanced profiles born from the dramatic peaks of the Peruvian highlands. Grown in harmony with the mountains by our artisan farming families, every bean tells a story of extraordinary terroir. Sip the elevation at home, or join us on the mountain to live the magic behind the harvest."))
                     </p>
                 </div>
@@ -45,10 +45,10 @@
                     <h3 id="philosophy-heading" class="text-[10px] font-bold uppercase tracking-widest text-gray-800 dark:text-mist font-mono-jb">01 // PHILOSOPHY</h3>
                 </div>
                 <div class="lg:col-span-8">
-                    <p class="text-3xl md:text-5xl font-bold tracking-tight text-[#FF6464] dark:text-cream leading-[1.1] mb-8 font-sans" data-entity-id="Home_Philosophy_Title" data-entity-type="SiteContent" data-editable="Value">
+                    <p class="text-3xl md:text-5xl font-bold tracking-tight text-[#FF6464] dark:text-cream leading-[1.1] mb-8 font-mono-jb" data-entity-id="Home_Philosophy_Title" data-entity-type="SiteContent" data-editable="Value">
                         @Html.Raw(Model.PageContent.GetValueOrDefault("Home_Philosophy_Title", "We source and roast the finest coffees in <span class=\"border-b-4 border-white dark:border-cream\">Peru</span>."))
                     </p>
-                    <p class="text-gray-900 dark:text-mist text-base md:text-lg font-normal leading-relaxed max-w-2xl" data-entity-id="Home_Philosophy_Desc" data-entity-type="SiteContent" data-editable="Value">
+                    <p class="text-gray-900 dark:text-mist text-base md:text-lg font-normal leading-relaxed max-w-2xl font-grotesk" data-entity-id="Home_Philosophy_Desc" data-entity-type="SiteContent" data-editable="Value" style="font-family: 'Inter', sans-serif;">
                         @Html.Raw(Model.PageContent.GetValueOrDefault("Home_Philosophy_Desc", "Exploring the dynamic relationship between variety, altitude, and experimental post-harvest processing to showcase the inherent sweetness and vibrancy of the Andean coffee cherry."))
                     </p>
                 </div>
