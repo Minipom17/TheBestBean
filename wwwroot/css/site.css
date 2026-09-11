@@ -42,12 +42,12 @@ footer img.brand-logo {
 header .brand-wordmark,
 #mobile-nav-menu .brand-wordmark,
 footer .brand-wordmark {
-    font-family: 'Anton', sans-serif !important;
-    font-weight: 400 !important;
-    font-size: 1.25rem !important;
-    line-height: 0.85 !important;
-    letter-spacing: 0.02em !important;
-    text-transform: uppercase !important;
+    font-family: 'Ubuntu', sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 1.33rem !important;
+    line-height: 1 !important;
+    letter-spacing: -0.01em !important;
+    text-transform: lowercase !important;
     color: #3c1950 !important;
 }
 html.dark header .brand-wordmark,
@@ -636,6 +636,40 @@ html.dark .offerings-choose-prompt {
     color: #111;
     border-color: #111;
 }
+.tour-syllabus-details {
+    margin-top: 0.25rem;
+}
+.tour-syllabus-details__summary {
+    list-style: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0;
+    user-select: none;
+}
+.tour-syllabus-details__summary::-webkit-details-marker {
+    display: none;
+}
+.tour-syllabus-details__summary .tracking-widest {
+    letter-spacing: 0.15em;
+}
+.tour-syllabus-details__chevron {
+    width: 0.4rem;
+    height: 0.4rem;
+    border-right: 1.5px solid #8B8490;
+    border-bottom: 1.5px solid #8B8490;
+    transform: rotate(45deg);
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+}
+.tour-syllabus-details[open] .tour-syllabus-details__chevron {
+    transform: rotate(225deg);
+}
+.tour-syllabus-details__body {
+    max-width: 42rem;
+}
+
 .lab-recipe-dropdown {
     border: 1px solid #111;
     background: #fff;

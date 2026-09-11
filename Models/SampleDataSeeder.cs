@@ -817,6 +817,22 @@ namespace TheBestBean.Models
                 return row;
             }
 
+            var cynthiaTastingGallery = new List<string>
+            {
+                "/Media/experiences/tour-22/cynthia-hero.jpg?v=1",
+                "/Media/experiences/tour-22/cynthia-tasting-07.jpg",
+                "/Media/experiences/tour-22/cynthia-tasting-01.jpg",
+                "/Media/experiences/tour-22/cynthia-tasting-02.jpg",
+                "/Media/experiences/tour-22/cynthia-tasting-03.jpg",
+                "/Media/experiences/tour-22/cynthia-tasting-04.jpg",
+                "/Media/experiences/tour-22/cynthia-tasting-05.jpg",
+                "/Media/experiences/tour-22/cynthia-tasting-06.jpg",
+                "/Media/experiences/tour-22/cynthia-tasting-08.jpg",
+                "/Media/experiences/tour-22/cynthia-tasting-09.jpg",
+                "/Media/experiences/tour-22/cynthia-tasting-10.jpg",
+                "/Media/experiences/tour-22/cynthia-tasting-11.jpg"
+            };
+
             await UpsertWorkshopAsync("Tasting Hour", new Experience
             {
                 Title = "Peru Tasting Hour",
@@ -827,25 +843,25 @@ namespace TheBestBean.Models
                 Duration = "1 HOUR",
                 Price = 25,
                 Tag = "1 HOUR",
-                ImageUrl = odarGallery.ElementAtOrDefault(0) ?? "",
-                Description = "Sit down for an hour of conversation over coffee. We brew lots from around Peru for you — no gear, just tasting, talking, and comparing cups from different regions.",
-                DescriptionES = "Una hora de conversación y café. Preparamos lotes de distintas regiones del Perú; tú pruebas y hablamos. Sin equipo: el café se hace para ti.",
-                LongDescription = "The easy hour: you sit, we brew. Cups from different regions of Peru land in front of you while we talk altitude, process, and why one farm tastes nothing like the next. No grinding, no pouring — the coffee is made for you. Leave with a map of the country on your palate.",
-                LongDescriptionES = "La hora fácil: tú te sientas, nosotros preparamos. Llegan tazas de distintas regiones del Perú y hablamos de altitud, proceso y por qué una finca no sabe a la otra. El café se hace para ti.",
+                ImageUrl = "/Media/experiences/tour-22/cynthia-hero.jpg?v=1",
+                Description = "One hour of conversation over coffee. We brew lots from around Peru for you — sit, taste, compare regions, and talk. No gear required; the coffee is made for you.",
+                DescriptionES = "Una hora de conversación y café. Preparamos lotes de distintas regiones del Perú; tú pruebas, comparas y hablamos. Sin equipo: el café se hace para ti.",
+                LongDescription = "The tasting hour: you sit, we brew. Coffees from different regions of Peru land in front of you while we talk altitude, process, and why one farm tastes nothing like the next. No grinding, no pouring — just conversation and cups. Leave with a map of Peru on your palate.",
+                LongDescriptionES = "La hora de cata: te sientas, nosotros preparamos. Llegan tazas de distintas regiones del Perú y hablamos de altitud, proceso y terroir. El café se hace para ti.",
                 Syllabus = new List<string>
                 {
-                    "Welcome: conversation — Peru is not one coffee",
-                    "Around the country: we brew, you taste and compare",
-                    "Close: favorite lot, what to buy, questions"
+                    "Welcome: conversation at the table — Peru is not one coffee (10 min)||At Cinthya's tasting room we start with orientation, not a lecture. Peru spans desert coast, Amazon jungle, and Andean peaks above 2,000m — each zone produces something different. We talk through altitude, variety, and processing in plain language so the first cup makes sense before you sip.",
+                    "Tasting flight: we brew, you taste — cups from across the country (40 min)||You stay seated; we prepare several brewed cups while the conversation continues. Smell the steam, taste side by side, and compare acidity, sweetness, and body. Lots from Cusco, the north, and the east land in front of you — notice how different \"Peruvian coffee\" can be when the region changes. No grinding or pouring on your side: the coffee is made for you.",
+                    "Close: your favorite lot, what to take home, questions (10 min)||Name the cup you liked best, ask what to buy for home or at our shop, and leave with a simple mental map of Peru on your palate. Cinthya can point you toward beans that match what you tasted."
                 },
                 ProvidedEquipment = new List<string>
                 {
-                    "Coffees from around Peru, brewed for you",
-                    "Guided tasting conversation",
-                    "Water and a quiet table"
+                    "Coffees from around Peru, brewed for you at Cinthya's table",
+                    "Guided tasting conversation with a Q grader",
+                    "Water, cups, and a quiet seat — no gear required"
                 },
                 RequiredGear = new List<string>(),
-                GalleryImages = odarGallery.Take(2).ToList()
+                GalleryImages = cynthiaTastingGallery
             });
 
             await UpsertWorkshopAsync("Brew Your Own", new Experience
@@ -858,16 +874,16 @@ namespace TheBestBean.Models
                 Duration = "1 HOUR",
                 Price = 25,
                 Tag = "1 HOUR",
-                ImageUrl = odarGallery.ElementAtOrDefault(4) ?? odarGallery.ElementAtOrDefault(0) ?? "",
-                Description = "An hour on the bar. We explain roast levels and brew ratios, hand you a recipe, then you brew it yourself — and run it again to sharpen your technique.",
-                DescriptionES = "Una hora en la barra. Explicamos tuestes y ratios, te damos una receta, preparas tu taza y afinamos la técnica.",
-                LongDescription = "Hands-on hour. We start with why a light roast and a more developed roast need different water and grind, then lock a ratio. You get a written recipe and brew it yourself. We watch the pour, adjust, and you brew a second time so your technique is better when you leave.",
-                LongDescriptionES = "Hora práctica. Empezamos con por qué un tueste claro y uno más desarrollado piden distinta agua y molienda, y fijamos un ratio. Te damos la receta, preparas tu taza, y la repetimos para mejorar la técnica.",
+                ImageUrl = "/Media/experiences/tour-22/cynthia-tasting-06.jpg?v=1",
+                Description = "An hour on the bar — you prepare your own coffee. We explain roast levels and brew ratios, give you a recipe, then you brew it and run it again to sharpen your technique.",
+                DescriptionES = "Una hora en la barra: tú preparas tu café. Explicamos tuestes y ratios, te damos una receta, preparas tu taza y afinamos la técnica.",
+                LongDescription = "Hands-on hour on the brew bar. We explain how light roast and more developed roast need different water and grind, lock a ratio, and hand you a written recipe. You brew your own cup, we watch the pour and adjust together, then you brew a second time so your technique is better when you leave.",
+                LongDescriptionES = "Hora práctica en la barra. Explicamos tueste claro vs desarrollado, agua y molienda, fijamos un ratio y te damos la receta. Preparas tu taza, afinamos juntos y repites para mejorar la técnica.",
                 Syllabus = new List<string>
                 {
-                    "Roast & ratio: light vs developed, water, grind, and the recipe we give you",
-                    "You brew: prepare your own cup from that recipe",
-                    "Technique: second pass — pour, timing, and what to change at home"
+                    "Roast & ratio: light vs developed — water, grind, and your written recipe (15 min)||Why a light roast and a more developed roast need different extraction. We set grind, water temperature, and ratio, then give you a recipe card to follow on the bar.",
+                    "You brew: prepare your own cup from that recipe (25 min)||You take the brewer, dose, and pour. We coach timing, bloom, and pour pattern while you make the cup yourself — this is the hour where you work the bar, not us.",
+                    "Technique: second pass — improve pour, timing, and what to change at home (20 min)||You brew again with adjustments. We compare both cups and leave you with clear notes on what to change when you brew at home or in a hotel."
                 },
                 ProvidedEquipment = new List<string>
                 {
@@ -876,7 +892,7 @@ namespace TheBestBean.Models
                     "Coffee to brew and to take notes on"
                 },
                 RequiredGear = new List<string>(),
-                GalleryImages = odarGallery.Skip(4).Take(1).ToList()
+                GalleryImages = new List<string> { "/Media/experiences/tour-22/cynthia-tasting-06.jpg?v=1", "/Media/experiences/tour-22/cynthia-tasting-05.jpg?v=1" }
             });
 
             await UpsertWorkshopAsync("Introduction to Cupping", new Experience
@@ -889,17 +905,17 @@ namespace TheBestBean.Models
                 Duration = "1 HOUR",
                 Price = 25,
                 Tag = "1 HOUR",
-                ImageUrl = odarGallery.ElementAtOrDefault(3) ?? odarGallery.ElementAtOrDefault(1) ?? "",
-                Description = "Four rounds of cupping in one hour. We start with how to smell — crack the crust, steam, nose — then four coffees: a basic 81, two specialty lots around 85 and 86–87, and one super lot.",
-                DescriptionES = "Cuatro rondas de catación en una hora. Primero cómo oler; luego cuatro cafés: un 81 básico, dos especialidad (~85 y 86–87) y un súper lote.",
-                LongDescription = "A first cupping, paced for travelers. We open with how to smell: break the crust, use the steam, and wake up the nose before any sip. Then four coffees in four rounds — an 81-point everyday cup, two specialty lots (about 85 and 86–87), and one super coffee so you feel the jump. Same protocol each round: smell, slurp, score what you can, talk.",
-                LongDescriptionES = "Primera catación, a ritmo de viajero. Abrimos con el olfato: romper la costra, usar el vapor, despertar la nariz. Luego cuatro cafés: un 81 cotidiano, dos de especialidad (~85 y 86–87) y un súper café. Misma pauta en cada ronda: oler, sorber, anotar, hablar.",
+                ImageUrl = "/Media/experiences/tour-22/cynthia-tasting-01.jpg?v=1",
+                Description = "Four rounds of cupping in one hour. We teach you how to smell — crack the crust, use the steam, wake up your senses — then taste four coffees: an 81-point baseline, two specialty lots (~85 and 86–87), and one super lot.",
+                DescriptionES = "Cuatro rondas de catación en una hora. Cómo oler — romper la costra, usar el vapor — y cuatro cafés: un 81 básico, dos de especialidad (~85 y 86–87) y un súper lote.",
+                LongDescription = "Your first cupping, paced for travelers. We open with smell: break the crust, use the steam, and activate your senses before any sip. Then four coffees in four rounds — an 81-point everyday cup as baseline, two specialty lots around 85 and 86–87, and one super coffee so you feel the jump in quality. Same protocol each round: smell, slurp, note what you taste, talk.",
+                LongDescriptionES = "Primera catación a ritmo de viajero. Abrimos con el olfato: romper la costra, usar el vapor, activar los sentidos. Luego cuatro cafés: un 81 cotidiano, dos de especialidad (~85 y 86–87) y un súper café. Misma pauta: oler, sorber, anotar, hablar.",
                 Syllabus = new List<string>
                 {
-                    "Smell first: how to smell, crack the crust, activate the senses",
-                    "Round 1: the 81-point cup — everyday coffee as a baseline",
-                    "Rounds 2–3: specialty lots around 85 and 86–87",
-                    "Round 4: the super coffee — what a high score tastes like"
+                    "Smell first: crack the crust, use the steam, activate your senses (10 min)||Before any slurp we teach how to smell coffee properly — break the crust, lean in to the steam, and wake up your nose. This is the foundation for every round that follows.",
+                    "Round 1: the 81-point cup — everyday coffee as a baseline (12 min)||Your first scored coffee is a solid everyday lot around 81 points. Learn the cupping protocol: smell dry and wet, slurp, and note acidity, body, and sweetness without overthinking it.",
+                    "Rounds 2–3: specialty lots around 85 and 86–87 (25 min)||Two higher-scoring coffees side by side. Notice how clarity, sweetness, and complexity jump compared to the baseline — we talk through what changed on the farm and in the roast.",
+                    "Round 4: the super coffee — what a high score tastes like (13 min)||One exceptional lot to finish. Feel the gap between good, specialty, and truly standout coffee. Close with questions and what to look for when buying beans."
                 },
                 ProvidedEquipment = new List<string>
                 {
@@ -908,7 +924,12 @@ namespace TheBestBean.Models
                     "Four coffees: 81 · ~85 · 86–87 · super lot"
                 },
                 RequiredGear = new List<string>(),
-                GalleryImages = odarGallery.Skip(1).Take(3).ToList()
+                GalleryImages = new List<string>
+                {
+                    "/Media/experiences/tour-22/cynthia-tasting-01.jpg?v=1",
+                    "/Media/experiences/tour-22/cynthia-tasting-02.jpg?v=1",
+                    "/Media/experiences/tour-22/cynthia-tasting-03.jpg?v=1"
+                }
             });
 
             await UpsertWorkshopAsync("Odar", new Experience
@@ -972,14 +993,20 @@ namespace TheBestBean.Models
                 GalleryImages = new List<string>()
             });
 
+            // Cinthya Lab (2.5hr) archived — the three 1-hour workshops above are the distinct offerings.
+            var cinthyaLab = await _context.Experiences.FirstOrDefaultAsync(e => e.Title == "Cinthya Lab [V60, Espresso & Cupping]");
+            if (cinthyaLab != null)
+            {
+                cinthyaLab.Category = "Archived";
+            }
+
             var keep = new[]
             {
                 "Peru Tasting Hour",
                 "Brew Your Own",
                 "Introduction to Cupping",
                 "The Cusco Coffee Laboratory",
-                "Odar Lab [Sensory & Roast]",
-                "Cinthya Lab [V60, Espresso & Cupping]"
+                "Odar Lab [Sensory & Roast]"
             };
             var extras = await _context.Experiences
                 .Where(e => (e.Category == "Urban Workshops" || e.Category == "Urban Labs") && !keep.Contains(e.Title))
