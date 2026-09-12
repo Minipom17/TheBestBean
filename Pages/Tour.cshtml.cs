@@ -115,7 +115,7 @@ namespace TheBestBean.Pages
             var listing = new Dictionary<string, object?>
             {
                 ["@context"] = "https://schema.org",
-                ["@type"] = new[] { "TouristAttraction", "Service" },
+                ["@type"] = new[] { "Service", "EducationEvent" },
                 ["name"] = tour.Title,
                 ["description"] = description,
                 ["image"] = images,
