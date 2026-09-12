@@ -738,6 +738,12 @@ html.dark .offerings-choose-prompt {
     width: 100% !important;
     max-width: 100% !important;
     aspect-ratio: 1 / 1;
+    isolation: isolate;
+    transform: translateZ(0);
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
 }
 .tour-venue-map__frame iframe {
     display: block;
@@ -746,6 +752,12 @@ html.dark .offerings-choose-prompt {
     width: 100%;
     height: 100%;
     min-height: 0;
+    border: 0;
+    outline: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
 }
 @media (min-width: 768px) {
     .tour-venue-map {
