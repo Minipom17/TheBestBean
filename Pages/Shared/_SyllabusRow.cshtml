@@ -1,54 +1,40 @@
 @model SyllabusItem
 
 <div class="syllabus-row">
-@if (!string.IsNullOrWhiteSpace(Model.DetailBody))
-{
-    <details class="tour-syllabus-details w-full group">
-        <summary class="tour-syllabus-details__summary w-full flex items-center flex-wrap gap-y-1">
+    <div class="syllabus-row__top">
+        <div class="syllabus-row__lead">
             <span class="tour-syllabus-label">@Model.Label:</span>
-            <span class="syllabus-module-title mr-auto">
-                @if (!string.IsNullOrWhiteSpace(Model.Title))
-                {
-                    <span class="syllabus-module-title__name">@Model.Title</span>
-                }
-                @if (!string.IsNullOrWhiteSpace(Model.Time))
-                {
-                    <span class="syllabus-module-title__time">@Model.Time</span>
-                }
-            </span>
-            <div class="flex items-center ml-4 gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
-                <span class="exp-filter-label m-0" style="width: auto; flex: none;">details</span>
-                <span class="tour-syllabus-details__chevron" aria-hidden="true"></span>
-            </div>
-        </summary>
-        <div class="tour-syllabus-details__body text-sm text-v-gray leading-relaxed font-normal pt-2">
-            @Html.Raw(Model.DetailBody)
-        </div>
-    </details>
-}
-else
-{
-    <div class="w-full flex items-center flex-wrap gap-y-1">
-        <span class="tour-syllabus-label">@Model.Label:</span>
-        <span class="syllabus-module-title">
-            @if (!string.IsNullOrWhiteSpace(Model.Title))
-            {
-                <span class="syllabus-module-title__name">@Model.Title</span>
-            }
             @if (!string.IsNullOrWhiteSpace(Model.Time))
             {
                 <span class="syllabus-module-title__time">@Model.Time</span>
             }
-        </span>
-    </div>
-}
-@if (Model.Tags.Count > 0)
-{
-    <ul class="syllabus-tags">
-        @foreach (var tag in Model.Tags)
+        </div>
+        @if (!string.IsNullOrWhiteSpace(Model.DetailBody))
         {
-            <li class="syllabus-tag">@tag</li>
+            <details class="tour-syllabus-details syllabus-row__details">
+                <summary class="tour-syllabus-details__summary syllabus-row__details-btn">
+                    <span class="exp-filter-label m-0" style="width: auto; flex: none;">details</span>
+                    <span class="tour-syllabus-details__chevron" aria-hidden="true"></span>
+                </summary>
+                <div class="tour-syllabus-details__body text-sm text-v-gray leading-relaxed font-normal pt-2">
+                    @Html.Raw(Model.DetailBody)
+                </div>
+            </details>
         }
-    </ul>
-}
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(Model.Title))
+    {
+        <p class="syllabus-module-title__name">@Model.Title</p>
+    }
+
+    @if (Model.Tags.Count > 0)
+    {
+        <ul class="syllabus-tags">
+            @foreach (var tag in Model.Tags)
+            {
+                <li class="syllabus-tag">@tag</li>
+            }
+        </ul>
+    }
 </div>
