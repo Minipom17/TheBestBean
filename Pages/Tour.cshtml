@@ -216,14 +216,14 @@
                 <div>
                     <h2 class="text-2xl font-bold tracking-tight text-v-black dark:text-[#D6D0C8] mb-8">Syllabus & Timeline</h2>
                     
-                    <div class="flex flex-col relative pl-2">
-                        <div class="absolute left-[11px] top-2 bottom-2 w-px bg-gray-200 dark:bg-[#2A262C]"></div>
+                    <div class="tour-syllabus-timeline">
+                        <div class="tour-syllabus-timeline__line" aria-hidden="true"></div>
                         @for (int i = 0; i < Model.Tour.Syllabus.Count; i++)
                         {
                             var syllabusRow = SyllabusParser.Parse(Model.Tour.Syllabus[i], i);
 
-                            <div class="relative pl-8 pb-10 last:pb-0">
-                                <div class="absolute -left-0.5 top-1.5 w-2.5 h-2.5 bg-v-black dark:bg-[#D6D0C8] rounded-full shadow-[0_0_0_4px_white] dark:shadow-[0_0_0_4px_#121014]"></div>
+                            <div class="tour-syllabus-timeline__item">
+                                <div class="tour-syllabus-timeline__dot" aria-hidden="true"></div>
                                 <partial name="_SyllabusRow" model="syllabusRow" />
                             </div>
                         }
