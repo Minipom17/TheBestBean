@@ -44,7 +44,7 @@ public static class ExperienceVenue
             || title.Contains("Cynthia", StringComparison.OrdinalIgnoreCase)
             || title.Contains("Peru Tasting", StringComparison.OrdinalIgnoreCase))
         {
-            return new Venue("Cusco City", "Calle Santa Teresa", "in front of the SUNAT", -13.51612, -71.98120);
+            return new Venue("Cusco City", "Calle Santa Teresa 365", "in front of the SUNAT", -13.51612, -71.98120);
         }
 
         var category = experience.Category ?? string.Empty;
