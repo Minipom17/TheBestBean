@@ -839,25 +839,25 @@ namespace TheBestBean.Models
                 TitleES = "Hora de cata del Perú",
                 Location = "Cusco",
                 Month = "Year-round",
-                Difficulty = "Beginner",
+                Difficulty = "All Levels",
                 Duration = "1 HOUR",
                 Price = 25,
                 Tag = "1 HOUR",
                 ImageUrl = "/Media/experiences/tour-22/cynthia-hero.jpg?v=1",
-                Description = "One hour of conversation over coffee. We brew lots from around Peru for you — sit, taste, compare regions, and talk. No gear required; the coffee is made for you.",
-                DescriptionES = "Una hora de conversación y café. Preparamos lotes de distintas regiones del Perú; tú pruebas, comparas y hablamos. Sin equipo: el café se hace para ti.",
-                LongDescription = "The tasting hour: you sit, we brew. Coffees from different regions of Peru land in front of you while we talk altitude, process, and why one farm tastes nothing like the next. No grinding, no pouring — just conversation and cups. Leave with a map of Peru on your palate.",
-                LongDescriptionES = "La hora de cata: te sientas, nosotros preparamos. Llegan tazas de distintas regiones del Perú y hablamos de altitud, proceso y terroir. El café se hace para ti.",
+                Description = "One hour with Cynthia and Pavel. She leads the sensory side (cupping, roast); he brews V60. Sit, taste, and learn how variety and process — washed, natural, honey — change the cup. All levels; coffee is made for you.",
+                DescriptionES = "Una hora con Cynthia y Pavel. Ella lleva lo sensorial (catación, tueste); él prepara V60. Pruebas y aprendes cómo la variedad y el proceso — lavado, natural, honey — cambian la taza. Todos los niveles; el café se hace para ti.",
+                LongDescription = "Hosted by Cynthia, roastmaster and cupping specialist, and Pavel, V60 pour-over. You sit; they brew. Cups from around Peru — different varieties and processes — land in front of you while you talk altitude, washed vs natural vs honey, and what those words actually taste like. First specialty cup or already deep in coffee: the conversation meets you there. You leave able to read a bag and know what you like.",
+                LongDescriptionES = "Con Cynthia, tostadora y especialista en catación, y Pavel, maestro de V60. Tú te sientas; ellos preparan. Tazas de distintas regiones, variedades y procesos: lavado, natural, honey. Principiante o avanzado: la conversación se adapta. Sales sabiendo leer un empaque y reconocer lo que te gusta.",
                 Syllabus = new List<string>
                 {
-                    "Welcome: conversation at the table — Peru is not one coffee (10 min)||At Cinthya's tasting room we start with orientation, not a lecture. Peru spans desert coast, Amazon jungle, and Andean peaks above 2,000m — each zone produces something different. We talk through altitude, variety, and processing in plain language so the first cup makes sense before you sip.",
-                    "Tasting flight: we brew, you taste — cups from across the country (40 min)||You stay seated; we prepare several brewed cups while the conversation continues. Smell the steam, taste side by side, and compare acidity, sweetness, and body. Lots from Cusco, the north, and the east land in front of you — notice how different \"Peruvian coffee\" can be when the region changes. No grinding or pouring on your side: the coffee is made for you.",
-                    "Close: your favorite lot, what to take home, questions (10 min)||Name the cup you liked best, ask what to buy for home or at our shop, and leave with a simple mental map of Peru on your palate. Cinthya can point you toward beans that match what you tasted."
+                    "Welcome: Cynthia & Pavel — Peru is not one coffee (10 min)||<ul class=\"tour-syllabus-points\"><li>Cynthia (cupping and roast) and Pavel (V60) open the hour together.</li><li>Peru runs from desert coast to Amazon jungle to peaks above 2,000m — so variety, altitude, and process actually show up in the cup.</li><li>We set that frame before the first sip, whether this is your first specialty coffee or you already know the map.</li></ul>||Bourbon, Geisha, Typica, Altitude, Terroir",
+                    "Tasting flight: process & variety side by side (40 min)||<ul class=\"tour-syllabus-points\"><li>Pavel brews; you stay seated.</li><li>Cups from different regions, varieties, and processes land in front of you.</li><li>You learn what makes washed coffee distinct from natural and honey — acidity, fruit, cleanliness, funk — and how long versus short fermentation changes flavor.</li><li>Fragrance on the dry grounds, then aroma once the coffee is wet. Taste side by side: sweetness, acidity, body.</li></ul>||Washed, Natural, Honey, Long fermentation, Short fermentation, Fragrance, Aroma, V60",
+                    "Close: your palate, the next bag (10 min)||<ul class=\"tour-syllabus-points\"><li>Pick the cup you liked most.</li><li>Together we name why — sweetness, acidity, body — so you leave knowing what your palate leans toward.</li><li>Next time you pick up a coffee bag, variety and process on the label will point you at coffee you actually like.</li></ul>||Palate, Flavor notes, Reading a bag"
                 },
                 ProvidedEquipment = new List<string>
                 {
-                    "Coffees from around Peru, brewed for you at Cinthya's table",
-                    "Guided tasting conversation with a Q grader",
+                    "Coffees from around Peru, brewed for you — Cynthia and Pavel at the table",
+                    "Guided tasting: cupping language with a Q grader, V60 with Pavel",
                     "Water, cups, and a quiet seat — no gear required"
                 },
                 RequiredGear = new List<string>(),
@@ -874,7 +874,7 @@ namespace TheBestBean.Models
                 Duration = "1 HOUR",
                 Price = 25,
                 Tag = "1 HOUR",
-                ImageUrl = "/Media/experiences/tour-22/cynthia-tasting-06.jpg?v=1",
+                ImageUrl = "/Media/experiences/tour-25/cynthia-brew-01.webp?v=2",
                 Description = "An hour on the bar — you prepare your own coffee. We explain roast levels and brew ratios, give you a recipe, then you brew it and run it again to sharpen your technique.",
                 DescriptionES = "Una hora en la barra: tú preparas tu café. Explicamos tuestes y ratios, te damos una receta, preparas tu taza y afinamos la técnica.",
                 LongDescription = "Hands-on hour on the brew bar. We explain how light roast and more developed roast need different water and grind, lock a ratio, and hand you a written recipe. You brew your own cup, we watch the pour and adjust together, then you brew a second time so your technique is better when you leave.",
@@ -892,8 +892,23 @@ namespace TheBestBean.Models
                     "Coffee to brew and to take notes on"
                 },
                 RequiredGear = new List<string>(),
-                GalleryImages = new List<string> { "/Media/experiences/tour-22/cynthia-tasting-06.jpg?v=1", "/Media/experiences/tour-22/cynthia-tasting-05.jpg?v=1" }
+                GalleryImages = new List<string>
+                {
+                    "/Media/experiences/tour-25/cynthia-brew-01.webp?v=2",
+                    "/Media/experiences/tour-25/cynthia-brew-02.webp?v=2",
+                    "/Media/experiences/tour-25/cynthia-brew-03.webp?v=2"
+                }
             });
+
+            var cynthiaCuppingGallery = new List<string>
+            {
+                "/Media/experiences/tour-26/cynthia-cupping-01.webp?v=2",
+                "/Media/experiences/tour-26/cynthia-cupping-02.webp?v=2",
+                "/Media/experiences/tour-26/cynthia-cupping-03.webp?v=2",
+                "/Media/experiences/tour-26/cynthia-cupping-04.webp?v=2",
+                "/Media/experiences/tour-26/cynthia-cupping-05.webp?v=2",
+                "/Media/experiences/tour-26/cynthia-cupping-06.webp?v=2"
+            };
 
             await UpsertWorkshopAsync("Introduction to Cupping", new Experience
             {
@@ -905,7 +920,7 @@ namespace TheBestBean.Models
                 Duration = "1 HOUR",
                 Price = 25,
                 Tag = "1 HOUR",
-                ImageUrl = "/Media/experiences/tour-22/cynthia-tasting-01.jpg?v=1",
+                ImageUrl = "/Media/experiences/tour-26/cynthia-cupping-01.webp?v=2",
                 Description = "Four rounds of cupping in one hour. We teach you how to smell — crack the crust, use the steam, wake up your senses — then taste four coffees: an 81-point baseline, two specialty lots (~85 and 86–87), and one super lot.",
                 DescriptionES = "Cuatro rondas de catación en una hora. Cómo oler — romper la costra, usar el vapor — y cuatro cafés: un 81 básico, dos de especialidad (~85 y 86–87) y un súper lote.",
                 LongDescription = "Your first cupping, paced for travelers. We open with smell: break the crust, use the steam, and activate your senses before any sip. Then four coffees in four rounds — an 81-point everyday cup as baseline, two specialty lots around 85 and 86–87, and one super coffee so you feel the jump in quality. Same protocol each round: smell, slurp, note what you taste, talk.",
@@ -924,12 +939,7 @@ namespace TheBestBean.Models
                     "Four coffees: 81 · ~85 · 86–87 · super lot"
                 },
                 RequiredGear = new List<string>(),
-                GalleryImages = new List<string>
-                {
-                    "/Media/experiences/tour-22/cynthia-tasting-01.jpg?v=1",
-                    "/Media/experiences/tour-22/cynthia-tasting-02.jpg?v=1",
-                    "/Media/experiences/tour-22/cynthia-tasting-03.jpg?v=1"
-                }
+                GalleryImages = cynthiaCuppingGallery
             });
 
             await UpsertWorkshopAsync("Odar", new Experience
@@ -992,6 +1002,23 @@ namespace TheBestBean.Models
                 RequiredGear = new List<string>(),
                 GalleryImages = new List<string>()
             });
+
+            async Task UpsertTourSiteContentAsync(string key, string value)
+            {
+                var row = await _context.SiteContent.FirstOrDefaultAsync(c => c.Key == key);
+                if (row == null)
+                {
+                    _context.SiteContent.Add(new SiteContent { Key = key, Value = value, Page = "Tour" });
+                }
+                else
+                {
+                    row.Value = value;
+                    row.Page = "Tour";
+                }
+            }
+
+            await UpsertTourSiteContentAsync("Tour_Hero_Image_26", "/Media/experiences/tour-26/cynthia-cupping-06.webp?v=2");
+            await UpsertTourSiteContentAsync("Tour_Hero_Pos_26", "50% 40%");
 
             // Cinthya Lab (2.5hr) archived — the three 1-hour workshops above are the distinct offerings.
             var cinthyaLab = await _context.Experiences.FirstOrDefaultAsync(e => e.Title == "Cinthya Lab [V60, Espresso & Cupping]");

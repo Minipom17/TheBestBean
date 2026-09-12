@@ -118,6 +118,50 @@ document.addEventListener('DOMContentLoaded', () => {
             overlay.appendChild(adjustBtn);
         }
 
+        const isGallery = imgEl.getAttribute('data-editable')?.startsWith('GalleryImage_');
+        if (isGallery) {
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'flex items-center gap-2 text-white font-bold cursor-pointer hover:text-red-500 transition-colors border border-white px-4 py-2 rounded-md hover:bg-white/20 bg-black/50 backdrop-blur-sm';
+            removeBtn.innerHTML = '<i class="bi bi-trash"></i> Remove Image';
+            removeBtn.onclick = async (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                if (confirm('Are you sure you want to remove this image? This will be saved immediately.')) {
+                    const entityType = imgEl.getAttribute('data-entity-type');
+                    const entityId = imgEl.getAttribute('data-entity-id');
+                    const field = imgEl.getAttribute('data-editable');
+                    
+                    const csrfToken = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
+                    
+                    try {
+                        const response = await fetch('/api/cms/update', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'RequestVerificationToken': csrfToken
+                            },
+                            body: JSON.stringify([{
+                                entityType: entityType,
+                                entityId: entityId,
+                                field: field,
+                                value: 'REMOVE'
+                            }])
+                        });
+                        
+                        if (response.ok) {
+                            window.location.reload();
+                        } else {
+                            alert('Failed to remove image.');
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        alert('Remove error.');
+                    }
+                }
+            };
+            overlay.appendChild(removeBtn);
+        }
+
         parent.appendChild(overlay);
 
         overlay.onclick = (e) => {
@@ -150,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 
                 cropperInstance = new Cropper(imageTarget, {
-                    viewMode: 1,
+                    viewMode: 0,
                     autoCropArea: 1,
                     background: false
                 });
@@ -278,21 +322,33 @@ document.addEventListener('DOMContentLoaded', () => {
         overlay.style.display = 'none';
         
         const doneBtn = document.createElement('button');
-        doneBtn.textContent = 'Save Position';
+        doneBtn.textContent = 'Save Position & Zoom';
         doneBtn.className = 'absolute bottom-4 right-4 bg-v-green text-white font-bold px-4 py-2 rounded-md shadow-lg z-50 cursor-pointer hover:bg-green-600 transition-colors';
         parent.appendChild(doneBtn);
         
+        // Add zoom hint
+        const hint = document.createElement('div');
+        hint.textContent = 'Drag to pan, scroll to zoom';
+        hint.className = 'absolute top-4 left-4 bg-black/70 text-white text-xs px-3 py-1 rounded shadow-lg z-50 pointer-events-none';
+        parent.appendChild(hint);
+
         let isDragging = false;
         let startX, startY;
         
-        let currentPos = window.getComputedStyle(imgEl).objectPosition || '50% 50%';
-        let parts = currentPos.split(' ');
+        let savedPos = imgEl.getAttribute('data-saved-pos') || '50% 50% 1.0';
+        let parts = savedPos.split(' ');
         let posX = parseFloat(parts[0]);
         let posY = parseFloat(parts[1]);
+        let scale = parts.length > 2 ? parseFloat(parts[2]) : 1.0;
+        
         if (isNaN(posX)) posX = 50;
         if (isNaN(posY)) posY = 50;
+        if (isNaN(scale)) scale = 1.0;
         
         imgEl.style.cursor = 'move';
+        // Initialize position explicitly
+        imgEl.style.objectPosition = `${posX}% ${posY}%`;
+        imgEl.style.transform = `scale(${scale})`;
         
         const onMouseDown = (e) => {
             isDragging = true;
@@ -309,9 +365,9 @@ document.addEventListener('DOMContentLoaded', () => {
             startY = e.clientY;
             
             const rect = parent.getBoundingClientRect();
-            // Sensitivity multiplier, 1.5 feels more natural than 1.0
-            const moveX = (deltaX / rect.width) * 150;
-            const moveY = (deltaY / rect.height) * 150;
+            // Adjust sensitivity based on scale
+            const moveX = (deltaX / rect.width) * (150 / scale);
+            const moveY = (deltaY / rect.height) * (150 / scale);
             
             posX -= moveX;
             posY -= moveY;
@@ -325,10 +381,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const onMouseUp = () => {
             isDragging = false;
         };
+
+        const onWheel = (e) => {
+            e.preventDefault();
+            const zoomDelta = e.deltaY > 0 ? -0.1 : 0.1;
+            scale += zoomDelta;
+            scale = Math.max(1.0, Math.min(3.0, scale)); // Clamp zoom between 1.0x and 3.0x to prevent showing background
+            imgEl.style.transform = `scale(${scale})`;
+        };
         
         parent.addEventListener('mousedown', onMouseDown);
         window.addEventListener('mousemove', onMouseMove);
         window.addEventListener('mouseup', onMouseUp);
+        parent.addEventListener('wheel', onWheel, { passive: false });
         
         doneBtn.onclick = async (e) => {
             e.stopPropagation();
@@ -337,13 +402,17 @@ document.addEventListener('DOMContentLoaded', () => {
             parent.removeEventListener('mousedown', onMouseDown);
             window.removeEventListener('mousemove', onMouseMove);
             window.removeEventListener('mouseup', onMouseUp);
+            parent.removeEventListener('wheel', onWheel);
+            
             imgEl.style.cursor = '';
             doneBtn.remove();
+            hint.remove();
             
             overlay.style.display = 'flex';
             
             const csrfToken = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
-            const newPos = `${Math.round(posX)}% ${Math.round(posY)}%`;
+            const newPos = `${Math.round(posX)}% ${Math.round(posY)}% ${scale.toFixed(2)}`;
+            imgEl.setAttribute('data-saved-pos', newPos); // Update memory
             
             try {
                 const response = await fetch('/api/cms/update', {

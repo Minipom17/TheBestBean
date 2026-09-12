@@ -663,12 +663,14 @@
                 const cardUsd = root.querySelector('[data-card-usd]');
                 const cardPenEl = root.querySelector('[data-card-pen]');
                 const saveEl = root.querySelector('[data-yape-save]');
-                if (soles) soles.textContent = from + 'S/ ' + yape;
+                if (soles) soles.textContent = from + 'S/' + yape;
                 if (cardUsd) cardUsd.textContent = '$' + Number(usd).toFixed(2);
-                if (cardPenEl) cardPenEl.textContent = '≈ S/ ' + cardPen;
-                if (saveEl) saveEl.textContent = save > 0
-                    ? 'Save S/ ' + save + ' paying with Yape — no card FX.'
-                    : '';
+                if (cardPenEl) cardPenEl.textContent = '≈ S/' + cardPen;
+                if (saveEl) {
+                    const saveAmt = saveEl.querySelector('[data-yape-save-amt]');
+                    if (saveAmt) saveAmt.textContent = '−S/' + save;
+                    saveEl.hidden = save <= 0;
+                }
             };
 
             const storedCurrency = localStorage.getItem('Currency');

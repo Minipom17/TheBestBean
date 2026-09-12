@@ -17,12 +17,14 @@ namespace TheBestBean.Pages
         public List<CartItem> CartItems { get; set; } = new List<CartItem>();
         public decimal CartTotal { get; set; }
         public int ItemCount { get; set; }
+        public bool IsWorkshopOnlyCart { get; set; }
 
         public void OnGet()
         {
             CartItems = _cartService.GetCart(HttpContext.Session);
             CartTotal = _cartService.GetCartTotal(HttpContext.Session);
             ItemCount = _cartService.GetCartItemCount(HttpContext.Session);
+            IsWorkshopOnlyCart = CartService.IsWorkshopOnlyCart(CartItems);
         }
 
         public IActionResult OnPostUpdateQuantity(int productId, string productType, int quantity)

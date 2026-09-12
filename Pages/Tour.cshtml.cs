@@ -25,7 +25,10 @@ namespace TheBestBean.Pages
         public Dictionary<string, string> PageContent { get; set; } = new Dictionary<string, string>();
         public List<string> JsonLdBlocks { get; set; } = new();
         public bool IsCoffeeLab { get; set; }
+        public bool TakesCoffeeHome { get; set; }
+        public bool TakesCynthiaPavelKit { get; set; }
         public IReadOnlyList<LabRecipeCard> LabRecipes { get; set; } = Array.Empty<LabRecipeCard>();
+        public ExperienceVenue.Venue? Venue { get; set; }
 
         public IActionResult OnGet(string id)
         {
@@ -44,10 +47,14 @@ namespace TheBestBean.Pages
                     .ToList();
 
                 IsCoffeeLab = IsCuscoCoffeeLab(Tour);
+                TakesCoffeeHome = TakesRoastHome(Tour);
+                TakesCynthiaPavelKit = IsCynthiaPavelSession(Tour);
                 if (IsCoffeeLab)
                 {
                     LabRecipes = CoffeeLabRecipes;
                 }
+
+                Venue = ExperienceVenue.Resolve(Tour);
 
                 ApplyTourSeo(Tour);
                 Ga4Ecommerce.SetPageEvent(ViewData, "view_item", Ga4Ecommerce.Payload(new[]
@@ -68,13 +75,21 @@ namespace TheBestBean.Pages
             return Page();
         }
 
+        private string GetTourHeroImageUrl(Experience tour)
+        {
+            var key = $"Tour_Hero_Image_{tour.Id}";
+            var hero = _context.SiteContent.FirstOrDefault(c => c.Key == key)?.Value;
+            return string.IsNullOrWhiteSpace(hero) ? tour.ImageUrl : hero;
+        }
+
         private void ApplyTourSeo(Experience tour)
         {
+            var heroImage = GetTourHeroImageUrl(tour);
             var pageUrl = $"https://purplebean.coffee/Tour/{tour.Id}";
             ViewData["CanonicalUrl"] = pageUrl;
             ViewData["Title"] = tour.Title;
             ViewData["OgType"] = "article";
-            ViewData["MetaImage"] = ToAbsolute(tour.ImageUrl);
+            ViewData["MetaImage"] = ToAbsolute(heroImage);
 
             var meta = string.IsNullOrWhiteSpace(tour.LongDescription) ? tour.Description : tour.LongDescription;
             meta = string.Join(" ", meta.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries));
@@ -84,7 +99,7 @@ namespace TheBestBean.Pages
             }
             ViewData["MetaDescription"] = meta;
 
-            var images = new List<string> { ToAbsolute(tour.ImageUrl) };
+            var images = new List<string> { ToAbsolute(heroImage) };
             foreach (var galleryImage in tour.GalleryImages.Take(8))
             {
                 var absolute = ToAbsolute(galleryImage);
@@ -181,6 +196,30 @@ namespace TheBestBean.Pages
                 ["text"] = answer
             }
         };
+
+        private static bool TakesRoastHome(Experience tour)
+        {
+            var title = tour.Title ?? string.Empty;
+            if (title.Contains("Odar", StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            return (title.Contains("Coffee Laboratory", StringComparison.OrdinalIgnoreCase)
+                    || title.Contains("Coffee Lab", StringComparison.OrdinalIgnoreCase))
+                && !title.Contains("Cinthya", StringComparison.OrdinalIgnoreCase)
+                && !title.Contains("Cynthia", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static bool IsCynthiaPavelSession(Experience tour)
+        {
+            var title = tour.Title ?? string.Empty;
+            return title.Contains("Tasting Hour", StringComparison.OrdinalIgnoreCase)
+                || title.Contains("Brew Your Own", StringComparison.OrdinalIgnoreCase)
+                || title.Contains("Introduction to Cupping", StringComparison.OrdinalIgnoreCase)
+                || title.Contains("Cinthya", StringComparison.OrdinalIgnoreCase)
+                || title.Contains("Cynthia", StringComparison.OrdinalIgnoreCase);
+        }
 
         private static bool IsCuscoCoffeeLab(Experience tour)
         {
@@ -299,7 +338,7 @@ namespace TheBestBean.Pages
             return "https://purplebean.coffee" + (path.StartsWith('/') ? path : "/" + path);
         }
 
-        public IActionResult OnPostAddToCart(int tourId, string title, decimal price, string date, int participants = 1)
+        public IActionResult OnPostAddToCart(int tourId, string title, decimal price, string date, string imageUrl, int participants = 1)
         {
             var cartItem = new CartItem
             {
@@ -308,7 +347,7 @@ namespace TheBestBean.Pages
                 ProductType = "Experience",
                 Price = price,
                 Quantity = participants,
-                ImageUrl = "/Media/Cacao/Llama_Cacao_paper.webp",
+                ImageUrl = string.IsNullOrEmpty(imageUrl) ? "/brand/placeholder.jpg" : imageUrl,
                 Description = $"Booking for {participants} person(s) on {date}"
             };
 

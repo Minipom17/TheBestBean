@@ -30,7 +30,7 @@ namespace TheBestBean.Pages
                 return new("lima", "barranco", "Lima", "Barranco");
             }
 
-            return new("cusco", "city", "Cusco", "City");
+            return new("cusco", "city", "Cusco", "Cusco City");
         }
 
         public static bool IsMonWed(string? month)

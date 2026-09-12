@@ -35,7 +35,12 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 items-start mb-10 relative">
             <div class="w-full">
                 <div class="product-hero-frame w-full overflow-hidden bg-white dark:bg-[#1C191F] relative rounded-2xl border border-gray-100 dark:border-[#3A353C]">
-                    <img src="@Model.Product.ImageUrl" alt="@Model.Product.Name" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="ImageUrl" data-position-key="Product_@(Model.Product.Id)_ImageUrl_Position" class="w-full h-full object-cover" style="width: 100%; height: 100%; object-fit: cover; object-position: @heroPos;">
+                    @{
+                        var heroPosParts = heroPos.Split(' ');
+                        var cssPos = heroPosParts.Length >= 2 ? $"{heroPosParts[0]} {heroPosParts[1]}" : "50% 50%";
+                        var cssScale = heroPosParts.Length >= 3 ? heroPosParts[2] : "1.0";
+                    }
+                    <img src="@Model.Product.ImageUrl" alt="@Model.Product.Name" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="ImageUrl" data-position-key="Product_@(Model.Product.Id)_ImageUrl_Position" data-saved-pos="@heroPos" class="w-full h-full object-cover transition-transform" style="width: 100%; height: 100%; object-fit: cover; object-position: @cssPos; transform: scale(@cssScale);">
                 </div>
                 @if (Model.Product.Name.Contains("Chuncho"))
                 {
@@ -461,7 +466,7 @@
                                 <h5 class="font-grotesk font-bold text-lg mb-2 group-hover:text-swiss-red transition-colors" style="font-family: 'Inter', sans-serif; font-weight: 700; font-size: 1.125rem; margin-bottom: 0.5rem; transition: color 0.3s;">@product.Name</h5>
                                 <p class="font-mono text-xs text-gray-500 mb-4" style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #6b7280; margin-bottom: 1rem;">@product.Origin</p>
                                 <div class="flex justify-between items-center border-t border-gray-200 dark:border-dark-border pt-4" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #e5e7eb; padding-top: 1rem;">
-                                    <span class="font-bold text-lg" style="font-weight: 700; font-size: 1.125rem;">S/ @((product.Price * 3.8m).ToString("F2"))</span>
+                                    <span class="font-bold text-lg" style="font-weight: 700; font-size: 1.125rem;">S/@((product.Price * 3.8m).ToString("F2"))</span>
                                     <span class="text-xs font-bold uppercase tracking-widest flex items-center gap-2 group-hover:text-swiss-red transition-colors" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; display: flex; align-items: center; gap: 0.5rem; transition: color 0.3s;">View <i class="bi bi-arrow-right"></i></span>
                                 </div>
                             </div>

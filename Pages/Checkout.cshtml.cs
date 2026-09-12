@@ -19,6 +19,7 @@ namespace TheBestBean.Pages
 
         public List<CartItem> CartItems { get; set; } = new List<CartItem>();
         public decimal CartTotal { get; set; }
+        public bool IsWorkshopOnlyCart { get; set; }
 
         [BindProperty]
         public string FirstName { get; set; } = string.Empty;
@@ -69,6 +70,7 @@ namespace TheBestBean.Pages
         {
             CartItems = _cartService.GetCart(HttpContext.Session);
             CartTotal = _cartService.GetCartTotal(HttpContext.Session);
+            IsWorkshopOnlyCart = CartService.IsWorkshopOnlyCart(CartItems);
 
             if (!CartItems.Any())
             {
@@ -83,6 +85,7 @@ namespace TheBestBean.Pages
         {
             CartItems = _cartService.GetCart(HttpContext.Session);
             CartTotal = _cartService.GetCartTotal(HttpContext.Session);
+            IsWorkshopOnlyCart = CartService.IsWorkshopOnlyCart(CartItems);
 
             if (!CartItems.Any())
             {

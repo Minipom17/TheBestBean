@@ -14,16 +14,29 @@
      data-compact="@(compact ? "1" : "0")"
      data-from="@(from)">
     <div class="yape-price__yape">
-        <span class="yape-price__badge">Yape</span>
-        <span class="yape-price__soles" data-yape-soles>@(from)S/ @yape.ToString("0")</span>
+        <span class="yape-price__badge" aria-label="Yape">
+            <img src="/brand/yape-logo.webp" alt="Yape" class="yape-price__logo" width="76" height="24" loading="lazy" decoding="async" />
+        </span>
+        <span class="yape-price__soles" data-yape-soles>@(from)S/@yape.ToString("0")</span>
     </div>
     <div class="yape-price__card">
         <span class="yape-price__card-label">Card / PayPal</span>
         <span class="yape-price__card-usd" data-card-usd>$@usd.ToString("0.00")</span>
-        <span class="yape-price__card-pen" data-card-pen>≈ S/ @cardPen.ToString("0")</span>
+        <span class="yape-price__card-pen" data-card-pen>≈ S/@cardPen.ToString("0")</span>
     </div>
-    @if (!compact && save > 0)
+    @if (!compact)
     {
-        <p class="yape-price__save" data-yape-save>Save S/ @save.ToString("0") paying with Yape — no card FX.</p>
+        <div class="flex flex-col gap-1 items-end mt-2 text-right">
+            @if (!string.IsNullOrWhiteSpace(Model.FeeNote))
+            {
+                <span class="text-[9px] font-mono font-bold tracking-widest text-[#FF3B1F] uppercase yape-price__fee-note">@Model.FeeNote</span>
+            }
+            @if (save > 0)
+            {
+                <span class="text-[10px] font-mono font-bold text-v-black dark:text-[#D6D0C8] tracking-wider uppercase yape-price__save" data-yape-save>
+                    <span data-yape-save-amt>−S/@save.ToString("0")</span> <span class="text-v-gray">w/ cash or Yape</span>
+                </span>
+            }
+        </div>
     }
 </div>

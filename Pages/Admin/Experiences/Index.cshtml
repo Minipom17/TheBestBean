@@ -2,83 +2,85 @@
 @model TheBestBean.Pages_Admin_Experiences.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Manage Experiences";
+    Layout = "_Layout";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Experience[0].Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Experience[0].Category)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Experience[0].Location)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Experience[0].Month)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Experience[0].Difficulty)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Experience[0].Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Experience[0].ImageUrl)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Experience[0].Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Experience[0].Tag)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Experience) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Location)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Month)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Difficulty)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ImageUrl)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Tag)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 mt-20">
+    <div class="sm:flex sm:items-center">
+        <div class="sm:flex-auto">
+            <h1 class="text-3xl font-bold tracking-tight text-v-black dark:text-[#D6D0C8]">Manage Experiences</h1>
+            <p class="mt-2 text-sm text-v-gray">A list of all experiences in your database including their title, category, price, and thumbnail.</p>
+        </div>
+        <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+            <a asp-page="Create" class="inline-flex items-center justify-center rounded-full border border-transparent bg-[#722EA8] px-4 py-2 text-sm font-bold tracking-widest uppercase text-white shadow-sm hover:bg-[#5a2485] focus:outline-none focus:ring-2 focus:ring-[#722EA8] focus:ring-offset-2 sm:w-auto">Create New</a>
+        </div>
+    </div>
+    
+    <div class="mt-8 flex flex-col">
+        <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                    <table class="min-w-full divide-y divide-gray-300 dark:divide-gray-700">
+                        <thead class="bg-gray-50 dark:bg-[#2A262C]">
+                            <tr>
+                                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-[10px] font-mono font-bold tracking-widest text-v-black dark:text-[#D6D0C8] uppercase sm:pl-6">Experience</th>
+                                <th scope="col" class="px-3 py-3.5 text-left text-[10px] font-mono font-bold tracking-widest text-v-black dark:text-[#D6D0C8] uppercase">Category</th>
+                                <th scope="col" class="px-3 py-3.5 text-left text-[10px] font-mono font-bold tracking-widest text-v-black dark:text-[#D6D0C8] uppercase">Location</th>
+                                <th scope="col" class="px-3 py-3.5 text-left text-[10px] font-mono font-bold tracking-widest text-v-black dark:text-[#D6D0C8] uppercase">Price</th>
+                                <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                                    <span class="sr-only">Edit</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 dark:divide-gray-800 bg-white dark:bg-[#1C191F]">
+                            @foreach (var item in Model.Experience)
+                            {
+                                <tr>
+                                    <td class="whitespace-nowrap py-4 pl-4 pr-3 sm:pl-6">
+                                        <div class="flex items-center">
+                                            <div class="h-10 w-16 flex-shrink-0">
+                                                @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                                {
+                                                    <img class="h-10 w-16 rounded-md object-cover" src="@item.ImageUrl" alt="" />
+                                                }
+                                                else
+                                                {
+                                                    <div class="h-10 w-16 rounded-md bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                                                        <i class="bi bi-image text-gray-400"></i>
+                                                    </div>
+                                                }
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="font-semibold text-v-black dark:text-[#D6D0C8]">@item.Title</div>
+                                                @if(!string.IsNullOrEmpty(item.Tag))
+                                                {
+                                                    <div class="text-[10px] font-mono tracking-widest text-v-gray mt-1">@item.Tag</div>
+                                                }
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-v-gray">
+                                        <div class="text-v-black dark:text-[#D6D0C8]">@item.Category</div>
+                                        <div class="text-[10px] font-mono uppercase tracking-widest mt-1">@item.Difficulty</div>
+                                    </td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-v-gray">
+                                        <div class="text-v-black dark:text-[#D6D0C8]">@item.Location</div>
+                                        <div class="text-[10px] font-mono uppercase tracking-widest mt-1">@item.Month</div>
+                                    </td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-v-black dark:text-[#D6D0C8] font-mono font-semibold">
+                                        $@item.Price.ToString("0.00")
+                                    </td>
+                                    <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                                        <a asp-page="./Edit" asp-route-id="@item.Id" class="text-[#722EA8] hover:text-[#5a2485] mr-4"><i class="bi bi-pencil-square"></i><span class="sr-only">Edit</span></a>
+                                        <a asp-page="./Delete" asp-route-id="@item.Id" class="text-red-600 hover:text-red-900"><i class="bi bi-trash3"></i><span class="sr-only">Delete</span></a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

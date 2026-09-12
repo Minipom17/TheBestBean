@@ -1,0 +1,18 @@
+@model string
+
+<div class="exp-filter-row">
+    <span class="exp-filter-label">Location</span>
+    <div class="exp-geo exp-geo--flat" id="@Model" role="group" aria-label="Filter by location">
+        <button type="button" class="exp-geo-all filter-btn active" data-filter="all">All</button>
+        <span class="exp-geo-sep" aria-hidden="true">·</span>
+        <button type="button" class="exp-geo-place filter-btn" data-filter="place:city">Cusco City</button>
+        <span class="exp-geo-sep" aria-hidden="true">·</span>
+        <button type="button" class="exp-geo-place filter-btn" data-filter="place:calca">Calca</button>
+        <span class="exp-geo-sep" aria-hidden="true">·</span>
+        <button type="button" class="exp-geo-place filter-btn" data-filter="place:santa-teresa">Santa Teresa</button>
+        <span class="exp-geo-sep" aria-hidden="true">·</span>
+        <button type="button" class="exp-geo-place filter-btn" data-filter="place:barranco">Lima · Barranco</button>
+        <span class="exp-geo-sep" aria-hidden="true">·</span>
+        <button type="button" class="exp-geo-place filter-btn" data-filter="place:jaen">Cajamarca · Jaén</button>
+    </div>
+</div>

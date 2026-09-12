@@ -90,25 +90,37 @@
                             <div class="pt-4 border-t border-gray-200 space-y-4">
                                 <div class="yape-price yape-price--stack">
                                     <div class="yape-price__yape">
-                                        <span class="yape-price__badge">Yape</span>
-                                        <span class="yape-price__soles">S/ @LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</span>
+                                        <span class="yape-price__badge" aria-label="Yape">
+                                            <img src="/brand/yape-logo.webp" alt="Yape" class="yape-price__logo" width="76" height="24" loading="lazy" decoding="async" />
+                                        </span>
+                                        <span class="yape-price__soles">S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</span>
                                     </div>
-                                    <p class="yape-price__save mb-0">Local price in soles · recommended in Perú</p>
+                                    @if (!Model.IsWorkshopOnlyCart)
+                                    {
+                                        <p class="yape-price__save mb-0">Local price in soles · recommended in Perú</p>
+                                    }
                                     <div class="yape-price__card mt-3">
                                         <span class="yape-price__card-label">Card / PayPal</span>
                                         <span class="yape-price__card-usd">$@Model.CartTotal.ToString("F2")</span>
-                                        <span class="yape-price__card-pen">≈ S/ @LocalPricing.CardSoles(Model.CartTotal).ToString("0")</span>
+                                        <span class="yape-price__card-pen">≈ S/@LocalPricing.CardSoles(Model.CartTotal).ToString("0")</span>
                                     </div>
-                                    @if (LocalPricing.YapeSavings(Model.CartTotal) > 0)
+                                    @if (Model.IsWorkshopOnlyCart)
                                     {
-                                        <p class="yape-price__save">Save S/ @LocalPricing.YapeSavings(Model.CartTotal).ToString("0") with Yape vs card FX.</p>
+                                        <p class="yape-price__save yape-price__fee-note">@LocalPricing.WorkshopVisaFeeNote</p>
+                                    }
+                                    else if (LocalPricing.YapeSavings(Model.CartTotal) > 0)
+                                    {
+                                        <p class="yape-price__save">
+                                            <span>−S/@LocalPricing.YapeSavings(Model.CartTotal).ToString("0")</span> w/ cash or
+                                            <img src="/brand/yape-logo.webp" alt="Yape" class="yape-price__logo yape-price__logo--inline" width="64" height="18" loading="lazy" decoding="async" />
+                                        </p>
                                     }
                                 </div>
                             </div>
                         </div>
 
                         <a asp-page="/Checkout" class="block w-full bg-black text-white text-center py-4 font-mono-jb font-bold text-xs uppercase tracking-widest hover:bg-v-red transition-colors border border-black text-decoration-none">
-                            Pay with Yape — S/ @LocalPricing.YapeSoles(Model.CartTotal).ToString("0")
+                            Pay with Yape — S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")
                         </a>
                         
                         <p class="mt-4 text-center text-[10px] font-mono-jb uppercase tracking-widest text-gray-400">

@@ -82,6 +82,9 @@ namespace TheBestBean.Services
             return cart.Sum(i => i.Subtotal);
         }
 
+        public static bool IsWorkshopOnlyCart(IEnumerable<CartItem> cart) =>
+            cart.Any() && cart.All(i => string.Equals(i.ProductType, "Experience", StringComparison.OrdinalIgnoreCase));
+
         private void SaveCart(ISession session, List<CartItem> cart)
         {
             var cartJson = JsonSerializer.Serialize(cart);

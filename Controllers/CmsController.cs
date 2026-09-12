@@ -42,8 +42,13 @@ namespace TheBestBean.Controllers
                     }
                     else
                     {
-                        // UPSERT logic: if it doesn't exist, create it automatically!
-                        content = new SiteContent { Key = update.EntityId, Value = update.Value };
+                        string page = "";
+                        if (update.EntityId.StartsWith("Tour_")) page = "Tour";
+                        else if (update.EntityId.StartsWith("Product_")) page = "Product";
+                        else if (update.EntityId.StartsWith("Home_")) page = "Home";
+                        else if (update.EntityId.StartsWith("Experiences_")) page = "Experiences";
+                        
+                        content = new SiteContent { Key = update.EntityId, Value = update.Value, Page = page };
                         _context.SiteContent.Add(content);
                     }
                 }
@@ -66,6 +71,27 @@ namespace TheBestBean.Controllers
                                 case "Month": exp.Month = update.Value; break;
                                 case "Duration": exp.Duration = update.Value; break;
                                 case "Category": exp.Category = update.Value; break;
+                                default:
+                                    if (update.Field.StartsWith("GalleryImage_"))
+                                    {
+                                        if (int.TryParse(update.Field.Replace("GalleryImage_", ""), out int idx))
+                                        {
+                                            var gallery = exp.GalleryImages;
+                                            if (idx >= 0 && idx < gallery.Count)
+                                            {
+                                                if (update.Value == "REMOVE")
+                                                {
+                                                    gallery.RemoveAt(idx);
+                                                }
+                                                else
+                                                {
+                                                    gallery[idx] = update.Value;
+                                                }
+                                                exp.GalleryImages = gallery; // trigger setter
+                                            }
+                                        }
+                                    }
+                                    break;
                             }
                         }
                     }

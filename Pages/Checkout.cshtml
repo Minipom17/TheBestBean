@@ -79,7 +79,14 @@
                     <section>
                         <h2 class="text-lg font-mono-jb font-bold uppercase tracking-widest mb-6 border-b border-black pb-2">03. Payment</h2>
                         <p class="text-sm text-gray-600 mb-6 leading-relaxed">
-                            Locals in Perú: pay with <strong>Yape</strong> in soles. Card and PayPal are in USD and pick up bank FX.
+                            @if (Model.IsWorkshopOnlyCart)
+                            {
+                                <text>Pay with <strong>Yape</strong> or Plin in soles, or card / PayPal in USD.</text>
+                            }
+                            else
+                            {
+                                <text>Locals in Perú: pay with <strong>Yape</strong> in soles. Card and PayPal are in USD and pick up bank FX.</text>
+                            }
                         </p>
                         <div class="grid grid-cols-1 gap-3" id="payment-method-cards">
                             <label class="yape-pay-option yape-pay-option--recommended">
@@ -87,12 +94,14 @@
                                 <div class="yape-pay-option__card peer-checked:ring-2">
                                     <div class="flex items-start justify-between gap-4">
                                         <div>
-                                            <span class="yape-price__badge">Yape</span>
+                                            <span class="yape-price__badge" aria-label="Yape">
+                                                <img src="/brand/yape-logo.webp" alt="Yape" class="yape-price__logo" width="76" height="24" loading="lazy" decoding="async" />
+                                            </span>
                                             <h3 class="font-grotesk font-bold text-lg mt-2 mb-1">Yape / Plin · Perú</h3>
                                             <p class="text-xs text-gray-500 font-light m-0">Pay in soles after you place the order. We’ll send the QR to WhatsApp.</p>
                                         </div>
                                         <div class="text-right shrink-0">
-                                            <div class="text-2xl font-grotesk font-bold">S/ @LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</div>
+                                            <div class="text-2xl font-grotesk font-bold">S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</div>
                                             <div class="text-[10px] font-mono-jb uppercase tracking-widest text-[#722EA8] font-bold mt-1">Recommended</div>
                                         </div>
                                     </div>
@@ -104,24 +113,35 @@
                                     <div class="flex items-start justify-between gap-4">
                                         <div>
                                             <h3 class="font-grotesk font-bold text-lg mt-0 mb-1">Card / PayPal</h3>
-                                            <p class="text-xs text-gray-500 font-light m-0">International USD. Bank FX and card fees make this the higher soles price.</p>
+                                            <p class="text-xs text-gray-500 font-light m-0">
+                                                @(Model.IsWorkshopOnlyCart
+                                                    ? "International USD. " + LocalPricing.WorkshopVisaFeeNote + " on card payments."
+                                                    : "International USD. Bank FX and card fees make this the higher soles price.")
+                                            </p>
                                         </div>
                                         <div class="text-right shrink-0">
                                             <div class="text-2xl font-grotesk font-bold">$@Model.CartTotal.ToString("F2")</div>
-                                            <div class="text-[10px] font-mono-jb uppercase tracking-widest text-gray-400 mt-1">≈ S/ @LocalPricing.CardSoles(Model.CartTotal).ToString("0")</div>
+                                            <div class="text-[10px] font-mono-jb uppercase tracking-widest text-gray-400 mt-1">≈ S/@LocalPricing.CardSoles(Model.CartTotal).ToString("0")</div>
                                         </div>
                                     </div>
                                 </div>
                             </label>
                         </div>
-                        @if (LocalPricing.YapeSavings(Model.CartTotal) > 0)
+                        @if (Model.IsWorkshopOnlyCart)
                         {
-                            <p class="yape-price__save mt-4">Yape saves you about S/ @LocalPricing.YapeSavings(Model.CartTotal).ToString("0") versus paying by card.</p>
+                            <p class="yape-price__save yape-price__fee-note mt-4">@LocalPricing.WorkshopVisaFeeNote</p>
+                        }
+                        else if (LocalPricing.YapeSavings(Model.CartTotal) > 0)
+                        {
+                            <p class="yape-price__save mt-4">
+                                <span>−S/@LocalPricing.YapeSavings(Model.CartTotal).ToString("0")</span> w/ cash or
+                                <img src="/brand/yape-logo.webp" alt="Yape" class="yape-price__logo yape-price__logo--inline" width="64" height="18" loading="lazy" decoding="async" />
+                            </p>
                         }
                     </section>
 
                     <button type="submit" id="checkout-submit" class="w-full bg-black text-white py-5 font-mono-jb font-bold text-xs uppercase tracking-widest hover:bg-v-red transition-colors border border-black">
-                        Complete order — Yape S/ @LocalPricing.YapeSoles(Model.CartTotal).ToString("0")
+                        Complete order — Yape S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")
                     </button>
                 </form>
             </div>
@@ -146,7 +166,7 @@
                                     <p class="text-[10px] text-gray-400 font-mono-jb uppercase tracking-widest">@item.ProductType</p>
                                 </div>
                                 <div class="font-mono-jb text-sm font-bold text-right">
-                                    <div>S/ @LocalPricing.YapeSoles(item.Subtotal).ToString("0")</div>
+                                    <div>S/@LocalPricing.YapeSoles(item.Subtotal).ToString("0")</div>
                                     <div class="text-[10px] text-gray-400 font-normal">$@item.Subtotal.ToString("F2")</div>
                                 </div>
                             </div>
@@ -156,11 +176,11 @@
                     <div class="space-y-4 border-t border-gray-200 pt-8 text-sm">
                         <div class="flex justify-between">
                             <span class="font-light text-gray-500">Yape / Plin</span>
-                            <span class="font-mono-jb font-bold">S/ @LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</span>
+                            <span class="font-mono-jb font-bold">S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</span>
                         </div>
                         <div class="flex justify-between">
                             <span class="font-light text-gray-500">Card / PayPal</span>
-                            <span class="font-mono-jb font-bold">$@Model.CartTotal.ToString("F2") <span class="text-gray-400 font-normal">≈ S/ @LocalPricing.CardSoles(Model.CartTotal).ToString("0")</span></span>
+                            <span class="font-mono-jb font-bold">$@Model.CartTotal.ToString("F2") <span class="text-gray-400 font-normal">≈ S/@LocalPricing.CardSoles(Model.CartTotal).ToString("0")</span></span>
                         </div>
                         <div class="flex justify-between">
                             <span class="font-light text-gray-500">Shipping</span>
@@ -168,9 +188,13 @@
                         </div>
                         <div class="flex justify-between border-t border-black pt-4 mt-6">
                             <span class="text-xl font-grotesk font-bold">Yape total</span>
-                            <span class="text-2xl font-grotesk font-bold">S/ @LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</span>
+                            <span class="text-2xl font-grotesk font-bold">S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</span>
                         </div>
-                        <p class="text-[10px] text-gray-400 font-mono-jb uppercase tracking-widest m-0">Taxes included · Yape is the local soles price</p>
+                        <p class="text-[10px] text-gray-400 font-mono-jb uppercase tracking-widest m-0">
+                            @(Model.IsWorkshopOnlyCart
+                                ? "Taxes included · " + LocalPricing.WorkshopVisaFeeNote + " on card"
+                                : "Taxes included · Yape is the local soles price")
+                        </p>
                     </div>
                 </div>
             </div>
@@ -209,7 +233,7 @@
             lastName?.addEventListener('input', updateFullName);
 
             const submit = document.getElementById('checkout-submit');
-            const yapeTotal = 'S/ @LocalPricing.YapeSoles(Model.CartTotal).ToString("0")';
+            const yapeTotal = 'S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")';
             const cardTotal = '$@Model.CartTotal.ToString("F2")';
             document.querySelectorAll('input[name="PaymentMethod"]').forEach(function (input) {
                 input.addEventListener('change', function () {

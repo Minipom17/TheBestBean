@@ -173,7 +173,7 @@
             }
             else
             {
-                <span class="info-value" style="color: #722EA8; font-size: 1.25rem;">S/ @LocalPricing.YapeSoles(Model.OrderTotal).ToString("0")</span>
+                <span class="info-value" style="color: #722EA8; font-size: 1.25rem;">S/@LocalPricing.YapeSoles(Model.OrderTotal).ToString("0")</span>
             }
         </div>
         <div class="info-row">
@@ -198,12 +198,12 @@
                         }
                         else
                         {
-                            <text>S/ @LocalPricing.YapeSoles(item.Price).ToString("0")</text>
+                            <text>S/@LocalPricing.YapeSoles(item.Price).ToString("0")</text>
                         }
                     </div>
                 </div>
                 <div style="font-weight: 600; color: var(--charcoal);">
-                    S/ @LocalPricing.YapeSoles(item.Subtotal).ToString("0")
+                    S/@LocalPricing.YapeSoles(item.Subtotal).ToString("0")
                 </div>
             </div>
         }
@@ -231,7 +231,7 @@
                 }
                 else
                 {
-                    <h4>Yape S/ @LocalPricing.YapeSoles(Model.OrderTotal).ToString("0")</h4>
+                    <h4>Yape S/@LocalPricing.YapeSoles(Model.OrderTotal).ToString("0")</h4>
                     <p>Yape or Plin to <strong>993 779 381</strong> (Purple Bean). Put order <strong>@Model.OrderNumber</strong> in the note. We’ll also send the QR on WhatsApp.</p>
                 }
             </div>

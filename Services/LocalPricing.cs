@@ -7,6 +7,8 @@ namespace TheBestBean.Services
     /// </summary>
     public static class LocalPricing
     {
+        public const string WorkshopVisaFeeNote = "VISA 5%";
+
         public const decimal YapeRate = 3.75m;
         public const decimal CardRate = 4.10m;
 
@@ -29,8 +31,8 @@ namespace TheBestBean.Services
         }
 
         /// <summary>
-        /// 100 g Yape price in soles from SCA. 88 pts = S/ 30; CoE lots sit above; lower scores step down.
-        /// Larger bags use the same bulk ratios as the 88-pt ladder (200 g S/ 50, 500 g S/ 120, 1 kg S/ 200).
+        /// 100 g Yape price in soles from SCA. 88 pts = S/30; CoE lots sit above; lower scores step down.
+        /// Larger bags use the same bulk ratios as the 88-pt ladder (200 g S/50, 500 g S/120, 1 kg S/200).
         /// </summary>
         public static decimal CoffeeHundredGramsPen(decimal sca) => sca switch
         {

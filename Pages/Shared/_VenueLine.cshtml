@@ -1,0 +1,18 @@
+@model TheBestBean.Models.Experience
+@{
+    var venue = ExperienceVenue.Resolve(Model);
+}
+@if (venue != null)
+{
+    <span class="inline-flex flex-wrap items-baseline gap-x-1 gap-y-0.5">
+        <span>@ExperienceVenue.InlineLabel(venue)</span>
+        @if (!string.IsNullOrWhiteSpace(venue.WalkNote))
+        {
+            <span class="text-[10px] font-normal normal-case tracking-normal text-v-gray">@venue.WalkNote</span>
+        }
+    </span>
+}
+else
+{
+    @Model.Location
+}

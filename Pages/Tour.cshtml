@@ -17,12 +17,17 @@
     <!-- Huge Hero Image (Rounded Corners) -->
     <div class="max-w-[1600px] mx-auto w-full px-4 md:px-12 mt-6 no-print">
         @{
+            var heroImage = Model.PageContent.GetValueOrDefault($"Tour_Hero_Image_{Model.Tour.Id}", Model.Tour.ImageUrl);
             var heroPos = Model.PageContent.GetValueOrDefault($"Tour_Hero_Pos_{Model.Tour.Id}", "50% 50%");
         }
         <div class="w-full aspect-[21/9] md:aspect-[3/1] bg-gray-100 dark:bg-[#1C191F] overflow-hidden rounded-3xl relative shadow-sm">
-             @if (!string.IsNullOrWhiteSpace(Model.Tour.ImageUrl))
+             @if (!string.IsNullOrWhiteSpace(heroImage))
              {
-                 <img src="@Model.Tour.ImageUrl" alt="@Model.Tour.Title" class="absolute inset-0 w-full h-full object-cover" style="object-position: @heroPos;" data-entity-id="@Model.Tour.Id" data-entity-type="Experience" data-editable="ImageUrl" data-position-key="Tour_Hero_Pos_@Model.Tour.Id" />
+                 var heroPosParts = heroPos.Split(' ');
+                 var cssPos = heroPosParts.Length >= 2 ? $"{heroPosParts[0]} {heroPosParts[1]}" : "50% 50%";
+                 var cssScale = heroPosParts.Length >= 3 ? heroPosParts[2] : "1.0";
+                 
+                 <img src="@heroImage" alt="@Model.Tour.Title" class="absolute inset-0 w-full h-full object-cover transition-transform" style="object-position: @cssPos; transform: scale(@cssScale);" data-entity-id="@Model.Tour.Id" data-entity-type="Experience" data-editable="ImageUrl" data-position-key="Tour_Hero_Pos_@Model.Tour.Id" data-saved-pos="@heroPos" />
              }
              else
              {
@@ -40,20 +45,36 @@
             <div class="lg:col-span-4 flex flex-col relative order-2 lg:order-1">
                 <div class="lg:sticky lg:top-32 bg-white dark:bg-[#121014] rounded-3xl border border-gray-100 p-8 shadow-sm">
                     <div class="mb-2">
-                        <partial name="_YapePrice" model="new DualPriceModel { Usd = Model.Tour.Price, Pen = LocalPricing.YapeSoles(Model.Tour.Price) }" />
+                        <div class="flex flex-col items-start gap-1">
+                            <span class="price-pair text-3xl font-bold text-v-black dark:text-[#D6D0C8] font-mono-jb"><span>S/@LocalPricing.YapeSoles(Model.Tour.Price).ToString("0")</span><span class="price-pair__sep">/</span><span>$@Model.Tour.Price.ToString("0")</span></span>
+                            <span class="text-[10px] font-mono font-bold tracking-widest text-[#FF3B1F] uppercase mt-1">VISA 5%</span>
+                        </div>
                         <p class="text-xs text-v-gray mt-2 m-0">per participant</p>
                     </div>
                     
                     <div class="flex flex-col gap-4 mt-8 pt-8 border-t border-gray-100">
-                        <div class="flex justify-between items-start text-sm gap-4">
+                        <div class="flex justify-between items-start text-xs gap-4">
                             <span class="text-v-gray font-normal shrink-0">Duration</span>
                             <span class="text-v-black dark:text-[#D6D0C8] font-semibold text-right">@Model.Tour.Duration</span>
                         </div>
-                        <div class="flex justify-between items-start text-sm gap-4">
+                        <div class="flex justify-between items-start text-xs gap-4">
                             <span class="text-v-gray font-normal shrink-0">Location</span>
-                            <span class="text-v-black dark:text-[#D6D0C8] font-semibold text-right" data-entity-id="@Model.Tour.Id" data-entity-type="Experience" data-editable="Location">@Model.Tour.Location</span>
+                            <span class="text-v-black dark:text-[#D6D0C8] font-semibold text-right max-w-[14rem]" data-entity-id="@Model.Tour.Id" data-entity-type="Experience" data-editable="Location">
+                                @if (Model.Venue != null)
+                                {
+                                    <span class="block">@ExperienceVenue.InlineLabel(Model.Venue)</span>
+                                    @if (!string.IsNullOrWhiteSpace(Model.Venue.WalkNote))
+                                    {
+                                        <span class="block text-[10px] font-normal text-v-gray mt-0.5">@Model.Venue.WalkNote</span>
+                                    }
+                                }
+                                else
+                                {
+                                    @Model.Tour.Location
+                                }
+                            </span>
                         </div>
-                        <div class="flex justify-between items-start text-sm gap-4">
+                        <div class="flex justify-between items-start text-xs gap-4">
                             <span class="text-v-gray font-normal shrink-0">Level</span>
                             <span class="text-v-black dark:text-[#D6D0C8] font-semibold text-right" data-entity-id="@Model.Tour.Id" data-entity-type="Experience" data-editable="Difficulty">@Model.Tour.Difficulty</span>
                         </div>
@@ -63,6 +84,7 @@
                         <input type="hidden" name="tourId" value="@Model.Tour.Id" />
                         <input type="hidden" name="title" value="@Model.Tour.Title" />
                         <input type="hidden" name="price" value="@Model.Tour.Price" />
+                        <input type="hidden" name="imageUrl" value="@heroImage" />
                         <input type="hidden" name="date" value="Oct 15, 2026 (10:00 AM)" />
                         <input type="hidden" name="participants" value="1" />
                         
@@ -79,7 +101,17 @@
                 
                 <!-- Title Block -->
                 <div>
-                    <span class="text-[10px] font-bold uppercase tracking-widest text-v-gray font-mono-jb block mb-4">@Model.Tour.Category &bull; @Model.Tour.Duration</span>
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-v-gray font-mono-jb block mb-2">@Model.Tour.Category &bull; @Model.Tour.Duration</span>
+                    @if (Model.Venue != null)
+                    {
+                        <p class="text-sm font-mono-jb text-v-black dark:text-[#D6D0C8] mb-4 m-0">
+                            @ExperienceVenue.InlineLabel(Model.Venue)
+                            @if (!string.IsNullOrWhiteSpace(Model.Venue.WalkNote))
+                            {
+                                <span class="text-[10px] font-normal text-v-gray ml-1">@Model.Venue.WalkNote</span>
+                            }
+                        </p>
+                    }
                     <h1 class="text-5xl md:text-7xl font-bold tracking-tighter text-v-black dark:text-[#D6D0C8] leading-[0.9] m-0" data-entity-id="@Model.Tour.Id" data-entity-type="Experience" data-editable="Title">
                         @Model.Tour.Title
                     </h1>
@@ -98,14 +130,15 @@
                 <!-- What You Get Box -->
                 @if (Model.Tour.ProvidedEquipment != null && Model.Tour.ProvidedEquipment.Any())
                 {
-                    <div class="relative mt-2 mb-8 max-w-2xl font-sans">
+                    <div class="tour-whatyouget-map flex flex-col md:flex-row md:items-start gap-6 md:gap-8 mb-8 w-full max-w-5xl font-sans">
+                    <div class="relative mt-2 flex-1 min-w-0">
                         <!-- Top Tag -->
                         <div class="absolute -top-3 left-6 bg-[#FF3B1F] text-white text-xs font-semibold px-2 py-0.5 z-10">
                             what you get
                         </div>
                         
                         <!-- Main Box -->
-                        <div class="border border-[#FF3B1F] relative p-8 pt-10">
+                        <div class="border border-[#FF3B1F] relative p-8 pt-10 h-full">
                             <!-- Corner Nodes -->
                             <div class="absolute -top-1 -left-1 w-2 h-2 bg-[#FF3B1F]"></div>
                             <div class="absolute -top-1 -right-1 w-2 h-2 bg-[#FF3B1F]"></div>
@@ -126,28 +159,56 @@
                             <!-- Take Home Section -->
                             @if (!string.Equals(Model.Tour.Category, "Expedition", StringComparison.OrdinalIgnoreCase))
                             {
-                            <div class="mt-8 pt-6 border-t border-[#FF3B1F]/30">
+                            <div class="mt-8 pt-6 border-t border-[#FF3B1F]/30" data-takehome="by-host">
                                 <span class="text-[10px] font-bold uppercase tracking-widest text-[#FF3B1F] block mb-4">TAKE HOME</span>
                                 <ul class="list-none p-0 m-0 space-y-3 font-mono-jb text-sm text-v-black dark:text-[#D6D0C8]">
-                                    <li class="flex items-start gap-3">
-                                        <span class="text-[#FF3B1F] shrink-0">+</span>
-                                        <span class="leading-relaxed">200g coffee</span>
-                                    </li>
+                                    @if (Model.TakesCoffeeHome)
+                                    {
+                                        <li class="flex items-start gap-3">
+                                            <span class="text-[#FF3B1F] shrink-0">+</span>
+                                            <span class="leading-relaxed">200g coffee</span>
+                                        </li>
+                                    }
                                     <li class="flex items-start gap-3">
                                         <span class="text-[#FF3B1F] shrink-0">+</span>
                                         <span class="leading-relaxed">SCA flavor wheel</span>
                                     </li>
-                                    @if (Model.IsCoffeeLab)
+                                    @if (Model.TakesCynthiaPavelKit || Model.IsCoffeeLab)
                                     {
                                         <li class="flex items-start gap-3">
                                             <span class="text-[#FF3B1F] shrink-0">+</span>
-                                            <span class="leading-relaxed">Recipe cards (V60 + AeroPress) — print from this page</span>
+                                            <span class="leading-relaxed">Recipe cards</span>
                                         </li>
                                     }
                                 </ul>
                             </div>
                             }
                         </div>
+                    </div>
+                    @if (Model.Venue != null)
+                    {
+                        <div class="tour-venue-map w-full md:w-44 lg:w-52 xl:w-56 shrink-0 flex flex-col md:mt-2">
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-v-gray font-mono-jb mb-2">Meeting point</span>
+                            <div class="tour-venue-map__frame w-full aspect-square max-w-[14rem] md:max-w-none border border-gray-200 dark:border-[#2A262C] rounded-2xl overflow-hidden bg-gray-100 dark:bg-[#1C191F]">
+                                <iframe
+                                    title="Map — @ExperienceVenue.InlineLabel(Model.Venue)"
+                                    class="w-full h-full min-h-[11rem] border-0"
+                                    loading="lazy"
+                                    referrerpolicy="no-referrer-when-downgrade"
+                                    src="@ExperienceVenue.MapEmbedUrl(Model.Venue)"
+                                    allowfullscreen>
+                                </iframe>
+                            </div>
+                            <p class="text-[10px] text-v-gray font-mono-jb mt-2 m-0 leading-relaxed">
+                                @ExperienceVenue.InlineLabel(Model.Venue)
+                                @if (!string.IsNullOrWhiteSpace(Model.Venue.WalkNote))
+                                {
+                                    <span class="text-v-gray"> · @Model.Venue.WalkNote</span>
+                                }
+                            </p>
+                            <a href="@ExperienceVenue.MapOpenUrl(Model.Venue)" target="_blank" rel="noopener noreferrer" class="text-[10px] font-mono-jb text-[#722EA8] mt-1 text-decoration-none hover:underline">Open in Google Maps</a>
+                        </div>
+                    }
                     </div>
                 }
 
@@ -159,30 +220,11 @@
                         <div class="absolute left-[11px] top-2 bottom-2 w-px bg-gray-200 dark:bg-[#2A262C]"></div>
                         @for (int i = 0; i < Model.Tour.Syllabus.Count; i++)
                         {
-                            var moduleText = Model.Tour.Syllabus[i];
-                            var detailParts = moduleText.Split(new string[] { "||" }, 2, StringSplitOptions.None);
-                            var mainPart = detailParts[0];
-                            var detailBody = detailParts.Length > 1 ? detailParts[1].Trim() : null;
-                            var parts = mainPart.Split(new[] { ':' }, 2);
-                            var headerPart = parts.Length > 1 ? parts[0].Trim() : $"DAY {(i + 1)}";
-                            var summaryPart = parts.Length > 1 ? parts[1].Trim() : moduleText;
+                            var syllabusRow = SyllabusParser.Parse(Model.Tour.Syllabus[i], i);
 
                             <div class="relative pl-8 pb-10 last:pb-0">
                                 <div class="absolute -left-0.5 top-1.5 w-2.5 h-2.5 bg-v-black dark:bg-[#D6D0C8] rounded-full shadow-[0_0_0_4px_white] dark:shadow-[0_0_0_4px_#121014]"></div>
-                                <span class="text-[10px] font-bold uppercase tracking-widest text-v-gray block mb-1">@headerPart</span>
-                                <div class="text-sm font-bold text-v-black dark:text-[#D6D0C8] m-0 leading-tight mb-2">@Html.Raw(summaryPart)</div>
-                                @if (!string.IsNullOrWhiteSpace(detailBody))
-                                {
-                                    <details class="tour-syllabus-details">
-                                        <summary class="tour-syllabus-details__summary">
-                                            <span class="text-[10px] font-bold uppercase tracking-widest font-mono-jb text-v-gray">details</span>
-                                            <span class="tour-syllabus-details__chevron" aria-hidden="true"></span>
-                                        </summary>
-                                        <div class="tour-syllabus-details__body text-sm text-v-gray leading-relaxed font-normal pt-2">
-                                            @Html.Raw(detailBody)
-                                        </div>
-                                    </details>
-                                }
+                                <partial name="_SyllabusRow" model="syllabusRow" />
                             </div>
                         }
                     </div>
@@ -219,10 +261,11 @@
                 </div>
                 
                 <div class="flex overflow-x-auto gap-6 pb-8 snap-x scrollbar-hide" style="scrollbar-width: none;">
-                    @foreach (var img in Model.Tour.GalleryImages)
+                    @for (int i = 0; i < Model.Tour.GalleryImages.Count; i++)
                     {
+                        var img = Model.Tour.GalleryImages[i];
                         <div class="snap-center shrink-0 w-[80vw] md:w-[600px] aspect-[4/3] rounded-3xl overflow-hidden relative shadow-sm">
-                            <img src="@img" class="absolute inset-0 w-full h-full object-cover img-stark" alt="@Model.Tour.Title photo" loading="lazy" />
+                            <img src="@img" class="absolute inset-0 w-full h-full object-cover img-stark" alt="@Model.Tour.Title photo" loading="lazy" data-entity-id="@Model.Tour.Id" data-entity-type="Experience" data-editable="GalleryImage_@i" />
                         </div>
                     }
                 </div>
