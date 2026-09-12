@@ -327,12 +327,20 @@ html.dark .hover\:border-\[\#FF3B1F\]:hover {
     max-width: none;
 }
 
+
+.exp-filter-row > .exp-geo,
+.exp-filter-row > .exp-when {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
 .exp-filter-row {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 0.7rem;
     min-width: 0;
+    width: 100%;
 }
 
 .exp-filter-label {
@@ -346,9 +354,12 @@ html.dark .hover\:border-\[\#FF3B1F\]:hover {
 }
 
 .exp-geo--flat {
-    flex-wrap: wrap;
-    gap: 0.35rem 0.5rem;
-    align-items: baseline;
+    flex-wrap: nowrap;
+    gap: 0.5rem 0.65rem;
+    align-items: center;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
 }
 
 .exp-geo-sep {
@@ -378,9 +389,14 @@ html.dark .exp-geo-sep {
 }
 
 .exp-geo.exp-geo--flat {
-    flex-wrap: wrap;
-    overflow: visible;
-    padding-right: 0;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-right: 1.5rem;
+}
+.exp-geo--flat::-webkit-scrollbar {
+    display: none;
 }
 
 .exp-geo::-webkit-scrollbar,
