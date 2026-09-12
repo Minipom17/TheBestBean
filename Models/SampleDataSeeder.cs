@@ -881,9 +881,9 @@ namespace TheBestBean.Models
                 LongDescriptionES = "Hora práctica en la barra. Explicamos tueste claro vs desarrollado, agua y molienda, fijamos un ratio y te damos la receta. Preparas tu taza, afinamos juntos y repites para mejorar la técnica.",
                 Syllabus = new List<string>
                 {
-                    "Roast & ratio: light vs developed — water, grind, and your written recipe (15 min)||Why a light roast and a more developed roast need different extraction. We set grind, water temperature, and ratio, then give you a recipe card to follow on the bar.",
-                    "You brew: prepare your own cup from that recipe (25 min)||You take the brewer, dose, and pour. We coach timing, bloom, and pour pattern while you make the cup yourself — this is the hour where you work the bar, not us.",
-                    "Technique: second pass — improve pour, timing, and what to change at home (20 min)||You brew again with adjustments. We compare both cups and leave you with clear notes on what to change when you brew at home or in a hotel."
+                    "Roast & ratio: light vs developed — water, grind, and your written recipe (15 min)||Why a light roast and a more developed roast need different extraction. We set grind, water temperature, and ratio, then give you a recipe card to follow on the bar.||Light roast, Developed roast, Grind, Ratio, Recipe card",
+                    "You brew: prepare your own cup from that recipe (25 min)||You take the brewer, dose, and pour. We coach timing, bloom, and pour pattern while you make the cup yourself — this is the hour where you work the bar, not us.||V60, Bloom, Pour, Dose, Timing",
+                    "Technique: second pass — improve pour, timing, and what to change at home (20 min)||You brew again with adjustments. We compare both cups and leave you with clear notes on what to change when you brew at home or in a hotel.||Second brew, Adjustments, Home brew, Technique"
                 },
                 ProvidedEquipment = new List<string>
                 {
@@ -927,10 +927,10 @@ namespace TheBestBean.Models
                 LongDescriptionES = "Primera catación a ritmo de viajero. Abrimos con el olfato: romper la costra, usar el vapor, activar los sentidos. Luego cuatro cafés: un 81 cotidiano, dos de especialidad (~85 y 86–87) y un súper café. Misma pauta: oler, sorber, anotar, hablar.",
                 Syllabus = new List<string>
                 {
-                    "Smell first: crack the crust, use the steam, activate your senses (10 min)||Before any slurp we teach how to smell coffee properly — break the crust, lean in to the steam, and wake up your nose. This is the foundation for every round that follows.",
-                    "Round 1: the 81-point cup — everyday coffee as a baseline (12 min)||Your first scored coffee is a solid everyday lot around 81 points. Learn the cupping protocol: smell dry and wet, slurp, and note acidity, body, and sweetness without overthinking it.",
-                    "Rounds 2–3: specialty lots around 85 and 86–87 (25 min)||Two higher-scoring coffees side by side. Notice how clarity, sweetness, and complexity jump compared to the baseline — we talk through what changed on the farm and in the roast.",
-                    "Round 4: the super coffee — what a high score tastes like (13 min)||One exceptional lot to finish. Feel the gap between good, specialty, and truly standout coffee. Close with questions and what to look for when buying beans."
+                    "Smell first: crack the crust, use the steam, activate your senses (10 min)||Before any slurp we teach how to smell coffee properly — break the crust, lean in to the steam, and wake up your nose. This is the foundation for every round that follows.||Crust, Steam, Fragrance, Aroma, Nose",
+                    "Round 1: the 81-point cup — everyday coffee as a baseline (12 min)||Your first scored coffee is a solid everyday lot around 81 points. Learn the cupping protocol: smell dry and wet, slurp, and note acidity, body, and sweetness without overthinking it.||81 points, Baseline, Slurp, Acidity, Body",
+                    "Rounds 2–3: specialty lots around 85 and 86–87 (25 min)||Two higher-scoring coffees side by side. Notice how clarity, sweetness, and complexity jump compared to the baseline — we talk through what changed on the farm and in the roast.||85 points, 86–87, Clarity, Sweetness, Complexity",
+                    "Round 4: the super coffee — what a high score tastes like (13 min)||One exceptional lot to finish. Feel the gap between good, specialty, and truly standout coffee. Close with questions and what to look for when buying beans.||Super lot, High score, Specialty, Buying beans"
                 },
                 ProvidedEquipment = new List<string>
                 {
@@ -940,6 +940,38 @@ namespace TheBestBean.Models
                 },
                 RequiredGear = new List<string>(),
                 GalleryImages = cynthiaCuppingGallery
+            });
+
+            await UpsertWorkshopAsync("Cusco Coffee Laboratory", new Experience
+            {
+                Title = "The Cusco Coffee Laboratory",
+                TitleES = "El Laboratorio de Café de Cusco",
+                Location = "Cusco",
+                Month = "Year-round",
+                Difficulty = "All Levels",
+                Duration = "2.5hrs",
+                Price = 50,
+                Tag = "FEATURED",
+                ImageUrl = "/Media/experiences/tour-14/lab-hero.jpg",
+                Description = "Join us in our state-of-the-art laboratory in the heart of Cusco. Varieties, V60, espresso, and a roast you take home — one session that covers the full craft.",
+                DescriptionES = "Únete a nuestro laboratorio en el corazón de Cusco. Variedades, V60, espresso y un tueste para llevar — una sesión que cubre todo el oficio.",
+                LongDescription = "Our Cusco Coffee Laboratory workshop elevates your coffee journey. Theory on Peruvian varieties and altitude, V60 filtration and sensory work, an espresso machine demo with cappuccino tasting, then roast fundamentals together — everyone takes home 200g of fresh roast.",
+                LongDescriptionES = "Nuestro laboratorio en Cusco eleva tu viaje con el café. Variedades peruanas y altitud, V60 y sensorial, demo de espresso con cappuccino, y fundamentos de tueste — todos se llevan 200g de tueste fresco.",
+                Syllabus = new List<string>
+                {
+                    "Intro: varieties in Peru — brewer, grinder, coffee, and ratio are set; every cup comes out different (15 min)||Explanation of varieties growing across Peru and why altitude matters in Cusco. Everything is prepared for you: brewer, grinder setting, coffee dose, and a basic recipe. All brews will taste different — that is the point of the session.||Varieties, Altitude, Ratio, Brewer, Grinder",
+                    "V60 Filtration & Sensory: intro to the V60, grinding, and sensory evaluation (30 min)||We introduce the V60 and grinding, then evaluate aroma (compare to other drinks you know), taste notes using spoons, and mouthfeel — especially acidity. You learn to name what you sense before moving to espresso.||V60, Grinding, Aroma, Acidity, Sensory",
+                    "Espresso Experience: machine demo — grind, weigh, tamp, extract, and cappuccino tasting (30 min)||Introduction to the espresso machine. We demonstrate grinding, weighing, tamping, and ratio extraction, froth milk for a cappuccino, and taste and evaluate the result together.||Espresso, Tamp, Extraction, Cappuccino, Milk",
+                    "Roasting Experience: roast fundamentals together — everyone takes home 200g of fresh roast (1 hr)||We run a batch roast together and cover the fundamentals of the roasting process. At the end, everyone takes home 200 grams of freshly roasted coffee.||Roast, Batch, Fresh roast, Take-home, 200g"
+                },
+                ProvidedEquipment = new List<string>
+                {
+                    "V60 and espresso gear",
+                    "Guided sensory tasting",
+                    "Batch roast — 200g to take home"
+                },
+                RequiredGear = new List<string>(),
+                GalleryImages = new List<string>()
             });
 
             await UpsertWorkshopAsync("Odar", new Experience
