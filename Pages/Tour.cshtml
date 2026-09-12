@@ -14,13 +14,13 @@
 
 @if (Model.Tour != null)
 {
-    <!-- Huge Hero Image (Rounded Corners) -->
-    <div class="max-w-[1600px] mx-auto w-full px-4 md:px-12 mt-6 no-print">
+    <!-- Huge Hero Image — full-bleed on mobile, rounded inset on desktop -->
+    <div class="tour-media-bleed max-w-[1600px] mx-auto w-full mt-0 md:mt-6 no-print">
         @{
             var heroImage = Model.PageContent.GetValueOrDefault($"Tour_Hero_Image_{Model.Tour.Id}", Model.Tour.ImageUrl);
             var heroPos = Model.PageContent.GetValueOrDefault($"Tour_Hero_Pos_{Model.Tour.Id}", "50% 50%");
         }
-        <div class="w-full aspect-[21/9] md:aspect-[3/1] bg-gray-100 dark:bg-[#1C191F] overflow-hidden rounded-3xl relative shadow-sm">
+        <div class="tour-media-frame w-full aspect-[4/3] md:aspect-[3/1] bg-gray-100 dark:bg-[#1C191F] overflow-hidden relative shadow-sm">
              @if (!string.IsNullOrWhiteSpace(heroImage))
              {
                  var heroPosParts = heroPos.Split(' ');
@@ -46,7 +46,7 @@
                 <div class="lg:sticky lg:top-32 bg-white dark:bg-[#121014] rounded-3xl border border-gray-100 p-8 shadow-sm">
                     <div class="mb-2">
                         <div class="flex flex-col items-start gap-1">
-                            <span class="price-pair text-3xl font-bold text-v-black dark:text-[#D6D0C8] font-mono-jb"><span>S/@LocalPricing.YapeSoles(Model.Tour.Price).ToString("0")</span><span class="price-pair__sep">/</span><span>$@Model.Tour.Price.ToString("0")</span></span>
+                            <span class="price-pair text-3xl font-bold text-v-black dark:text-[#D6D0C8] font-mono-jb"><span>S/@LocalPricing.YapeSoles(Model.Tour.Price).ToString("0")</span><span class="price-pair__sep">/</span><span>$@Model.Tour.Price.ToString("0")<span class="price-pair__usd">USD</span></span></span>
                             <span class="text-[10px] font-mono font-bold tracking-widest text-[#FF3B1F] uppercase mt-1">VISA 5%</span>
                         </div>
                         <p class="text-xs text-v-gray mt-2 m-0">per participant</p>
@@ -260,11 +260,11 @@
                     <div class="h-px bg-gray-200 flex-grow"></div>
                 </div>
                 
-                <div class="flex overflow-x-auto gap-6 pb-8 snap-x scrollbar-hide" style="scrollbar-width: none;">
+                <div class="tour-gallery-bleed flex overflow-x-auto gap-0 md:gap-6 pb-8 snap-x scrollbar-hide" style="scrollbar-width: none;">
                     @for (int i = 0; i < Model.Tour.GalleryImages.Count; i++)
                     {
                         var img = Model.Tour.GalleryImages[i];
-                        <div class="snap-center shrink-0 w-[80vw] md:w-[600px] aspect-[4/3] rounded-3xl overflow-hidden relative shadow-sm">
+                        <div class="tour-media-frame snap-center shrink-0 w-[100vw] md:w-[600px] aspect-[4/3] overflow-hidden relative shadow-sm">
                             <img src="@img" class="absolute inset-0 w-full h-full object-cover img-stark" alt="@Model.Tour.Title photo" loading="lazy" data-entity-id="@Model.Tour.Id" data-entity-type="Experience" data-editable="GalleryImage_@i" />
                         </div>
                     }

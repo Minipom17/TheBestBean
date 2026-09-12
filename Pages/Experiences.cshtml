@@ -150,7 +150,7 @@
                                         <span class="bg-v-black text-v-white px-8 py-4 font-bold uppercase tracking-widest text-[10px] group-hover:bg-v-yellow group-hover:text-v-black transition-colors font-mono-jb">
                                             VIEW DETAILS
                                         </span>
-                                        <span class="price-pair text-2xl font-semibold text-v-black dark:text-[#D6D0C8] font-mono-jb"><span>S/@LocalPricing.YapeSoles(featuredLab.Price).ToString("0")</span><span class="price-pair__sep">/</span><span>$@featuredLab.Price.ToString("0")</span></span>
+                                        <span class="price-pair text-2xl font-semibold text-v-black dark:text-[#D6D0C8] font-mono-jb"><span>S/@LocalPricing.YapeSoles(featuredLab.Price).ToString("0")</span><span class="price-pair__sep">/</span><span>$@featuredLab.Price.ToString("0")<span class="price-pair__usd">USD</span></span></span>
                                     </div>
                                 </div>
 
@@ -209,7 +209,7 @@
                                         <p class="text-[10px] font-mono-jb uppercase tracking-wide text-v-gray mb-3 m-0"><partial name="_VenueLine" model="exp" /></p>
                                         <p class="text-v-gray text-sm leading-relaxed mb-5 pb-5 border-b border-v-black/10 dark:border-[#2A262C] font-normal flex-grow">@exp.Description</p>
                                         <div class="flex items-center justify-between mt-auto font-mono-jb">
-                                            <span class="text-lg font-bold text-v-black dark:text-[#D6D0C8]">S/@LocalPricing.YapeSoles(exp.Price).ToString("0") <span class="text-sm font-normal text-v-gray">/ $@exp.Price</span></span>
+                                            <span class="text-lg font-bold text-v-black dark:text-[#D6D0C8]">S/@LocalPricing.YapeSoles(exp.Price).ToString("0") <span class="text-sm font-normal text-v-gray">/ $@exp.Price<span class="price-pair__usd">USD</span></span></span>
                                             <span class="text-sm font-bold">Reserve <span class="ml-1">&rarr;</span></span>
                                         </div>
                                     </a>
@@ -256,7 +256,7 @@
                                         @exp.Description
                                     </p>
                                     <div class="flex items-center justify-between mt-auto pt-4 font-mono-jb">
-                                        <span class="text-2xl font-bold text-v-black dark:text-[#D6D0C8]">S/@LocalPricing.YapeSoles(exp.Price).ToString("0") <span class="text-sm font-normal text-v-gray">/ $<span data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Price">@exp.Price</span></span></span>
+                                        <span class="text-2xl font-bold text-v-black dark:text-[#D6D0C8]">S/@LocalPricing.YapeSoles(exp.Price).ToString("0") <span class="text-sm font-normal text-v-gray">/ $<span data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Price">@exp.Price</span><span class="price-pair__usd">USD</span></span></span>
                                         <span class="text-sm font-bold text-v-black dark:text-[#D6D0C8] hover:text-v-gray transition-colors flex items-center">
                                             Reserve <span class="ml-2 transform group-hover:translate-x-1 transition-transform">&rarr;</span>
                                         </span>
@@ -348,7 +348,7 @@
                                         <span class="bg-v-black text-v-white px-8 py-4 font-bold uppercase tracking-widest text-[10px] group-hover:bg-v-red transition-colors font-mono-jb" data-entity-id="Experiences_ViewDossierButton" data-entity-type="SiteContent" data-editable="Value">
                                             @Html.Raw(Model.PageContent.GetValueOrDefault("Experiences_ViewDossierButton", "VIEW DOSSIER"))
                                         </span>
-                                        <span class="price-pair text-2xl font-semibold text-v-black dark:text-[#D6D0C8] font-mono-jb"><span>S/@LocalPricing.YapeSoles(exp.Price).ToString("0")</span><span class="price-pair__sep">/</span><span>$<span data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Price">@exp.Price</span></span></span>
+                                        <span class="price-pair text-2xl font-semibold text-v-black dark:text-[#D6D0C8] font-mono-jb"><span>S/@LocalPricing.YapeSoles(exp.Price).ToString("0")</span><span class="price-pair__sep">/</span><span>$<span data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Price">@exp.Price</span><span class="price-pair__usd">USD</span></span></span>
                                     </div>
                                 </div>
 
