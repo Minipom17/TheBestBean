@@ -160,7 +160,7 @@
                             @if (!string.Equals(Model.Tour.Category, "Expedition", StringComparison.OrdinalIgnoreCase))
                             {
                             <div class="mt-8 pt-6 border-t border-[#FF3B1F]/30" data-takehome="by-host">
-                                <span class="text-[11px] font-bold uppercase tracking-widest text-[#FF3B1F] block mb-4">TAKE HOME</span>
+                                <span class="text-xs font-bold uppercase tracking-widest text-[#FF3B1F] block mb-4">TAKE HOME</span>
                                 <ul class="list-none p-0 m-0 space-y-3 font-mono-jb text-sm text-v-black dark:text-[#D6D0C8]">
                                     @if (Model.TakesCoffeeHome)
                                     {
@@ -188,7 +188,7 @@
                     @if (Model.Venue != null)
                     {
                         <div class="tour-venue-map w-full flex flex-col md:mt-2">
-                            <span class="text-[11px] font-bold uppercase tracking-widest text-v-gray font-mono-jb mb-2">Meeting point</span>
+                            <span class="text-xs font-bold uppercase tracking-widest text-v-gray font-mono-jb mb-2">Meeting point</span>
                             <div class="tour-venue-map__frame w-full border border-gray-200 dark:border-[#2A262C] rounded-2xl overflow-hidden bg-gray-100 dark:bg-[#1C191F]">
                                 <iframe
                                     title="Map — @ExperienceVenue.InlineLabel(Model.Venue)"
@@ -199,14 +199,14 @@
                                     allowfullscreen>
                                 </iframe>
                             </div>
-                            <p class="text-[11px] text-v-gray font-mono-jb mt-2 m-0 leading-relaxed">
+                            <p class="text-xs text-v-gray font-mono-jb mt-2 m-0 leading-relaxed">
                                 @ExperienceVenue.InlineLabel(Model.Venue)
                                 @if (!string.IsNullOrWhiteSpace(Model.Venue.WalkNote))
                                 {
                                     <span class="text-v-gray"> · @Model.Venue.WalkNote</span>
                                 }
                             </p>
-                            <a href="@ExperienceVenue.MapOpenUrl(Model.Venue)" target="_blank" rel="noopener noreferrer" class="text-[11px] font-mono-jb text-[#722EA8] mt-1 text-decoration-none hover:underline">Open in Google Maps</a>
+                            <a href="@ExperienceVenue.MapOpenUrl(Model.Venue)" target="_blank" rel="noopener noreferrer" class="text-xs font-mono-jb text-[#722EA8] mt-1 text-decoration-none hover:underline">Open in Google Maps</a>
                         </div>
                     }
                     </div>
