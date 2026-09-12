@@ -1540,13 +1540,14 @@ html.dark .brew-variables-band {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
     font-weight: 700;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: #0B1210;
-    background: rgba(255, 255, 255, 0.94);
-    border: 1.5px solid var(--brew-accent, #111);
-    padding: 0.4rem 0.6rem;
-    line-height: 1.2;
+    /* Dark ink on solid white — readable on teal cards; accent only on the border */
+    color: #111111 !important;
+    background: #ffffff !important;
+    border: 2px solid var(--brew-accent, #111);
+    padding: 0.45rem 0.65rem;
+    line-height: 1.25;
 }
 .brew-method-card {
     border: 1px solid #111;
