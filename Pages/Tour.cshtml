@@ -105,10 +105,10 @@
                     @if (Model.Venue != null)
                     {
                         <p class="text-sm font-mono-jb text-v-black dark:text-[#D6D0C8] mb-4 m-0">
-                            @ExperienceVenue.InlineLabel(Model.Venue)
+                            <span class="block">@ExperienceVenue.InlineLabel(Model.Venue)</span>
                             @if (!string.IsNullOrWhiteSpace(Model.Venue.WalkNote))
                             {
-                                <span class="text-[10px] font-normal text-v-gray ml-1">@Model.Venue.WalkNote</span>
+                                <span class="block text-[10px] font-normal text-v-gray mt-0.5">@Model.Venue.WalkNote</span>
                             }
                         </p>
                     }
@@ -200,10 +200,10 @@
                                 </iframe>
                             </div>
                             <p class="text-xs text-v-gray font-mono-jb mt-2 m-0 leading-relaxed">
-                                @ExperienceVenue.InlineLabel(Model.Venue)
+                                <span class="block">@ExperienceVenue.InlineLabel(Model.Venue)</span>
                                 @if (!string.IsNullOrWhiteSpace(Model.Venue.WalkNote))
                                 {
-                                    <span class="text-v-gray"> · @Model.Venue.WalkNote</span>
+                                    <span class="block text-[10px] mt-0.5">@Model.Venue.WalkNote</span>
                                 }
                             </p>
                             <a href="@ExperienceVenue.MapOpenUrl(Model.Venue)" target="_blank" rel="noopener noreferrer" class="text-xs font-mono-jb text-[#722EA8] mt-1 text-decoration-none hover:underline">Open in Google Maps</a>
