@@ -55,7 +55,7 @@
                     <div class="flex flex-col gap-4 mt-8 pt-8 border-t border-gray-100">
                         <div class="flex justify-between items-start text-xs gap-4">
                             <span class="text-v-gray font-normal shrink-0">Duration</span>
-                            <span class="text-v-black dark:text-[#D6D0C8] font-semibold text-right">@Model.Tour.Duration</span>
+                            <span class="text-v-black dark:text-[#D6D0C8] font-semibold text-right">@ExperienceGeo.FormatDuration(Model.Tour.Duration)</span>
                         </div>
                         <div class="flex justify-between items-start text-xs gap-4">
                             <span class="text-v-gray font-normal shrink-0">Location</span>
@@ -101,7 +101,7 @@
                 
                 <!-- Title Block -->
                 <div>
-                    <span class="text-[10px] font-bold uppercase tracking-widest text-v-gray font-mono-jb block mb-2">@Model.Tour.Category &bull; @Model.Tour.Duration</span>
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-v-gray font-mono-jb block mb-2">@Model.Tour.Category &bull; @ExperienceGeo.FormatDuration(Model.Tour.Duration)</span>
                     @if (Model.Venue != null)
                     {
                         <p class="text-sm font-mono-jb text-v-black dark:text-[#D6D0C8] mb-4 m-0">

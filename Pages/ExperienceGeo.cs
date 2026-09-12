@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using TheBestBean.Models;
 
 namespace TheBestBean.Pages
@@ -5,6 +6,19 @@ namespace TheBestBean.Pages
     public static class ExperienceGeo
     {
         public readonly record struct Place(string Region, string PlaceKey, string RegionLabel, string PlaceLabel);
+
+
+        /// <summary>Display durations as 1hr / 2.5hrs instead of 1 HOUR / 2.5 HOURS.</summary>
+        public static string FormatDuration(string? duration)
+        {
+            if (string.IsNullOrWhiteSpace(duration)) return string.Empty;
+            var s = duration.Trim();
+            s = Regex.Replace(s, @"\bHOURS\b", "hrs", RegexOptions.IgnoreCase);
+            s = Regex.Replace(s, @"\bHOUR\b", "hr", RegexOptions.IgnoreCase);
+            s = Regex.Replace(s, @"(\d+(?:\.\d+)?)\s*(hrs?)\b", "$1$2", RegexOptions.IgnoreCase);
+            return s;
+        }
+
 
         public static Place Locate(Experience e)
         {

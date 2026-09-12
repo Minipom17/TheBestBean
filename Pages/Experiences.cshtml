@@ -11,9 +11,10 @@
 @functions {
     public static string GetTimeCategory(string duration) {
         if (string.IsNullOrEmpty(duration)) return "all";
-        var d = duration.ToLower();
-        if (d.Contains("1 hour")) return "1-hour";
-        if (d.Contains("2.5") || d.Contains("2") || d.Contains("3") || d.Contains("4")) return "2-5-hours";
+        var d = duration.ToLowerInvariant().Replace(" ", "");
+        if (d.Contains("1hour") || d.Contains("1hr")) return "1-hour";
+        if (d.Contains("2.5") || d.Contains("2hr") || d.Contains("3hr") || d.Contains("4hr")
+            || d.Contains("2hour") || d.Contains("3hour") || d.Contains("4hour")) return "2-5-hours";
         if (d.Contains("day") && !d.Contains("days") && !d.Contains("multi")) return "day";
         if (d.Contains("days") || d.Contains("multi")) return "multi-day";
         return "all";
@@ -39,27 +40,12 @@
                 
                 <div class="mt-3 md:mt-5 exp-filters font-mono-jb lg:w-full" aria-label="Workshop filters">
                     <partial name="_ExpLocationFilters" model='"urban-location-filters"' />
-
-                    <div class="exp-filter-row">
-                        <span class="exp-filter-label">When</span>
-                        <div class="exp-when" id="urban-frequency-filters" role="group" aria-label="Filter by schedule">
-                            <button type="button" class="exp-when-btn filter-btn active" data-filter="all">All</button>
-                            @foreach (var when in Model.ExperiencesList
-                                .Where(e => e.Category == "Urban Workshops" && !string.IsNullOrEmpty(e.Month) && !ExperienceGeo.IsMonWed(e.Month))
-                                .Select(e => ExperienceGeo.WhenKey(e.Month))
-                                .Where(k => !string.IsNullOrWhiteSpace(k))
-                                .Distinct())
-                            {
-                                <button type="button" class="exp-when-btn filter-btn" data-filter="@when">@ExperienceGeo.WhenLabel(when)</button>
-                            }
-                        </div>
-                    </div>
                     <div class="exp-filter-row mt-4">
                         <span class="exp-filter-label">Time</span>
                         <div class="exp-when" id="urban-time-filters" role="group" aria-label="Filter by time">
                             <button type="button" class="exp-when-btn filter-btn active" data-filter="all">All</button>
-                            <button type="button" class="exp-when-btn filter-btn" data-filter="1-hour">1 hour</button>
-                            <button type="button" class="exp-when-btn filter-btn" data-filter="2-5-hours">2.5 hours</button>
+                            <button type="button" class="exp-when-btn filter-btn" data-filter="1-hour">1hr</button>
+                            <button type="button" class="exp-when-btn filter-btn" data-filter="2-5-hours">2.5hrs</button>
                             <button type="button" class="exp-when-btn filter-btn" data-filter="day">day</button>
                             <button type="button" class="exp-when-btn filter-btn" data-filter="multi-day">multi-day</button>
                         </div>
@@ -118,7 +104,7 @@
                                 <div class="md:col-span-7 flex flex-col">
                                     <div class="flex items-center gap-3 mb-4 font-mono-jb">
                                         <div class="w-3 h-3 bg-v-yellow"></div>
-                                        <span class="text-[10px] font-bold uppercase tracking-widest text-v-black dark:text-[#D6D0C8]">@featuredLab.Duration</span>
+                                        <span class="text-[10px] font-bold uppercase tracking-widest text-v-black dark:text-[#D6D0C8]">@ExperienceGeo.FormatDuration(featuredLab.Duration)</span>
                                         @if (!string.IsNullOrEmpty(featuredLab.Month) && !ExperienceGeo.IsMonWed(featuredLab.Month))
                                         {
                                             <span class="text-[10px] font-bold tracking-widest uppercase text-v-gray">@featuredLab.Month</span>
@@ -211,11 +197,11 @@
                                             {
                                                 <div class="absolute inset-0 flex items-center justify-center font-mono-jb text-[10px] font-bold uppercase tracking-widest text-v-gray">Photos soon</div>
                                             }
-                                            <div class="absolute top-3 right-3 bg-v-yellow text-v-black rounded-full px-3 py-1 text-[9px] font-mono-jb font-bold uppercase tracking-widest">1 HOUR</div>
+                                            <div class="absolute top-3 right-3 bg-v-yellow text-v-black rounded-full px-3 py-1 text-[9px] font-mono-jb font-bold uppercase tracking-widest">1hr</div>
                                         </div>
                                         <div class="flex items-center gap-2 font-mono-jb text-[10px] font-bold tracking-widest uppercase mb-2">
                                             <div class="w-1.5 h-1.5 bg-v-yellow"></div>
-                                            <span class="text-v-black dark:text-[#D6D0C8]">@exp.Duration</span>
+                                            <span class="text-v-black dark:text-[#D6D0C8]">@ExperienceGeo.FormatDuration(exp.Duration)</span>
                                             <span class="text-gray-300">/</span>
                                             <span class="text-v-gray">@exp.Difficulty</span>
                                         </div>
@@ -295,27 +281,12 @@
 
                 <div class="mt-3 md:mt-5 exp-filters font-mono-jb w-full" aria-label="Expedition filters">
                     <partial name="_ExpLocationFilters" model='"expedition-location-filters"' />
-
-                    <div class="exp-filter-row">
-                        <span class="exp-filter-label">When</span>
-                        <div class="exp-when" id="expedition-frequency-filters" role="group" aria-label="Filter by schedule">
-                            <button type="button" class="exp-when-btn filter-btn active" data-filter="all">All</button>
-                            @foreach (var when in Model.ExperiencesList
-                                .Where(e => e.Category == "Expedition" && !string.IsNullOrEmpty(e.Month) && !ExperienceGeo.IsMonWed(e.Month))
-                                .Select(e => ExperienceGeo.WhenKey(e.Month))
-                                .Where(k => !string.IsNullOrWhiteSpace(k))
-                                .Distinct())
-                            {
-                                <button type="button" class="exp-when-btn filter-btn" data-filter="@when">@ExperienceGeo.WhenLabel(when)</button>
-                            }
-                        </div>
-                    </div>
                     <div class="exp-filter-row mt-4">
                         <span class="exp-filter-label">Time</span>
                         <div class="exp-when" id="expedition-time-filters" role="group" aria-label="Filter by time">
                             <button type="button" class="exp-when-btn filter-btn active" data-filter="all">All</button>
-                            <button type="button" class="exp-when-btn filter-btn" data-filter="1-hour">1 hour</button>
-                            <button type="button" class="exp-when-btn filter-btn" data-filter="2-5-hours">2.5 hours</button>
+                            <button type="button" class="exp-when-btn filter-btn" data-filter="1-hour">1hr</button>
+                            <button type="button" class="exp-when-btn filter-btn" data-filter="2-5-hours">2.5hrs</button>
                             <button type="button" class="exp-when-btn filter-btn" data-filter="day">day</button>
                             <button type="button" class="exp-when-btn filter-btn" data-filter="multi-day">multi-day</button>
                         </div>
@@ -362,7 +333,7 @@
                                 <div class="md:col-span-7 flex flex-col">
                                     <div class="flex items-center gap-3 mb-4 font-mono-jb">
                                         <div class="w-3 h-3 bg-v-red"></div>
-                                        <span class="text-[10px] font-bold uppercase tracking-widest text-v-black dark:text-[#D6D0C8]" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Duration">@exp.Duration</span>
+                                        <span class="text-[10px] font-bold uppercase tracking-widest text-v-black dark:text-[#D6D0C8]" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Duration">@ExperienceGeo.FormatDuration(exp.Duration)</span>
                                         @if (!string.IsNullOrEmpty(exp.Month) && !ExperienceGeo.IsMonWed(exp.Month))
                                         {
                                             <span class="text-[10px] font-bold tracking-widest uppercase text-v-gray" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Month">@exp.Month</span>
@@ -449,63 +420,69 @@
 
                         const labItems = document.querySelectorAll('.lab-item');
             let currentUrbanLocation = 'all';
-            let currentUrbanFrequency = 'all';
             let currentUrbanTime = 'all';
+            let urbanLocationLabel = 'All';
+            let urbanTimeLabel = '';
+
+            function formatSubtitle(locLabel, timeLabel) {
+                return timeLabel ? (locLabel + ' - ' + timeLabel) : locLabel;
+            }
+
+            function timeChipLabel(btn) {
+                return (btn?.textContent || '').replace(/\s+/g, ' ').trim();
+            }
 
             function filterUrbanLabs() {
                 labItems.forEach(item => {
-                    const itemFrequency = item.getAttribute('data-frequency') || 'all';
                     const itemTime = item.getAttribute('data-time') || 'all';
                     const matchesLocation = matchesGeo(item, currentUrbanLocation);
-                    const matchesFrequency = currentUrbanFrequency === 'all' || itemFrequency === currentUrbanFrequency;
                     const matchesTime = currentUrbanTime === 'all' || itemTime === currentUrbanTime;
-                    item.style.display = (matchesLocation && matchesFrequency && matchesTime) ? 'flex' : 'none';
+                    item.style.display = (matchesLocation && matchesTime) ? 'flex' : 'none';
                 });
             }
 
             bindFilterGroup('#urban-location-filters .filter-btn', (value, btn) => {
                 currentUrbanLocation = value;
+                urbanLocationLabel = locationLabel(btn);
                 const subtitle = document.getElementById('urban-location-subtitle');
-                if (subtitle) subtitle.textContent = locationLabel(btn);
+                if (subtitle) subtitle.textContent = formatSubtitle(urbanLocationLabel, urbanTimeLabel);
                 filterUrbanLabs();
             });
-            bindFilterGroup('#urban-frequency-filters .filter-btn', value => {
-                currentUrbanFrequency = value;
-                filterUrbanLabs();
-            });
-            bindFilterGroup('#urban-time-filters .filter-btn', value => {
+            bindFilterGroup('#urban-time-filters .filter-btn', (value, btn) => {
                 currentUrbanTime = value;
+                urbanTimeLabel = value === 'all' ? '' : timeChipLabel(btn);
+                const subtitle = document.getElementById('urban-location-subtitle');
+                if (subtitle) subtitle.textContent = formatSubtitle(urbanLocationLabel, urbanTimeLabel);
                 filterUrbanLabs();
             });
 
             const expeditionItems = document.querySelectorAll('.expedition-item');
             let currentExpeditionLocation = 'all';
-            let currentExpeditionFrequency = 'all';
             let currentExpeditionTime = 'all';
+            let expeditionLocationLabel = 'All';
+            let expeditionTimeLabel = '';
 
             function filterExpeditions() {
                 expeditionItems.forEach(item => {
-                    const itemFrequency = item.getAttribute('data-frequency') || 'all';
                     const itemTime = item.getAttribute('data-time') || 'all';
                     const matchesLocation = matchesGeo(item, currentExpeditionLocation);
-                    const matchesFrequency = currentExpeditionFrequency === 'all' || itemFrequency === currentExpeditionFrequency;
                     const matchesTime = currentExpeditionTime === 'all' || itemTime === currentExpeditionTime;
-                    item.style.display = (matchesLocation && matchesFrequency && matchesTime) ? 'flex' : 'none';
+                    item.style.display = (matchesLocation && matchesTime) ? 'flex' : 'none';
                 });
             }
 
             bindFilterGroup('#expedition-location-filters .filter-btn', (value, btn) => {
                 currentExpeditionLocation = value;
+                expeditionLocationLabel = locationLabel(btn);
                 const subtitle = document.getElementById('expedition-location-subtitle');
-                if (subtitle) subtitle.textContent = locationLabel(btn);
+                if (subtitle) subtitle.textContent = formatSubtitle(expeditionLocationLabel, expeditionTimeLabel);
                 filterExpeditions();
             });
-            bindFilterGroup('#expedition-frequency-filters .filter-btn', value => {
-                currentExpeditionFrequency = value;
-                filterExpeditions();
-            });
-            bindFilterGroup('#expedition-time-filters .filter-btn', value => {
+            bindFilterGroup('#expedition-time-filters .filter-btn', (value, btn) => {
                 currentExpeditionTime = value;
+                expeditionTimeLabel = value === 'all' ? '' : timeChipLabel(btn);
+                const subtitle = document.getElementById('expedition-location-subtitle');
+                if (subtitle) subtitle.textContent = formatSubtitle(expeditionLocationLabel, expeditionTimeLabel);
                 filterExpeditions();
             });
         });
