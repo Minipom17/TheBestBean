@@ -1,10 +1,10 @@
 html {
-  font-size: 14px;
+  font-size: 16px;
 }
 
 @media (min-width: 768px) {
   html {
-    font-size: 16px;
+    font-size: 18px;
   }
 }
 
@@ -100,35 +100,79 @@ html.dark footer img.brand-logo.brand-logo--cream {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    align-items: flex-end;
-    gap: 2rem 3rem;
-    padding-right: 8.5rem;
+    align-items: flex-start;
+    gap: 1.75rem 3rem;
+    padding-right: 0;
+}
+@media (min-width: 768px) {
+    .site-footer__inner {
+        align-items: flex-end;
+        padding-right: 8.5rem; /* room for WhatsApp FAB */
+    }
 }
 .site-footer__copy {
-    flex: 1 1 16rem;
-    max-width: 38rem;
+    flex: 1 1 100%;
+    max-width: none;
+    width: 100%;
+}
+@media (min-width: 768px) {
+    .site-footer__copy {
+        flex: 1 1 16rem;
+        max-width: 38rem;
+        width: auto;
+    }
 }
 .site-footer__copy p {
-    margin: 0 0 0.45rem;
+    margin: 0 0 0.7rem;
+}
+.site-footer__copy p:last-child {
+    margin-bottom: 0;
 }
 .site-footer__copy span {
+    display: block;
     color: #8B8490;
+    margin-bottom: 0.15rem;
 }
 html.dark .site-footer__copy span {
     color: #8B8490;
 }
+@media (min-width: 768px) {
+    .site-footer__copy p {
+        margin: 0 0 0.45rem;
+    }
+    .site-footer__copy span {
+        display: inline;
+        margin-bottom: 0;
+    }
+    .site-footer__copy span::after {
+        content: ": ";
+    }
+}
 .site-footer__grid {
     display: grid;
-    grid-template-columns: repeat(3, max-content);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     grid-template-rows: auto auto;
-    column-gap: 1.75rem;
-    row-gap: 0.65rem;
-    margin-left: auto;
-    flex: 0 0 auto;
+    grid-auto-flow: column;
+    column-gap: 0.75rem;
+    row-gap: 0.75rem;
+    margin-left: 0;
+    flex: 1 1 100%;
+    width: 100%;
 }
 .site-footer__grid a {
     color: inherit;
     text-decoration: none;
+    min-width: 0;
+}
+@media (min-width: 768px) {
+    .site-footer__grid {
+        grid-template-columns: repeat(3, max-content);
+        column-gap: 1.75rem;
+        row-gap: 0.65rem;
+        margin-left: auto;
+        flex: 0 0 auto;
+        width: auto;
+    }
 }
 .site-footer__grid a:hover {
     color: #722EA8;
@@ -327,12 +371,19 @@ html.dark .hover\:border-\[\#FF3B1F\]:hover {
     max-width: none;
 }
 
+.exp-filter-row > .exp-geo,
+.exp-filter-row > .exp-when {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
 .exp-filter-row {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 0.7rem;
     min-width: 0;
+    width: 100%;
 }
 
 .exp-filter-label {
@@ -346,9 +397,12 @@ html.dark .hover\:border-\[\#FF3B1F\]:hover {
 }
 
 .exp-geo--flat {
-    flex-wrap: wrap;
-    gap: 0.35rem 0.5rem;
-    align-items: baseline;
+    flex-wrap: nowrap;
+    gap: 0.5rem 0.65rem;
+    align-items: center;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
 }
 
 .exp-geo-sep {
@@ -378,9 +432,14 @@ html.dark .exp-geo-sep {
 }
 
 .exp-geo.exp-geo--flat {
-    flex-wrap: wrap;
-    overflow: visible;
-    padding-right: 0;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-right: 1.5rem;
+}
+.exp-geo--flat::-webkit-scrollbar {
+    display: none;
 }
 
 .exp-geo::-webkit-scrollbar,
@@ -660,23 +719,174 @@ html.dark .offerings-choose-prompt {
     color: #111;
     border-color: #111;
 }
-.tour-syllabus-details {
-    margin-top: 0.25rem;
+
+.tour-whatyouget-map {
+    width: 100%;
+    align-items: stretch;
 }
-.tour-syllabus-details__summary {
+.tour-whatyouget-map > .relative,
+.tour-whatyouget-map > .tour-venue-map {
+    width: 100%;
+    max-width: 100%;
+}
+.tour-venue-map {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+.tour-venue-map__frame {
+    position: relative;
+    width: 100% !important;
+    max-width: 100% !important;
+    aspect-ratio: 1 / 1;
+    isolation: isolate;
+    transform: translateZ(0);
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+}
+.tour-venue-map__frame iframe {
+    display: block;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    border: 0;
+    outline: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+}
+@media (min-width: 768px) {
+    .tour-venue-map {
+        width: 13rem !important;
+        max-width: 14rem !important;
+    }
+}
+
+/* Timeline rail sits closer to the left edge on mobile */
+.tour-syllabus-timeline {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding-left: 0;
+    margin-left: -0.85rem; /* reclaim page gutter so dots sit nearer the edge */
+}
+@media (min-width: 768px) {
+    .tour-syllabus-timeline {
+        margin-left: 0;
+    }
+}
+.tour-syllabus-timeline__line {
+    position: absolute;
+    left: 4px;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 1px;
+    background: #e5e7eb;
+}
+html.dark .tour-syllabus-timeline__line {
+    background: #2A262C;
+}
+.tour-syllabus-timeline__item {
+    position: relative;
+    padding-left: 1.35rem;
+    padding-bottom: 2.5rem;
+}
+.tour-syllabus-timeline__item:last-child {
+    padding-bottom: 0;
+}
+.tour-syllabus-timeline__dot {
+    position: absolute;
+    left: 0;
+    top: 0.4rem;
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 9999px;
+    background: #111;
+    box-shadow: 0 0 0 4px #fff;
+}
+html.dark .tour-syllabus-timeline__dot {
+    background: #D6D0C8;
+    box-shadow: 0 0 0 4px #121014;
+}
+@media (min-width: 768px) {
+    .tour-syllabus-timeline__line {
+        left: 5px;
+    }
+    .tour-syllabus-timeline__item {
+        padding-left: 2rem;
+    }
+    .tour-syllabus-timeline__dot {
+        width: 0.625rem;
+        height: 0.625rem;
+    }
+}
+
+.syllabus-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    width: 100%;
+    min-width: 0;
+}
+details.syllabus-row {
+    width: 100%;
+    min-width: 0;
+}
+.syllabus-row__summary {
     list-style: none;
     cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
     padding: 0;
     user-select: none;
+    min-width: 0;
 }
-.tour-syllabus-details__summary::-webkit-details-marker {
+.syllabus-row__summary::-webkit-details-marker {
     display: none;
 }
-.tour-syllabus-details__summary .tracking-widest {
-    letter-spacing: 0.15em;
+.syllabus-row__top {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.85rem;
+    width: 100%;
+    min-width: 0;
+}
+.syllabus-row__lead {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.5rem;
+    flex: 1 1 0;
+    min-width: 0;
+}
+.syllabus-row__details-btn {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.35rem;
+    white-space: nowrap;
+    flex: 0 0 auto;
+    margin-left: 0;
+    padding-top: 0.1rem;
+    opacity: 0.8;
+    position: relative;
+    z-index: 1;
+}
+.syllabus-row__summary:hover .syllabus-row__details-btn {
+    opacity: 1;
+}
+.syllabus-row__body {
+    max-width: 42rem;
+    padding-top: 0.35rem;
+    margin-top: 0.15rem;
 }
 .tour-syllabus-details__chevron {
     width: 0.4rem;
@@ -687,12 +897,80 @@ html.dark .offerings-choose-prompt {
     transition: transform 0.2s ease;
     flex-shrink: 0;
 }
-.tour-syllabus-details[open] .tour-syllabus-details__chevron {
+details.syllabus-row[open] .tour-syllabus-details__chevron {
     transform: rotate(225deg);
 }
-.tour-syllabus-details__body {
-    max-width: 42rem;
+.tour-syllabus-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #8B8490;
+    margin-right: 0;
+    flex: 0 1 auto;
+    min-width: 0;
+    max-width: 100%;
 }
+.syllabus-module-title__name {
+    display: block;
+    margin: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    line-height: 1.5;
+    color: #722EA8;
+}
+.syllabus-module-title__time {
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+    padding: 0.12rem 0.4rem;
+    border: 1px solid #722EA8;
+    border-radius: 2px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    line-height: 1.2;
+    color: #722EA8;
+    white-space: nowrap;
+}
+html.dark .syllabus-module-title__name,
+html.dark .syllabus-module-title__time {
+    color: #B794E8;
+}
+html.dark .syllabus-module-title__time {
+    border-color: #B794E8;
+}
+.syllabus-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    list-style: none;
+    margin: 0.1rem 0 0;
+    padding: 0;
+}
+.syllabus-tag {
+    display: inline-flex;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #722EA8;
+    border: 1px solid #D4C4E8;
+    background: #faf7fd;
+    padding: 0.18rem 0.45rem;
+    line-height: 1.3;
+}
+html.dark .syllabus-tag {
+    color: #B794E8;
+    border-color: #4A3A58;
+    background: #1C191F;
+}
+
 .tour-syllabus-points {
     list-style: none;
     margin: 0;
@@ -717,87 +995,11 @@ html.dark .offerings-choose-prompt {
     background: #722EA8;
 }
 
-.tour-whatyouget-map {
-    width: 100%;
+@media (min-width: 768px) {
+    
 }
 
-.tour-venue-map__frame {
-    position: relative;
-}
-.tour-venue-map__frame iframe {
-    display: block;
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-}
-.tour-syllabus-label {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: #8B8490;
-    margin-right: 0.5rem;
-    flex-shrink: 0;
-}
-.syllabus-module-title {
-    display: inline-flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    color: #722EA8;
-}
-.syllabus-module-title__name {
-    font-weight: 500;
-}
-.syllabus-module-title__time {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.1rem 0.35rem;
-    border: 1px solid #722EA8;
-    border-radius: 2px;
-    font-size: 9px;
-    font-weight: 500;
-    letter-spacing: 0.04em;
-    line-height: 1.2;
-    color: #722EA8;
-}
-html.dark .syllabus-module-title,
-html.dark .syllabus-module-title__time {
-    color: #B794E8;
-    border-color: #B794E8;
-}
-.syllabus-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.3rem;
-    list-style: none;
-    margin: 0.55rem 0 0;
-    padding: 0;
-}
-.syllabus-tag {
-    display: inline-flex;
-    align-items: center;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: #722EA8;
-    border: 1px solid #D4C4E8;
-    background: #faf7fd;
-    padding: 0.15rem 0.4rem;
-    line-height: 1.3;
-}
-html.dark .syllabus-tag {
-    color: #B794E8;
-    border-color: #4A3A58;
-    background: #1C191F;
-}
+html.dark 
 
 .lab-recipe-dropdown {
     border: 1px solid #111;
@@ -905,6 +1107,48 @@ span.font-mono-jb > span.mx-2 {
     font-weight: 400;
     margin-left: 0 !important;
     margin-right: 0 !important;
+}
+.price-pair__usd {
+    display: inline-block;
+    margin-left: 0.28em;
+    font-size: 0.42em;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    vertical-align: super;
+    color: #8B8490;
+    line-height: 1;
+}
+html.dark .price-pair__usd {
+    color: #8B8490;
+}
+
+/* Tour media: full-bleed square corners on mobile; inset + rounded on desktop */
+.tour-media-bleed {
+    padding-left: 0;
+    padding-right: 0;
+}
+.tour-media-frame {
+    border-radius: 0;
+}
+.tour-gallery-bleed {
+    margin-left: -1.5rem;
+    margin-right: -1.5rem;
+    width: calc(100% + 3rem);
+}
+@media (min-width: 768px) {
+    .tour-media-bleed {
+        padding-left: 3rem;
+        padding-right: 3rem;
+    }
+    .tour-media-bleed .tour-media-frame,
+    .tour-gallery-bleed .tour-media-frame {
+        border-radius: 1.5rem;
+    }
+    .tour-gallery-bleed {
+        margin-left: 0;
+        margin-right: 0;
+        width: 100%;
+    }
 }
 
 /* Yape vs card pricing */
@@ -1294,13 +1538,22 @@ html.dark .brew-variables-band {
     margin-top: auto;
     align-self: flex-start;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 700;
-    letter-spacing: 0.16em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--brew-accent, #111);
-    background: color-mix(in srgb, var(--brew-accent, #111) 14%, transparent);
-    padding: 0.35rem 0.55rem;
+    /* Black type on a light tint of the accent — readable on teal cards */
+    color: #111111 !important;
+    background: color-mix(in srgb, var(--brew-accent, #111) 16%, #ffffff) !important;
+    border: 1.5px solid color-mix(in srgb, var(--brew-accent, #111) 55%, #111111);
+    padding: 0.45rem 0.65rem;
+    line-height: 1.25;
+}
+@supports not (background: color-mix(in srgb, red 16%, white)) {
+    .brew-var-spec {
+        background: #ffffff !important;
+        border-color: var(--brew-accent, #111);
+    }
 }
 .brew-method-card {
     border: 1px solid #111;

@@ -76,9 +76,9 @@
     <script type="application/ld+json">
     {
       "@@context": "https://schema.org",
-      "@@type": ["CafeOrCoffeeShop", "TouristAttraction"],
+      "@@type": ["CafeOrCoffeeShop", "LocalBusiness"],
       "name": "Purple Bean Coffee",
-      "description": "Specialty coffee roastery based in Cusco, Peru. We source from high-altitude farms in La Convención and Cajamarca, roast in small batches, and offer immersive coffee experiences for travelers.",
+      "description": "Specialty coffee roastery based in Cusco, Peru. We source from high-altitude farms in La Convención and Cajamarca, roast in small batches, and offer immersive coffee experiences.",
       "image": [
         "https://purplebean.coffee/images/og-logo-square.png",
         "https://purplebean.coffee/images/brand-icon.png"
@@ -295,6 +295,13 @@
         }
         html.dark .rule-thin {
             border-bottom-color: var(--line);
+        }
+
+        /* Workshops request: no hairline under sticky navbar */
+        header.sticky,
+        header {
+            border-bottom: none !important;
+            box-shadow: none !important;
         }
 
         header .brand-lockup,
@@ -565,7 +572,7 @@
     
     @await RenderSectionAsync("Styles", required: false)
 </head>
-<body class="min-h-screen flex flex-col font-sans text-sm selection:bg-v-black selection:text-v-white relative bg-v-white dark:bg-night text-v-black dark:text-cream transition-colors duration-300">
+<body class="min-h-screen flex flex-col font-sans text-[0.9375rem] md:text-sm selection:bg-v-black selection:text-v-white relative bg-v-white dark:bg-night text-v-black dark:text-cream transition-colors duration-300">
     @{
         var cartCount = 0;
         try {

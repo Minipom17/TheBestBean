@@ -6,8 +6,12 @@ public record SyllabusItem(string Label, string Title, string Time, string? Deta
 
 public static class SyllabusParser
 {
-    private static readonly Regex TimeOnly = new(@"^\d+\s*min", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-    private static readonly Regex TrailingTime = new(@"^(.*)\((\d+\s*min(?:ute)?s?)\)\s*$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+    private static readonly Regex TimeOnly = new(
+        @"^\d+(?:\.\d+)?\s*(?:min(?:ute)?s?|hrs?|hours?)\b",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled);
+    private static readonly Regex TrailingTime = new(
+        @"^(.*)\((\d+(?:\.\d+)?\s*(?:min(?:ute)?s?|hrs?|hours?))\)\s*$",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled);
     private static readonly char[] TagSplit = [',', '·'];
 
     public static SyllabusItem Parse(string item, int index)
@@ -82,6 +86,11 @@ public static class SyllabusParser
             return "";
         }
 
-        return Regex.Replace(time.Trim(), @"\bmins\b", "min", RegexOptions.IgnoreCase);
+        var t = time.Trim();
+        t = Regex.Replace(t, @"\bmins\b", "min", RegexOptions.IgnoreCase);
+        t = Regex.Replace(t, @"\bhours\b", "hrs", RegexOptions.IgnoreCase);
+        t = Regex.Replace(t, @"\bhour\b", "hr", RegexOptions.IgnoreCase);
+        t = Regex.Replace(t, @"(\d+(?:\.\d+)?)\s*(hrs?)\b", "$1$2", RegexOptions.IgnoreCase);
+        return t;
     }
 }

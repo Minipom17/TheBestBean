@@ -4,7 +4,7 @@
 }
 @if (venue != null)
 {
-    <span class="inline-flex flex-wrap items-baseline gap-x-1 gap-y-0.5">
+    <span class="inline-flex flex-col items-start gap-y-0.5">
         <span>@ExperienceVenue.InlineLabel(venue)</span>
         @if (!string.IsNullOrWhiteSpace(venue.WalkNote))
         {
