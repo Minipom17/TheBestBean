@@ -749,7 +749,7 @@ html.dark .offerings-choose-prompt {
     font-size: 10px;
     font-weight: 600;
     letter-spacing: 0.02em;
-    color: #722EA8;
+    color: #000000;
 }
 .syllabus-module-title__name {
     font-weight: 500;
@@ -766,7 +766,9 @@ html.dark .offerings-choose-prompt {
     line-height: 1.2;
     color: #722EA8;
 }
-html.dark .syllabus-module-title,
+html.dark .syllabus-module-title {
+    color: #D6D0C8;
+}
 html.dark .syllabus-module-title__time {
     color: #B794E8;
     border-color: #B794E8;
