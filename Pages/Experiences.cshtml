@@ -107,7 +107,7 @@
                                         <span class="text-[10px] font-bold uppercase tracking-widest text-v-black dark:text-[#D6D0C8]">@ExperienceGeo.FormatDuration(featuredLab.Duration)</span>
                                         @if (!string.IsNullOrEmpty(featuredLab.Month) && !ExperienceGeo.IsMonWed(featuredLab.Month))
                                         {
-                                            <span class="text-[10px] font-bold tracking-widest uppercase text-v-gray">@featuredLab.Month</span>
+                                            <span class="text-[10px] font-bold tracking-widest uppercase text-v-black dark:text-[#D6D0C8]">@featuredLab.Month</span>
                                         }
                                         <span class="text-[10px] font-bold tracking-widest uppercase"><partial name="_VenueLine" model="featuredLab" /></span>
                                     </div>
@@ -246,7 +246,7 @@
                                             <div class="w-1.5 h-1.5 bg-[#F05A28]"></div>
                                             <span class="text-gray-300">/</span>
                                             <span class="text-v-black dark:text-[#D6D0C8]" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Location"><partial name="_VenueLine" model="exp" /></span>
-                                            <span class="text-gray-500" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Month">@exp.Month</span>
+                                            <span class="text-v-black dark:text-[#D6D0C8]" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Month">@exp.Month</span>
                                             <span class="text-gray-300">/</span>
                                             <span class="text-[#F05A28]" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Difficulty">@exp.Difficulty</span>
                                         </div>
@@ -336,7 +336,7 @@
                                         <span class="text-[10px] font-bold uppercase tracking-widest text-v-black dark:text-[#D6D0C8]" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Duration">@ExperienceGeo.FormatDuration(exp.Duration)</span>
                                         @if (!string.IsNullOrEmpty(exp.Month) && !ExperienceGeo.IsMonWed(exp.Month))
                                         {
-                                            <span class="text-[10px] font-bold tracking-widest uppercase text-v-gray" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Month">@exp.Month</span>
+                                            <span class="text-[10px] font-bold tracking-widest uppercase text-v-black dark:text-[#D6D0C8]" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Month">@exp.Month</span>
                                         }
                                         <span class="text-[10px] font-bold tracking-widest uppercase" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Location">@exp.Location</span>
                                     </div>

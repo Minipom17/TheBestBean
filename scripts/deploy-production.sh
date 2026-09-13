@@ -60,6 +60,9 @@ trap 'rm -rf "$PUBLISH"; [[ "$CLEANUP_KEY" == 1 ]] && rm -f "$KEY_FILE"' EXIT
 )
 rm -f "$PUBLISH/coffee.db" "$PUBLISH/coffee.db-shm" "$PUBLISH/coffee.db-wal"
 rm -rf "$PUBLISH/wwwroot/Media"
+# Drop publish-time precompressed CSS — stale .br/.gz on the server have
+# previously shadowed a freshly extracted site.css via static compression.
+find "$PUBLISH/wwwroot" -type f \( -name '*.css.br' -o -name '*.css.gz' \) -delete
 
 TAR="$(mktemp --suffix=.tar.gz)"
 trap 'rm -rf "$PUBLISH" "$TAR"; [[ "$CLEANUP_KEY" == 1 ]] && rm -f "$KEY_FILE"' EXIT
@@ -74,13 +77,21 @@ REMOTE_DIR=/srv/coffee_app
 systemctl stop coffee-app.service
 cp -a "$REMOTE_DIR/coffee.db" "/root/coffee.db.bak-agent-$(date +%Y%m%d%H%M)"
 cd "$REMOTE_DIR"
+# Stale precompressed CSS can keep nginx on an old stylesheet after extract
+rm -f wwwroot/css/site.css wwwroot/css/site.css.br wwwroot/css/site.css.gz \
+      wwwroot/css/site.min.css.br wwwroot/css/site.min.css.gz
 tar -xzf /root/deploy_temp.tar.gz --exclude=coffee.db
 rm -f /root/deploy_temp.tar.gz
+# Never leave compressed siblings of the freshly extracted CSS
+rm -f wwwroot/css/site.css.br wwwroot/css/site.css.gz
 chown -R www-data:www-data "$REMOTE_DIR"
+test -f "$REMOTE_DIR/wwwroot/css/site.css"
+grep -q 'color: #111111 !important' "$REMOTE_DIR/wwwroot/css/site.css"
+grep -q 'exp-geo--flat' "$REMOTE_DIR/wwwroot/css/site.css"
 systemctl start coffee-app.service
 systemctl is-active coffee-app.service
 test -f "$REMOTE_DIR/coffee.db"
-echo "deploy ok"
+echo "deploy ok ($(wc -c < "$REMOTE_DIR/wwwroot/css/site.css") bytes site.css)"
 REMOTE
 
 echo "==> https://purplebean.coffee"

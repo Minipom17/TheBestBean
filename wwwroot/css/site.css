@@ -1542,12 +1542,18 @@ html.dark .brew-variables-band {
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    /* Dark ink on solid white — readable on teal cards; accent only on the border */
+    /* Black type on a light tint of the accent — readable on teal cards */
     color: #111111 !important;
-    background: #ffffff !important;
-    border: 2px solid var(--brew-accent, #111);
+    background: color-mix(in srgb, var(--brew-accent, #111) 16%, #ffffff) !important;
+    border: 1.5px solid color-mix(in srgb, var(--brew-accent, #111) 55%, #111111);
     padding: 0.45rem 0.65rem;
     line-height: 1.25;
+}
+@supports not (background: color-mix(in srgb, red 16%, white)) {
+    .brew-var-spec {
+        background: #ffffff !important;
+        border-color: var(--brew-accent, #111);
+    }
 }
 .brew-method-card {
     border: 1px solid #111;
