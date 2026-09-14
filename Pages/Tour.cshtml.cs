@@ -264,16 +264,16 @@ namespace TheBestBean.Pages
                 Kind = "Pour-over",
                 Dose = "15 g",
                 Yield = "250 g",
-                Time = "2:45",
+                Time = "2:30",
                 Grind = "Medium-fine",
                 Temp = "96 °C",
                 Ratio = "1 : 16.5",
                 Steps =
                 [
                     "Rinse the paper filter and warm the carafe.",
-                    "Bloom with 45 g water for 45 seconds.",
+                    "Bloom with 45 g water for 45 seconds. Do not swirl.",
                     "Pour in slow concentric circles to 250 g.",
-                    "Let the bed drain. Total time about 2:45."
+                    "Let the bed drain. Total time about 2:30."
                 ],
                 Tip = "Keep the pour gentle — the cone is unforgiving and shows floral, citrus cups from Cusco lots."
             },

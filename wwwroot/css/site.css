@@ -761,10 +761,29 @@ html.dark .tour-materials__list {
 
 .tour-whatyouget-map {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
-
+.tour-whatyouget-map__box {
+    display: flex;
+    flex-direction: column;
+}
+.tour-whatyouget-map__box > .border {
+    flex: 1 1 auto;
+}
+.tour-venue-map {
+    width: 100%;
+    max-width: 14rem;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
 .tour-venue-map__frame {
     position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    flex: 0 0 auto;
 }
 .tour-venue-map__frame iframe {
     display: block;
@@ -772,6 +791,31 @@ html.dark .tour-materials__list {
     inset: 0;
     width: 100%;
     height: 100%;
+}
+@media (min-width: 768px) {
+    .tour-whatyouget-map {
+        flex-direction: row;
+        align-items: stretch;
+        gap: 2rem;
+    }
+    .tour-whatyouget-map__box {
+        flex: 1 1 auto;
+        min-width: 0;
+        margin-top: 0.5rem;
+    }
+    .tour-venue-map {
+        flex: 0 0 17.5rem;
+        width: 17.5rem;
+        max-width: none;
+        align-self: stretch;
+        margin-top: 0.5rem;
+    }
+    .tour-venue-map__frame {
+        flex: 1 1 auto;
+        aspect-ratio: auto;
+        min-height: 12rem;
+        height: auto;
+    }
 }
 .tour-syllabus-label {
     font-size: 10px;
@@ -922,6 +966,254 @@ html.dark .lab-recipe-dropdown__title {
     width: 100%;
     height: auto;
     background: #fff;
+}
+
+.pb-brew-card {
+    background: #fff;
+    color: #111;
+    padding: 2.25rem 2rem 1.75rem;
+    min-height: 32rem;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Inter', sans-serif;
+}
+.pb-brew-card__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 2rem;
+    margin-bottom: 2.25rem;
+}
+.pb-brew-card__kicker {
+    display: block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    line-height: 1.25;
+    margin-bottom: 0.85rem;
+    color: #111;
+}
+.pb-brew-card__kicker--right {
+    text-align: right;
+    margin-bottom: 0.45rem;
+}
+.pb-brew-card__sys-name {
+    margin: 0 0 0.65rem;
+    font-size: 1.65rem;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1;
+}
+.pb-brew-card__water {
+    margin: 0;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+.pb-brew-card__chem {
+    text-align: right;
+    flex: 0 0 auto;
+    max-width: 11rem;
+}
+.pb-brew-card__chem p {
+    margin: 0;
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: #9ca3af;
+    line-height: 1.45;
+}
+.pb-brew-card__sca {
+    margin: 0.15rem 0 0.2rem !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase;
+}
+.pb-brew-card__ions {
+    display: grid;
+    grid-template-columns: 1.35rem 1.35rem;
+    gap: 1px;
+    margin: 0 0 0.35rem auto;
+    width: max-content;
+}
+.pb-brew-card__ions span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.35rem;
+    height: 1.35rem;
+    font-size: 8px;
+    font-weight: 800;
+    background: #ececec;
+    color: #111;
+}
+.pb-brew-card__ions span.is-hi {
+    background: #e8ff3d;
+}
+.pb-brew-card__body {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 2.5rem 4.5rem;
+    flex-grow: 1;
+}
+.pb-brew-card__body--solo {
+    margin-top: 0.5rem;
+}
+.pb-brew-card__left {
+    flex: 0 1 13.5rem;
+    min-width: 0;
+}
+.pb-brew-card__right {
+    flex: 0 0 16.5rem;
+    margin-left: auto;
+    max-width: 17rem;
+}
+.pb-brew-card__method {
+    margin: 0 0 1.5rem;
+    font-size: clamp(2.4rem, 5vw, 3.35rem);
+    font-weight: 800;
+    letter-spacing: -0.055em;
+    line-height: 0.86;
+    text-transform: lowercase;
+}
+.pb-brew-card__temp {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin: 0 0 2.4rem;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #9ca3af;
+}
+.pb-brew-card__temp span {
+    background: #e8ff3d;
+    color: #111;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    padding: 0.22rem 0.38rem;
+}
+.pb-brew-card__grind {
+    margin: 0;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+.pb-brew-card__stat {
+    margin: 0 0 0.15rem;
+    font-size: 13px;
+    font-weight: 400;
+    color: #9ca3af;
+    letter-spacing: 0.01em;
+}
+.pb-brew-card__stat strong {
+    font-size: 2.55rem;
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    color: #111;
+    margin-right: 0.35rem;
+    line-height: 0.95;
+}
+.pb-brew-card__stat strong span {
+    font-size: 1.55rem;
+    font-weight: 700;
+    color: #b0b0b0;
+    letter-spacing: -0.03em;
+}
+.pb-brew-card__blurb {
+    position: relative;
+    margin-top: 1.35rem;
+    padding: 0.15rem 0.85rem 0.15rem 0;
+}
+.pb-brew-card__blurb::before,
+.pb-brew-card__blurb::after {
+    content: "";
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-color: #d1d5db;
+    border-style: solid;
+}
+.pb-brew-card__blurb::before {
+    top: -4px;
+    right: 0;
+    border-width: 1px 1px 0 0;
+}
+.pb-brew-card__blurb::after {
+    left: 0;
+    bottom: -4px;
+    border-width: 0 0 1px 1px;
+}
+.pb-brew-card__blurb p {
+    margin: 0 0 1rem;
+    font-size: 13px;
+    line-height: 1.45;
+    color: #111;
+    max-width: 16.5rem;
+}
+.pb-brew-card__blurb ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 1.55;
+    color: #111;
+}
+.pb-brew-card__labs {
+    margin: 2.5rem 0 0;
+    text-align: center;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #c4c4c4;
+}
+.pb-brew-card__cut {
+    margin: 2.4rem 0 0.55rem;
+    text-align: center;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #d1d5db;
+}
+.pb-brew-card__cut-rule {
+    border-top: 1px dashed #d1d5db;
+    margin: 0 0.5rem;
+}
+.pb-brew-card__meta {
+    margin: auto 0 0;
+    padding-top: 3rem;
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #c4c4c4;
+}
+@media (max-width: 639px) {
+    .pb-brew-card {
+        padding: 1.5rem 1.15rem 1.25rem;
+        min-height: 0;
+    }
+    .pb-brew-card__body {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    .pb-brew-card__right {
+        flex: 1 1 auto;
+        max-width: none;
+        margin-left: 0;
+        width: 100%;
+    }
+    .pb-brew-card__method {
+        font-size: 2.5rem;
+    }
 }
 .lab-recipe-page figcaption {
     font-family: 'JetBrains Mono', monospace;
@@ -1294,10 +1586,20 @@ html.dark .lab-recipe-card {
         break-after: auto;
         page-break-after: auto;
     }
-    html.print-lab-recipes .lab-recipe-page img {
+    html.print-lab-recipes .lab-recipe-page img,
+    html.print-lab-recipes .pb-brew-card {
         width: 100%;
         max-height: 277mm;
-        object-fit: contain;
+        min-height: 0;
+        box-sizing: border-box;
+    }
+    html.print-lab-recipes .pb-brew-card {
+        border: 0;
+        padding: 12mm 14mm;
+    }
+    html.print-lab-recipes .pb-brew-card__cut,
+    html.print-lab-recipes .pb-brew-card__cut-rule {
+        display: block !important;
     }
     @page {
         size: A4 portrait;
