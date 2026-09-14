@@ -522,28 +522,27 @@
 
                 function applyFilter(filter) {
                     const lowerFilter = filter.toLowerCase();
-                    // Update button styles
                     buttons.forEach(b => {
-                        if (b.getAttribute('data-filter').toLowerCase() === lowerFilter) {
-                            b.classList.remove('bg-white dark:bg-[#121014]', 'hover:bg-gray-100 dark:bg-[#1C191F]');
-                            b.classList.add('bg-black', 'text-white');
-                        } else {
-                            b.classList.remove('bg-black', 'text-white');
-                            b.classList.add('bg-white dark:bg-[#121014]', 'hover:bg-gray-100 dark:bg-[#1C191F]');
-                        }
+                        const on = b.getAttribute('data-filter').toLowerCase() === lowerFilter;
+                        b.classList.toggle('bg-black', on);
+                        b.classList.toggle('text-white', on);
+                        b.classList.toggle('dark:bg-cream', on);
+                        b.classList.toggle('dark:text-night', on);
+                        b.classList.toggle('bg-white', !on);
+                        b.classList.toggle('text-black', !on);
+                        b.classList.toggle('dark:bg-[#1C191F]', !on);
+                        b.classList.toggle('dark:text-mist', !on);
                     });
 
-                    // Filter cards
-                    cards.forEach(card => {
+                    document.querySelectorAll('.coffee-product-card').forEach(card => {
                         const origin = (card.getAttribute('data-origin') || '').toLowerCase();
                         const process = (card.getAttribute('data-process') || '').toLowerCase();
                         const coffeeType = (card.getAttribute('data-type') || '').toLowerCase();
-                        
-                        if (lowerFilter === 'all' || origin === lowerFilter || process === lowerFilter || coffeeType === lowerFilter) {
-                            card.style.display = 'block';
-                        } else {
-                            card.style.display = 'none';
-                        }
+                        const match = lowerFilter === 'all'
+                            || origin.includes(lowerFilter)
+                            || process.includes(lowerFilter)
+                            || coffeeType === lowerFilter;
+                        card.style.display = match ? '' : 'none';
                     });
                 }
 

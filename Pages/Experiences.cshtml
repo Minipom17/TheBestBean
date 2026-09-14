@@ -41,7 +41,7 @@
                     <partial name="_ExpLocationFilters" model='"urban-location-filters"' />
 
                     <div class="exp-filter-row mt-4">
-                        <span class="exp-filter-label">Time</span>
+                        <span class="exp-filter-label exp-filter-label--emoji" title="Time" aria-hidden="true">⏱️</span>
                         <div class="exp-when" id="urban-time-filters" role="group" aria-label="Filter by time">
                             <button type="button" class="exp-when-btn filter-btn active" data-filter="all">All</button>
                             <button type="button" class="exp-when-btn filter-btn" data-filter="1-hour">1 hour</button>
@@ -102,9 +102,9 @@
                             <div class="grid grid-cols-1 md:grid-cols-12 gap-12 flex-grow">
                                 <!-- Left: Content & Button -->
                                 <div class="md:col-span-7 flex flex-col">
-                                    <div class="flex flex-wrap items-center gap-3 mb-4 font-mono-jb">
+                                    <div class="flex flex-nowrap items-center gap-3 mb-4 font-mono-jb w-full">
                                         <div class="w-3 h-3 bg-v-yellow shrink-0"></div>
-                                        <span class="text-[10px] font-bold uppercase tracking-widest text-v-black dark:text-[#D6D0C8] whitespace-nowrap">@featuredLab.Duration</span>
+                                        <span class="text-[10px] font-bold uppercase tracking-widest text-v-black dark:text-[#D6D0C8] whitespace-nowrap shrink-0">@featuredLab.Duration</span>
                                         <span class="text-[10px] font-bold tracking-widest uppercase whitespace-nowrap"><partial name="_VenueLine" model="featuredLab" /></span>
                                     </div>
                                     <h3 class="text-3xl md:text-4xl font-semibold tracking-tight mb-4 m-0">@featuredLab.Title</h3>
@@ -253,12 +253,10 @@
                                     <div class="grid grid-cols-1 md:grid-cols-12 gap-12 flex-grow">
                                         <!-- Left: Content & Button -->
                                         <div class="md:col-span-7 flex flex-col">
-                                            <div class="font-mono-jb text-[10px] font-bold tracking-widest uppercase mb-4 leading-relaxed flex flex-wrap items-center">
-                                                <span class="inline-block w-1.5 h-1.5 bg-[#F05A28] shrink-0 mr-1.5"></span>
-                                                <span class="text-gray-300 mr-1.5">/</span>
-                                                <span class="text-v-black dark:text-[#D6D0C8] whitespace-nowrap" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Location"><partial name="_VenueLine" model="exp" /></span>
-                                                <span class="text-gray-300 mx-1.5">/</span>
-                                                <span class="text-[#F05A28] whitespace-nowrap" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Difficulty">@exp.Difficulty</span>
+                                            <div class="flex flex-nowrap items-center gap-3 mb-4 font-mono-jb w-full leading-relaxed">
+                                                <div class="w-1.5 h-1.5 bg-[#F05A28] shrink-0"></div>
+                                                <span class="text-[10px] font-bold uppercase tracking-widest text-v-black dark:text-[#D6D0C8] whitespace-nowrap shrink-0" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Duration">@exp.Duration</span>
+                                                <span class="text-[10px] font-bold tracking-widest uppercase whitespace-nowrap" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Location"><partial name="_VenueLine" model="exp" /></span>
                                             </div>
                                             <h3 class="text-3xl md:text-4xl font-semibold tracking-tight mb-4 m-0" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Title">@exp.Title</h3>
                                             <p class="text-v-gray text-base leading-relaxed mb-10 font-normal max-w-xl" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Description">
@@ -273,7 +271,7 @@
                                         </div>
 
                                         <!-- Right: Syllabus -->
-                                        <div class="md:col-span-5 flex flex-col pt-2 md:pt-7 font-mono-jb">
+                                        <div class="md:col-span-5 flex flex-col pt-2 md:pt-[120px] font-mono-jb">
                                             <h4 class="text-[10px] font-bold uppercase tracking-widest text-v-gray mb-4">SYLLABUS</h4>
                                             <div class="flex flex-col border-t border-v-black dark:border-[#2A262C] font-sans">
                                                 @if (exp.Syllabus != null && exp.Syllabus.Any())
@@ -317,7 +315,7 @@
                     <partial name="_ExpLocationFilters" model='"expedition-location-filters"' />
 
                     <div class="exp-filter-row mt-4">
-                        <span class="exp-filter-label">Time</span>
+                        <span class="exp-filter-label exp-filter-label--emoji" title="Time" aria-hidden="true">⏱️</span>
                         <div class="exp-when" id="expedition-time-filters" role="group" aria-label="Filter by time">
                             <button type="button" class="exp-when-btn filter-btn active" data-filter="all">All</button>
                             <button type="button" class="exp-when-btn filter-btn" data-filter="1-hour">1 hour</button>
@@ -366,14 +364,10 @@
                             <div class="grid grid-cols-1 md:grid-cols-12 gap-12 flex-grow">
                                 <!-- Left: Content & Button -->
                                 <div class="md:col-span-7 flex flex-col">
-                                    <div class="flex items-center gap-3 mb-4 font-mono-jb">
-                                        <div class="w-3 h-3 bg-v-red"></div>
-                                        <span class="text-[10px] font-bold uppercase tracking-widest text-v-black dark:text-[#D6D0C8]" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Duration">@exp.Duration</span>
-                                        @if (!string.IsNullOrEmpty(exp.Month) && !ExperienceGeo.IsMonWed(exp.Month))
-                                        {
-                                            <span class="text-[10px] font-bold tracking-widest uppercase text-v-gray" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Month">@exp.Month</span>
-                                        }
-                                        <span class="text-[10px] font-bold tracking-widest uppercase" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Location">@exp.Location</span>
+                                    <div class="flex flex-nowrap items-center gap-3 mb-4 font-mono-jb w-full">
+                                        <div class="w-3 h-3 bg-v-red shrink-0"></div>
+                                        <span class="text-[10px] font-bold uppercase tracking-widest text-v-black dark:text-[#D6D0C8] whitespace-nowrap shrink-0" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Duration">@exp.Duration</span>
+                                        <span class="text-[10px] font-bold tracking-widest uppercase whitespace-nowrap" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Location"><partial name="_VenueLine" model="exp" /></span>
                                     </div>
                                     <h3 class="text-3xl md:text-4xl font-semibold tracking-tight mb-4 m-0" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Title">@exp.Title</h3>
                                     <p class="text-v-gray text-base leading-relaxed mb-10 font-normal max-w-xl" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Description">

@@ -1,6 +1,6 @@
 @model TheBestBean.Models.CoffeeBean
 
-<article class="coffee-product-card group cursor-pointer flex flex-col bg-white dark:bg-[#1C191F] border border-gray-200 dark:border-[#3A353C] transition-all h-full" 
+<article class="coffee-product-card product-card-container group cursor-pointer flex flex-col bg-white dark:bg-[#1C191F] border border-gray-200 dark:border-[#3A353C] transition-all h-full" 
      data-origin="@(Model.OriginCountry?.Name ?? "Peru")" 
      data-process="@Model.ProcessingMethod"
      data-type="@(Model.Name.Contains("Roast") || Model.Name.Contains("Roasted") ? "roasted" : "green")">
@@ -48,7 +48,7 @@
                     @Model.Name
                 </h3>
             </a>
-            <partial name="_YapePrice" model="new DualPriceModel { Usd = Model.BasePriceUSD, Pen = Model.BasePricePEN, Compact = true, From = true }" />
+            <partial name="_YapePrice" model="new DualPriceModel { Usd = Model.BasePriceUSD, Pen = Model.BasePricePEN, Compact = true, From = true, ShowCard = false }" />
         </div>
 
         <p class="text-gray-600 dark:text-mist text-[11px] font-mono-tech leading-relaxed m-0 mt-2 mb-6" data-entity-id="@Model.Id" data-entity-type="CoffeeBean" data-editable="FlavorProfile">

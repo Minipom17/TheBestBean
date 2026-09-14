@@ -9,6 +9,12 @@ namespace TheBestBean.Models
     {
         private static TheBestBeanContext? _context;
 
+        private static async Task<bool> TourMediaLockedAsync(int experienceId)
+        {
+            if (_context == null || experienceId <= 0) return false;
+            return await _context.SiteContent.AnyAsync(c => c.Key == $"Tour_Media_Locked_{experienceId}");
+        }
+
         public static async Task SeedAdminUserAsync(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             // Ensure Admin role exists
@@ -688,7 +694,11 @@ namespace TheBestBean.Models
                 santa.Duration = "1 DAY";
                 santa.Price = 150;
                 santa.Tag = "MACHU PICCHU ROUTE";
-                santa.ImageUrl = $"/Media/tours/santa-teresa/10-visitor-and-producer.jpg{v}";
+                var santaLocked = await TourMediaLockedAsync(santa.Id);
+                if (!santaLocked && string.IsNullOrWhiteSpace(santa.ImageUrl))
+                {
+                    santa.ImageUrl = $"/Media/tours/santa-teresa/10-visitor-and-producer.jpg{v}";
+                }
                 santa.Description = "Cloud-forest farm day on the Santa Teresa / Hidroeléctrica corridor most travelers use to reach Machu Picchu. Walk the plantation, pick ripe cherry, and see washed parchment drying with the family — then continue to Aguas Calientes.";
                 santa.DescriptionES = "Día de finca en el bosque de nubes de Santa Teresa, en el corredor de Hidroeléctrica que usa la mayoría para llegar a Machu Picchu. Recorre el cafetal, cosecha cereza y ve el pergamino lavado secándose con la familia.";
                 santa.LongDescription = "Santa Teresa sits in the cloud forest of La Convención, on the same road and rail corridor that takes you to Machu Picchu via Hidroeléctrica. This is the origin day that fits a trekking itinerary: leave Cusco (or stay in Santa Teresa), walk shade-grown plots, taste cherry at the tree, and watch washed parchment dry on raised beds. You meet the producers who pick and process the lot — not a show farm. Combine it with the walk or train into Aguas Calientes the same day or the next morning.";
@@ -714,7 +724,10 @@ namespace TheBestBean.Models
                     "Rain layer (cloud forest)",
                     "Sun hat"
                 };
-                santa.GalleryImages = santaGallery;
+                if (!santaLocked && (santa.GalleryImages == null || santa.GalleryImages.Count == 0))
+                {
+                    santa.GalleryImages = santaGallery;
+                }
                 _context.Experiences.Update(santa);
             }
 
@@ -730,7 +743,11 @@ namespace TheBestBean.Models
                 cajamarca.Duration = "2 DAYS";
                 cajamarca.Price = 300;
                 cajamarca.Tag = "CUP OF EXCELLENCE #1";
-                cajamarca.ImageUrl = $"/Media/tours/cajamarca-jaen/01-la-catarata-sign.jpg{v}";
+                var cajamarcaLocked = await TourMediaLockedAsync(cajamarca.Id);
+                if (!cajamarcaLocked && string.IsNullOrWhiteSpace(cajamarca.ImageUrl))
+                {
+                    cajamarca.ImageUrl = $"/Media/tours/cajamarca-jaen/01-la-catarata-sign.jpg{v}";
+                }
                 cajamarca.Description = "Not a Cusco day trip — Jaén is in Cajamarca, northern Peru. Visit Ángel Manosalva at La Catarata: 2025 Cup of Excellence Perú first place, 90.64 points. Follow the lot from tree to parchment: Brix on cherry, pH in process, pulping, fermentation, dried bags.";
                 cajamarca.DescriptionES = "No es un día desde Cusco: Jaén está en Cajamarca, en el norte del Perú. Visita a Ángel Manosalva en La Catarata, primer lugar Taza de Excelencia Perú 2025 (90,64). Recorres el lote del árbol al pergamino: Brix, pH, despulpado, fermentación y sacos secos.";
                 cajamarca.LongDescription = "Ángel Antonio Manosalva Palomino farms La Catarata (and La Pomarrosa) in La Cascarilla above Jaén — a different province from Cusco, in Peru’s northern competition belt. In 2025 his washed Geisha took first at Taza de Excelencia Perú with 90.64 points. This expedition is the farm journey in order: the Catarata La Momia sign, Ángel in the plot, cherry on the tree, Brix for sweetness, pH at the mill, pulping and fermentation, then parchment drying and Ángel standing with the finished bags. Fly Lima–Jaén (or overnight bus); this is not a same-day return from Cusco.";
@@ -756,7 +773,10 @@ namespace TheBestBean.Models
                     "Light rain jacket",
                     "Passport for domestic flights"
                 };
-                cajamarca.GalleryImages = cajamarcaGallery;
+                if (!cajamarcaLocked && (cajamarca.GalleryImages == null || cajamarca.GalleryImages.Count == 0))
+                {
+                    cajamarca.GalleryImages = cajamarcaGallery;
+                }
                 _context.Experiences.Update(cajamarca);
             }
 
@@ -791,6 +811,7 @@ namespace TheBestBean.Models
             async Task<Experience> UpsertWorkshopAsync(string titleMatch, Experience values)
             {
                 var row = await _context.Experiences.FirstOrDefaultAsync(e => e.Title.Contains(titleMatch));
+                var isNew = row == null;
                 if (row == null)
                 {
                     row = new Experience { Title = values.Title };
@@ -805,7 +826,11 @@ namespace TheBestBean.Models
                 row.Duration = values.Duration;
                 row.Price = values.Price;
                 row.Tag = values.Tag;
-                row.ImageUrl = values.ImageUrl;
+                var lockPhotos = !isNew && await TourMediaLockedAsync(row.Id);
+                if (isNew || (!lockPhotos && string.IsNullOrWhiteSpace(row.ImageUrl)))
+                {
+                    row.ImageUrl = values.ImageUrl;
+                }
                 row.Description = values.Description;
                 row.DescriptionES = values.DescriptionES;
                 row.LongDescription = values.LongDescription;
@@ -813,7 +838,10 @@ namespace TheBestBean.Models
                 row.Syllabus = values.Syllabus;
                 row.ProvidedEquipment = values.ProvidedEquipment;
                 row.RequiredGear = values.RequiredGear;
-                row.GalleryImages = values.GalleryImages;
+                if (isNew)
+                {
+                    row.GalleryImages = values.GalleryImages;
+                }
                 return row;
             }
 
@@ -1003,22 +1031,17 @@ namespace TheBestBean.Models
                 GalleryImages = new List<string>()
             });
 
-            async Task UpsertTourSiteContentAsync(string key, string value)
+            async Task UpsertTourSiteContentIfMissingAsync(string key, string value)
             {
                 var row = await _context.SiteContent.FirstOrDefaultAsync(c => c.Key == key);
                 if (row == null)
                 {
                     _context.SiteContent.Add(new SiteContent { Key = key, Value = value, Page = "Tour" });
                 }
-                else
-                {
-                    row.Value = value;
-                    row.Page = "Tour";
-                }
             }
 
-            await UpsertTourSiteContentAsync("Tour_Hero_Image_26", "/Media/experiences/tour-26/cynthia-cupping-06.webp?v=2");
-            await UpsertTourSiteContentAsync("Tour_Hero_Pos_26", "50% 40%");
+            await UpsertTourSiteContentIfMissingAsync("Tour_Hero_Image_26", "/Media/experiences/tour-26/cynthia-cupping-06.webp?v=2");
+            await UpsertTourSiteContentIfMissingAsync("Tour_Hero_Pos_26", "50% 40%");
 
             // Cinthya Lab (2.5hr) archived — the three 1-hour workshops above are the distinct offerings.
             var cinthyaLab = await _context.Experiences.FirstOrDefaultAsync(e => e.Title == "Cinthya Lab [V60, Espresso & Cupping]");

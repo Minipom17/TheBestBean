@@ -451,17 +451,27 @@ document.addEventListener('DOMContentLoaded', () => {
             let value;
             if (el.tagName === 'IMG') {
                 value = el.getAttribute('data-new-url');
-                if (!value) return; // No new image
+                if (!value) return;
             } else {
                 value = el.innerText.trim();
             }
 
             updates.push({
-                EntityType: entityType,
-                EntityId: entityId,
-                Field: field,
-                Value: value
+                entityType: entityType,
+                entityId: entityId,
+                field: field,
+                value: value
             });
+
+            const positionKey = el.getAttribute('data-position-key');
+            if (el.tagName === 'IMG' && positionKey && positionKey.startsWith('Tour_Hero_Pos_')) {
+                updates.push({
+                    entityType: 'SiteContent',
+                    entityId: positionKey.replace('Tour_Hero_Pos_', 'Tour_Hero_Image_'),
+                    field: 'Value',
+                    value: value
+                });
+            }
         });
 
         if (updates.length === 0) {

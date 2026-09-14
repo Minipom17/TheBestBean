@@ -35,21 +35,23 @@ namespace TheBestBean.Controllers
             {
                 if (update.EntityType == "SiteContent")
                 {
-                    var content = await _context.SiteContent.FindAsync(update.EntityId);
-                    if (content != null)
+                    string page = "";
+                    if (update.EntityId.StartsWith("Tour_")) page = "Tour";
+                    else if (update.EntityId.StartsWith("Product_")) page = "Product";
+                    else if (update.EntityId.StartsWith("Home_")) page = "Home";
+                    else if (update.EntityId.StartsWith("Experiences_")) page = "Experiences";
+
+                    await UpsertSiteContentAsync(update.EntityId, update.Value, page);
+
+                    if (update.EntityId.StartsWith("Tour_Hero_Image_") &&
+                        int.TryParse(update.EntityId.Replace("Tour_Hero_Image_", ""), out int heroTourId))
                     {
-                        content.Value = update.Value;
-                    }
-                    else
-                    {
-                        string page = "";
-                        if (update.EntityId.StartsWith("Tour_")) page = "Tour";
-                        else if (update.EntityId.StartsWith("Product_")) page = "Product";
-                        else if (update.EntityId.StartsWith("Home_")) page = "Home";
-                        else if (update.EntityId.StartsWith("Experiences_")) page = "Experiences";
-                        
-                        content = new SiteContent { Key = update.EntityId, Value = update.Value, Page = page };
-                        _context.SiteContent.Add(content);
+                        var heroExp = await _context.Experiences.FindAsync(heroTourId);
+                        if (heroExp != null)
+                        {
+                            heroExp.ImageUrl = update.Value;
+                        }
+                        await UpsertSiteContentAsync($"Tour_Media_Locked_{heroTourId}", "1", "Tour");
                     }
                 }
                 else if (update.EntityType == "Experience")
@@ -65,7 +67,11 @@ namespace TheBestBean.Controllers
                                 case "Description": exp.Description = update.Value; break;
                                 case "LongDescription": exp.LongDescription = update.Value; break;
                                 case "Price": if (decimal.TryParse(update.Value, out decimal p)) exp.Price = p; break;
-                                case "ImageUrl": exp.ImageUrl = update.Value; break;
+                                case "ImageUrl":
+                                    exp.ImageUrl = update.Value;
+                                    await UpsertSiteContentAsync($"Tour_Hero_Image_{id}", update.Value, "Tour");
+                                    await UpsertSiteContentAsync($"Tour_Media_Locked_{id}", "1", "Tour");
+                                    break;
                                 case "Difficulty": exp.Difficulty = update.Value; break;
                                 case "Location": exp.Location = update.Value; break;
                                 case "Month": exp.Month = update.Value; break;
@@ -76,7 +82,7 @@ namespace TheBestBean.Controllers
                                     {
                                         if (int.TryParse(update.Field.Replace("GalleryImage_", ""), out int idx))
                                         {
-                                            var gallery = exp.GalleryImages;
+                                            var gallery = exp.GalleryImages?.ToList() ?? new List<string>();
                                             if (idx >= 0 && idx < gallery.Count)
                                             {
                                                 if (update.Value == "REMOVE")
@@ -87,7 +93,9 @@ namespace TheBestBean.Controllers
                                                 {
                                                     gallery[idx] = update.Value;
                                                 }
-                                                exp.GalleryImages = gallery; // trigger setter
+                                                exp.GalleryImages = gallery;
+                                                _context.Entry(exp).Property(e => e.GalleryImagesJson).IsModified = true;
+                                                await UpsertSiteContentAsync($"Tour_Media_Locked_{id}", "1", "Tour");
                                             }
                                         }
                                     }
@@ -132,6 +140,20 @@ namespace TheBestBean.Controllers
 
             await _context.SaveChangesAsync();
             return Ok(new { success = true });
+        }
+
+        private async Task UpsertSiteContentAsync(string key, string value, string page)
+        {
+            var content = await _context.SiteContent.FindAsync(key);
+            if (content != null)
+            {
+                content.Value = value;
+                if (!string.IsNullOrWhiteSpace(page)) content.Page = page;
+            }
+            else
+            {
+                _context.SiteContent.Add(new SiteContent { Key = key, Value = value, Page = page });
+            }
         }
 
         [HttpPost("upload")]

@@ -77,7 +77,7 @@
                     <span class="bg-black text-white px-2 py-0.5 text-xs font-bold font-mono tracking-widest rounded-sm whitespace-nowrap" style="font-family: 'JetBrains Mono', monospace;">SCA @Model.Product.ScaScore.ToString("0.##")</span>
                 </div>
                 <div class="mb-3" id="main-product-price" data-base-usd="@Model.Product.BasePriceUSD" data-base-pen="@Model.Product.BasePricePEN">
-                    <partial name="_YapePrice" model="new DualPriceModel { Usd = Model.Product.BasePriceUSD, Pen = Model.Product.BasePricePEN }" />
+                    <partial name="_YapePrice" model="new DualPriceModel { Usd = Model.Product.BasePriceUSD, Pen = Model.Product.BasePricePEN, ShowCard = false }" />
                 </div>
                 <p class="font-sans text-gray-600 dark:text-gray-300 mb-3 leading-snug text-sm" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="FlavorProfile" style="font-family: 'Inter', sans-serif;">@Model.Product.Description</p>
                 

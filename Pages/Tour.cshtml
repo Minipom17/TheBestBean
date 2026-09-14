@@ -207,7 +207,10 @@
                     {
                         <div class="tour-venue-map">
                             <div class="tour-venue-map__frame border border-gray-200 dark:border-[#2A262C] rounded-2xl overflow-hidden bg-gray-100 dark:bg-[#1C191F]">
-                                <span class="tour-venue-map__label">Meeting point</span>
+                                <div class="tour-venue-map__chrome">
+                                    <span class="tour-venue-map__label">Meeting point</span>
+                                    <a class="tour-venue-map__open" href="@ExperienceVenue.MapOpenUrl(Model.Venue)" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>
+                                </div>
                                 <iframe
                                     title="Map — @ExperienceVenue.InlineLabel(Model.Venue)"
                                     class="w-full h-full border-0"
@@ -216,16 +219,15 @@
                                     src="@ExperienceVenue.MapEmbedUrl(Model.Venue)"
                                     allowfullscreen>
                                 </iframe>
-                                <div class="tour-venue-map__caption">
-                                    <p>
-                                        @ExperienceVenue.InlineLabel(Model.Venue)
-                                        @if (!string.IsNullOrWhiteSpace(Model.Venue.WalkNote))
-                                        {
-                                            <span> · @Model.Venue.WalkNote</span>
-                                        }
-                                    </p>
-                                    <a href="@ExperienceVenue.MapOpenUrl(Model.Venue)" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>
-                                </div>
+                            </div>
+                            <div class="tour-venue-map__caption">
+                                <p>
+                                    @ExperienceVenue.InlineLabel(Model.Venue)
+                                    @if (!string.IsNullOrWhiteSpace(Model.Venue.WalkNote))
+                                    {
+                                        <span> · @Model.Venue.WalkNote</span>
+                                    }
+                                </p>
                             </div>
                         </div>
                     }

@@ -6,7 +6,7 @@
     <details class="tour-syllabus-details w-full group">
         <summary class="tour-syllabus-details__summary w-full flex items-center flex-nowrap gap-y-1">
             <span class="tour-syllabus-label">@Model.Label:</span>
-            <span class="syllabus-module-title mr-auto">
+            <span class="syllabus-module-title mr-auto flex-nowrap whitespace-nowrap">
                 @if (!string.IsNullOrWhiteSpace(Model.Title))
                 {
                     <span class="syllabus-module-title__name">@Model.Title</span>
@@ -30,7 +30,7 @@ else
 {
     <div class="w-full flex items-center flex-wrap gap-y-1">
         <span class="tour-syllabus-label">@Model.Label:</span>
-        <span class="syllabus-module-title">
+        <span class="syllabus-module-title mr-auto flex-nowrap whitespace-nowrap">
             @if (!string.IsNullOrWhiteSpace(Model.Title))
             {
                 <span class="syllabus-module-title__name">@Model.Title</span>

@@ -343,6 +343,15 @@ html.dark .hover\:border-\[\#FF3B1F\]:hover {
     text-transform: uppercase;
     color: #543A55;
 }
+.exp-filter-label--emoji {
+    width: 1.15rem;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+    line-height: 1;
+    color: inherit;
+}
 
 .exp-geo--flat {
     flex-wrap: wrap;
@@ -505,6 +514,10 @@ html.dark .exp-when-btn,
 html.dark .exp-geo-place {
     color: #DFE6B2;
     opacity: 0.7;
+}
+html.dark .exp-filter-label--emoji {
+    opacity: 0.95;
+    color: inherit;
 }
 
 html.dark .exp-geo-all:hover,
@@ -793,11 +806,19 @@ html.dark .tour-materials__list {
     width: 100%;
     height: 100%;
 }
-.tour-venue-map__label {
+.tour-venue-map__chrome {
     position: absolute;
     top: 0.7rem;
     left: 0.75rem;
     z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+    max-width: calc(100% - 1.5rem);
+    pointer-events: none;
+}
+.tour-venue-map__label {
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
     font-weight: 700;
@@ -808,32 +829,34 @@ html.dark .tour-materials__list {
     padding: 0.2rem 0.45rem;
     border-radius: 0.25rem;
 }
+.tour-venue-map__open {
+    pointer-events: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #722EA8;
+    background: rgba(255, 255, 255, 0.92);
+    padding: 0.2rem 0.45rem;
+    border-radius: 0.25rem;
+    text-decoration: none;
+}
+.tour-venue-map__open:hover {
+    text-decoration: underline;
+}
 .tour-venue-map__caption {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 2;
-    padding: 1.75rem 0.8rem 0.75rem;
-    background: linear-gradient(to top, rgba(18, 16, 20, 0.82) 0%, rgba(18, 16, 20, 0.0) 100%);
+    flex: 0 0 auto;
+    padding: 0.65rem 0.15rem 0;
 }
 .tour-venue-map__caption p {
     margin: 0;
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
     line-height: 1.45;
-    color: #fff;
+    color: #8B8490;
 }
-.tour-venue-map__caption a {
-    display: inline-block;
-    margin-top: 0.3rem;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    color: #e8d7ff;
-    text-decoration: none;
-}
-.tour-venue-map__caption a:hover {
-    text-decoration: underline;
+html.dark .tour-venue-map__caption p {
+    color: #A39AAB;
 }
 @media (min-width: 768px) {
     .tour-whatyouget-map {
@@ -861,7 +884,6 @@ html.dark .tour-materials__list {
         flex: 1 1 auto;
         aspect-ratio: unset;
         min-height: 0;
-        height: 100%;
     }
 }
 .tour-syllabus-label {

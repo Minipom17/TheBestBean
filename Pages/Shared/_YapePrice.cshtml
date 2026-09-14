@@ -19,11 +19,14 @@
         </span>
         <span class="yape-price__soles" data-yape-soles>@(from)S/@yape.ToString("0")</span>
     </div>
+    @if (Model.ShowCard)
+    {
     <div class="yape-price__card">
         <span class="yape-price__card-label">Card / PayPal</span>
         <span class="yape-price__card-usd" data-card-usd>$@usd.ToString("0.00")</span>
         <span class="yape-price__card-pen" data-card-pen>≈ S/@cardPen.ToString("0")</span>
     </div>
+    }
     @if (!compact)
     {
         <div class="flex flex-col gap-1 items-end mt-2 text-right">
@@ -31,7 +34,7 @@
             {
                 <span class="text-[9px] font-mono font-bold tracking-widest text-[#FF3B1F] uppercase yape-price__fee-note">@Model.FeeNote</span>
             }
-            @if (save > 0)
+            @if (Model.ShowCard && save > 0)
             {
                 <span class="text-[10px] font-mono font-bold text-v-black dark:text-[#D6D0C8] tracking-wider uppercase yape-price__save" data-yape-save>
                     <span data-yape-save-amt>−S/@save.ToString("0")</span> <span class="text-v-gray">w/ cash or Yape</span>
