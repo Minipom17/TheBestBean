@@ -761,10 +761,28 @@ html.dark .tour-materials__list {
 
 .tour-whatyouget-map {
     width: 100%;
+    align-items: stretch;
 }
-
+.tour-whatyouget-map > .relative,
+.tour-whatyouget-map > .tour-venue-map {
+    width: 100%;
+    max-width: 100%;
+}
+.tour-venue-map {
+    width: 100% !important;
+    max-width: 100% !important;
+}
 .tour-venue-map__frame {
     position: relative;
+    width: 100% !important;
+    max-width: 100% !important;
+    aspect-ratio: 1 / 1;
+    isolation: isolate;
+    transform: translateZ(0);
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
 }
 .tour-venue-map__frame iframe {
     display: block;
@@ -772,6 +790,20 @@ html.dark .tour-materials__list {
     inset: 0;
     width: 100%;
     height: 100%;
+    min-height: 0;
+    border: 0;
+    outline: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+}
+@media (min-width: 768px) {
+    .tour-venue-map {
+        width: 13rem !important;
+        max-width: 14rem !important;
+        flex-shrink: 0;
+    }
 }
 .tour-syllabus-label {
     font-size: 10px;
