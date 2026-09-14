@@ -4,7 +4,7 @@
 @if (!string.IsNullOrWhiteSpace(Model.DetailBody))
 {
     <details class="tour-syllabus-details w-full group">
-        <summary class="tour-syllabus-details__summary w-full flex items-center flex-wrap gap-y-1">
+        <summary class="tour-syllabus-details__summary w-full flex items-center flex-nowrap gap-y-1">
             <span class="tour-syllabus-label">@Model.Label:</span>
             <span class="syllabus-module-title mr-auto">
                 @if (!string.IsNullOrWhiteSpace(Model.Title))
@@ -16,7 +16,7 @@
                     <span class="syllabus-module-title__time">@Model.Time</span>
                 }
             </span>
-            <div class="flex items-center ml-4 gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+            <div class="flex items-center ml-4 gap-1 opacity-80 group-hover:opacity-100 transition-opacity shrink-0">
                 <span class="exp-filter-label m-0" style="width: auto; flex: none;">details</span>
                 <span class="tour-syllabus-details__chevron" aria-hidden="true"></span>
             </div>

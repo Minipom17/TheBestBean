@@ -105,10 +105,6 @@
                                     <div class="flex flex-wrap items-center gap-3 mb-4 font-mono-jb">
                                         <div class="w-3 h-3 bg-v-yellow shrink-0"></div>
                                         <span class="text-[10px] font-bold uppercase tracking-widest text-v-black dark:text-[#D6D0C8] whitespace-nowrap">@featuredLab.Duration</span>
-                                        @if (!string.IsNullOrEmpty(featuredLab.Month) && !ExperienceGeo.IsMonWed(featuredLab.Month))
-                                        {
-                                            <span class="text-[10px] font-bold tracking-widest uppercase text-v-gray whitespace-nowrap">@featuredLab.Month</span>
-                                        }
                                         <span class="text-[10px] font-bold tracking-widest uppercase whitespace-nowrap"><partial name="_VenueLine" model="featuredLab" /></span>
                                     </div>
                                     <h3 class="text-3xl md:text-4xl font-semibold tracking-tight mb-4 m-0">@featuredLab.Title</h3>
@@ -156,7 +152,7 @@
 
                                 <!-- Right: Syllabus -->
                                 <div class="md:col-span-5 flex flex-col pt-2 md:pt-0 font-mono-jb">
-                                    <div class="hidden md:block" style="height: 86px;"></div>
+                                    <div class="hidden md:block" style="height: 126px;"></div>
                                     <h4 class="text-[10px] font-bold uppercase tracking-widest text-v-gray mb-4">SYLLABUS</h4>
                                     <div class="flex flex-col border-t border-v-black dark:border-[#2A262C] font-sans">
                                         @if (featuredLab.Syllabus != null && featuredLab.Syllabus.Any())
@@ -257,12 +253,11 @@
                                     <div class="grid grid-cols-1 md:grid-cols-12 gap-12 flex-grow">
                                         <!-- Left: Content & Button -->
                                         <div class="md:col-span-7 flex flex-col">
-                                            <div class="font-mono-jb text-[10px] font-bold tracking-widest uppercase mb-4 leading-relaxed">
-                                                <span class="inline-block w-1.5 h-1.5 bg-[#F05A28] relative -top-[1px] mr-1.5"></span>
+                                            <div class="font-mono-jb text-[10px] font-bold tracking-widest uppercase mb-4 leading-relaxed flex flex-wrap items-center">
+                                                <span class="inline-block w-1.5 h-1.5 bg-[#F05A28] shrink-0 mr-1.5"></span>
                                                 <span class="text-gray-300 mr-1.5">/</span>
                                                 <span class="text-v-black dark:text-[#D6D0C8] whitespace-nowrap" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Location"><partial name="_VenueLine" model="exp" /></span>
-                                                <span class="text-gray-500 mx-1.5 whitespace-nowrap" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Month">@exp.Month</span>
-                                                <span class="text-gray-300 mr-1.5">/</span>
+                                                <span class="text-gray-300 mx-1.5">/</span>
                                                 <span class="text-[#F05A28] whitespace-nowrap" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Difficulty">@exp.Difficulty</span>
                                             </div>
                                             <h3 class="text-3xl md:text-4xl font-semibold tracking-tight mb-4 m-0" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Title">@exp.Title</h3>

@@ -783,7 +783,8 @@ html.dark .tour-materials__list {
     position: relative;
     width: 100%;
     aspect-ratio: 1;
-    flex: 0 0 auto;
+    flex: 1 1 auto;
+    min-height: 14rem;
 }
 .tour-venue-map__frame iframe {
     display: block;
@@ -792,29 +793,75 @@ html.dark .tour-materials__list {
     width: 100%;
     height: 100%;
 }
+.tour-venue-map__label {
+    position: absolute;
+    top: 0.7rem;
+    left: 0.75rem;
+    z-index: 2;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #111;
+    background: rgba(255, 255, 255, 0.92);
+    padding: 0.2rem 0.45rem;
+    border-radius: 0.25rem;
+}
+.tour-venue-map__caption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    padding: 1.75rem 0.8rem 0.75rem;
+    background: linear-gradient(to top, rgba(18, 16, 20, 0.82) 0%, rgba(18, 16, 20, 0.0) 100%);
+}
+.tour-venue-map__caption p {
+    margin: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    line-height: 1.45;
+    color: #fff;
+}
+.tour-venue-map__caption a {
+    display: inline-block;
+    margin-top: 0.3rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #e8d7ff;
+    text-decoration: none;
+}
+.tour-venue-map__caption a:hover {
+    text-decoration: underline;
+}
 @media (min-width: 768px) {
     .tour-whatyouget-map {
-        flex-direction: row;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 18rem;
         align-items: stretch;
         gap: 2rem;
     }
     .tour-whatyouget-map__box {
-        flex: 1 1 auto;
         min-width: 0;
         margin-top: 0.5rem;
+        height: 100%;
+    }
+    .tour-whatyouget-map__box > .border {
+        height: 100%;
     }
     .tour-venue-map {
-        flex: 0 0 17.5rem;
-        width: 17.5rem;
+        width: 100%;
         max-width: none;
-        align-self: stretch;
         margin-top: 0.5rem;
+        height: 100%;
+        align-self: stretch;
     }
     .tour-venue-map__frame {
         flex: 1 1 auto;
-        aspect-ratio: auto;
-        min-height: 12rem;
-        height: auto;
+        aspect-ratio: unset;
+        min-height: 0;
+        height: 100%;
     }
 }
 .tour-syllabus-label {
@@ -951,11 +998,6 @@ html.dark .lab-recipe-dropdown__title {
     grid-template-columns: 1fr;
     gap: 1.5rem;
 }
-@media (min-width: 900px) {
-    .lab-recipe-sheet {
-        grid-template-columns: 1fr 1fr;
-    }
-}
 .lab-recipe-page {
     margin: 0;
     background: #fff;
@@ -971,7 +1013,7 @@ html.dark .lab-recipe-dropdown__title {
 .pb-brew-card {
     background: #fff;
     color: #111;
-    padding: 2.25rem 2rem 1.75rem;
+    padding: 2.25rem 2.75rem 1.75rem;
     min-height: 32rem;
     display: flex;
     flex-direction: column;
@@ -1052,23 +1094,23 @@ html.dark .lab-recipe-dropdown__title {
     background: #e8ff3d;
 }
 .pb-brew-card__body {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 2.5rem 4.5rem;
+    display: grid;
+    grid-template-columns: minmax(12rem, 17rem) 1fr;
+    align-items: start;
+    column-gap: 2rem;
     flex-grow: 1;
 }
 .pb-brew-card__body--solo {
     margin-top: 0.5rem;
 }
 .pb-brew-card__left {
-    flex: 0 1 13.5rem;
     min-width: 0;
 }
 .pb-brew-card__right {
-    flex: 0 0 16.5rem;
-    margin-left: auto;
-    max-width: 17rem;
+    justify-self: end;
+    width: min(22rem, 100%);
+    max-width: 22rem;
+    padding-right: 0.25rem;
 }
 .pb-brew-card__method {
     margin: 0 0 1.5rem;
@@ -1102,6 +1144,10 @@ html.dark .lab-recipe-dropdown__title {
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
+}
+.pb-brew-card__grind i {
+    font-style: normal;
+    text-transform: none;
 }
 .pb-brew-card__stat {
     margin: 0 0 0.15rem;
@@ -1202,14 +1248,15 @@ html.dark .lab-recipe-dropdown__title {
         min-height: 0;
     }
     .pb-brew-card__body {
+        display: flex;
         flex-direction: column;
         gap: 1.5rem;
     }
     .pb-brew-card__right {
-        flex: 1 1 auto;
+        justify-self: stretch;
         max-width: none;
-        margin-left: 0;
         width: 100%;
+        padding-right: 0;
     }
     .pb-brew-card__method {
         font-size: 2.5rem;
