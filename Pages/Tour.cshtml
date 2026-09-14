@@ -26,7 +26,6 @@
                  var heroPosParts = heroPos.Split(' ');
                  var cssPos = heroPosParts.Length >= 2 ? $"{heroPosParts[0]} {heroPosParts[1]}" : "50% 50%";
                  var cssScale = heroPosParts.Length >= 3 ? heroPosParts[2] : "1.0";
-                 
                  <img src="@heroImage" alt="@Model.Tour.Title" class="absolute inset-0 w-full h-full object-cover transition-transform" style="object-position: @cssPos; transform: scale(@cssScale);" data-entity-id="@Model.Tour.Id" data-entity-type="Experience" data-editable="ImageUrl" data-position-key="Tour_Hero_Pos_@Model.Tour.Id" data-saved-pos="@heroPos" />
              }
              else
@@ -125,6 +124,25 @@
                     <p class="text-v-gray text-lg md:text-xl leading-relaxed font-normal max-w-3xl" data-entity-id="@Model.Tour.Id" data-entity-type="Experience" data-editable="LongDescription">
                         @Model.Tour.LongDescription
                     </p>
+                    @if (Model.WorkshopMaterials.Count > 0)
+                    {
+                        <details class="tour-materials">
+                            <summary class="tour-syllabus-details__summary">
+                                <span class="text-[10px] font-bold uppercase tracking-widest text-v-gray font-mono-jb">Materials</span>
+                                <span class="exp-filter-label m-0" style="width: auto; flex: none;">included</span>
+                                <span class="tour-syllabus-details__chevron" aria-hidden="true"></span>
+                            </summary>
+                            <div class="tour-materials__body">
+                                <p class="tour-materials__note">We set the table. You don't bring anything.</p>
+                                <ul class="tour-materials__list">
+                                    @foreach (var item in Model.WorkshopMaterials)
+                                    {
+                                        <li>@item</li>
+                                    }
+                                </ul>
+                            </div>
+                        </details>
+                    }
                 </div>
 
                 <!-- What You Get Box -->
@@ -133,17 +151,17 @@
                     <div class="tour-whatyouget-map flex flex-col md:flex-row md:items-start gap-6 md:gap-8 mb-8 w-full max-w-5xl font-sans">
                     <div class="relative mt-2 flex-1 min-w-0">
                         <!-- Top Tag -->
-                        <div class="absolute -top-3 left-6 bg-[#FF3B1F] text-white text-xs font-semibold px-2 py-0.5 z-10">
+                        <div class="absolute -top-3 left-6 bg-[#722EA8] text-white text-xs font-semibold px-2 py-0.5 z-10">
                             what you get
                         </div>
                         
                         <!-- Main Box -->
-                        <div class="border border-[#FF3B1F] relative p-8 pt-10 h-full">
+                        <div class="border border-[#722EA8] relative p-8 pt-10 h-full">
                             <!-- Corner Nodes -->
-                            <div class="absolute -top-1 -left-1 w-2 h-2 bg-[#FF3B1F]"></div>
-                            <div class="absolute -top-1 -right-1 w-2 h-2 bg-[#FF3B1F]"></div>
-                            <div class="absolute -bottom-1 -left-1 w-2 h-2 bg-[#FF3B1F]"></div>
-                            <div class="absolute -bottom-1 -right-1 w-2 h-2 bg-[#FF3B1F]"></div>
+                            <div class="absolute -top-1 -left-1 w-2 h-2 bg-[#722EA8]"></div>
+                            <div class="absolute -top-1 -right-1 w-2 h-2 bg-[#722EA8]"></div>
+                            <div class="absolute -bottom-1 -left-1 w-2 h-2 bg-[#722EA8]"></div>
+                            <div class="absolute -bottom-1 -right-1 w-2 h-2 bg-[#722EA8]"></div>
                             
                             <!-- List -->
                             <ul class="list-none p-0 m-0 space-y-4 font-mono-jb text-sm text-v-gray">
@@ -159,24 +177,24 @@
                             <!-- Take Home Section -->
                             @if (!string.Equals(Model.Tour.Category, "Expedition", StringComparison.OrdinalIgnoreCase))
                             {
-                            <div class="mt-8 pt-6 border-t border-[#FF3B1F]/30" data-takehome="by-host">
-                                <span class="text-[10px] font-bold uppercase tracking-widest text-[#FF3B1F] block mb-4">TAKE HOME</span>
+                            <div class="mt-8 pt-6 border-t border-[#722EA8]/30" data-takehome="by-host">
+                                <span class="text-[10px] font-bold uppercase tracking-widest text-[#722EA8] block mb-4">TAKE HOME</span>
                                 <ul class="list-none p-0 m-0 space-y-3 font-mono-jb text-sm text-v-black dark:text-[#D6D0C8]">
                                     @if (Model.TakesCoffeeHome)
                                     {
                                         <li class="flex items-start gap-3">
-                                            <span class="text-[#FF3B1F] shrink-0">+</span>
+                                            <span class="text-[#722EA8] shrink-0">+</span>
                                             <span class="leading-relaxed">200g coffee</span>
                                         </li>
                                     }
                                     <li class="flex items-start gap-3">
-                                        <span class="text-[#FF3B1F] shrink-0">+</span>
+                                        <span class="text-[#722EA8] shrink-0">+</span>
                                         <span class="leading-relaxed">SCA flavor wheel</span>
                                     </li>
                                     @if (Model.TakesCynthiaPavelKit || Model.IsCoffeeLab)
                                     {
                                         <li class="flex items-start gap-3">
-                                            <span class="text-[#FF3B1F] shrink-0">+</span>
+                                            <span class="text-[#722EA8] shrink-0">+</span>
                                             <span class="leading-relaxed">Recipe cards</span>
                                         </li>
                                     }

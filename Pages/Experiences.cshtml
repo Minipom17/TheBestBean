@@ -40,20 +40,6 @@
                 <div class="mt-3 md:mt-5 exp-filters font-mono-jb lg:w-full" aria-label="Workshop filters">
                     <partial name="_ExpLocationFilters" model='"urban-location-filters"' />
 
-                    <div class="exp-filter-row">
-                        <span class="exp-filter-label">When</span>
-                        <div class="exp-when" id="urban-frequency-filters" role="group" aria-label="Filter by schedule">
-                            <button type="button" class="exp-when-btn filter-btn active" data-filter="all">All</button>
-                            @foreach (var when in Model.ExperiencesList
-                                .Where(e => e.Category == "Urban Workshops" && !string.IsNullOrEmpty(e.Month) && !ExperienceGeo.IsMonWed(e.Month))
-                                .Select(e => ExperienceGeo.WhenKey(e.Month))
-                                .Where(k => !string.IsNullOrWhiteSpace(k))
-                                .Distinct())
-                            {
-                                <button type="button" class="exp-when-btn filter-btn" data-filter="@when">@ExperienceGeo.WhenLabel(when)</button>
-                            }
-                        </div>
-                    </div>
                     <div class="exp-filter-row mt-4">
                         <span class="exp-filter-label">Time</span>
                         <div class="exp-when" id="urban-time-filters" role="group" aria-label="Filter by time">
@@ -135,17 +121,17 @@
                                     {
                                         <div class="relative mt-2 mb-8 max-w-xl font-sans">
                                             <!-- Top Tag -->
-                                            <div class="absolute -top-3 left-6 bg-[#FF3B1F] text-white text-[10px] font-semibold px-2 py-0.5 z-10 uppercase tracking-widest">
+                                            <div class="absolute -top-3 left-6 bg-[#722EA8] text-white text-[10px] font-semibold px-2 py-0.5 z-10 uppercase tracking-widest">
                                                 what you get
                                             </div>
                                             
                                             <!-- Main Box -->
-                                            <div class="border border-[#FF3B1F] relative p-6 pt-8">
+                                            <div class="border border-[#722EA8] relative p-6 pt-8">
                                                 <!-- Corner Nodes -->
-                                                <div class="absolute -top-1 -left-1 w-2 h-2 bg-[#FF3B1F]"></div>
-                                                <div class="absolute -top-1 -right-1 w-2 h-2 bg-[#FF3B1F]"></div>
-                                                <div class="absolute -bottom-1 -left-1 w-2 h-2 bg-[#FF3B1F]"></div>
-                                                <div class="absolute -bottom-1 -right-1 w-2 h-2 bg-[#FF3B1F]"></div>
+                                                <div class="absolute -top-1 -left-1 w-2 h-2 bg-[#722EA8]"></div>
+                                                <div class="absolute -top-1 -right-1 w-2 h-2 bg-[#722EA8]"></div>
+                                                <div class="absolute -bottom-1 -left-1 w-2 h-2 bg-[#722EA8]"></div>
+                                                <div class="absolute -bottom-1 -right-1 w-2 h-2 bg-[#722EA8]"></div>
                                                 
                                                 <!-- List -->
                                                 <ul class="list-none p-0 m-0 space-y-3 font-mono-jb text-[11px] text-v-gray">
@@ -235,45 +221,84 @@
 
                 @if (regularLabs.Any())
                 {
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16" id="urban-labs-grid">
+                    <div class="flex flex-col gap-24 md:gap-32 mt-8" id="urban-labs-grid">
                         @foreach (var exp in regularLabs)
                         {
                             var labGeo = ExperienceGeo.Locate(exp);
                             <article class="lab-item flex flex-col group" data-region="@labGeo.Region" data-place="@labGeo.PlaceKey" data-frequency="@ExperienceGeo.WhenKey(exp.Month)" data-time="@GetTimeCategory(exp.Duration)">
+                                @{
+                                    var expPhotos = (exp.GalleryImages != null && exp.GalleryImages.Any())
+                                        ? exp.GalleryImages
+                                        : (string.IsNullOrWhiteSpace(exp.ImageUrl) ? new List<string>() : new List<string> { exp.ImageUrl });
+                                }
+                                <div class="w-full aspect-[21/9] bg-gray-100 dark:bg-[#1C191F] mb-8 overflow-hidden rounded-3xl relative">
+                                    <div class="carousel-container absolute inset-0 w-full h-full flex transition-transform duration-500 ease-in-out" id="carousel-@exp.Id" data-current="0">
+                                        @foreach (var img in expPhotos)
+                                        {
+                                            <img src="@img" alt="@exp.Title" class="img-stark w-full h-full object-cover flex-shrink-0" loading="lazy" />
+                                        }
+                                    </div>
+                                    @if (exp.Tag != null)
+                                    {
+                                        <div class="absolute top-3 right-3 bg-red-600 text-white rounded-full px-3 py-1 text-[9px] font-mono-jb font-bold uppercase tracking-widest shadow-sm z-10" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Tag">@exp.Tag</div>
+                                    }
+                                    @if (expPhotos.Count > 1)
+                                    {
+                                        <button type="button" aria-label="Previous Image" onclick="moveCarousel(@exp.Id, -1)" class="absolute left-4 top-1/2 -translate-y-1/2 bg-black/40 text-white w-10 h-10 rounded-full hover:bg-black/70 transition flex items-center justify-center z-10 border-0 cursor-pointer">
+                                            <i class="bi bi-chevron-left text-xl"></i>
+                                        </button>
+                                        <button type="button" aria-label="Next Image" onclick="moveCarousel(@exp.Id, 1)" class="absolute right-4 top-1/2 -translate-y-1/2 bg-black/40 text-white w-10 h-10 rounded-full hover:bg-black/70 transition flex items-center justify-center z-10 border-0 cursor-pointer">
+                                            <i class="bi bi-chevron-right text-xl"></i>
+                                        </button>
+                                    }
+                                </div>
+
                                 <a asp-page="/Tour" asp-route-id="@exp.Id" class="text-decoration-none text-slate-900 dark:text-[#D6D0C8] flex flex-col h-full group">
-                                    <div class="w-full aspect-[3/2] bg-gray-100 dark:bg-[#1C191F] mb-6 overflow-hidden rounded-3xl relative @(exp.Tag != null ? "border border-red-200" : "")">
-                                        @if (!string.IsNullOrWhiteSpace(exp.ImageUrl))
-                                        {
-                                            <img src="@exp.ImageUrl" alt="@exp.Title" class="img-stark absolute inset-0 w-full h-full object-cover" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="ImageUrl" loading="lazy" />
-                                        }
-                                        else
-                                        {
-                                            <div class="absolute inset-0 flex items-center justify-center font-mono-jb text-[10px] font-bold uppercase tracking-widest text-v-gray">Photos soon</div>
-                                        }
-                                        @if (exp.Tag != null)
-                                        {
-                                            <div class="absolute top-3 right-3 bg-red-600 text-white rounded-full px-3 py-1 text-[9px] font-mono-jb font-bold uppercase tracking-widest shadow-sm" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Tag">@exp.Tag</div>
-                                        }
-                                    </div>
-                                    <div class="flex flex-col mb-4">
-                                        <div class="flex items-center gap-2 font-mono-jb text-[10px] font-bold tracking-widest uppercase mb-2">
-                                            <div class="w-1.5 h-1.5 bg-[#F05A28]"></div>
-                                            <span class="text-gray-300">/</span>
-                                            <span class="text-v-black dark:text-[#D6D0C8]" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Location"><partial name="_VenueLine" model="exp" /></span>
-                                            <span class="text-gray-500" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Month">@exp.Month</span>
-                                            <span class="text-gray-300">/</span>
-                                            <span class="text-[#F05A28]" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Difficulty">@exp.Difficulty</span>
+                                    <div class="grid grid-cols-1 md:grid-cols-12 gap-12 flex-grow">
+                                        <!-- Left: Content & Button -->
+                                        <div class="md:col-span-7 flex flex-col">
+                                            <div class="font-mono-jb text-[10px] font-bold tracking-widest uppercase mb-4 leading-relaxed">
+                                                <span class="inline-block w-1.5 h-1.5 bg-[#F05A28] relative -top-[1px] mr-1.5"></span>
+                                                <span class="text-gray-300 mr-1.5">/</span>
+                                                <span class="text-v-black dark:text-[#D6D0C8]" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Location"><partial name="_VenueLine" model="exp" /></span>
+                                                <span class="text-gray-500 mx-1.5" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Month">@exp.Month</span>
+                                                <span class="text-gray-300 mr-1.5">/</span>
+                                                <span class="text-[#F05A28]" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Difficulty">@exp.Difficulty</span>
+                                            </div>
+                                            <h3 class="text-3xl md:text-4xl font-semibold tracking-tight mb-4 m-0" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Title">@exp.Title</h3>
+                                            <p class="text-v-gray text-base leading-relaxed mb-10 font-normal max-w-xl" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Description">
+                                                @exp.Description
+                                            </p>
+                                            <div class="flex items-center gap-6 mt-auto">
+                                                <span class="bg-v-black text-v-white px-8 py-4 font-bold uppercase tracking-widest text-[10px] group-hover:bg-[#F05A28] transition-colors font-mono-jb">
+                                                    VIEW DETAILS
+                                                </span>
+                                                <span class="price-pair text-2xl font-semibold text-v-black dark:text-[#D6D0C8] font-mono-jb"><span>S/@LocalPricing.YapeSoles(exp.Price).ToString("0")</span><span class="price-pair__sep">/</span><span>$<span data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Price">@exp.Price</span></span></span>
+                                            </div>
                                         </div>
-                                        <h3 class="text-2xl md:text-3xl font-semibold tracking-tight text-v-black dark:text-[#D6D0C8] m-0" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Title">@exp.Title</h3>
-                                    </div>
-                                    <p class="text-v-gray text-sm md:text-base leading-relaxed mb-6 pb-6 border-b border-v-black/10 dark:border-[#2A262C] font-normal flex-grow" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Description">
-                                        @exp.Description
-                                    </p>
-                                    <div class="flex items-center justify-between mt-auto pt-4 font-mono-jb">
-                                        <span class="text-2xl font-bold text-v-black dark:text-[#D6D0C8]">S/@LocalPricing.YapeSoles(exp.Price).ToString("0") <span class="text-sm font-normal text-v-gray">/ $<span data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Price">@exp.Price</span></span></span>
-                                        <span class="text-sm font-bold text-v-black dark:text-[#D6D0C8] hover:text-v-gray transition-colors flex items-center">
-                                            Reserve <span class="ml-2 transform group-hover:translate-x-1 transition-transform">&rarr;</span>
-                                        </span>
+
+                                        <!-- Right: Syllabus -->
+                                        <div class="md:col-span-5 flex flex-col pt-2 md:pt-0 font-mono-jb">
+                                            <h4 class="text-[10px] font-bold uppercase tracking-widest text-v-gray mb-4">SYLLABUS</h4>
+                                            <div class="flex flex-col border-t border-v-black dark:border-[#2A262C] font-sans">
+                                                @if (exp.Syllabus != null && exp.Syllabus.Any())
+                                                {
+                                                    for (int i = 0; i < exp.Syllabus.Count; i++)
+                                                    {
+                                                        var isLast = i == exp.Syllabus.Count - 1;
+                                                        var paddingClasses = isLast ? "pt-4 pb-0" : "py-4 border-b border-v-light-gray";
+                                                        var syllabusRow = SyllabusParser.Parse(exp.Syllabus[i], i);
+                                                        <div class="@paddingClasses">
+                                                            <partial name="_SyllabusRow" model="syllabusRow" />
+                                                        </div>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-sm font-normal text-v-gray py-4">Syllabus details available upon request.</span>
+                                                }
+                                            </div>
+                                        </div>
                                     </div>
                                 </a>
                             </article>
@@ -296,20 +321,6 @@
                 <div class="mt-3 md:mt-5 exp-filters font-mono-jb w-full" aria-label="Expedition filters">
                     <partial name="_ExpLocationFilters" model='"expedition-location-filters"' />
 
-                    <div class="exp-filter-row">
-                        <span class="exp-filter-label">When</span>
-                        <div class="exp-when" id="expedition-frequency-filters" role="group" aria-label="Filter by schedule">
-                            <button type="button" class="exp-when-btn filter-btn active" data-filter="all">All</button>
-                            @foreach (var when in Model.ExperiencesList
-                                .Where(e => e.Category == "Expedition" && !string.IsNullOrEmpty(e.Month) && !ExperienceGeo.IsMonWed(e.Month))
-                                .Select(e => ExperienceGeo.WhenKey(e.Month))
-                                .Where(k => !string.IsNullOrWhiteSpace(k))
-                                .Distinct())
-                            {
-                                <button type="button" class="exp-when-btn filter-btn" data-filter="@when">@ExperienceGeo.WhenLabel(when)</button>
-                            }
-                        </div>
-                    </div>
                     <div class="exp-filter-row mt-4">
                         <span class="exp-filter-label">Time</span>
                         <div class="exp-when" id="expedition-time-filters" role="group" aria-label="Filter by time">

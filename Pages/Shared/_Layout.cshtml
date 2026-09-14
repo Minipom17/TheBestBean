@@ -379,21 +379,21 @@
         ::-webkit-scrollbar-thumb { background: #E5E5E5; }
         ::-webkit-scrollbar-thumb:hover { background: #000000; }
 
-        /* JMB Image Treatment: High contrast, stark grayscale on desktop, full color on mobile */
+        /* JMB Image Treatment: Darker & desaturated on desktop, full color on hover */
         .img-stark {
             transition: filter 0.5s ease;
         }
 
         body.is-scrolling .img-stark {
-            filter: grayscale(100%) contrast(1.15) brightness(0.95) !important;
+            filter: saturate(60%) brightness(0.7) contrast(1.05) !important;
         }
         
         @@media (hover: hover) {
             .img-stark {
-                filter: grayscale(100%) contrast(1.15) brightness(0.95);
+                filter: saturate(60%) brightness(0.7) contrast(1.05);
             }
             .img-stark:hover, .group:hover .img-stark {
-                filter: grayscale(0%) contrast(1.0) brightness(1.0);
+                filter: saturate(100%) brightness(1.0) contrast(1.0);
             }
         }
 

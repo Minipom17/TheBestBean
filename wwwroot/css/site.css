@@ -323,8 +323,7 @@ html.dark .hover\:border-\[\#FF3B1F\]:hover {
     display: flex;
     flex-direction: column;
     gap: 0.35rem;
-    width: calc(100% + 1.5rem);
-    max-width: none;
+    width: 100%;
 }
 
 .exp-filter-row {
@@ -660,6 +659,49 @@ html.dark .offerings-choose-prompt {
     color: #111;
     border-color: #111;
 }
+.tour-materials {
+    margin-top: 1.5rem;
+    max-width: 28rem;
+}
+.tour-materials > summary {
+    width: 100%;
+}
+.tour-materials__body {
+    padding: 0.75rem 0 0.15rem;
+}
+.tour-materials__note {
+    margin: 0 0 0.7rem;
+    font-size: 0.8rem;
+    line-height: 1.45;
+    color: #8B8490;
+}
+.tour-materials__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: #6B6570;
+}
+.tour-materials__list li {
+    display: flex;
+    gap: 0.55rem;
+    align-items: baseline;
+}
+.tour-materials__list li::before {
+    content: "+";
+    color: #C4BEC6;
+    flex-shrink: 0;
+}
+html.dark .tour-materials__list {
+    color: #9A93A0;
+}
+
 .tour-syllabus-details {
     margin-top: 0.25rem;
 }

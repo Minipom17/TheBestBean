@@ -24,7 +24,8 @@ public static class ExperienceVenue
 
         if (title.Contains("Odar", StringComparison.OrdinalIgnoreCase))
         {
-            return new Venue("Cusco City", "Santa Ana", null, -13.5148, -71.9812);
+            // Misky factory: Av. República de Bolivia C-11, Parque Industrial, Wanchaq.
+            return new Venue("Cusco City", "República de Bolivia C-11", "Parque Industrial, Wanchaq", -13.53205, -71.94598);
         }
 
         if ((title.Contains("Coffee Laboratory", StringComparison.OrdinalIgnoreCase)
@@ -33,7 +34,8 @@ public static class ExperienceVenue
             && !title.Contains("Cinthya", StringComparison.OrdinalIgnoreCase)
             && !title.Contains("Cynthia", StringComparison.OrdinalIgnoreCase))
         {
-            return new Venue("Cusco City", "Santiago", "15 min from Plaza de Armas", -13.5186, -71.9825);
+            // Google listing: Belen Coffee Lab, Santiago 08484 (not San Francisco / centro).
+            return new Venue("Cusco City", "Santiago", "Belén · 15 min from Plaza de Armas", -13.52825, -71.98236);
         }
 
         // Next door to Sta. Teresa 385 (D'Manolos barbershop). Their space is not on Google Maps;
@@ -63,7 +65,7 @@ public static class ExperienceVenue
 
     public static string MapEmbedUrl(Venue venue) =>
         string.Create(CultureInfo.InvariantCulture,
-            $"https://www.google.com/maps?q={venue.Latitude},{venue.Longitude}&hl=en&z=18&output=embed");
+            $"https://www.google.com/maps?q=loc:{venue.Latitude},{venue.Longitude}&hl=en&z=18&output=embed");
 
     public static string MapOpenUrl(Venue venue) =>
         string.Create(CultureInfo.InvariantCulture,

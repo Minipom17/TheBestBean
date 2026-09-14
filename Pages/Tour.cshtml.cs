@@ -27,6 +27,7 @@ namespace TheBestBean.Pages
         public bool IsCoffeeLab { get; set; }
         public bool TakesCoffeeHome { get; set; }
         public bool TakesCynthiaPavelKit { get; set; }
+        public IReadOnlyList<string> WorkshopMaterials { get; set; } = Array.Empty<string>();
         public IReadOnlyList<LabRecipeCard> LabRecipes { get; set; } = Array.Empty<LabRecipeCard>();
         public ExperienceVenue.Venue? Venue { get; set; }
 
@@ -49,6 +50,10 @@ namespace TheBestBean.Pages
                 IsCoffeeLab = IsCuscoCoffeeLab(Tour);
                 TakesCoffeeHome = TakesRoastHome(Tour);
                 TakesCynthiaPavelKit = IsCynthiaPavelSession(Tour);
+                if (TakesCynthiaPavelKit)
+                {
+                    WorkshopMaterials = CynthiaWorkshopMaterials;
+                }
                 if (IsCoffeeLab)
                 {
                     LabRecipes = CoffeeLabRecipes;
@@ -238,6 +243,17 @@ namespace TheBestBean.Pages
             return string.Equals(tour.Tag, "FEATURED", StringComparison.OrdinalIgnoreCase)
                 && (tour.Category ?? string.Empty).Contains("Urban", StringComparison.OrdinalIgnoreCase);
         }
+
+        public static readonly IReadOnlyList<string> CynthiaWorkshopMaterials =
+        [
+            "Napkins",
+            "Water for brewing",
+            "Bottled water",
+            "Filters",
+            "Coffee",
+            "Snacks",
+            "Paper towels"
+        ];
 
         public static readonly IReadOnlyList<LabRecipeCard> CoffeeLabRecipes =
         [
