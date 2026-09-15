@@ -72,29 +72,30 @@
                     var featuredGeo = ExperienceGeo.Locate(featuredLab);
                     <article class="lab-item flex flex-col group w-full" data-region="@featuredGeo.Region" data-place="@featuredGeo.PlaceKey" data-frequency="@ExperienceGeo.WhenKey(featuredLab.Month)" data-time="@GetTimeCategory(featuredLab.Duration)">
                         <!-- Carousel Container -->
-                        <div class="w-full aspect-[3/2] bg-gray-100 dark:bg-[#1C191F] mb-8 overflow-hidden rounded-3xl relative">
+                        @{
+                            var featuredPhotos = (featuredLab.GalleryImages != null && featuredLab.GalleryImages.Any())
+                                ? featuredLab.GalleryImages
+                                : (string.IsNullOrWhiteSpace(featuredLab.ImageUrl) ? new List<string>() : new List<string> { featuredLab.ImageUrl });
+                        }
+                        <div class="exp-carousel w-full aspect-[3/2] bg-gray-100 dark:bg-[#1C191F] mb-8 overflow-hidden rounded-3xl relative" data-carousel-id="@featuredLab.Id">
                             <div class="carousel-container absolute inset-0 w-full h-full flex transition-transform duration-500 ease-in-out" id="carousel-@featuredLab.Id" data-current="0">
-                                @if (featuredLab.GalleryImages != null && featuredLab.GalleryImages.Any())
+                                @foreach (var img in featuredPhotos)
                                 {
-                                    foreach (var img in featuredLab.GalleryImages)
-                                    {
-                                        <img src="@img" alt="@featuredLab.Title" class="img-stark w-full h-full object-cover flex-shrink-0" loading="lazy" />
-                                    }
-                                }
-                                else
-                                {
-                                    <img src="@featuredLab.ImageUrl" alt="@featuredLab.Title" class="img-stark w-full h-full object-cover flex-shrink-0" loading="lazy" />
+                                    <img src="@img" alt="@featuredLab.Title" class="img-stark w-full h-full object-cover flex-shrink-0" draggable="false" loading="lazy" />
                                 }
                             </div>
-                            <div class="absolute top-3 right-3 bg-v-yellow text-v-black rounded-full px-3 py-1 text-[9px] font-mono-jb font-bold uppercase tracking-widest shadow-sm">FEATURED</div>
+                            <div class="absolute top-3 right-3 bg-v-yellow text-v-black rounded-full px-3 py-1 text-[9px] font-mono-jb font-bold uppercase tracking-widest shadow-sm z-10 pointer-events-none">FEATURED</div>
                             
-                            <!-- Carousel Controls -->
-                            <button aria-label="Previous Image" onclick="moveCarousel(@featuredLab.Id, -1)" class="absolute left-4 top-1/2 -translate-y-1/2 bg-black/40 text-white w-10 h-10 rounded-full hover:bg-black/70 transition flex items-center justify-center z-10 border-0 cursor-pointer">
-                                <i class="bi bi-chevron-left text-xl"></i>
-                            </button>
-                            <button aria-label="Next Image" onclick="moveCarousel(@featuredLab.Id, 1)" class="absolute right-4 top-1/2 -translate-y-1/2 bg-black/40 text-white w-10 h-10 rounded-full hover:bg-black/70 transition flex items-center justify-center z-10 border-0 cursor-pointer">
-                                <i class="bi bi-chevron-right text-xl"></i>
-                            </button>
+                            @if (featuredPhotos.Count > 1)
+                            {
+                                <!-- Carousel Controls -->
+                                <button type="button" aria-label="Previous Image" onclick="moveCarousel(@featuredLab.Id, -1, event)" class="exp-carousel__btn absolute left-4 top-1/2 -translate-y-1/2 bg-black/40 text-white w-10 h-10 rounded-full hover:bg-black/70 transition flex items-center justify-center z-10 border-0 cursor-pointer">
+                                    <i class="bi bi-chevron-left text-xl"></i>
+                                </button>
+                                <button type="button" aria-label="Next Image" onclick="moveCarousel(@featuredLab.Id, 1, event)" class="exp-carousel__btn absolute right-4 top-1/2 -translate-y-1/2 bg-black/40 text-white w-10 h-10 rounded-full hover:bg-black/70 transition flex items-center justify-center z-10 border-0 cursor-pointer">
+                                    <i class="bi bi-chevron-right text-xl"></i>
+                                </button>
+                            }
                         </div>
 
                         <!-- Data Grid splits inside -->
@@ -183,18 +184,37 @@
                             {
                                 var labGeo = ExperienceGeo.Locate(exp);
                                 <article class="lab-item flex flex-col group" data-region="@labGeo.Region" data-place="@labGeo.PlaceKey" data-frequency="@ExperienceGeo.WhenKey(exp.Month)" data-time="@GetTimeCategory(exp.Duration)">
+                                    @{
+                                        var hourPhotos = (exp.GalleryImages != null && exp.GalleryImages.Any())
+                                            ? exp.GalleryImages
+                                            : (string.IsNullOrWhiteSpace(exp.ImageUrl) ? new List<string>() : new List<string> { exp.ImageUrl });
+                                    }
+                                    <div class="exp-carousel w-full aspect-[3/2] bg-gray-100 dark:bg-[#1C191F] mb-5 overflow-hidden rounded-3xl relative" data-carousel-id="@exp.Id">
+                                        @if (hourPhotos.Any())
+                                        {
+                                            <div class="carousel-container absolute inset-0 w-full h-full flex transition-transform duration-500 ease-in-out" id="carousel-@exp.Id" data-current="0">
+                                                @foreach (var img in hourPhotos)
+                                                {
+                                                    <img src="@img" alt="@exp.Title" class="img-stark w-full h-full object-cover flex-shrink-0" draggable="false" loading="lazy" />
+                                                }
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="absolute inset-0 flex items-center justify-center font-mono-jb text-[10px] font-bold uppercase tracking-widest text-v-gray">Photos soon</div>
+                                        }
+                                        <div class="absolute top-3 right-3 bg-v-yellow text-v-black rounded-full px-3 py-1 text-[9px] font-mono-jb font-bold uppercase tracking-widest z-10 pointer-events-none">1 HOUR</div>
+                                        @if (hourPhotos.Count > 1)
+                                        {
+                                            <button type="button" aria-label="Previous Image" onclick="moveCarousel(@exp.Id, -1, event)" class="exp-carousel__btn absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 text-white w-8 h-8 rounded-full hover:bg-black/70 transition flex items-center justify-center z-10 border-0 cursor-pointer">
+                                                <i class="bi bi-chevron-left text-base"></i>
+                                            </button>
+                                            <button type="button" aria-label="Next Image" onclick="moveCarousel(@exp.Id, 1, event)" class="exp-carousel__btn absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 text-white w-8 h-8 rounded-full hover:bg-black/70 transition flex items-center justify-center z-10 border-0 cursor-pointer">
+                                                <i class="bi bi-chevron-right text-base"></i>
+                                            </button>
+                                        }
+                                    </div>
                                     <a asp-page="/Tour" asp-route-id="@exp.Id" class="text-decoration-none text-slate-900 dark:text-[#D6D0C8] flex flex-col h-full group">
-                                        <div class="w-full aspect-[3/2] bg-gray-100 dark:bg-[#1C191F] mb-5 overflow-hidden rounded-3xl relative">
-                                            @if (!string.IsNullOrWhiteSpace(exp.ImageUrl))
-                                            {
-                                                <img src="@exp.ImageUrl" alt="@exp.Title" class="img-stark absolute inset-0 w-full h-full object-cover" loading="lazy" />
-                                            }
-                                            else
-                                            {
-                                                <div class="absolute inset-0 flex items-center justify-center font-mono-jb text-[10px] font-bold uppercase tracking-widest text-v-gray">Photos soon</div>
-                                            }
-                                            <div class="absolute top-3 right-3 bg-v-yellow text-v-black rounded-full px-3 py-1 text-[9px] font-mono-jb font-bold uppercase tracking-widest">1 HOUR</div>
-                                        </div>
                                         <div class="flex items-center gap-2 font-mono-jb text-[10px] font-bold tracking-widest uppercase mb-2">
                                             <div class="w-1.5 h-1.5 bg-v-yellow"></div>
                                             <span class="text-v-black dark:text-[#D6D0C8]">@exp.Duration</span>
@@ -227,23 +247,23 @@
                                         ? exp.GalleryImages
                                         : (string.IsNullOrWhiteSpace(exp.ImageUrl) ? new List<string>() : new List<string> { exp.ImageUrl });
                                 }
-                                <div class="w-full aspect-[3/2] bg-gray-100 dark:bg-[#1C191F] mb-8 overflow-hidden rounded-3xl relative">
+                                <div class="exp-carousel w-full aspect-[3/2] bg-gray-100 dark:bg-[#1C191F] mb-8 overflow-hidden rounded-3xl relative" data-carousel-id="@exp.Id">
                                     <div class="carousel-container absolute inset-0 w-full h-full flex transition-transform duration-500 ease-in-out" id="carousel-@exp.Id" data-current="0">
                                         @foreach (var img in expPhotos)
                                         {
-                                            <img src="@img" alt="@exp.Title" class="img-stark w-full h-full object-cover flex-shrink-0" loading="lazy" />
+                                            <img src="@img" alt="@exp.Title" class="img-stark w-full h-full object-cover flex-shrink-0" draggable="false" loading="lazy" />
                                         }
                                     </div>
                                     @if (exp.Tag != null)
                                     {
-                                        <div class="absolute top-3 right-3 bg-red-600 text-white rounded-full px-3 py-1 text-[9px] font-mono-jb font-bold uppercase tracking-widest shadow-sm z-10" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Tag">@exp.Tag</div>
+                                        <div class="absolute top-3 right-3 bg-red-600 text-white rounded-full px-3 py-1 text-[9px] font-mono-jb font-bold uppercase tracking-widest shadow-sm z-10 pointer-events-none" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Tag">@exp.Tag</div>
                                     }
                                     @if (expPhotos.Count > 1)
                                     {
-                                        <button type="button" aria-label="Previous Image" onclick="moveCarousel(@exp.Id, -1)" class="absolute left-4 top-1/2 -translate-y-1/2 bg-black/40 text-white w-10 h-10 rounded-full hover:bg-black/70 transition flex items-center justify-center z-10 border-0 cursor-pointer">
+                                        <button type="button" aria-label="Previous Image" onclick="moveCarousel(@exp.Id, -1, event)" class="exp-carousel__btn absolute left-4 top-1/2 -translate-y-1/2 bg-black/40 text-white w-10 h-10 rounded-full hover:bg-black/70 transition flex items-center justify-center z-10 border-0 cursor-pointer">
                                             <i class="bi bi-chevron-left text-xl"></i>
                                         </button>
-                                        <button type="button" aria-label="Next Image" onclick="moveCarousel(@exp.Id, 1)" class="absolute right-4 top-1/2 -translate-y-1/2 bg-black/40 text-white w-10 h-10 rounded-full hover:bg-black/70 transition flex items-center justify-center z-10 border-0 cursor-pointer">
+                                        <button type="button" aria-label="Next Image" onclick="moveCarousel(@exp.Id, 1, event)" class="exp-carousel__btn absolute right-4 top-1/2 -translate-y-1/2 bg-black/40 text-white w-10 h-10 rounded-full hover:bg-black/70 transition flex items-center justify-center z-10 border-0 cursor-pointer">
                                             <i class="bi bi-chevron-right text-xl"></i>
                                         </button>
                                     }
@@ -338,23 +358,23 @@
                                 ? exp.GalleryImages
                                 : (string.IsNullOrWhiteSpace(exp.ImageUrl) ? new List<string>() : new List<string> { exp.ImageUrl });
                         }
-                        <div class="w-full aspect-[21/9] bg-gray-100 dark:bg-[#1C191F] mb-8 overflow-hidden rounded-3xl relative">
+                        <div class="exp-carousel w-full aspect-[21/9] bg-gray-100 dark:bg-[#1C191F] mb-8 overflow-hidden rounded-3xl relative" data-carousel-id="@exp.Id">
                             <div class="carousel-container absolute inset-0 w-full h-full flex transition-transform duration-500 ease-in-out" id="carousel-@exp.Id" data-current="0">
                                 @foreach (var img in expeditionPhotos)
                                 {
-                                    <img src="@img" alt="@exp.Title" class="img-stark w-full h-full object-cover flex-shrink-0" loading="lazy" />
+                                    <img src="@img" alt="@exp.Title" class="img-stark w-full h-full object-cover flex-shrink-0" draggable="false" loading="lazy" />
                                 }
                             </div>
                             @if (exp.Tag != null)
                             {
-                                <div class="absolute top-3 right-3 bg-red-600 text-white rounded-full px-3 py-1 text-[9px] font-mono-jb font-bold uppercase tracking-widest shadow-sm z-10" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Tag">@exp.Tag</div>
+                                <div class="absolute top-3 right-3 bg-red-600 text-white rounded-full px-3 py-1 text-[9px] font-mono-jb font-bold uppercase tracking-widest shadow-sm z-10 pointer-events-none" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Tag">@exp.Tag</div>
                             }
                             @if (expeditionPhotos.Count > 1)
                             {
-                                <button type="button" aria-label="Previous Image" onclick="moveCarousel(@exp.Id, -1)" class="absolute left-4 top-1/2 -translate-y-1/2 bg-black/40 text-white w-10 h-10 rounded-full hover:bg-black/70 transition flex items-center justify-center z-10 border-0 cursor-pointer">
+                                <button type="button" aria-label="Previous Image" onclick="moveCarousel(@exp.Id, -1, event)" class="exp-carousel__btn absolute left-4 top-1/2 -translate-y-1/2 bg-black/40 text-white w-10 h-10 rounded-full hover:bg-black/70 transition flex items-center justify-center z-10 border-0 cursor-pointer">
                                     <i class="bi bi-chevron-left text-xl"></i>
                                 </button>
-                                <button type="button" aria-label="Next Image" onclick="moveCarousel(@exp.Id, 1)" class="absolute right-4 top-1/2 -translate-y-1/2 bg-black/40 text-white w-10 h-10 rounded-full hover:bg-black/70 transition flex items-center justify-center z-10 border-0 cursor-pointer">
+                                <button type="button" aria-label="Next Image" onclick="moveCarousel(@exp.Id, 1, event)" class="exp-carousel__btn absolute right-4 top-1/2 -translate-y-1/2 bg-black/40 text-white w-10 h-10 rounded-full hover:bg-black/70 transition flex items-center justify-center z-10 border-0 cursor-pointer">
                                     <i class="bi bi-chevron-right text-xl"></i>
                                 </button>
                             }
@@ -510,26 +530,106 @@
             });
         });
 
-        // Global carousel function for featured workshops
-        window.moveCarousel = function(id, direction) {
-            // Prevent event from bubbling up to the anchor tag to avoid navigation
-            event.preventDefault();
-            event.stopPropagation();
-            
+        window.moveCarousel = function(id, direction, evt) {
+            if (evt) {
+                evt.preventDefault();
+                evt.stopPropagation();
+            }
+
             const container = document.getElementById('carousel-' + id);
             if (!container) return;
-            
+
             const images = container.querySelectorAll('img');
             const total = images.length;
             if (total <= 1) return;
-            
-            let current = parseInt(container.getAttribute('data-current') || '0');
+
+            let current = parseInt(container.getAttribute('data-current') || '0', 10);
             current = (current + direction + total) % total;
             container.setAttribute('data-current', current.toString());
-            
-            // Move container by -100% * current
+            container.classList.remove('is-dragging');
             container.style.transform = `translateX(-${current * 100}%)`;
         };
+
+        function bindCarouselSwipe(frame) {
+            const id = frame.getAttribute('data-carousel-id');
+            const container = document.getElementById('carousel-' + id);
+            if (!container) return;
+
+            const images = container.querySelectorAll('img');
+            if (images.length <= 1) return;
+
+            let startX = 0;
+            let startY = 0;
+            let deltaX = 0;
+            let tracking = false;
+            let horizontal = null;
+            let pointerId = null;
+
+            const width = () => frame.getBoundingClientRect().width || 1;
+
+            const onPointerDown = (e) => {
+                if (e.pointerType === 'mouse' && e.button !== 0) return;
+                if (e.target.closest && e.target.closest('.exp-carousel__btn')) return;
+                tracking = true;
+                horizontal = null;
+                pointerId = e.pointerId;
+                startX = e.clientX;
+                startY = e.clientY;
+                deltaX = 0;
+                container.classList.add('is-dragging');
+                try { frame.setPointerCapture(e.pointerId); } catch (_) {}
+            };
+
+            const onPointerMove = (e) => {
+                if (!tracking || e.pointerId !== pointerId) return;
+                deltaX = e.clientX - startX;
+                const deltaY = e.clientY - startY;
+
+                if (horizontal === null) {
+                    if (Math.abs(deltaX) < 8 && Math.abs(deltaY) < 8) return;
+                    horizontal = Math.abs(deltaX) > Math.abs(deltaY);
+                    if (!horizontal) {
+                        tracking = false;
+                        container.classList.remove('is-dragging');
+                        container.style.transform = `translateX(-${parseInt(container.getAttribute('data-current') || '0', 10) * 100}%)`;
+                        try { frame.releasePointerCapture(e.pointerId); } catch (_) {}
+                        return;
+                    }
+                }
+
+                if (!horizontal) return;
+                e.preventDefault();
+                const current = parseInt(container.getAttribute('data-current') || '0', 10);
+                const pct = (deltaX / width()) * 100;
+                container.style.transform = `translateX(calc(-${current * 100}% + ${pct}%))`;
+            };
+
+            const finish = (e) => {
+                if (!tracking || (e && e.pointerId !== pointerId)) return;
+                tracking = false;
+                container.classList.remove('is-dragging');
+                try { frame.releasePointerCapture(pointerId); } catch (_) {}
+
+                const threshold = Math.min(56, width() * 0.18);
+                if (horizontal && Math.abs(deltaX) >= threshold) {
+                    moveCarousel(id, deltaX < 0 ? 1 : -1);
+                } else {
+                    const current = parseInt(container.getAttribute('data-current') || '0', 10);
+                    container.style.transform = `translateX(-${current * 100}%)`;
+                }
+                horizontal = null;
+                deltaX = 0;
+                pointerId = null;
+            };
+
+            frame.addEventListener('pointerdown', onPointerDown);
+            frame.addEventListener('pointermove', onPointerMove, { passive: false });
+            frame.addEventListener('pointerup', finish);
+            frame.addEventListener('pointercancel', finish);
+            frame.addEventListener('lostpointercapture', finish);
+        }
+
+        document.querySelectorAll('.exp-carousel[data-carousel-id]').forEach(bindCarouselSwipe);
     </script>
 }
  

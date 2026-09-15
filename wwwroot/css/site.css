@@ -1360,11 +1360,30 @@ html.dark .price-pair--compact .price-pair__soles {
 }
 
 /* Workshop carousels: each slide fills the framed aspect box */
+.exp-carousel {
+    touch-action: pan-y;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+}
+.exp-carousel:active {
+    cursor: grabbing;
+}
+.exp-carousel .carousel-container {
+    will-change: transform;
+    touch-action: pan-y;
+}
+.exp-carousel .carousel-container.is-dragging {
+    transition: none !important;
+}
 .carousel-container > img {
     flex: 0 0 100%;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    pointer-events: none;
+    -webkit-user-drag: none;
+    user-select: none;
 }
 
 /* Yape vs card pricing */
