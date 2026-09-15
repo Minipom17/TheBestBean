@@ -21,7 +21,7 @@
 }
 
 <!-- MAIN CONTENT CONTAINER (Swiss Master Architecture) -->
-<div class="flex-grow max-w-[1600px] mx-auto w-full px-6 md:px-12 relative pb-24 font-sans text-v-black dark:text-[#D6D0C8]">
+<div class="experiences-page flex-grow max-w-[1600px] mx-auto w-full px-6 md:px-12 relative pb-24 font-sans text-v-black dark:text-[#D6D0C8] overflow-x-clip">
 
     <!-- MAIN CONTENT GRID -->
     <main class="flex flex-col gap-32 md:gap-48 pt-8">
@@ -54,7 +54,7 @@
             </div>
 
             <!-- Right Content Container -->
-            <div class="lg:col-span-8 flex flex-col gap-16" id="urban-labs-container">
+            <div class="lg:col-span-8 flex flex-col gap-16 min-w-0" id="urban-labs-container">
                 @{
                     var hourOrder = new[] { "Peru Tasting Hour", "Brew Your Own", "Introduction to Cupping" };
                     var urbanLabs = Model.ExperiencesList.Where(e => e.Category == "Urban Workshops").ToList();
@@ -102,13 +102,13 @@
                         <a asp-page="/Tour" asp-route-id="@featuredLab.Id" class="text-decoration-none text-slate-900 dark:text-[#D6D0C8] flex flex-col h-full group">
                             <div class="grid grid-cols-1 md:grid-cols-12 gap-12 flex-grow">
                                 <!-- Left: Content & Button -->
-                                <div class="md:col-span-7 flex flex-col">
-                                    <div class="flex flex-nowrap items-center gap-3 mb-4 font-mono-jb w-full">
+                                <div class="md:col-span-7 flex flex-col min-w-0">
+                                    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mb-4 font-mono-jb w-full min-w-0">
                                         <div class="w-3 h-3 bg-v-yellow shrink-0"></div>
-                                        <span class="text-[10px] font-bold uppercase tracking-widest text-v-black dark:text-[#D6D0C8] whitespace-nowrap shrink-0">@featuredLab.Duration</span>
-                                        <span class="text-[10px] font-bold tracking-widest uppercase whitespace-nowrap"><partial name="_VenueLine" model="featuredLab" /></span>
+                                        <span class="text-[10px] font-bold uppercase tracking-widest text-v-black dark:text-[#D6D0C8] shrink-0">@featuredLab.Duration</span>
+                                        <span class="text-[10px] font-bold tracking-widest uppercase min-w-0 break-words"><partial name="_VenueLine" model="featuredLab" /></span>
                                     </div>
-                                    <h3 class="text-3xl md:text-4xl font-semibold tracking-tight mb-4 m-0">@featuredLab.Title</h3>
+                                    <h3 class="text-3xl md:text-4xl font-semibold tracking-tight mb-4 m-0 break-words">@featuredLab.Title</h3>
                                     <p class="text-v-gray text-base leading-relaxed mb-6 font-normal max-w-xl">
                                         @featuredLab.Description
                                     </p>
@@ -273,10 +273,10 @@
                                     <div class="grid grid-cols-1 md:grid-cols-12 gap-12 flex-grow">
                                         <!-- Left: Content & Button -->
                                         <div class="md:col-span-7 flex flex-col">
-                                            <div class="flex flex-nowrap items-center gap-3 mb-4 font-mono-jb w-full leading-relaxed">
+                                            <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mb-4 font-mono-jb w-full min-w-0 leading-relaxed">
                                                 <div class="w-1.5 h-1.5 bg-[#F05A28] shrink-0"></div>
-                                                <span class="text-[10px] font-bold uppercase tracking-widest text-v-black dark:text-[#D6D0C8] whitespace-nowrap shrink-0" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Duration">@exp.Duration</span>
-                                                <span class="text-[10px] font-bold tracking-widest uppercase whitespace-nowrap" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Location"><partial name="_VenueLine" model="exp" /></span>
+                                                <span class="text-[10px] font-bold uppercase tracking-widest text-v-black dark:text-[#D6D0C8] shrink-0" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Duration">@exp.Duration</span>
+                                                <span class="text-[10px] font-bold tracking-widest uppercase min-w-0 break-words" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Location"><partial name="_VenueLine" model="exp" /></span>
                                             </div>
                                             <h3 class="text-3xl md:text-4xl font-semibold tracking-tight mb-4 m-0" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Title">@exp.Title</h3>
                                             <p class="text-v-gray text-base leading-relaxed mb-10 font-normal max-w-xl" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Description">
@@ -348,7 +348,7 @@
             </div>
 
             <!-- Right Content Column (8 Columns stacked) -->
-            <div class="lg:col-span-8 flex flex-col gap-24 md:gap-32" id="expeditions-list">
+            <div class="lg:col-span-8 flex flex-col gap-24 md:gap-32 min-w-0" id="expeditions-list">
                 @foreach (var exp in Model.ExperiencesList.Where(e => e.Category == "Expedition"))
                 {
                     var expeditionGeo = ExperienceGeo.Locate(exp);
@@ -358,7 +358,7 @@
                                 ? exp.GalleryImages
                                 : (string.IsNullOrWhiteSpace(exp.ImageUrl) ? new List<string>() : new List<string> { exp.ImageUrl });
                         }
-                        <div class="exp-carousel w-full aspect-[21/9] bg-gray-100 dark:bg-[#1C191F] mb-8 overflow-hidden rounded-3xl relative" data-carousel-id="@exp.Id">
+                        <div class="exp-carousel w-full aspect-[3/2] bg-gray-100 dark:bg-[#1C191F] mb-8 overflow-hidden rounded-3xl relative" data-carousel-id="@exp.Id">
                             <div class="carousel-container absolute inset-0 w-full h-full flex transition-transform duration-500 ease-in-out" id="carousel-@exp.Id" data-current="0">
                                 @foreach (var img in expeditionPhotos)
                                 {
@@ -384,10 +384,10 @@
                             <div class="grid grid-cols-1 md:grid-cols-12 gap-12 flex-grow">
                                 <!-- Left: Content & Button -->
                                 <div class="md:col-span-7 flex flex-col">
-                                    <div class="flex flex-nowrap items-center gap-3 mb-4 font-mono-jb w-full">
+                                    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mb-4 font-mono-jb w-full min-w-0">
                                         <div class="w-3 h-3 bg-v-red shrink-0"></div>
-                                        <span class="text-[10px] font-bold uppercase tracking-widest text-v-black dark:text-[#D6D0C8] whitespace-nowrap shrink-0" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Duration">@exp.Duration</span>
-                                        <span class="text-[10px] font-bold tracking-widest uppercase whitespace-nowrap" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Location"><partial name="_VenueLine" model="exp" /></span>
+                                        <span class="text-[10px] font-bold uppercase tracking-widest text-v-black dark:text-[#D6D0C8] shrink-0" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Duration">@exp.Duration</span>
+                                        <span class="text-[10px] font-bold tracking-widest uppercase min-w-0 break-words" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Location"><partial name="_VenueLine" model="exp" /></span>
                                     </div>
                                     <h3 class="text-3xl md:text-4xl font-semibold tracking-tight mb-4 m-0" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Title">@exp.Title</h3>
                                     <p class="text-v-gray text-base leading-relaxed mb-10 font-normal max-w-xl" data-entity-id="@exp.Id" data-entity-type="Experience" data-editable="Description">

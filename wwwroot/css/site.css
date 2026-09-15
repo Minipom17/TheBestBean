@@ -781,13 +781,15 @@ html.dark .tour-materials__list {
 .tour-whatyouget-map__box {
     display: flex;
     flex-direction: column;
+    min-width: 0;
+    width: 100%;
 }
 .tour-whatyouget-map__box > .border {
     flex: 1 1 auto;
 }
 .tour-venue-map {
     width: 100%;
-    max-width: 14rem;
+    max-width: none;
     display: flex;
     flex-direction: column;
     min-height: 0;
@@ -795,7 +797,8 @@ html.dark .tour-materials__list {
 .tour-venue-map__frame {
     position: relative;
     width: 100%;
-    aspect-ratio: 1;
+    max-width: none;
+    aspect-ratio: 16 / 10;
     flex: 1 1 auto;
     min-height: 14rem;
 }
@@ -1384,6 +1387,46 @@ html.dark .price-pair--compact .price-pair__soles {
     pointer-events: none;
     -webkit-user-drag: none;
     user-select: none;
+}
+
+/* Tour detail: full-bleed media on mobile; inset + rounded on desktop */
+.tour-media-bleed {
+    padding-left: 0;
+    padding-right: 0;
+}
+.tour-media-frame {
+    border-radius: 0;
+}
+.tour-gallery-bleed {
+    margin-left: -1.5rem;
+    margin-right: -1.5rem;
+    width: calc(100% + 3rem);
+}
+@media (min-width: 768px) {
+    .tour-media-bleed {
+        padding-left: 3rem;
+        padding-right: 3rem;
+    }
+    .tour-media-bleed .tour-media-frame,
+    .tour-gallery-bleed .tour-media-frame {
+        border-radius: 1.5rem;
+    }
+    .tour-gallery-bleed {
+        margin-left: 0;
+        margin-right: 0;
+        width: 100%;
+    }
+}
+
+.experiences-page .lab-item,
+.experiences-page .expedition-item {
+    min-width: 0;
+    max-width: 100%;
+}
+.experiences-page .lab-item p,
+.experiences-page .expedition-item p {
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 /* Yape vs card pricing */
