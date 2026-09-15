@@ -1299,7 +1299,7 @@ html.dark .lab-recipe-dropdown__title {
 span.font-mono-jb:has(> span.mx-2) {
     display: inline-flex;
     align-items: baseline;
-    column-gap: 0.28em;
+    column-gap: 0.45em;
     white-space: nowrap;
 }
 .price-pair__sep,
@@ -1308,6 +1308,63 @@ span.font-mono-jb > span.mx-2 {
     font-weight: 400;
     margin-left: 0 !important;
     margin-right: 0 !important;
+}
+.price-pair--tour .price-pair__main,
+.price-pair--compact .price-pair__main {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    color: #111;
+}
+.price-pair--tour .price-pair__main {
+    font-size: 1.65rem;
+}
+.price-pair--compact .price-pair__main {
+    font-size: 1.2rem;
+}
+html.dark .price-pair--tour .price-pair__main,
+html.dark .price-pair--compact .price-pair__main {
+    color: #D6D0C8;
+}
+.price-pair__usd {
+    display: inline-block;
+    margin-left: 0.28em;
+    font-size: 0.42em;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    vertical-align: super;
+    color: #722EA8;
+    line-height: 1;
+}
+html.dark .price-pair__usd {
+    color: #B9A3C9;
+}
+.price-pair--tour .price-pair__soles,
+.price-pair--compact .price-pair__soles {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: #8B8490;
+}
+.price-pair--tour .price-pair__soles {
+    font-size: 0.95rem;
+}
+.price-pair--compact .price-pair__soles {
+    font-size: 0.8rem;
+}
+html.dark .price-pair--tour .price-pair__soles,
+html.dark .price-pair--compact .price-pair__soles {
+    color: #8B8490;
+}
+
+/* Workshop carousels: each slide fills the framed aspect box */
+.carousel-container > img {
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 /* Yape vs card pricing */
