@@ -903,6 +903,8 @@ html.dark .tour-venue-map__caption p {
     align-items: center;
     flex-wrap: wrap;
     gap: 0.35rem;
+    min-width: 0;
+    max-width: 100%;
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
     font-weight: 600;
@@ -911,6 +913,9 @@ html.dark .tour-venue-map__caption p {
 }
 .syllabus-module-title__name {
     font-weight: 500;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    white-space: normal;
 }
 .syllabus-module-title__time {
     display: inline-flex;
