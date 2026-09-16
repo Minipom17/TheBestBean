@@ -898,7 +898,6 @@ html.dark .tour-venue-map__caption p {
 .syllabus-module-title {
     display: inline-flex;
     align-items: center;
-    flex-wrap: wrap;
     gap: 0.35rem;
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;

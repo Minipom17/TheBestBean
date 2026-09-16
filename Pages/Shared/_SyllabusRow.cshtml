@@ -4,9 +4,9 @@
 @if (!string.IsNullOrWhiteSpace(Model.DetailBody))
 {
     <details class="tour-syllabus-details w-full group">
-        <summary class="tour-syllabus-details__summary w-full flex items-center flex-nowrap gap-y-1">
-            <span class="tour-syllabus-label">@Model.Label:</span>
-            <span class="syllabus-module-title mr-auto flex-nowrap whitespace-nowrap">
+        <summary class="tour-syllabus-details__summary w-full flex items-start gap-y-1">
+            <span class="tour-syllabus-label mt-1">@Model.Label:</span>
+            <span class="syllabus-module-title flex-1 mr-auto flex-nowrap mt-1 min-w-0 whitespace-nowrap">
                 @if (!string.IsNullOrWhiteSpace(Model.Title))
                 {
                     <span class="syllabus-module-title__name">@Model.Title</span>
@@ -16,7 +16,7 @@
                     <span class="syllabus-module-title__time">@Model.Time</span>
                 }
             </span>
-            <div class="flex items-center ml-4 gap-1 opacity-80 group-hover:opacity-100 transition-opacity shrink-0">
+            <div class="flex items-center ml-4 mt-1 gap-1 opacity-80 group-hover:opacity-100 transition-opacity shrink-0">
                 <span class="exp-filter-label m-0" style="width: auto; flex: none;">details</span>
                 <span class="tour-syllabus-details__chevron" aria-hidden="true"></span>
             </div>
@@ -28,9 +28,9 @@
 }
 else
 {
-    <div class="w-full flex items-center flex-wrap gap-y-1">
-        <span class="tour-syllabus-label">@Model.Label:</span>
-        <span class="syllabus-module-title mr-auto flex-nowrap whitespace-nowrap">
+    <div class="w-full flex items-start gap-y-1">
+        <span class="tour-syllabus-label mt-1">@Model.Label:</span>
+        <span class="syllabus-module-title flex-1 mr-auto flex-nowrap mt-1 min-w-0 whitespace-nowrap">
             @if (!string.IsNullOrWhiteSpace(Model.Title))
             {
                 <span class="syllabus-module-title__name">@Model.Title</span>

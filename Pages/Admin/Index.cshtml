@@ -68,7 +68,7 @@
 </div>
 
 @section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const generateBtn = document.getElementById('qr-generate-btn');
@@ -77,7 +77,7 @@
             const container = document.getElementById('qr-container');
             const placeholder = document.getElementById('qr-placeholder');
             
-            let currentCanvas = null;
+            let highResQrCode = null;
 
             generateBtn.addEventListener('click', function() {
                 const url = urlInput.value.trim();
@@ -87,49 +87,83 @@
                 if (placeholder) placeholder.style.display = 'none';
                 container.innerHTML = '';
                 
-                // Generate QR on a hidden high-res canvas (1000px wide for printing)
-                const tempCanvas = document.createElement('canvas');
-                
-                QRCode.toCanvas(tempCanvas, url, {
-                    width: 1000,
-                    margin: 2,
-                    color: {
-                        dark: "#000000",
-                        light: "#ffffff"
+                // Configuration for the stylized QR code preview
+                const previewQrCode = new QRCodeStyling({
+                    width: 250,
+                    height: 250,
+                    data: url,
+                    margin: 10,
+                    qrOptions: {
+                        typeNumber: 0,
+                        mode: "Byte",
+                        errorCorrectionLevel: "H"
+                    },
+                    imageOptions: {
+                        hideBackgroundDots: true,
+                        imageSize: 0.35,
+                        margin: 5
+                    },
+                    dotsOptions: {
+                        type: "classy",
+                        color: "#271825"
+                    },
+                    backgroundOptions: {
+                        color: "#B7C952"
+                    },
+                    image: "/images/center_logo.png",
+                    cornersSquareOptions: {
+                        type: "square",
+                        color: "#271825"
+                    },
+                    cornersDotOptions: {
+                        type: "square",
+                        color: "#271825"
                     }
-                }, function (error) {
-                    if (error) console.error(error);
-                    
-                    // Create a visible low-res canvas for preview
-                    currentCanvas = document.createElement('canvas');
-                    currentCanvas.className = "w-full max-w-[200px] h-auto rounded-lg shadow-sm";
-                    
-                    QRCode.toCanvas(currentCanvas, url, {
-                        width: 250,
-                        margin: 1,
-                        color: {
-                            dark: "#000000",
-                            light: "#ffffff"
-                        }
-                    }, function (err) {
-                        if (err) console.error(err);
-                        container.appendChild(currentCanvas);
-                        
-                        // Enable download button and attach high-res data
-                        downloadBtn.disabled = false;
-                        downloadBtn.dataset.highResUrl = tempCanvas.toDataURL("image/png");
-                    });
                 });
+                
+                previewQrCode.append(container);
+                
+                // Keep a high-res version for downloading
+                highResQrCode = new QRCodeStyling({
+                    width: 1000,
+                    height: 1000,
+                    data: url,
+                    margin: 40,
+                    qrOptions: {
+                        typeNumber: 0,
+                        mode: "Byte",
+                        errorCorrectionLevel: "H"
+                    },
+                    imageOptions: {
+                        hideBackgroundDots: true,
+                        imageSize: 0.35,
+                        margin: 10
+                    },
+                    dotsOptions: {
+                        type: "classy",
+                        color: "#271825"
+                    },
+                    backgroundOptions: {
+                        color: "#B7C952"
+                    },
+                    image: "/images/center_logo.png",
+                    cornersSquareOptions: {
+                        type: "square",
+                        color: "#271825"
+                    },
+                    cornersDotOptions: {
+                        type: "square",
+                        color: "#271825"
+                    }
+                });
+
+                downloadBtn.disabled = false;
             });
 
             downloadBtn.addEventListener('click', function() {
-                const dataUrl = this.dataset.highResUrl;
-                if (!dataUrl) return;
-                
-                const link = document.createElement('a');
-                link.download = 'purplebean_qr_code.png';
-                link.href = dataUrl;
-                link.click();
+                if (highResQrCode) {
+                    highResQrCode.download({ name: "purplebean_qr_code", extension: "png" });
+                }
             });
         });
     </script>

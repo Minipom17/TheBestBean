@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>QR Code Generator</title>
+    <script type="text/javascript" src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+</head>
+<body style="margin: 0; padding: 0; background: transparent;">
+    <div id="canvas"></div>
+    <script type="text/javascript">
+        window.isDone = false;
+        
+        // Use a data URI for the logo to avoid cross-origin issues from file://
+        const logoDataUri = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAYAAAABUCAYAAACLH+AyAAAQAElEQVR4AexdB3wUxRf+5tJDEpoBqYI0/xSDggooRLAgTQQFsdCl" // We will replace this in python with the actual logo
+        
+        const qrCode = new QRCodeStyling({
+            width: 1000,
+            height: 1000,
+            data: "https://purplebean.coffee",
+            margin: 0,
+            qrOptions: {
+                typeNumber: 0,
+                mode: "Byte",
+                errorCorrectionLevel: "H"
+            },
+            imageOptions: {
+                hideBackgroundDots: true,
+                imageSize: 0.4,
+                margin: 0
+            },
+            dotsOptions: {
+                type: "rounded",
+                color: "#271825"
+            },
+            backgroundOptions: {
+                color: "#B7C952"
+            },
+            // We will inject the data uri here
+            image: "LOGO_BASE64_PLACEHOLDER",
+            cornersSquareOptions: {
+                type: "square",
+                color: "#271825"
+            },
+            cornersDotOptions: {
+                type: "square",
+                color: "#271825"
+            }
+        });
+        
+        qrCode.append(document.getElementById("canvas"));
+        
+        // Wait a tiny bit for the image to load and render
+        setTimeout(() => {
+            window.isDone = true;
+        }, 1000);
+    </script>
+</body>
+</html>

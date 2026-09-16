@@ -23,7 +23,7 @@ def generate_qr(filename, accent_colors):
     width = n * box_size + padding * 2
     height = n * box_size + padding * 2
 
-    bg_color = "#E4E9C8"
+    bg_color = "#B7C952"
     main_color = "#271825"
 
     special_colored_cells = {}
@@ -86,12 +86,10 @@ def generate_qr(filename, accent_colors):
     except Exception as e:
         print("Could not load logo:", e)
 
-    artifact_dir = r"C:\Users\alext\.gemini\antigravity-ide\brain\4b133b32-1b99-4e2e-95ba-233689eeed02"
+    artifact_dir = r"C:\Users\alext\.gemini\antigravity-ide\brain\e046bdf1-7954-4f16-a92e-b5d259f7b56e"
     full_path = os.path.join(artifact_dir, filename)
     img.save(full_path)
     print(f"Saved {filename}")
 
-# Generate 3 variations with different color schemes
-generate_qr("qr_var1.png", ["#C54B8C", "#9966CC", "#FF3B1F", "#A1045A"])
-generate_qr("qr_var2.png", ["#FF3B1F", "#FF6B6B", "#C54B8C"])
-generate_qr("qr_var3.png", ["#9966CC", "#B57EDC", "#602080"])
+# Generate a clean stylized QR code with no colored accents
+generate_qr("purplebean_clean_qr.png", ["#271825"])
