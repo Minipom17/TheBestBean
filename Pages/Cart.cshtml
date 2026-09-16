@@ -100,9 +100,11 @@
                                         <p class="yape-price__save mb-0">Local price in soles · recommended in Perú</p>
                                     }
                                     <div class="yape-price__card mt-3">
-                                        <span class="yape-price__card-label">Card / PayPal</span>
-                                        <span class="yape-price__card-usd">$@Model.CartTotal.ToString("F2")</span>
-                                        <span class="yape-price__card-pen">≈ S/@LocalPricing.CardSoles(Model.CartTotal).ToString("0")</span>
+                                        <span class="yape-price__card-label">
+                                            <img src="/brand/paypal-logo.svg" alt="PayPal" class="yape-price__logo yape-price__logo--paypal yape-price__logo--inline" width="80" height="20" loading="lazy" decoding="async" />
+                                            CAD
+                                        </span>
+                                        <span class="yape-price__card-usd">C$@LocalPricing.Cad(Model.CartTotal).ToString("0.00")</span>
                                     </div>
                                     @if (Model.IsWorkshopOnlyCart)
                                     {
@@ -124,7 +126,7 @@
                         </a>
                         
                         <p class="mt-4 text-center text-[10px] font-mono-jb uppercase tracking-widest text-gray-400">
-                            Or card / PayPal at checkout · $@Model.CartTotal.ToString("F2")
+                            Or PayPal at checkout · C$@LocalPricing.Cad(Model.CartTotal).ToString("0.00")
                         </p>
                     </div>
                 </div>

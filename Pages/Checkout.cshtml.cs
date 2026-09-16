@@ -10,11 +10,15 @@ namespace TheBestBean.Pages
     {
         private readonly CartService _cartService;
         private readonly Data.TheBestBeanContext _context;
+        private readonly MercadoPagoService _mercadoPago;
+        private readonly PayPalService _payPal;
 
-        public CheckoutModel(CartService cartService, Data.TheBestBeanContext context)
+        public CheckoutModel(CartService cartService, Data.TheBestBeanContext context, MercadoPagoService mercadoPago, PayPalService payPal)
         {
             _cartService = cartService;
             _context = context;
+            _mercadoPago = mercadoPago;
+            _payPal = payPal;
         }
 
         public List<CartItem> CartItems { get; set; } = new List<CartItem>();
@@ -77,11 +81,20 @@ namespace TheBestBean.Pages
                 return RedirectToPage("/GreenBeans");
             }
 
+            if (TempData["MpError"] != null)
+            {
+                ModelState.AddModelError(string.Empty, TempData["MpError"]?.ToString() ?? "Payment failed. Try Yape or try again.");
+            }
+            if (string.Equals(Request.Query["paypal"].ToString(), "cancel", StringComparison.OrdinalIgnoreCase))
+            {
+                ModelState.AddModelError(string.Empty, "PayPal was cancelled. Your bag is still here.");
+            }
+
             Ga4Ecommerce.SetPageEvent(ViewData, "begin_checkout", Ga4Ecommerce.Payload(CartItems, CartTotal));
             return Page();
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
             CartItems = _cartService.GetCart(HttpContext.Session);
             CartTotal = _cartService.GetCartTotal(HttpContext.Session);
@@ -110,10 +123,9 @@ namespace TheBestBean.Pages
             }
 
             var orderNumber = $"ORD-{DateTime.Now:yyyyMMddHHmmss}";
-
-            var payment = string.Equals(PaymentMethod, "Card", StringComparison.OrdinalIgnoreCase)
-                ? "Card"
-                : "Yape";
+            var useMercadoPago = PaymentMethod is "Card" or "MercadoPago";
+            var usePayPal = PaymentMethod is "PayPal" or "Paypal";
+            var payment = usePayPal ? "PayPal" : useMercadoPago ? "MercadoPago" : "Yape";
 
             var order = new Order
             {
@@ -127,6 +139,7 @@ namespace TheBestBean.Pages
                 ZipCode = ZipCode,
                 DeliveryMethod = DeliveryMethod,
                 PaymentMethod = payment,
+                PaymentStatus = "Pending",
                 OrderNotes = OrderNotes,
                 TotalAmount = CartTotal,
                 CreatedAt = DateTime.UtcNow
@@ -144,19 +157,60 @@ namespace TheBestBean.Pages
                 });
             }
 
-            _context.Orders.Add(order);
-            _context.SaveChanges();
+            if (usePayPal)
+            {
+                if (!_payPal.IsConfigured)
+                {
+                    ModelState.AddModelError(string.Empty, "PayPal is not connected yet. Use Yape / Plin for now.");
+                    return Page();
+                }
 
-            // Store order information in TempData for confirmation page
+                var baseUrl = $"{Request.Scheme}://{Request.Host}";
+                var checkoutUrl = await _payPal.CreateCheckoutUrlAsync(order, LocalPricing.Cad(CartTotal), baseUrl);
+                if (string.IsNullOrWhiteSpace(checkoutUrl))
+                {
+                    ModelState.AddModelError(string.Empty, "PayPal did not start. Check that the account can charge CAD, or use Yape.");
+                    return Page();
+                }
+
+                _context.Orders.Add(order);
+                await _context.SaveChangesAsync();
+                return Redirect(checkoutUrl);
+            }
+
+            if (useMercadoPago)
+            {
+                if (!_mercadoPago.IsConfigured)
+                {
+                    ModelState.AddModelError(string.Empty, "Card payments are not connected yet. Use Yape / Plin, or try again in a bit.");
+                    return Page();
+                }
+
+                var baseUrl = $"{Request.Scheme}://{Request.Host}";
+                var checkoutUrl = await _mercadoPago.CreateCheckoutUrlAsync(order, LocalPricing.YapeSoles(CartTotal), baseUrl);
+                if (string.IsNullOrWhiteSpace(checkoutUrl))
+                {
+                    ModelState.AddModelError(string.Empty, "Mercado Pago did not start. Use Yape / Plin for now.");
+                    return Page();
+                }
+
+                _context.Orders.Add(order);
+                await _context.SaveChangesAsync();
+                _cartService.ClearCart(HttpContext.Session);
+                return Redirect(checkoutUrl);
+            }
+
+            _context.Orders.Add(order);
+            await _context.SaveChangesAsync();
+
             TempData["OrderNumber"] = orderNumber;
             TempData["CustomerName"] = FullName;
             TempData["CustomerEmail"] = Email;
-            TempData["OrderTotal"] = CartTotal.ToString(); // TempData can't reliably store decimal sometimes
+            TempData["OrderTotal"] = CartTotal.ToString();
             TempData["DeliveryMethod"] = DeliveryMethod;
             TempData["PaymentMethod"] = payment;
             TempData["OrderItems"] = System.Text.Json.JsonSerializer.Serialize(CartItems);
 
-            // Clear the cart
             _cartService.ClearCart(HttpContext.Session);
 
             return RedirectToPage("/OrderConfirmation");

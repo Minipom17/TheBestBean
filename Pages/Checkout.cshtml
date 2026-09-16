@@ -81,13 +81,14 @@
                         <p class="text-sm text-gray-600 mb-6 leading-relaxed">
                             @if (Model.IsWorkshopOnlyCart)
                             {
-                                <text>Pay with <strong>Yape</strong> or Plin in soles, or card / PayPal in USD.</text>
+                                <text>Pay with <strong>Yape</strong> in soles, Mercado Pago card in soles, or <strong>PayPal in Canadian dollars</strong>.</text>
                             }
                             else
                             {
-                                <text>Locals in Perú: pay with <strong>Yape</strong> in soles. Card and PayPal are in USD and pick up bank FX.</text>
+                                <text>Locals: <strong>Yape</strong> in soles. International: PayPal in CAD. Peru cards via Mercado Pago once verified.</text>
                             }
                         </p>
+                        <div asp-validation-summary="All" class="text-sm text-red-600 mb-4"></div>
                         <div class="grid grid-cols-1 gap-3" id="payment-method-cards">
                             <label class="yape-pay-option yape-pay-option--recommended">
                                 <input type="radio" name="PaymentMethod" value="Yape" checked class="sr-only peer" />
@@ -112,16 +113,34 @@
                                 <div class="yape-pay-option__card peer-checked:ring-2">
                                     <div class="flex items-start justify-between gap-4">
                                         <div>
-                                            <h3 class="font-grotesk font-bold text-lg mt-0 mb-1">Card / PayPal</h3>
+                                            <h3 class="font-grotesk font-bold text-lg mt-0 mb-1">Card · Mercado Pago</h3>
                                             <p class="text-xs text-gray-500 font-light m-0">
-                                                @(Model.IsWorkshopOnlyCart
-                                                    ? "International USD. " + LocalPricing.WorkshopVisaFeeNote + " on card payments."
-                                                    : "International USD. Bank FX and card fees make this the higher soles price.")
+                                                Visa / Mastercard in soles. You’ll finish on Mercado Pago and come back here.
                                             </p>
                                         </div>
                                         <div class="text-right shrink-0">
-                                            <div class="text-2xl font-grotesk font-bold">$@Model.CartTotal.ToString("F2")</div>
-                                            <div class="text-[10px] font-mono-jb uppercase tracking-widest text-gray-400 mt-1">≈ S/@LocalPricing.CardSoles(Model.CartTotal).ToString("0")</div>
+                                            <div class="text-2xl font-grotesk font-bold">S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</div>
+                                            <div class="text-[10px] font-mono-jb uppercase tracking-widest text-gray-400 mt-1">Cards · Perú</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </label>
+                            <label class="yape-pay-option">
+                                <input type="radio" name="PaymentMethod" value="PayPal" class="sr-only peer" />
+                                <div class="yape-pay-option__card peer-checked:ring-2">
+                                    <div class="flex items-start justify-between gap-4">
+                                        <div>
+                                            <span class="yape-price__badge" aria-label="PayPal">
+                                                <img src="/brand/paypal-logo.svg" alt="PayPal" class="yape-price__logo yape-price__logo--paypal" width="100" height="24" loading="lazy" decoding="async" />
+                                            </span>
+                                            <h3 class="font-grotesk font-bold text-lg mt-2 mb-1">PayPal · CAD</h3>
+                                            <p class="text-xs text-gray-500 font-light m-0">
+                                                Cards and wallets from anywhere. Charged in Canadian dollars, then you come back here.
+                                            </p>
+                                        </div>
+                                        <div class="text-right shrink-0">
+                                            <div class="text-2xl font-grotesk font-bold">C$@LocalPricing.Cad(Model.CartTotal).ToString("0.00")</div>
+                                            <div class="text-[10px] font-mono-jb uppercase tracking-widest text-gray-400 mt-1">Canada · PayPal</div>
                                         </div>
                                     </div>
                                 </div>
@@ -179,8 +198,8 @@
                             <span class="font-mono-jb font-bold">S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</span>
                         </div>
                         <div class="flex justify-between">
-                            <span class="font-light text-gray-500">Card / PayPal</span>
-                            <span class="font-mono-jb font-bold">$@Model.CartTotal.ToString("F2") <span class="text-gray-400 font-normal">≈ S/@LocalPricing.CardSoles(Model.CartTotal).ToString("0")</span></span>
+                            <span class="font-light text-gray-500">PayPal</span>
+                            <span class="font-mono-jb font-bold">C$@LocalPricing.Cad(Model.CartTotal).ToString("0.00")</span>
                         </div>
                         <div class="flex justify-between">
                             <span class="font-light text-gray-500">Shipping</span>
@@ -234,13 +253,13 @@
 
             const submit = document.getElementById('checkout-submit');
             const yapeTotal = 'S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")';
-            const cardTotal = '$@Model.CartTotal.ToString("F2")';
+            const paypalTotal = 'C$@LocalPricing.Cad(Model.CartTotal).ToString("0.00")';
             document.querySelectorAll('input[name="PaymentMethod"]').forEach(function (input) {
                 input.addEventListener('change', function () {
                     if (!submit) return;
-                    submit.textContent = this.value === 'Yape'
-                        ? 'Complete order — Yape ' + yapeTotal
-                        : 'Complete order — Card ' + cardTotal;
+                    if (this.value === 'Yape') submit.textContent = 'Complete order — Yape ' + yapeTotal;
+                    else if (this.value === 'PayPal') submit.textContent = 'Pay with PayPal — ' + paypalTotal;
+                    else submit.textContent = 'Pay with card — ' + yapeTotal;
                 });
             });
         });

@@ -36,6 +36,7 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 
 // Add session support for shopping cart
 builder.Services.AddDistributedMemoryCache();
+builder.Services.AddMemoryCache();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
@@ -55,6 +56,53 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 // Register services
 builder.Services.AddScoped<FarmProfileService>();
 builder.Services.AddScoped<TheBestBean.Services.CartService>();
+builder.Services.AddSingleton(sp =>
+{
+    var env = sp.GetRequiredService<IHostEnvironment>();
+    var config = sp.GetRequiredService<IConfiguration>();
+    var opt = new MercadoPagoOptions();
+    config.GetSection("MercadoPago").Bind(opt);
+    var secretPath = Path.Combine(env.ContentRootPath, "secrets", "mercadopago.json");
+    if (File.Exists(secretPath))
+    {
+        var file = System.Text.Json.JsonSerializer.Deserialize<MercadoPagoOptions>(
+            File.ReadAllText(secretPath),
+            new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        if (file != null)
+        {
+            if (!string.IsNullOrWhiteSpace(file.AccessToken)) opt.AccessToken = file.AccessToken;
+            if (!string.IsNullOrWhiteSpace(file.PublicKey)) opt.PublicKey = file.PublicKey;
+        }
+    }
+    var envToken = Environment.GetEnvironmentVariable("MERCADOPAGO_ACCESS_TOKEN");
+    if (!string.IsNullOrWhiteSpace(envToken)) opt.AccessToken = envToken;
+    return opt;
+});
+builder.Services.AddHttpClient<MercadoPagoService>();
+builder.Services.AddSingleton(sp =>
+{
+    var env = sp.GetRequiredService<IHostEnvironment>();
+    var opt = new PayPalOptions();
+    var secretPath = Path.Combine(env.ContentRootPath, "secrets", "paypal.json");
+    if (File.Exists(secretPath))
+    {
+        var file = System.Text.Json.JsonSerializer.Deserialize<PayPalOptions>(
+            File.ReadAllText(secretPath),
+            new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        if (file != null)
+        {
+            opt.Mode = string.IsNullOrWhiteSpace(file.Mode) ? "Live" : file.Mode;
+            opt.ClientId = file.ClientId;
+            opt.Secret = file.Secret;
+        }
+    }
+    var envId = Environment.GetEnvironmentVariable("PAYPAL_CLIENT_ID");
+    var envSecret = Environment.GetEnvironmentVariable("PAYPAL_SECRET");
+    if (!string.IsNullOrWhiteSpace(envId)) opt.ClientId = envId;
+    if (!string.IsNullOrWhiteSpace(envSecret)) opt.Secret = envSecret;
+    return opt;
+});
+builder.Services.AddHttpClient<PayPalService>();
 
 // Add Response Compression
 builder.Services.AddResponseCompression(options =>

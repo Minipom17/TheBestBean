@@ -68,3 +68,7 @@ build_diag.txt
 # SSH keys / secrets
 *.pem
 Coffe_Cacoa_Caca.txt
+secrets/
+ga4.env
+*service-account*.json
+google-credentials.json

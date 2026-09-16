@@ -167,9 +167,13 @@
         
         <div class="info-row">
             <span class="info-label">Total Amount</span>
-            @if (string.Equals(Model.PaymentMethod, "Card", StringComparison.OrdinalIgnoreCase))
+            @if (string.Equals(Model.PaymentMethod, "PayPal", StringComparison.OrdinalIgnoreCase))
             {
-                <span class="info-value" style="color: #0059ff; font-size: 1.25rem;">$@Model.OrderTotal.ToString("F2")</span>
+                <span class="info-value" style="color: #0059ff; font-size: 1.25rem;">C$@LocalPricing.Cad(Model.OrderTotal).ToString("0.00")</span>
+            }
+            else if (string.Equals(Model.PaymentMethod, "MercadoPago", StringComparison.OrdinalIgnoreCase) || string.Equals(Model.PaymentMethod, "Card", StringComparison.OrdinalIgnoreCase))
+            {
+                <span class="info-value" style="color: #0059ff; font-size: 1.25rem;">S/@LocalPricing.YapeSoles(Model.OrderTotal).ToString("0")</span>
             }
             else
             {
@@ -178,7 +182,12 @@
         </div>
         <div class="info-row">
             <span class="info-label">Pay with</span>
-            <span class="info-value">@(string.Equals(Model.PaymentMethod, "Card", StringComparison.OrdinalIgnoreCase) ? "Card / PayPal (USD)" : "Yape / Plin (soles)")</span>
+            <span class="info-value">@(Model.PaymentMethod switch
+            {
+                "PayPal" => "PayPal (CAD)",
+                "MercadoPago" or "Card" => "Mercado Pago (card)",
+                _ => "Yape / Plin (soles)"
+            })</span>
         </div>
     </div>
 
@@ -191,16 +200,7 @@
             <div class="order-item">
                 <div>
                     <div class="item-name">@item.ProductName</div>
-                    <div class="item-qty">Qty: @item.Quantity ×
-                        @if (string.Equals(Model.PaymentMethod, "Card", StringComparison.OrdinalIgnoreCase))
-                        {
-                            <text>$@item.Price.ToString("F2")</text>
-                        }
-                        else
-                        {
-                            <text>S/@LocalPricing.YapeSoles(item.Price).ToString("0")</text>
-                        }
-                    </div>
+                    <div class="item-qty">Qty: @item.Quantity × S/@LocalPricing.YapeSoles(item.Price).ToString("0")</div>
                 </div>
                 <div style="font-weight: 600; color: var(--charcoal);">
                     S/@LocalPricing.YapeSoles(item.Subtotal).ToString("0")
@@ -224,15 +224,25 @@
         <div class="step-item">
             <div class="step-icon">2</div>
             <div class="step-content">
-                @if (string.Equals(Model.PaymentMethod, "Card", StringComparison.OrdinalIgnoreCase))
-                {
-                    <h4>Pay by card / PayPal</h4>
-                    <p>We’ll email USD payment instructions for <strong>$@Model.OrderTotal.ToString("F2")</strong>. Bank FX makes this the higher soles price — Yape is cheaper next time.</p>
-                }
-                else
+                @if (string.Equals(Model.PaymentMethod, "Yape", StringComparison.OrdinalIgnoreCase))
                 {
                     <h4>Yape S/@LocalPricing.YapeSoles(Model.OrderTotal).ToString("0")</h4>
                     <p>Yape or Plin to <strong>993 779 381</strong> (Purple Bean). Put order <strong>@Model.OrderNumber</strong> in the note. We’ll also send the QR on WhatsApp.</p>
+                }
+                else if (string.Equals(Model.PaymentMethod, "PayPal", StringComparison.OrdinalIgnoreCase) && string.Equals(Model.PaymentStatus, "Paid", StringComparison.OrdinalIgnoreCase))
+                {
+                    <h4>PayPal paid</h4>
+                    <p>PayPal confirmed <strong>C$@LocalPricing.Cad(Model.OrderTotal).ToString("0.00")</strong> for order <strong>@Model.OrderNumber</strong>.</p>
+                }
+                else if (string.Equals(Model.PaymentStatus, "Paid", StringComparison.OrdinalIgnoreCase))
+                {
+                    <h4>Card paid</h4>
+                    <p>Mercado Pago confirmed S/@LocalPricing.YapeSoles(Model.OrderTotal).ToString("0") for order <strong>@Model.OrderNumber</strong>.</p>
+                }
+                else
+                {
+                    <h4>Card payment</h4>
+                    <p>If you finished on Mercado Pago, this will update to paid in a moment. If not, use Yape to <strong>993 779 381</strong> with order <strong>@Model.OrderNumber</strong>.</p>
                 }
             </div>
         </div>

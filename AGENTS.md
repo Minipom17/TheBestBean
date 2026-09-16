@@ -12,6 +12,7 @@ This repo is meant to run in **Cursor Cloud Agents**, not against the Windows PC
 - SQLite DB is created locally in the cloud VM (`coffee.db`). Do not expect production data.
 - Large photos/videos/`wwwroot/Media` are not in git. They live on the production server. Edit CSS, pages, and C# without those files.
 - After changes, push a branch and open a PR. Do not deploy to production unless asked.
+- Do not pollute production Google Analytics. Verify UI on `http://localhost:5202` when possible. If you must open https://purplebean.coffee, the **first** URL has to include `?pb_internal=1` (example: `https://purplebean.coffee/Experiences?pb_internal=1`). That cookie disables GA on that browser. Never treat Columbus/Ohio Linux Chrome hits as customers.
 
 ### Production deploy (only when the user asks)
 

@@ -45,31 +45,73 @@
 
     @{
         var gaId = Configuration["GoogleAnalytics:MeasurementId"];
+        var gaHost = Context.Request.Host.Host;
+        var skipGaServer = string.Equals(gaHost, "localhost", StringComparison.OrdinalIgnoreCase)
+            || gaHost == "127.0.0.1"
+            || gaHost == "::1"
+            || (User.Identity?.IsAuthenticated == true && User.IsInRole("Admin"));
     }
-    @if (!string.IsNullOrEmpty(gaId))
+    @if (!string.IsNullOrEmpty(gaId) && !skipGaServer)
     {
-        <!-- Google tag (gtag.js) -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=@gaId"></script>
+        <!-- Google tag (gtag.js). Opt out on this browser: /?pb_internal=1 -->
         <script>
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', '@gaId');
-          window.pbEmitGaEvents = function (events) {
-            if (!events || typeof gtag !== 'function') return;
-            events.forEach(function (e) {
-              if (!e || !e.event) return;
-              if (e.event === 'purchase' && e.params && e.params.transaction_id) {
-                var key = 'pb_ga_purchase_' + e.params.transaction_id;
-                try {
-                  if (sessionStorage.getItem(key)) return;
-                  sessionStorage.setItem(key, '1');
-                } catch (err) {}
+          (function () {
+            try {
+              var params = new URLSearchParams(location.search);
+              if (params.get('pb_internal') === '1') {
+                document.cookie = 'pb_ga_off=1;path=/;max-age=63072000;SameSite=Lax';
+                try { localStorage.setItem('pb_ga_off', '1'); } catch (e) {}
               }
-              gtag('event', e.event, e.params || {});
-            });
-          };
+              if (params.get('pb_internal') === '0') {
+                document.cookie = 'pb_ga_off=;path=/;max-age=0';
+                try { localStorage.removeItem('pb_ga_off'); } catch (e) {}
+              }
+              var ua = navigator.userAgent || '';
+              var isAgent = navigator.webdriver === true
+                || /HeadlessChrome|Playwright|Puppeteer/i.test(ua);
+              var optedOut = false;
+              try { optedOut = localStorage.getItem('pb_ga_off') === '1'; } catch (e) {}
+              window.__pbGaOff = isAgent || optedOut || document.cookie.split(';').some(function (c) {
+                return c.trim().indexOf('pb_ga_off=1') === 0;
+              });
+            } catch (err) {
+              window.__pbGaOff = false;
+            }
+          })();
         </script>
+        <script>
+          window.pbEmitGaEvents = function () {};
+          if (!window.__pbGaOff) {
+            window.dataLayer = window.dataLayer || [];
+            window.gtag = function () { dataLayer.push(arguments); };
+            window.pbEmitGaEvents = function (events) {
+              if (!events || typeof gtag !== 'function') return;
+              events.forEach(function (e) {
+                if (!e || !e.event) return;
+                if (e.event === 'purchase' && e.params && e.params.transaction_id) {
+                  var key = 'pb_ga_purchase_' + e.params.transaction_id;
+                  try {
+                    if (sessionStorage.getItem(key)) return;
+                    sessionStorage.setItem(key, '1');
+                  } catch (err) {}
+                }
+                gtag('event', e.event, e.params || {});
+              });
+            };
+            var s = document.createElement('script');
+            s.async = true;
+            s.src = 'https://www.googletagmanager.com/gtag/js?id=@gaId';
+            s.onload = function () {
+              gtag('js', new Date());
+              gtag('config', '@gaId');
+            };
+            document.head.appendChild(s);
+          }
+        </script>
+    }
+    else
+    {
+        <script>window.pbEmitGaEvents = function () {};</script>
     }
 
     <!-- LocalBusiness Schema -->

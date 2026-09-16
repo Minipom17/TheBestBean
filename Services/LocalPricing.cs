@@ -11,6 +11,10 @@ namespace TheBestBean.Services
 
         public const decimal YapeRate = 3.40m;
         public const decimal CardRate = 4.10m;
+        /// <summary>CAD charged on PayPal per 1 USD list price. Not tax — FX only.</summary>
+        public const decimal CadRate = 1.38m;
+
+        public static decimal Cad(decimal usd) => Math.Round(usd * CadRate, 2);
 
         public static decimal YapeSoles(decimal usd, decimal listedPen = 0)
         {

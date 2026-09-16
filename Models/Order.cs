@@ -17,6 +17,10 @@ namespace TheBestBean.Models
         public string DeliveryMethod { get; set; } = string.Empty;
         public string OrderNotes { get; set; } = string.Empty;
         public string PaymentMethod { get; set; } = "Yape";
+        public string PaymentStatus { get; set; } = "Pending";
+        public string MercadoPagoPreferenceId { get; set; } = string.Empty;
+        public string MercadoPagoPaymentId { get; set; } = string.Empty;
+        public string PayPalOrderId { get; set; } = string.Empty;
         public decimal TotalAmount { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

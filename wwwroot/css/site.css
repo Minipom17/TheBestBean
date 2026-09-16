@@ -1476,6 +1476,10 @@ html.dark .price-pair--compact .price-pair__soles {
     vertical-align: -0.1rem;
     margin-left: 0.15rem;
 }
+.yape-price__logo--paypal {
+    height: 22px;
+    max-width: 7.5rem;
+}
 .yape-price__soles {
     font-family: 'Fjalla One', sans-serif !important;
     font-size: 1.65rem;
