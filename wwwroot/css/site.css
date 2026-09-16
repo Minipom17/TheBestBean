@@ -1307,7 +1307,7 @@ html.dark .lab-recipe-dropdown__title {
 span.font-mono-jb:has(> span.mx-2) {
     display: inline-flex;
     align-items: flex-end;
-    column-gap: 0.75em;
+    column-gap: 0.9em;
     white-space: nowrap;
 }
 .price-pair__sep,
@@ -1320,8 +1320,10 @@ span.font-mono-jb > span.mx-2 {
 .price-pair--tour .price-pair__main,
 .price-pair--compact .price-pair__main {
     display: inline-flex;
-    align-items: flex-end;
-    gap: 0.28em;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    gap: 0.18em;
     font-family: 'JetBrains Mono', monospace;
     font-weight: 700;
     letter-spacing: -0.03em;
@@ -1341,12 +1343,11 @@ html.dark .price-pair--compact .price-pair__main {
     color: #D6D0C8;
 }
 .price-pair__usd {
-    display: inline-block;
+    display: block;
     font-size: 0.65rem;
     font-weight: 700;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.14em;
     line-height: 1;
-    padding-bottom: 0.12em;
     color: #722EA8 !important;
 }
 html.dark .price-pair__usd {
