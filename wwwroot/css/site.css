@@ -1306,8 +1306,8 @@ html.dark .lab-recipe-dropdown__title {
 .price-pair,
 span.font-mono-jb:has(> span.mx-2) {
     display: inline-flex;
-    align-items: baseline;
-    column-gap: 0.45em;
+    align-items: flex-end;
+    column-gap: 0.75em;
     white-space: nowrap;
 }
 .price-pair__sep,
@@ -1319,16 +1319,21 @@ span.font-mono-jb > span.mx-2 {
 }
 .price-pair--tour .price-pair__main,
 .price-pair--compact .price-pair__main {
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 0.28em;
     font-family: 'JetBrains Mono', monospace;
     font-weight: 700;
     letter-spacing: -0.03em;
     line-height: 1;
     color: #111;
 }
-.price-pair--tour .price-pair__main {
+.price-pair--tour .price-pair__amount,
+.price-pair--tour .price-pair__soles {
     font-size: 1.65rem;
 }
-.price-pair--compact .price-pair__main {
+.price-pair--compact .price-pair__amount,
+.price-pair--compact .price-pair__soles {
     font-size: 1.2rem;
 }
 html.dark .price-pair--tour .price-pair__main,
@@ -1337,13 +1342,12 @@ html.dark .price-pair--compact .price-pair__main {
 }
 .price-pair__usd {
     display: inline-block;
-    margin-left: 0.3em;
-    font-size: 0.5em;
+    font-size: 0.65rem;
     font-weight: 700;
     letter-spacing: 0.12em;
-    vertical-align: super;
-    color: #722EA8 !important;
     line-height: 1;
+    padding-bottom: 0.12em;
+    color: #722EA8 !important;
 }
 html.dark .price-pair__usd {
     color: #B9A3C9 !important;
@@ -1351,16 +1355,10 @@ html.dark .price-pair__usd {
 .price-pair--tour .price-pair__soles,
 .price-pair--compact .price-pair__soles {
     font-family: 'JetBrains Mono', monospace;
-    font-weight: 600;
-    letter-spacing: -0.02em;
+    font-weight: 700;
+    letter-spacing: -0.03em;
     line-height: 1;
     color: #8B8490;
-}
-.price-pair--tour .price-pair__soles {
-    font-size: 0.95rem;
-}
-.price-pair--compact .price-pair__soles {
-    font-size: 0.8rem;
 }
 html.dark .price-pair--tour .price-pair__soles,
 html.dark .price-pair--compact .price-pair__soles {

@@ -14,24 +14,61 @@
 
 @if (Model.Tour != null)
 {
-    <!-- Huge Hero Image — full-bleed on mobile, rounded inset on desktop -->
+    <!-- Huge Hero Image — full-bleed on mobile, rounded inset on desktop; swipeable gallery -->
     <div class="tour-media-bleed max-w-[1600px] mx-auto w-full mt-0 md:mt-6 no-print">
         @{
             var heroImage = Model.PageContent.GetValueOrDefault($"Tour_Hero_Image_{Model.Tour.Id}", Model.Tour.ImageUrl);
             var heroPos = Model.PageContent.GetValueOrDefault($"Tour_Hero_Pos_{Model.Tour.Id}", "50% 50%");
+            var heroPhotos = new List<string>();
+            if (!string.IsNullOrWhiteSpace(heroImage))
+            {
+                heroPhotos.Add(heroImage);
+            }
+            if (Model.Tour.GalleryImages != null)
+            {
+                foreach (var galleryImage in Model.Tour.GalleryImages)
+                {
+                    if (string.IsNullOrWhiteSpace(galleryImage)) continue;
+                    if (heroPhotos.Any(existing => string.Equals(existing, galleryImage, StringComparison.OrdinalIgnoreCase))) continue;
+                    heroPhotos.Add(galleryImage);
+                }
+            }
+            var carouselId = $"tour-{Model.Tour.Id}";
+            var heroPosParts = heroPos.Split(' ');
+            var cssPos = heroPosParts.Length >= 2 ? $"{heroPosParts[0]} {heroPosParts[1]}" : "50% 50%";
+            var cssScale = heroPosParts.Length >= 3 ? heroPosParts[2] : "1.0";
         }
-        <div class="tour-media-frame w-full aspect-[3/2] md:aspect-[21/9] bg-gray-100 dark:bg-[#1C191F] overflow-hidden relative shadow-sm">
-             @if (!string.IsNullOrWhiteSpace(heroImage))
-             {
-                 var heroPosParts = heroPos.Split(' ');
-                 var cssPos = heroPosParts.Length >= 2 ? $"{heroPosParts[0]} {heroPosParts[1]}" : "50% 50%";
-                 var cssScale = heroPosParts.Length >= 3 ? heroPosParts[2] : "1.0";
-                 <img src="@heroImage" alt="@Model.Tour.Title" class="absolute inset-0 w-full h-full object-cover transition-transform" style="object-position: @cssPos; transform: scale(@cssScale);" data-entity-id="@Model.Tour.Id" data-entity-type="Experience" data-editable="ImageUrl" data-position-key="Tour_Hero_Pos_@Model.Tour.Id" data-saved-pos="@heroPos" />
-             }
-             else
-             {
-                 <div class="absolute inset-0 flex items-center justify-center font-mono-jb text-[10px] font-bold uppercase tracking-widest text-v-gray">Photos soon</div>
-             }
+        <div class="exp-carousel tour-media-frame w-full aspect-[15/11] md:aspect-[19/9] bg-gray-100 dark:bg-[#1C191F] overflow-hidden relative shadow-sm" data-carousel-id="@carouselId">
+            @if (heroPhotos.Any())
+            {
+                <div class="carousel-container absolute inset-0 w-full h-full flex transition-transform duration-500 ease-in-out" id="carousel-@carouselId" data-current="0">
+                    @for (int i = 0; i < heroPhotos.Count; i++)
+                    {
+                        var img = heroPhotos[i];
+                        if (i == 0)
+                        {
+                            <img src="@img" alt="@Model.Tour.Title" class="img-stark w-full h-full object-cover flex-shrink-0 transition-transform" style="object-position: @cssPos; transform: scale(@cssScale);" draggable="false" data-entity-id="@Model.Tour.Id" data-entity-type="Experience" data-editable="ImageUrl" data-position-key="Tour_Hero_Pos_@Model.Tour.Id" data-saved-pos="@heroPos" />
+                        }
+                        else
+                        {
+                            <img src="@img" alt="@Model.Tour.Title" class="img-stark w-full h-full object-cover flex-shrink-0" draggable="false" loading="lazy" />
+                        }
+                    }
+                </div>
+                @if (heroPhotos.Count > 1)
+                {
+                    <button type="button" aria-label="Previous Image" onclick="moveCarousel('@carouselId', -1, event)" class="exp-carousel__btn absolute left-4 top-1/2 -translate-y-1/2 bg-black/40 text-white w-10 h-10 rounded-full hover:bg-black/70 transition flex items-center justify-center z-10 border-0 cursor-pointer">
+                        <i class="bi bi-chevron-left text-xl"></i>
+                    </button>
+                    <button type="button" aria-label="Next Image" onclick="moveCarousel('@carouselId', 1, event)" class="exp-carousel__btn absolute right-4 top-1/2 -translate-y-1/2 bg-black/40 text-white w-10 h-10 rounded-full hover:bg-black/70 transition flex items-center justify-center z-10 border-0 cursor-pointer">
+                        <i class="bi bi-chevron-right text-xl"></i>
+                    </button>
+                }
+            }
+            else
+            {
+                <div class="absolute inset-0 flex items-center justify-center font-mono-jb text-[10px] font-bold uppercase tracking-widest text-v-gray">Photos soon</div>
+            }
         </div>
     </div>
 
@@ -286,7 +323,7 @@
                     @for (int i = 0; i < Model.Tour.GalleryImages.Count; i++)
                     {
                         var img = Model.Tour.GalleryImages[i];
-                        <div class="tour-media-frame snap-center shrink-0 w-[100vw] md:w-[600px] aspect-[3/2] overflow-hidden relative shadow-sm">
+                        <div class="tour-media-frame snap-center shrink-0 w-[100vw] md:w-[600px] aspect-[15/11] overflow-hidden relative shadow-sm">
                             <img src="@img" class="absolute inset-0 w-full h-full object-cover img-stark" alt="@Model.Tour.Title photo" loading="lazy" data-entity-id="@Model.Tour.Id" data-entity-type="Experience" data-editable="GalleryImage_@i" />
                         </div>
                     }
@@ -317,4 +354,8 @@ else
             </a>
         </div>
     </div>
+}
+
+@section Scripts {
+    <script src="~/js/exp-carousel.js" asp-append-version="true"></script>
 }

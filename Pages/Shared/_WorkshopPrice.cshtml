@@ -7,6 +7,9 @@
     var sizeClass = Model.Compact ? "price-pair--compact" : "price-pair--tour";
 }
 <span class="price-pair @sizeClass">
-    <span class="price-pair__main">$@usdText<span class="price-pair__usd">USD</span></span>
+    <span class="price-pair__main">
+        <span class="price-pair__amount">$@usdText</span>
+        <span class="price-pair__usd">USD</span>
+    </span>
     <span class="price-pair__soles">S/@soles.ToString("0")</span>
 </span>
