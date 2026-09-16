@@ -653,7 +653,7 @@
             window.updateCurrencyPrices = updatePrices;
             window.renderYapePrice = function (root, usd, pen) {
                 if (!root) return;
-                const yapeRate = 3.75;
+                const yapeRate = 3.40;
                 const cardRate = 4.10;
                 const yape = Math.round((pen > 0 ? pen : usd * yapeRate));
                 const cardPen = Math.round(usd * cardRate);

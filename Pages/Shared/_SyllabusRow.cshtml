@@ -1,12 +1,12 @@
 @model SyllabusItem
 
-<div class="syllabus-row">
+<div class="syllabus-row min-w-0">
 @if (!string.IsNullOrWhiteSpace(Model.DetailBody))
 {
-    <details class="tour-syllabus-details w-full group">
-        <summary class="tour-syllabus-details__summary w-full flex items-start gap-y-1">
-            <span class="tour-syllabus-label mt-1">@Model.Label:</span>
-            <span class="syllabus-module-title flex-1 mr-auto flex-nowrap mt-1 min-w-0 whitespace-nowrap">
+    <details class="tour-syllabus-details w-full min-w-0 group">
+        <summary class="tour-syllabus-details__summary w-full flex items-start gap-x-2 gap-y-1 min-w-0">
+            <span class="tour-syllabus-label shrink-0 mt-1">@Model.Label:</span>
+            <span class="syllabus-module-title flex-1 mr-auto min-w-0 mt-1">
                 @if (!string.IsNullOrWhiteSpace(Model.Title))
                 {
                     <span class="syllabus-module-title__name">@Model.Title</span>
@@ -16,7 +16,7 @@
                     <span class="syllabus-module-title__time">@Model.Time</span>
                 }
             </span>
-            <div class="flex items-center ml-4 mt-1 gap-1 opacity-80 group-hover:opacity-100 transition-opacity shrink-0">
+            <div class="flex items-center ml-2 mt-1 gap-1 opacity-80 group-hover:opacity-100 transition-opacity shrink-0">
                 <span class="exp-filter-label m-0" style="width: auto; flex: none;">details</span>
                 <span class="tour-syllabus-details__chevron" aria-hidden="true"></span>
             </div>
@@ -28,9 +28,9 @@
 }
 else
 {
-    <div class="w-full flex items-start gap-y-1">
-        <span class="tour-syllabus-label mt-1">@Model.Label:</span>
-        <span class="syllabus-module-title flex-1 mr-auto flex-nowrap mt-1 min-w-0 whitespace-nowrap">
+    <div class="w-full flex items-start flex-wrap gap-x-2 gap-y-1 min-w-0">
+        <span class="tour-syllabus-label shrink-0 mt-1">@Model.Label:</span>
+        <span class="syllabus-module-title flex-1 mr-auto min-w-0 mt-1">
             @if (!string.IsNullOrWhiteSpace(Model.Title))
             {
                 <span class="syllabus-module-title__name">@Model.Title</span>
