@@ -79,11 +79,11 @@
             
             <!-- Left Grid: Sticky Reservation Card -->
             <div class="lg:col-span-4 flex flex-col relative order-2 lg:order-1">
-                <div class="lg:sticky lg:top-32 bg-white dark:bg-[#121014] rounded-3xl border border-gray-100 p-8 shadow-sm">
+                <div class="lg:sticky lg:top-32 relative bg-white dark:bg-[#121014] rounded-3xl border border-gray-100 p-8 shadow-sm">
+                    <span class="absolute top-6 right-8 text-[10px] font-mono font-bold tracking-widest text-[#FF3B1F] uppercase">VISA 5%</span>
                     <div class="mb-2">
-                        <div class="flex flex-col items-start gap-1">
+                        <div class="flex flex-col items-start">
                             <partial name="_WorkshopPrice" model="new DualPriceModel { Usd = Model.Tour.Price }" />
-                            <span class="text-[10px] font-mono font-bold tracking-widest text-[#FF3B1F] uppercase mt-1">VISA 5%</span>
                         </div>
                         <p class="text-xs text-v-gray mt-2 m-0">per participant</p>
                     </div>
@@ -127,7 +127,6 @@
                         <button type="submit" class="w-full bg-v-black text-v-white rounded-full py-4 font-bold tracking-tight text-lg hover:bg-v-red transition-colors border-0 cursor-pointer" data-entity-id="Tour_ReserveButton" data-entity-type="SiteContent" data-editable="Value">
                             @(Model.PageContent.GetValueOrDefault("Tour_ReserveButton", "Reserve Position"))
                         </button>
-                        <p class="text-[10px] text-v-gray text-center mt-4" data-entity-id="Tour_DepositText" data-entity-type="SiteContent" data-editable="Value">@(Model.PageContent.GetValueOrDefault("Tour_DepositText", "Requires a 50% deposit to secure equipment."))</p>
                     </form>
                 </div>
             </div>

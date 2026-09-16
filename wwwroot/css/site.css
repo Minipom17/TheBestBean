@@ -1321,10 +1321,10 @@ span.font-mono-jb > span.mx-2 {
 .price-pair--tour .price-pair__main,
 .price-pair--compact .price-pair__main {
     display: inline-flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-end;
-    gap: 0.18em;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: flex-start;
+    gap: 0.35em;
     font-family: 'JetBrains Mono', monospace;
     font-weight: 700;
     letter-spacing: -0.03em;
@@ -1344,7 +1344,7 @@ html.dark .price-pair--compact .price-pair__main {
     color: #D6D0C8;
 }
 .price-pair__usd {
-    display: block;
+    display: inline;
     font-size: 0.65rem;
     font-weight: 700;
     letter-spacing: 0.14em;
