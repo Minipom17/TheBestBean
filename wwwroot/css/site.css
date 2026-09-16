@@ -1306,7 +1306,7 @@ html.dark .lab-recipe-dropdown__title {
 .price-pair,
 span.font-mono-jb:has(> span.mx-2) {
     display: inline-flex;
-    align-items: flex-end;
+    align-items: flex-start;
     column-gap: 0.9em;
     white-space: nowrap;
 }
