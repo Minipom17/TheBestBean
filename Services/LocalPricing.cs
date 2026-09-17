@@ -7,7 +7,15 @@ namespace TheBestBean.Services
     /// </summary>
     public static class LocalPricing
     {
-        public const string WorkshopVisaFeeNote = "VISA 5%";
+        /// <summary>
+        /// Card surcharge: Culqi PEN is Perú 5%. PayPal USD and CAD run on the Canadian
+        /// account, so both use Visa Canada’s 2.4% cap — not the US merchant 3% cap.
+        /// Yape is not a card — no surcharge. Disclose on the method they pick, before they pay.
+        /// </summary>
+        public const string WorkshopVisaFeeNote = "Visa 5% Perú · 2.4% Canada / USD";
+        public const decimal PeruCardSurchargeRate = 0.05m;
+        public const decimal CanadaCardSurchargeRate = 0.024m;
+        public const decimal UsdCardSurchargeRate = CanadaCardSurchargeRate;
 
         public const decimal YapeRate = 3.40m;
         public const decimal CardRate = 4.10m;
@@ -15,6 +23,32 @@ namespace TheBestBean.Services
         public const decimal CadRate = 1.38m;
 
         public static decimal Cad(decimal usd) => Math.Round(usd * CadRate, 2);
+
+        public static decimal CardSurchargeRateFor(string currency) =>
+            (currency ?? "").Trim().ToUpperInvariant() switch
+            {
+                "CAD" => CanadaCardSurchargeRate,
+                "PEN" => PeruCardSurchargeRate,
+                _ => UsdCardSurchargeRate
+            };
+
+        public static decimal CardSurcharge(decimal amount, string currency) =>
+            Math.Round(amount * CardSurchargeRateFor(currency), 2, MidpointRounding.AwayFromZero);
+
+        public static decimal WithCardSurcharge(decimal amount, string currency) =>
+            amount + CardSurcharge(amount, currency);
+
+        public static string CardSurchargeLabel(string currency) =>
+            (currency ?? "").Trim().ToUpperInvariant() switch
+            {
+                "CAD" => "Visa 2.4% · Canada",
+                "PEN" => "Visa 5% · Perú",
+                _ => "Visa 2.4% · USD"
+            };
+
+        /// <summary>Culqi/Visa soles total: Yape price plus Perú 5% card surcharge, whole soles.</summary>
+        public static decimal CulqiSoles(decimal usd, decimal listedPen = 0) =>
+            Math.Round(YapeSoles(usd, listedPen) * (1m + PeruCardSurchargeRate), 0, MidpointRounding.AwayFromZero);
 
         public static decimal YapeSoles(decimal usd, decimal listedPen = 0)
         {

@@ -79,6 +79,11 @@ namespace TheBestBean.Models
         [StringLength(500)]
         public string? CertificateFilePath { get; set; }
 
+        [Display(Name = "Shop coffee")]
+        public int? CoffeeBeanId { get; set; }
+
+        public CoffeeBean? CoffeeBean { get; set; }
+
         // Navigation properties
         public virtual ICollection<RoastBatch> RoastBatches { get; set; } = new List<RoastBatch>();
     }

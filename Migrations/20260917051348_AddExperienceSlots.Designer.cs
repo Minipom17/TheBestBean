@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TheBestBean.Data;
 
@@ -10,9 +11,11 @@ using TheBestBean.Data;
 namespace TheBestBean.Migrations
 {
     [DbContext(typeof(TheBestBeanContext))]
-    partial class TheBestBeanContextModelSnapshot : ModelSnapshot
+    [Migration("20260917051348_AddExperienceSlots")]
+    partial class AddExperienceSlots
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.9");
@@ -223,9 +226,6 @@ namespace TheBestBean.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("CoffeeBeanId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<decimal?>("CostPerKg")
                         .HasColumnType("decimal(10, 2)");
 
@@ -287,8 +287,6 @@ namespace TheBestBean.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CoffeeBeanId");
 
                     b.ToTable("BeanInventories");
                 });
@@ -1411,12 +1409,6 @@ namespace TheBestBean.Migrations
 
             modelBuilder.Entity("TheBestBean.Models.BeanInventory", b =>
                 {
-                    b.HasOne("TheBestBean.Models.CoffeeBean", "CoffeeBean")
-                        .WithMany()
-                        .HasForeignKey("CoffeeBeanId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("CoffeeBean");
                     b.Navigation("RoastBatches");
                 });
 

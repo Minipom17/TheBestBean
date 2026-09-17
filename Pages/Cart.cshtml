@@ -4,145 +4,140 @@
     ViewData["Title"] = "Shopping Bag";
 }
 
-<div class="pt-32 pb-20 bg-white dark:bg-[#121014] min-h-[70vh]">
-    <div class="container mx-auto px-4 md:px-8">
-        <h1 class="text-4xl md:text-6xl font-grotesk font-bold tracking-tighter mb-12 uppercase">
-            Your Bag
-        </h1>
-
+<div class="checkout-pro">
+    <div class="checkout-pro__wrap">
         @if (Model.CartItems.Any())
         {
-            <div class="flex flex-col lg:flex-row gap-16">
-                <!-- Left: Items -->
-                <div class="flex-1 space-y-8">
-                    @foreach (var item in Model.CartItems)
-                    {
-                        <div class="flex gap-6 pb-8 border-b border-gray-100 group">
-                            <div class="w-32 h-40 bg-gray-50 border border-gray-100 overflow-hidden shrink-0 group-hover:border-black transition-colors">
-                                <img src="@item.ImageUrl" alt="@item.ProductName" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.src='https://picsum.photos/400/500?random=@item.ProductId'">
-                            </div>
-                            <div class="flex-1 flex flex-col justify-between">
-                                <div>
-                                    <div class="flex justify-between items-start">
-                                        <h3 class="text-xl font-grotesk font-bold">@item.ProductName</h3>
-                                        <div>
-                                            <partial name="_YapePrice" model="new DualPriceModel { Usd = item.Price, Pen = LocalPricing.YapeSoles(item.Price), Compact = true }" />
-                                        </div>
-                                    </div>
-                                    <p class="text-xs text-gray-500 font-mono-jb uppercase tracking-widest mt-1">@item.ProductType @(string.IsNullOrEmpty(item.Weight) ? "" : $"| {item.Weight}")</p>
-                                    <p class="text-sm text-gray-600 mt-2 font-light line-clamp-2">@item.Description</p>
-                                </div>
-                                <div class="flex justify-between items-end mt-4">
-                                    <div class="flex items-center gap-4">
-                                        <div class="flex items-center border border-gray-200">
-                                            <form method="post" asp-page-handler="UpdateQuantity">
-                                                <input type="hidden" name="productId" value="@item.ProductId" />
-                                                <input type="hidden" name="productType" value="@item.ProductType" />
-                                                <input type="hidden" name="quantity" value="@(item.Quantity - 1)" />
-                                                <button type="submit" class="w-8 h-8 flex items-center justify-center hover:bg-gray-100 dark:bg-[#1C191F] transition-colors border-0 bg-transparent">−</button>
-                                            </form>
-                                            <span class="w-10 text-center font-mono-jb text-sm font-bold">@item.Quantity</span>
-                                            <form method="post" asp-page-handler="UpdateQuantity">
-                                                <input type="hidden" name="productId" value="@item.ProductId" />
-                                                <input type="hidden" name="productType" value="@item.ProductType" />
-                                                <input type="hidden" name="quantity" value="@(item.Quantity + 1)" />
-                                                <button type="submit" class="w-8 h-8 flex items-center justify-center hover:bg-gray-100 dark:bg-[#1C191F] transition-colors border-0 bg-transparent">+</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                    <form method="post" asp-page-handler="RemoveItem">
-                                        <input type="hidden" name="productId" value="@item.ProductId" />
-                                        <input type="hidden" name="productType" value="@item.ProductType" />
-                                        <button type="submit" class="text-[10px] font-mono-jb font-bold uppercase tracking-widest text-gray-400 hover:text-black dark:text-[#D6D0C8] transition-colors border-0 bg-transparent">
-                                            Remove
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    }
+            <a asp-page="@Model.KeepShoppingPage" class="checkout-pro__back">
+                <i class="bi bi-arrow-left"></i> @Model.KeepShoppingLabel
+            </a>
 
-                    <div class="flex gap-4 pt-8">
-                        <a asp-page="/GreenBeans" class="text-xs font-mono-jb font-bold uppercase tracking-widest text-gray-400 hover:text-black dark:text-[#D6D0C8] transition-colors text-decoration-none border-b border-transparent hover:border-black">
-                            <i class="bi bi-arrow-left"></i> Keep Shopping
-                        </a>
+            <div class="checkout-pro__grid">
+                <div class="checkout-pro__main">
+                    <header class="checkout-pro__head">
+                        <p class="checkout-pro__kicker">Purple Bean Coffee · Cusco</p>
+                        <h1>Your bag</h1>
+                        <p class="checkout-pro__lede">@(Model.IsWorkshopOnlyCart
+                            ? $"Up to {CartService.MaxExperienceGuests} guests per session. Card fees show up when you choose how to pay."
+                            : "Listed price is Yape in soles. Visa and PayPal totals, with card fees, appear at checkout.")</p>
+                    </header>
+
+                    <div class="bag-pro__list">
+                        @foreach (var item in Model.CartItems)
+                        {
+                            var isGuests = CartService.IsExperienceBooking(item.ProductType);
+                            var atMax = isGuests && item.Quantity >= CartService.MaxExperienceGuests;
+                            <article class="checkout-pro__card bag-pro__item">
+                                <div class="bag-pro__photo">
+                                    <img src="@item.ImageUrl" alt="" onerror="this.src='https://picsum.photos/400/500?random=@item.ProductId'">
+                                </div>
+                                <div>
+                                    <div class="bag-pro__top">
+                                        <div>
+                                            <h3 class="bag-pro__name">@item.ProductName</h3>
+                                            <p class="bag-pro__meta">
+                                                @item.ProductType
+                                                @if (!string.IsNullOrEmpty(item.Weight))
+                                                {
+                                                    <text> · @item.Weight</text>
+                                                }
+                                                @if (!string.IsNullOrEmpty(item.RoastLevel))
+                                                {
+                                                    <text> · @RoastProfiles.CartLine(item.RoastLevel)</text>
+                                                }
+                                                @if (isGuests)
+                                                {
+                                                    <text> · @item.Quantity @(item.Quantity == 1 ? "guest" : "guests")</text>
+                                                }
+                                            </p>
+                                            @if (!string.IsNullOrWhiteSpace(item.Description))
+                                            {
+                                                <p class="bag-pro__desc">@item.Description</p>
+                                            }
+                                        </div>
+                                        <div class="bag-pro__price">
+                                            <strong>S/@LocalPricing.YapeSoles(item.Subtotal).ToString("0")</strong>
+                                            <span>$@item.Subtotal.ToString("0.00")</span>
+                                        </div>
+                                    </div>
+                                    <div class="bag-pro__row">
+                                        <div class="bag-pro__qty" role="group" aria-label="@(isGuests ? "Guests" : "Quantity")">
+                                            <form method="post" asp-page-handler="UpdateQuantity">
+                                                <input type="hidden" name="productId" value="@item.ProductId" />
+                                                <input type="hidden" name="productType" value="@item.ProductType" />
+                                                <input type="hidden" name="weight" value="@item.Weight" />
+                                                <input type="hidden" name="roastLevel" value="@item.RoastLevel" />
+                                                <input type="hidden" name="quantity" value="@(item.Quantity - 1)" />
+                                                <button type="submit" aria-label="@(isGuests ? "Fewer guests" : "Decrease quantity")">−</button>
+                                            </form>
+                                            <span>@item.Quantity</span>
+                                            <form method="post" asp-page-handler="UpdateQuantity">
+                                                <input type="hidden" name="productId" value="@item.ProductId" />
+                                                <input type="hidden" name="productType" value="@item.ProductType" />
+                                                <input type="hidden" name="weight" value="@item.Weight" />
+                                                <input type="hidden" name="roastLevel" value="@item.RoastLevel" />
+                                                <input type="hidden" name="quantity" value="@(item.Quantity + 1)" />
+                                                <button type="submit" @(atMax ? "disabled" : null) aria-label="@(isGuests ? "More guests" : "Increase quantity")">+</button>
+                                            </form>
+                                        </div>
+                                        <form method="post" asp-page-handler="RemoveItem">
+                                            <input type="hidden" name="productId" value="@item.ProductId" />
+                                            <input type="hidden" name="productType" value="@item.ProductType" />
+                                            <input type="hidden" name="weight" value="@item.Weight" />
+                                            <input type="hidden" name="roastLevel" value="@item.RoastLevel" />
+                                            <button type="submit" class="bag-pro__remove">Remove</button>
+                                        </form>
+                                    </div>
+                                    @if (isGuests)
+                                    {
+                                        <p class="bag-pro__hint">Maximum @CartService.MaxExperienceGuests guests.</p>
+                                    }
+                                </div>
+                            </article>
+                        }
+                    </div>
+
+                    <div class="bag-pro__foot">
                         <form method="post" asp-page-handler="ClearCart">
-                            <button type="submit" class="text-xs font-mono-jb font-bold uppercase tracking-widest text-red-400 hover:text-red-600 transition-colors border-0 bg-transparent">
-                                Clear Bag
-                            </button>
+                            <button type="submit" class="bag-pro__clear">Empty bag</button>
                         </form>
                     </div>
+
+                    @if (Model.HasCoffeeItems)
+                    {
+                        <p class="checkout-pro__help">We roast after payment, ship the next day, and the bag rests on the way.</p>
+                    }
                 </div>
 
-                <!-- Right: Summary -->
-                <div class="w-full lg:w-[400px]">
-                    <div class="bg-gray-50 dark:bg-[#1C191F] p-8 border border-gray-100 dark:border-[#2A262C] sticky top-32">
-                        <h2 class="text-lg font-mono-jb font-bold uppercase tracking-widest mb-6 border-b border-black pb-2">Order Summary</h2>
-                        <div class="space-y-4 mb-8">
-                            <div class="flex justify-between text-sm">
-                                <span class="text-gray-500 font-light">Subtotal (@Model.ItemCount items)</span>
-                                <span class="font-mono-jb font-bold">$@Model.CartTotal.ToString("F2")</span>
-                            </div>
-                            <div class="flex justify-between text-sm">
-                                <span class="text-gray-500 font-light">Shipping</span>
-                                <span class="text-green-600 font-mono-jb font-bold">FREE</span>
-                            </div>
-                            <div class="pt-4 border-t border-gray-200 space-y-4">
-                                <div class="yape-price yape-price--stack">
-                                    <div class="yape-price__yape">
-                                        <span class="yape-price__badge" aria-label="Yape">
-                                            <img src="/brand/yape-logo.webp" alt="Yape" class="yape-price__logo" width="76" height="24" loading="lazy" decoding="async" />
-                                        </span>
-                                        <span class="yape-price__soles">S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</span>
-                                    </div>
-                                    @if (!Model.IsWorkshopOnlyCart)
-                                    {
-                                        <p class="yape-price__save mb-0">Local price in soles · recommended in Perú</p>
-                                    }
-                                    <div class="yape-price__card mt-3">
-                                        <span class="yape-price__card-label">
-                                            <img src="/brand/paypal-logo.svg" alt="PayPal" class="yape-price__logo yape-price__logo--paypal yape-price__logo--inline" width="80" height="20" loading="lazy" decoding="async" />
-                                            CAD
-                                        </span>
-                                        <span class="yape-price__card-usd">C$@LocalPricing.Cad(Model.CartTotal).ToString("0.00")</span>
-                                    </div>
-                                    @if (Model.IsWorkshopOnlyCart)
-                                    {
-                                        <p class="yape-price__save yape-price__fee-note">@LocalPricing.WorkshopVisaFeeNote</p>
-                                    }
-                                    else if (LocalPricing.YapeSavings(Model.CartTotal) > 0)
-                                    {
-                                        <p class="yape-price__save">
-                                            <span>−S/@LocalPricing.YapeSavings(Model.CartTotal).ToString("0")</span> w/ cash or
-                                            <img src="/brand/yape-logo.webp" alt="Yape" class="yape-price__logo yape-price__logo--inline" width="64" height="18" loading="lazy" decoding="async" />
-                                        </p>
-                                    }
-                                </div>
-                            </div>
+                <aside class="checkout-pro__aside">
+                    <div class="checkout-pro__receipt">
+                        <h2>Order summary</h2>
+                        <div class="checkout-pro__totals">
+                            <div><span>Items</span><span>@Model.ItemCount</span></div>
+                            <div><span>Subtotal</span><span>$@Model.CartTotal.ToString("0.00")</span></div>
+                            <div><span>Shipping</span><span>Free</span></div>
+                            <div class="bag-pro__due"><span>Yape / listed</span><span>S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</span></div>
                         </div>
-
-                        <a asp-page="/Checkout" class="block w-full bg-black text-white text-center py-4 font-mono-jb font-bold text-xs uppercase tracking-widest hover:bg-v-red transition-colors border border-black text-decoration-none">
-                            Pay with Yape — S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")
-                        </a>
-                        
-                        <p class="mt-4 text-center text-[10px] font-mono-jb uppercase tracking-widest text-gray-400">
-                            Or PayPal at checkout · C$@LocalPricing.Cad(Model.CartTotal).ToString("0.00")
-                        </p>
+                        <p class="checkout-pro__receipt-note">Visa, Culqi, and PayPal amounts — including card fees — show when you pick a payment method.</p>
                     </div>
-                </div>
+                    <a asp-page="/Checkout" class="checkout-pro__submit bag-pro__cta">Continue to checkout</a>
+                    <p class="checkout-pro__trust">No charge on this page · Pay on the next step</p>
+                </aside>
             </div>
         }
         else
         {
-            <div class="flex flex-col items-center justify-center text-center py-20 border-2 border-dashed border-gray-100">
-                <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-6">
-                    <i class="bi bi-bag text-gray-300 fs-2"></i>
+            <a asp-page="/GreenBeans" class="checkout-pro__back">
+                <i class="bi bi-arrow-left"></i> Back to coffee
+            </a>
+            <div class="bag-pro__empty">
+                <p class="checkout-pro__kicker">Your bag</p>
+                <h2>Nothing in here yet</h2>
+                <p>Add a coffee or an experience, then come back to check out.</p>
+                <div class="bag-pro__empty-actions">
+                    <a asp-page="/GreenBeans" class="checkout-pro__submit" style="width:auto;padding-left:1.5rem;padding-right:1.5rem">Shop coffee</a>
+                    <a asp-page="/Experiences" class="bag-pro__ghost">Experiences</a>
                 </div>
-                <h2 class="text-2xl font-grotesk font-bold mb-4">Your bag is empty</h2>
-                <p class="text-gray-500 font-light mb-8 max-w-xs">Looks like you haven't added any coffees to your collection yet.</p>
-                <a asp-page="/GreenBeans" class="bg-black text-white px-8 py-4 font-mono-jb font-bold text-xs uppercase tracking-widest hover:bg-gray-800 transition-all text-decoration-none border-0">
-                    Discover Coffee
-                </a>
             </div>
         }
     </div>

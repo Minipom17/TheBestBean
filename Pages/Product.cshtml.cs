@@ -11,16 +11,20 @@ namespace TheBestBean.Pages
     {
         private readonly CartService _cartService;
         private readonly TheBestBean.Data.TheBestBeanContext _context;
+        private readonly CoffeeFreshnessService _freshness;
 
-        public ProductModel(CartService cartService, TheBestBean.Data.TheBestBeanContext context)
+        public ProductModel(CartService cartService, TheBestBean.Data.TheBestBeanContext context, CoffeeFreshnessService freshness)
         {
             _cartService = cartService;
             _context = context;
+            _freshness = freshness;
         }
 
         public Product? Product { get; set; }
         public List<Product> RelatedProducts { get; set; } = new();
         public Dictionary<string, string> PageContent { get; set; } = new();
+        public CoffeeLotStatus? Lot { get; set; }
+        public CoffeeLabBoard? LotBoard { get; set; }
 
         public async Task<IActionResult> OnGetAsync(string id)
         {
@@ -67,6 +71,17 @@ namespace TheBestBean.Pages
                     ScaScore = bean.ScaScore,
                     GalleryImages = AngelCatarataGallery(bean)
                 };
+                Lot = await _freshness.GetLotAsync(bean.Id);
+                LotBoard = new CoffeeLabBoard
+                {
+                    Lots = Lot == null ? Array.Empty<CoffeeLotStatus>() : new[] { Lot },
+                    Compact = true,
+                    ShowTimeline = true,
+                    ShowGrind = true,
+                    Kicker = "This lot",
+                    Title = "Green, roast, rest",
+                    Highlight = Lot?.Roasts.FirstOrDefault()?.Phase
+                };
             }
             else 
             {
@@ -101,8 +116,9 @@ namespace TheBestBean.Pages
 
 
 
-        public IActionResult OnPostAddToCart(int productId, string productName, string productType, decimal price, string imageUrl, string description, int quantity = 1, string? purchaseType = null, string? subscriptionFrequency = null, string? weight = "100g")
+        public IActionResult OnPostAddToCart(int productId, string productName, string productType, decimal price, string imageUrl, string description, int quantity = 1, string? purchaseType = null, string? subscriptionFrequency = null, string? weight = "100g", string? roastLevel = null)
         {
+            var roast = RoastProfiles.Normalize(roastLevel);
             var bean = _context.CoffeeBean.Find(productId);
             if (bean != null)
             {
@@ -111,6 +127,7 @@ namespace TheBestBean.Pages
                 {
                     productName = $"{productName} ({weight})";
                 }
+                productName = $"{productName} · {RoastProfiles.CartLine(roast)}";
             }
 
             var finalPrice = price;
@@ -133,7 +150,9 @@ namespace TheBestBean.Pages
                 Price = finalPrice,
                 Quantity = quantity,
                 ImageUrl = imageUrl,
-                Description = finalDesc
+                Description = finalDesc,
+                Weight = weight ?? "",
+                RoastLevel = bean != null ? roast : ""
             };
 
             _cartService.AddToCart(HttpContext.Session, cartItem);

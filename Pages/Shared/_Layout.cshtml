@@ -23,6 +23,10 @@
     <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
     <title>@ViewData["Title"] | Purple Bean Coffee</title>
+    @if (ViewData["Robots"] is string robots)
+    {
+        <meta name="robots" content="@robots" />
+    }
     <meta name="description" content="@(ViewData["MetaDescription"] ?? "Specialty coffee shop and roasting lab in Cusco, Peru. Sourcing and roasting the finest high-altitude coffees, and offering immersive coffee tours and workshops.")">
     
     <!-- Open Graph / Facebook -->
@@ -623,6 +627,13 @@
     
     <partial name="_Footer" />
 
+    @{
+        var hideDispatchDock = Context.Request.Path.StartsWithSegments("/Checkout")
+            || Context.Request.Path.StartsWithSegments("/Cart")
+            || Context.Request.Path.StartsWithSegments("/Tour");
+    }
+    @if (!hideDispatchDock)
+    {
     <!-- Unified Delivery & WhatsApp Float Button -->
     <a href="https://wa.me/51993779381" target="_blank" class="delivery-float" title="Delivery & WhatsApp Dispatch"
        onclick="if (typeof gtag === 'function') { gtag('event', 'whatsapp_click', { event_category: 'engagement', event_label: location.pathname, page_path: location.pathname, transport_type: 'beacon' }); gtag('event', 'generate_lead', { event_category: 'engagement', method: 'whatsapp', page_path: location.pathname, transport_type: 'beacon' }); }">
@@ -630,6 +641,7 @@
         <span>//</span>
         <i class="bi bi-whatsapp text-xl"></i>
     </a>
+    }
 
     <script>
         // Theme Toggle Logic (init already done in <head> to prevent FOUC)

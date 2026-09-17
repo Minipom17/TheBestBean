@@ -34,6 +34,7 @@ namespace TheBestBean.Data // Updated for consistency
 
         // Experiences
         public DbSet<Experience> Experiences { get; set; } = default!;
+        public DbSet<ExperienceSlot> ExperienceSlots { get; set; } = default!;
 
         // CMS Content
         public DbSet<SiteContent> SiteContent { get; set; } = default!;
@@ -52,6 +53,16 @@ namespace TheBestBean.Data // Updated for consistency
         {
             // Call base OnModelCreating
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<ExperienceSlot>()
+                .HasIndex(s => new { s.ExperienceId, s.StartAt })
+                .IsUnique();
+
+            modelBuilder.Entity<BeanInventory>()
+                .HasOne(b => b.CoffeeBean)
+                .WithMany()
+                .HasForeignKey(b => b.CoffeeBeanId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             // Seed data will be added after database creation
             // SeedData(modelBuilder);

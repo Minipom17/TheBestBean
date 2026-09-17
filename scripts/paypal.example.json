@@ -1,5 +1,14 @@
 {
   "Mode": "Live",
   "ClientId": "paste-live-client-id",
-  "Secret": "paste-live-secret"
+  "Secret": "paste-live-secret",
+  "Sandbox": {
+    "ClientId": "paste-sandbox-client-id",
+    "Secret": "paste-sandbox-secret",
+    "BuyerEmail": "sb-buyer@business.example.com"
+  },
+  "Live": {
+    "ClientId": "paste-live-client-id",
+    "Secret": "paste-live-secret"
+  }
 }

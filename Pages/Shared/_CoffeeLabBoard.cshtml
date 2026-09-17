@@ -1,0 +1,85 @@
+@model TheBestBean.Services.CoffeeLabBoard
+@{
+    var board = Model ?? new CoffeeLabBoard();
+    var compact = board.Compact;
+}
+
+<section class="lab-board@(compact ? " lab-board--compact" : "")" aria-label="Coffee freshness">
+    <header class="lab-board__head">
+        <p class="lab-board__kicker">@board.Kicker</p>
+        <h2>@board.Title</h2>
+        <p class="lab-board__lede">
+            We buy green from farmers and labs, profile the roast, then roast after you order and ship the next day so rest happens in transit. Most lots are for pour-over; the same coffee works as espresso if you want those flavors in the shot.
+        </p>
+    </header>
+
+    @if (board.Lots.Count > 0)
+    {
+        <div class="lab-board__feed" role="list">
+            @foreach (var lot in board.Lots)
+            {
+                <article class="lab-board__lot" role="listitem">
+                    <div class="lab-board__lot-top">
+                        <a asp-page="/Product" asp-route-id="@lot.CoffeeBeanId" class="lab-board__name">@lot.Name</a>
+                        @if (lot.HasGreen)
+                        {
+                            <span class="lab-board__pill lab-board__pill--green">@CoffeeLotStatus.FormatKg(lot.GreenKg) green · ready to roast</span>
+                        }
+                        else
+                        {
+                            <span class="lab-board__pill">Roast to order</span>
+                        }
+                    </div>
+                    @if (lot.Roasts.Count > 0)
+                    {
+                        <ul class="lab-board__roasts">
+                            @foreach (var roast in lot.Roasts)
+                            {
+                                <li data-phase="@roast.Phase.ToString().ToLowerInvariant()">
+                                    <strong>@roast.DaysAgo d ago</strong>
+                                    <span>@roast.Profile</span>
+                                    <span class="lab-board__phase">@roast.PhaseLabel</span>
+                                    @if (roast.WeightGrams is > 0)
+                                    {
+                                        <span>@(roast.WeightGrams >= 1000 ? $"{roast.WeightGrams / 1000m:0.#} kg" : $"{roast.WeightGrams:0} g") batch</span>
+                                    }
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="lab-board__empty-roast">No roast logged yet — we roast this after you pay.</p>
+                    }
+                </article>
+            }
+        </div>
+    }
+    else
+    {
+        <p class="lab-board__empty">Green kg and roast dates post here from the lab. Until a lot is logged, we still roast to order after you pay.</p>
+    }
+
+    @if (board.ShowTimeline)
+    {
+        <ol class="fresh-timeline" aria-label="Coffee freshness timeline">
+            @foreach (var phase in new[] { FreshPhase.Degas, FreshPhase.Peak, FreshPhase.Fade, FreshPhase.Stale })
+            {
+                var on = board.Highlight == phase;
+                <li class="fresh-timeline__phase@(on ? " is-now" : "")">
+                    <span class="fresh-timeline__window">@CoffeeFreshnessService.PhaseWindow(phase)</span>
+                    <strong>@CoffeeFreshnessService.PhaseLabel(phase)</strong>
+                    <p>@CoffeeFreshnessService.PhaseHint(phase)</p>
+                </li>
+            }
+        </ol>
+    }
+
+    @if (board.ShowGrind)
+    {
+        <div class="lab-board__grind">
+            <p><strong>Whole bean.</strong> After you open the bag, flavor holds about a month. We don’t grind for shipping — ground coffee is at peak for 20–30 minutes, then aroma drops fast.</p>
+            <p>Pour-over: brew 2–3 days after roast with a bloom. Press, Moka, AeroPress: 3–7 days. Espresso: 5–14 days so CO₂ doesn’t wreck the shot.</p>
+        </div>
+    }
+</section>

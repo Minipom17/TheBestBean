@@ -80,6 +80,10 @@
                     <partial name="_YapePrice" model="new DualPriceModel { Usd = Model.Product.BasePriceUSD, Pen = Model.Product.BasePricePEN, ShowCard = false }" />
                 </div>
                 <p class="font-sans text-gray-600 dark:text-gray-300 mb-3 leading-snug text-sm" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="FlavorProfile" style="font-family: 'Inter', sans-serif;">@Model.Product.Description</p>
+                @if (Model.Product.Type == "Bean" && Model.Lot != null)
+                {
+                    <p class="product-lot-line">@Model.Lot.CardLine</p>
+                }
                 
                 <div class="border-t border-gray-200 dark:border-dark-border pt-3">
                     <form method="post" asp-page-handler="AddToCart">
@@ -134,6 +138,33 @@
                                 }
                             }
                         </script>
+
+                        @if (Model.Product.Type == "Bean")
+                        {
+                            <input type="hidden" name="roastLevel" id="product-selected-roast" value="profile" />
+                            <div class="mb-3 font-mono-jb roast-pick">
+                                <label class="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2 block">Roast</label>
+                                <div class="flex flex-wrap gap-2">
+                                    <label class="cursor-pointer">
+                                        <input type="radio" name="roast-select" value="profile" checked class="peer sr-only" onchange="document.getElementById('product-selected-roast').value='profile'" />
+                                        <div class="px-3 py-2 border border-black bg-transparent text-black peer-checked:bg-black peer-checked:text-white dark:border-[#D6D0C8] dark:text-[#D6D0C8] dark:peer-checked:bg-[#D6D0C8] dark:peer-checked:text-black transition-all font-bold text-xs font-mono">Our roast</div>
+                                    </label>
+                                    <label class="cursor-pointer">
+                                        <input type="radio" name="roast-select" value="light" class="peer sr-only" onchange="document.getElementById('product-selected-roast').value='light'" />
+                                        <div class="px-3 py-2 border border-black bg-transparent text-black peer-checked:bg-black peer-checked:text-white dark:border-[#D6D0C8] dark:text-[#D6D0C8] dark:peer-checked:bg-[#D6D0C8] dark:peer-checked:text-black transition-all font-bold text-xs font-mono">Light</div>
+                                    </label>
+                                    <label class="cursor-pointer">
+                                        <input type="radio" name="roast-select" value="medium" class="peer sr-only" onchange="document.getElementById('product-selected-roast').value='medium'" />
+                                        <div class="px-3 py-2 border border-black bg-transparent text-black peer-checked:bg-black peer-checked:text-white dark:border-[#D6D0C8] dark:text-[#D6D0C8] dark:peer-checked:bg-[#D6D0C8] dark:peer-checked:text-black transition-all font-bold text-xs font-mono">Medium</div>
+                                    </label>
+                                    <label class="cursor-pointer">
+                                        <input type="radio" name="roast-select" value="dark" class="peer sr-only" onchange="document.getElementById('product-selected-roast').value='dark'" />
+                                        <div class="px-3 py-2 border border-black bg-transparent text-black peer-checked:bg-black peer-checked:text-white dark:border-[#D6D0C8] dark:text-[#D6D0C8] dark:peer-checked:bg-[#D6D0C8] dark:peer-checked:text-black transition-all font-bold text-xs font-mono">Dark</div>
+                                    </label>
+                                </div>
+                                <p class="text-[10px] text-gray-500 mt-2 mb-0 leading-relaxed">Default is the profile we developed for this lot. Most of our coffee is roasted for pour-over; it still works as espresso if you want those flavors in the shot.</p>
+                            </div>
+                        }
 
                         <!-- Purchase Type Selection: One-time vs Subscription -->
                         <div class="mb-3 font-mono-jb">
@@ -203,6 +234,10 @@
                             <button type="submit" class="btn-lab flex-grow" style="padding: 0.5rem 0;">Add to Cart</button>
                         </div>
                     </form>
+                    @if (Model.Product.Type == "Bean" && Model.LotBoard != null)
+                    {
+                        <partial name="_CoffeeLabBoard" model="Model.LotBoard" />
+                    }
                 </div>
             </div>
         </div>

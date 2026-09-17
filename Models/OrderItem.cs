@@ -16,6 +16,7 @@ namespace TheBestBean.Models
         public string ProductType { get; set; } = string.Empty; // e.g. "Experience", "CoffeeBean"
         public int Quantity { get; set; }
         public decimal UnitPrice { get; set; }
+        public int SlotId { get; set; }
         public decimal TotalPrice => Quantity * UnitPrice;
     }
 }

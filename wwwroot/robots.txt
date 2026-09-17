@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
 Disallow: /Admin/
+Disallow: /PayPalTest
 
 Sitemap: https://purplebean.coffee/sitemap.xml

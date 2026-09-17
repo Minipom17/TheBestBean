@@ -167,24 +167,42 @@
         
         <div class="info-row">
             <span class="info-label">Total Amount</span>
-            @if (string.Equals(Model.PaymentMethod, "PayPal", StringComparison.OrdinalIgnoreCase))
+            @if (Model.IsPayPalUsd)
             {
-                <span class="info-value" style="color: #0059ff; font-size: 1.25rem;">C$@LocalPricing.Cad(Model.OrderTotal).ToString("0.00")</span>
+                <span class="info-value" style="color: #0059ff; font-size: 1.25rem;">$@Model.PayPalUsdCharged.ToString("0.00")</span>
             }
-            else if (string.Equals(Model.PaymentMethod, "MercadoPago", StringComparison.OrdinalIgnoreCase) || string.Equals(Model.PaymentMethod, "Card", StringComparison.OrdinalIgnoreCase))
+            else if (Model.IsPayPal)
             {
-                <span class="info-value" style="color: #0059ff; font-size: 1.25rem;">S/@LocalPricing.YapeSoles(Model.OrderTotal).ToString("0")</span>
+                <span class="info-value" style="color: #0059ff; font-size: 1.25rem;">C$@Model.PayPalCadCharged.ToString("0.00")</span>
+            }
+            else if (string.Equals(Model.PaymentMethod, "MercadoPago", StringComparison.OrdinalIgnoreCase) || string.Equals(Model.PaymentMethod, "Card", StringComparison.OrdinalIgnoreCase) || Model.IsCulqi)
+            {
+                <span class="info-value" style="color: #0059ff; font-size: 1.25rem;">S/@LocalPricing.CulqiSoles(Model.OrderTotal).ToString("0")</span>
             }
             else
             {
                 <span class="info-value" style="color: #722EA8; font-size: 1.25rem;">S/@LocalPricing.YapeSoles(Model.OrderTotal).ToString("0")</span>
             }
         </div>
+        @if (Model.CardSurcharge > 0)
+        {
+            <div class="info-row">
+                <span class="info-label">Card surcharge</span>
+                <span class="info-value">
+                    @(Model.IsPayPalUsd ? LocalPricing.CardSurchargeLabel("USD") + " · $" + Model.CardSurcharge.ToString("0.00")
+                        : Model.IsPayPal ? LocalPricing.CardSurchargeLabel("CAD") + " · C$" + Model.CardSurcharge.ToString("0.00")
+                        : Model.IsCulqi ? LocalPricing.CardSurchargeLabel("PEN") + " · S/" + Model.CardSurcharge.ToString("0")
+                        : Model.CardSurcharge.ToString("0.00"))
+                </span>
+            </div>
+        }
         <div class="info-row">
             <span class="info-label">Pay with</span>
             <span class="info-value">@(Model.PaymentMethod switch
             {
-                "PayPal" => "PayPal (CAD)",
+                "PayPal-USD" => "PayPal (USD)",
+                "PayPal-CAD" or "PayPal" => "PayPal (CAD)",
+                "Culqi" => "Culqi (Visa / Mastercard · soles)",
                 "MercadoPago" or "Card" => "Mercado Pago (card)",
                 _ => "Yape / Plin (soles)"
             })</span>
@@ -229,20 +247,39 @@
                     <h4>Yape S/@LocalPricing.YapeSoles(Model.OrderTotal).ToString("0")</h4>
                     <p>Yape or Plin to <strong>993 779 381</strong> (Purple Bean). Put order <strong>@Model.OrderNumber</strong> in the note. We’ll also send the QR on WhatsApp.</p>
                 }
-                else if (string.Equals(Model.PaymentMethod, "PayPal", StringComparison.OrdinalIgnoreCase) && string.Equals(Model.PaymentStatus, "Paid", StringComparison.OrdinalIgnoreCase))
+                else if (Model.IsCulqi && string.Equals(Model.PaymentStatus, "Paid", StringComparison.OrdinalIgnoreCase))
+                {
+                    <h4>Culqi paid</h4>
+                    <p>
+                        Card charged <strong>S/@LocalPricing.CulqiSoles(Model.OrderTotal).ToString("0")</strong>
+                        for order <strong>@Model.OrderNumber</strong> (includes Perú 5% Visa surcharge).
+                    </p>
+                }
+                else if (Model.IsPayPal && string.Equals(Model.PaymentStatus, "Paid", StringComparison.OrdinalIgnoreCase))
                 {
                     <h4>PayPal paid</h4>
-                    <p>PayPal confirmed <strong>C$@LocalPricing.Cad(Model.OrderTotal).ToString("0.00")</strong> for order <strong>@Model.OrderNumber</strong>.</p>
+                    <p>
+                        PayPal confirmed
+                        <strong>
+                            @(Model.IsPayPalUsd
+                                ? "$" + Model.PayPalUsdCharged.ToString("0.00")
+                                : "C$" + Model.PayPalCadCharged.ToString("0.00"))
+                        </strong>
+                        for order <strong>@Model.OrderNumber</strong>
+                        @(Model.CardSurcharge > 0
+                            ? (Model.IsPayPalUsd ? " (includes 2.4% USD card surcharge)." : " (includes 2.4% Canada card surcharge).")
+                            : ".")
+                    </p>
                 }
                 else if (string.Equals(Model.PaymentStatus, "Paid", StringComparison.OrdinalIgnoreCase))
                 {
-                    <h4>Card paid</h4>
-                    <p>Mercado Pago confirmed S/@LocalPricing.YapeSoles(Model.OrderTotal).ToString("0") for order <strong>@Model.OrderNumber</strong>.</p>
+                    <h4>Paid</h4>
+                    <p>Payment confirmed for order <strong>@Model.OrderNumber</strong>.</p>
                 }
                 else
                 {
-                    <h4>Card payment</h4>
-                    <p>If you finished on Mercado Pago, this will update to paid in a moment. If not, use Yape to <strong>993 779 381</strong> with order <strong>@Model.OrderNumber</strong>.</p>
+                    <h4>Payment</h4>
+                    <p>If PayPal didn’t finish, Yape or Plin to <strong>993 779 381</strong> with order <strong>@Model.OrderNumber</strong>.</p>
                 }
             </div>
         </div>
@@ -250,16 +287,16 @@
         <div class="step-item">
             <div class="step-icon">3</div>
             <div class="step-content">
-                <h4>Processing & Shipping</h4>
-                <p>Once payment is received, we'll process your order and ship it within 2-3 business days.</p>
+                <h4>Roast & ship</h4>
+                <p>We roast after payment clears (the profile you picked, or our lab roast) and send it the next day so rest happens in transit. Pour-over is usually ready when the bag lands. Espresso wants 5–14 days from roast.</p>
             </div>
         </div>
 
         <div class="step-item">
             <div class="step-icon">4</div>
             <div class="step-content">
-                <h4>Enjoy Your Coffee!</h4>
-                <p>Your premium coffee will arrive fresh and ready to brew. Enjoy!</p>
+                <h4>Whole bean, peak later</h4>
+                <p>We ship whole bean. Grind right before you brew — ground coffee is at peak for 20–30 minutes. After you open the bag, flavor holds about a month. 0–5 days after roast is degassing; 1–6 weeks is the sweet spot.</p>
             </div>
         </div>
     </div>

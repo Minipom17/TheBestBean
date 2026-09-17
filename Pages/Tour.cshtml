@@ -38,21 +38,23 @@
             var cssPos = heroPosParts.Length >= 2 ? $"{heroPosParts[0]} {heroPosParts[1]}" : "50% 50%";
             var cssScale = heroPosParts.Length >= 3 ? heroPosParts[2] : "1.0";
         }
-        <div class="exp-carousel tour-media-frame w-full aspect-[15/11] md:aspect-[19/9] bg-gray-100 dark:bg-[#1C191F] overflow-hidden relative shadow-sm" data-carousel-id="@carouselId">
+        <div class="exp-carousel tour-media-frame w-full aspect-[15/11] md:aspect-[16/9] bg-gray-100 dark:bg-[#1C191F] overflow-hidden relative shadow-sm" data-carousel-id="@carouselId">
             @if (heroPhotos.Any())
             {
                 <div class="carousel-container absolute inset-0 w-full h-full flex transition-transform duration-500 ease-in-out" id="carousel-@carouselId" data-current="0">
                     @for (int i = 0; i < heroPhotos.Count; i++)
                     {
                         var img = heroPhotos[i];
-                        if (i == 0)
-                        {
-                            <img src="@img" alt="@Model.Tour.Title" class="img-stark w-full h-full object-cover flex-shrink-0 transition-transform" style="object-position: @cssPos; transform: scale(@cssScale);" draggable="false" data-entity-id="@Model.Tour.Id" data-entity-type="Experience" data-editable="ImageUrl" data-position-key="Tour_Hero_Pos_@Model.Tour.Id" data-saved-pos="@heroPos" />
-                        }
-                        else
-                        {
-                            <img src="@img" alt="@Model.Tour.Title" class="img-stark w-full h-full object-cover flex-shrink-0" draggable="false" loading="lazy" />
-                        }
+                        <div class="exp-carousel__slide">
+                            @if (i == 0)
+                            {
+                                <img src="@img" alt="@Model.Tour.Title" class="img-stark transition-transform" style="object-position: @cssPos; transform: scale(@cssScale);" draggable="false" data-entity-id="@Model.Tour.Id" data-entity-type="Experience" data-editable="ImageUrl" data-position-key="Tour_Hero_Pos_@Model.Tour.Id" data-saved-pos="@heroPos" />
+                            }
+                            else
+                            {
+                                <img src="@img" alt="@Model.Tour.Title" class="img-stark" draggable="false" loading="lazy" decoding="async" />
+                            }
+                        </div>
                     }
                 </div>
                 @if (heroPhotos.Count > 1)
@@ -77,18 +79,19 @@
         
         <main class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 relative no-print">
             
-            <!-- Left Grid: Sticky Reservation Card -->
-            <div class="lg:col-span-4 flex flex-col relative order-2 lg:order-1">
-                <div class="lg:sticky lg:top-32 bg-white dark:bg-[#121014] rounded-3xl border border-gray-100 p-8 shadow-sm">
+            <!-- Reservation stays first on phones so guests can actually book -->
+            <div class="lg:col-span-4 flex flex-col relative">
+                <div class="lg:sticky lg:top-32 bg-white dark:bg-[#121014] rounded-3xl border border-[#ece7df] p-6 md:p-8 shadow-[0_12px_40px_rgba(18,16,20,0.06)]">
                     <div class="mb-2">
+                        <p class="text-[10px] font-mono-jb font-bold uppercase tracking-widest text-[#722EA8] m-0 mb-2">Reserve a seat</p>
                         <div class="flex flex-col items-start gap-1">
                             <partial name="_WorkshopPrice" model="new DualPriceModel { Usd = Model.Tour.Price }" />
-                            <span class="text-[10px] font-mono font-bold tracking-widest text-[#FF3B1F] uppercase mt-1">VISA 5%</span>
+                            <span class="text-[10px] font-mono font-bold tracking-widest text-[#FF3B1F] uppercase mt-1">Visa 5% Perú · 2.4% CAD / USD</span>
                         </div>
-                        <p class="text-xs text-v-gray mt-2 m-0">per participant</p>
+                        <p class="text-xs text-v-gray mt-2 m-0">per participant · Cusco time</p>
                     </div>
                     
-                    <div class="flex flex-col gap-4 mt-8 pt-8 border-t border-gray-100">
+                    <div class="flex flex-col gap-3 mt-6 pt-6 border-t border-gray-100">
                         <div class="flex justify-between items-start text-xs gap-4">
                             <span class="text-v-gray font-normal shrink-0">Duration</span>
                             <span class="text-v-black dark:text-[#D6D0C8] font-semibold text-right">@Model.Tour.Duration</span>
@@ -116,24 +119,62 @@
                         </div>
                     </div>
 
-                    <form method="post" asp-page-handler="AddToCart" class="mt-8 pt-8 border-t border-gray-100">
+                    <form method="post" asp-page-handler="AddToCart" class="mt-6 pt-6 border-t border-gray-100" id="booking-form">
                         <input type="hidden" name="tourId" value="@Model.Tour.Id" />
                         <input type="hidden" name="title" value="@Model.Tour.Title" />
                         <input type="hidden" name="price" value="@Model.Tour.Price" />
                         <input type="hidden" name="imageUrl" value="@heroImage" />
-                        <input type="hidden" name="date" value="Oct 15, 2026 (10:00 AM)" />
-                        <input type="hidden" name="participants" value="1" />
-                        
-                        <button type="submit" class="w-full bg-v-black text-v-white rounded-full py-4 font-bold tracking-tight text-lg hover:bg-v-red transition-colors border-0 cursor-pointer" data-entity-id="Tour_ReserveButton" data-entity-type="SiteContent" data-editable="Value">
-                            @(Model.PageContent.GetValueOrDefault("Tour_ReserveButton", "Reserve Position"))
+                        <input type="hidden" name="slotId" id="slotId" value="" />
+
+                        <div class="booking-cal" data-slots='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.OpenSlots.Select(s => new {
+                            id = s.Id,
+                            day = BookingCalendarService.FormatDay(s.StartAt),
+                            time = BookingCalendarService.ToLima(s.StartAt).ToString("HH:mm"),
+                            remaining = s.Remaining,
+                            label = BookingCalendarService.FormatSlot(s.StartAt)
+                        })))'>
+                            <div class="flex items-center justify-between mb-3">
+                                <p class="text-[10px] font-mono-jb font-bold uppercase tracking-widest m-0">Pick a date</p>
+                                <div class="flex gap-2">
+                                    <button type="button" class="booking-cal__nav" data-cal-nav="-1" aria-label="Previous month">‹</button>
+                                    <button type="button" class="booking-cal__nav" data-cal-nav="1" aria-label="Next month">›</button>
+                                </div>
+                            </div>
+                            <p class="booking-cal__month font-mono-jb text-[11px] uppercase tracking-widest text-v-gray mb-3" data-cal-month></p>
+                            <div class="booking-cal__weekdays" aria-hidden="true">
+                                <span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span>
+                            </div>
+                            <div class="booking-cal__grid" data-cal-grid></div>
+                            <p class="booking-cal__hint">Purple days are open · 12-hour cutoff · Sundays closed</p>
+                            <p class="booking-cal__picked" data-cal-picked></p>
+                            <div class="booking-cal__times mt-3" data-cal-times>
+                                <p class="text-[10px] text-v-gray m-0">Pick a highlighted day, then a time.</p>
+                            </div>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Model.BookingError))
+                        {
+                            <p class="text-sm text-red-600 mt-3 mb-0">@Model.BookingError</p>
+                        }
+
+                        <label class="block text-[10px] font-mono-jb font-bold uppercase tracking-widest mt-5 mb-2">Guests</label>
+                        <select name="participants" id="participants" class="w-full border border-gray-200 rounded-lg p-3 bg-white text-sm" data-max="@CartService.MaxExperienceGuests">
+                            @for (var n = 1; n <= CartService.MaxExperienceGuests; n++)
+                            {
+                                <option value="@n">@n @(n == 1 ? "guest" : "guests")</option>
+                            }
+                        </select>
+                        <p class="text-[10px] text-v-gray mt-2 mb-0">Maximum @CartService.MaxExperienceGuests guests per session.</p>
+
+                        <button type="submit" id="reserve-btn" disabled class="w-full bg-v-black text-v-white rounded-full py-4 font-bold tracking-tight text-lg hover:bg-v-red transition-colors border-0 cursor-pointer mt-5 mb-16 lg:mb-0 disabled:opacity-40 disabled:cursor-not-allowed relative z-[1]" data-entity-id="Tour_ReserveButton" data-entity-type="SiteContent" data-editable="Value">
+                            Choose a date to reserve
                         </button>
-                        <p class="text-[10px] text-v-gray text-center mt-4" data-entity-id="Tour_DepositText" data-entity-type="SiteContent" data-editable="Value">@(Model.PageContent.GetValueOrDefault("Tour_DepositText", "Requires a 50% deposit to secure equipment."))</p>
+                        <p class="text-[10px] text-v-gray text-center mt-4 mb-0">Need a private time? <a href="https://wa.me/51993779381" class="text-[#722EA8]">WhatsApp +51 993 779 381</a></p>
                     </form>
                 </div>
             </div>
 
-            <!-- Right Grid: Details & Syllabus -->
-            <div class="lg:col-span-8 flex flex-col gap-16 pt-4 order-1 lg:order-2">
+            <div class="lg:col-span-8 flex flex-col gap-16 pt-4">
                 
                 <!-- Title Block -->
                 <div>
@@ -324,7 +365,7 @@
                     {
                         var img = Model.Tour.GalleryImages[i];
                         <div class="tour-media-frame snap-center shrink-0 w-[100vw] md:w-[600px] aspect-[15/11] overflow-hidden relative shadow-sm">
-                            <img src="@img" class="absolute inset-0 w-full h-full object-cover img-stark" alt="@Model.Tour.Title photo" loading="lazy" data-entity-id="@Model.Tour.Id" data-entity-type="Experience" data-editable="GalleryImage_@i" />
+                            <img src="@img" class="img-stark" alt="@Model.Tour.Title photo" loading="lazy" decoding="async" data-entity-id="@Model.Tour.Id" data-entity-type="Experience" data-editable="GalleryImage_@i" />
                         </div>
                     }
                 </div>
@@ -358,4 +399,22 @@ else
 
 @section Scripts {
     <script src="~/js/exp-carousel.js" asp-append-version="true"></script>
+    <script src="~/js/booking-calendar.js" asp-append-version="true"></script>
+    @if (Model.Tour != null)
+    {
+        <script type="application/ld+json">
+        {
+          "@@context": "https://schema.org",
+          "@@type": "TouristTrip",
+          "name": "@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(Model.Tour.Title))",
+          "description": "@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(Model.Tour.Description))",
+          "image": "@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(Model.Tour.ImageUrl))",
+          "offers": {
+            "@@type": "Offer",
+            "price": "@Model.Tour.Price",
+            "priceCurrency": "USD"
+          }
+        }
+        </script>
+    }
 }

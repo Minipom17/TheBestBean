@@ -2,242 +2,263 @@
 @model TheBestBean.Pages.CheckoutModel
 @{
     ViewData["Title"] = "Checkout";
+    var isExperience = Model.IsWorkshopOnlyCart;
+    var skipShip = CartService.SkipsShipping(Model.CartItems);
+    var stepPay = Model.HasExperienceItems ? "04" : "03";
 }
 
-<div class="pt-32 pb-20 bg-white dark:bg-[#121014] min-h-screen">
-    <div class="container mx-auto px-4 md:px-8">
-        <!-- Back Link -->
-        <a asp-page="/Cart" class="flex items-center gap-2 font-mono-jb text-[10px] uppercase tracking-widest text-gray-400 hover:text-black dark:text-[#D6D0C8] mb-12 transition-colors text-decoration-none">
-            <i class="bi bi-arrow-left"></i> Back to Bag
+<div class="checkout-pro">
+    <div class="checkout-pro__wrap">
+        <a asp-page="/Cart" class="checkout-pro__back">
+            <i class="bi bi-arrow-left"></i> Back to bag
         </a>
 
-        <div class="flex flex-col lg:flex-row gap-20">
-            <!-- Left: Checkout Forms -->
-            <div class="flex-1">
-                <h1 class="text-4xl font-grotesk font-bold tracking-tighter mb-12 uppercase">
-                    Checkout
-                </h1>
+        <div class="checkout-pro__grid">
+            <div class="checkout-pro__main">
+                <header class="checkout-pro__head">
+                    <p class="checkout-pro__kicker">Purple Bean Coffee · Cusco</p>
+                    <h1>Checkout</h1>
+                    <p class="checkout-pro__lede">@(Model.IsPayPalTestCart
+                        ? "Live PayPal $1 test. USD charges about $1.02 with the 2.4% card fee. This is a real charge on the business account."
+                        : isExperience ? "Confirm who is coming, add a snack if you like, then pay. Times are America/Lima." : "We roast after payment (our profile unless you picked another), ship the next day, and the bag rests on the way.")</p>
+                    <ol class="checkout-pro__steps" aria-label="Checkout steps">
+                        <li>Contact</li>
+                        <li>@(skipShip ? (isExperience ? "Guests" : "Details") : "Shipping")</li>
+                        @if (Model.HasExperienceItems)
+                        {
+                            <li>Extras</li>
+                        }
+                        <li>Pay</li>
+                    </ol>
+                </header>
 
-                <form method="post" class="space-y-12">
-                    <!-- Contact -->
-                    <section>
-                        <h2 class="text-lg font-mono-jb font-bold uppercase tracking-widest mb-6 border-b border-black pb-2">01. Contact</h2>
-                        <div class="space-y-4">
-                            <div>
-                                <label asp-for="Email" class="block text-[10px] font-bold uppercase tracking-widest mb-2">Email Address</label>
-                                <input asp-for="Email" type="email" class="w-full bg-white dark:bg-[#121014] border-2 border-gray-100 p-3 focus:outline-none focus:border-black transition-colors font-light" placeholder="jane@example.com" required />
-                                <span asp-validation-for="Email" class="text-xs text-red-500 mt-1"></span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <input type="checkbox" id="newsletter" checked class="w-4 h-4 border-2 border-gray-200" />
-                                <label for="newsletter" class="text-xs text-gray-500 font-light">Email me with news and special offers</label>
-                            </div>
-                        </div>
+                <form id="extras-form" method="post" asp-page-handler="AddExtra" class="hidden">
+                    @Html.AntiForgeryToken()
+                </form>
+
+                <form method="post" id="checkout-form" class="checkout-pro__form">
+                    <input type="hidden" asp-for="CulqiToken" id="CulqiToken" />
+                    <input type="hidden" asp-for="DeliveryMethod" value="ship" />
+
+                    <section class="checkout-pro__card">
+                        <h2>01 · Contact</h2>
+                        <label asp-for="Email">Email</label>
+                        <input asp-for="Email" type="email" placeholder="you@email.com" autocomplete="email" required />
+                        <span asp-validation-for="Email" class="checkout-pro__error"></span>
+                        <p class="checkout-pro__help">Receipt and booking notes. We don’t add you to a list.</p>
                     </section>
 
-                    <!-- Shipping -->
-                    <section>
-                        <h2 class="text-lg font-mono-jb font-bold uppercase tracking-widest mb-6 border-b border-black pb-2">02. Shipping</h2>
-                        <div class="space-y-6">
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label asp-for="FirstName" class="block text-[10px] font-bold uppercase tracking-widest mb-2">First Name</label>
-                                    <input asp-for="FirstName" class="w-full bg-white dark:bg-[#121014] border-2 border-gray-100 p-3 focus:outline-none focus:border-black transition-colors font-light" required />
-                                </div>
-                                <div>
-                                    <label asp-for="LastName" class="block text-[10px] font-bold uppercase tracking-widest mb-2">Last Name</label>
-                                    <input asp-for="LastName" class="w-full bg-white dark:bg-[#121014] border-2 border-gray-100 p-3 focus:outline-none focus:border-black transition-colors font-light" required />
-                                </div>
-                            </div>
-                            <input type="hidden" asp-for="FullName" id="FullName" />
-
+                    <section class="checkout-pro__card">
+                        <h2>@(skipShip ? (isExperience ? "02 · Guest details" : "02 · Details") : "02 · Shipping")</h2>
+                        <div class="checkout-pro__row">
                             <div>
-                                <label asp-for="Address" class="block text-[10px] font-bold uppercase tracking-widest mb-2">Street Address</label>
-                                <input asp-for="Address" class="w-full bg-white dark:bg-[#121014] border-2 border-gray-100 p-3 focus:outline-none focus:border-black transition-colors font-light" placeholder="123 Coffee Lane" required />
-                                <span asp-validation-for="Address" class="text-xs text-red-500 mt-1"></span>
+                                <label asp-for="FirstName">First name</label>
+                                <input asp-for="FirstName" autocomplete="given-name" required />
                             </div>
-
-                            <div class="grid grid-cols-3 gap-4">
-                                <div class="col-span-1">
-                                    <label asp-for="ZipCode" class="block text-[10px] font-bold uppercase tracking-widest mb-2">Postal Code</label>
-                                    <input asp-for="ZipCode" class="w-full bg-white dark:bg-[#121014] border-2 border-gray-100 p-3 focus:outline-none focus:border-black transition-colors font-light" required />
-                                </div>
-                                <div class="col-span-2">
-                                    <label asp-for="City" class="block text-[10px] font-bold uppercase tracking-widest mb-2">City</label>
-                                    <input asp-for="City" class="w-full bg-white dark:bg-[#121014] border-2 border-gray-100 p-3 focus:outline-none focus:border-black transition-colors font-light" required />
-                                </div>
-                            </div>
-
-                             <div>
-                                <label asp-for="Phone" class="block text-[10px] font-bold uppercase tracking-widest mb-2">Phone</label>
-                                <input asp-for="Phone" type="tel" class="w-full bg-white dark:bg-[#121014] border-2 border-gray-100 p-3 focus:outline-none focus:border-black transition-colors font-light" required />
+                            <div>
+                                <label asp-for="LastName">Last name</label>
+                                <input asp-for="LastName" autocomplete="family-name" required />
                             </div>
                         </div>
-                    </section>
-
-                    <!-- Payment -->
-                    <section>
-                        <h2 class="text-lg font-mono-jb font-bold uppercase tracking-widest mb-6 border-b border-black pb-2">03. Payment</h2>
-                        <p class="text-sm text-gray-600 mb-6 leading-relaxed">
-                            @if (Model.IsWorkshopOnlyCart)
+                        <input type="hidden" asp-for="FullName" id="FullName" />
+                        <div class="mt-3">
+                            <label asp-for="Phone">WhatsApp / phone</label>
+                            <input asp-for="Phone" type="tel" required placeholder="+51 993…" autocomplete="tel" />
+                        </div>
+                        @if (skipShip)
+                        {
+                            @if (isExperience)
                             {
-                                <text>Pay with <strong>Yape</strong> in soles, Mercado Pago card in soles, or <strong>PayPal in Canadian dollars</strong>.</text>
+                                <div class="mt-3">
+                                    <label asp-for="Address">Hotel or stay in Cusco <span>(optional)</span></label>
+                                    <input asp-for="Address" placeholder="We’ll use this if we need to find you" autocomplete="street-address" />
+                                </div>
+                                <p class="checkout-pro__help">Up to @CartService.MaxExperienceGuests guests per session. Change the count in your bag before you pay.</p>
                             }
                             else
                             {
-                                <text>Locals: <strong>Yape</strong> in soles. International: PayPal in CAD. Peru cards via Mercado Pago once verified.</text>
+                                <p class="checkout-pro__help">No shipping — this is a live PayPal charge on the business account. Refund it in PayPal after if you want the dollar back.</p>
                             }
-                        </p>
-                        <div asp-validation-summary="All" class="text-sm text-red-600 mb-4"></div>
-                        <div class="grid grid-cols-1 gap-3" id="payment-method-cards">
-                            <label class="yape-pay-option yape-pay-option--recommended">
-                                <input type="radio" name="PaymentMethod" value="Yape" checked class="sr-only peer" />
-                                <div class="yape-pay-option__card peer-checked:ring-2">
-                                    <div class="flex items-start justify-between gap-4">
-                                        <div>
-                                            <span class="yape-price__badge" aria-label="Yape">
-                                                <img src="/brand/yape-logo.webp" alt="Yape" class="yape-price__logo" width="76" height="24" loading="lazy" decoding="async" />
-                                            </span>
-                                            <h3 class="font-grotesk font-bold text-lg mt-2 mb-1">Yape / Plin · Perú</h3>
-                                            <p class="text-xs text-gray-500 font-light m-0">Pay in soles after you place the order. We’ll send the QR to WhatsApp.</p>
-                                        </div>
-                                        <div class="text-right shrink-0">
-                                            <div class="text-2xl font-grotesk font-bold">S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</div>
-                                            <div class="text-[10px] font-mono-jb uppercase tracking-widest text-[#722EA8] font-bold mt-1">Recommended</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </label>
-                            <label class="yape-pay-option">
-                                <input type="radio" name="PaymentMethod" value="Card" class="sr-only peer" />
-                                <div class="yape-pay-option__card peer-checked:ring-2">
-                                    <div class="flex items-start justify-between gap-4">
-                                        <div>
-                                            <h3 class="font-grotesk font-bold text-lg mt-0 mb-1">Card · Mercado Pago</h3>
-                                            <p class="text-xs text-gray-500 font-light m-0">
-                                                Visa / Mastercard in soles. You’ll finish on Mercado Pago and come back here.
-                                            </p>
-                                        </div>
-                                        <div class="text-right shrink-0">
-                                            <div class="text-2xl font-grotesk font-bold">S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</div>
-                                            <div class="text-[10px] font-mono-jb uppercase tracking-widest text-gray-400 mt-1">Cards · Perú</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </label>
-                            <label class="yape-pay-option">
-                                <input type="radio" name="PaymentMethod" value="PayPal" class="sr-only peer" />
-                                <div class="yape-pay-option__card peer-checked:ring-2">
-                                    <div class="flex items-start justify-between gap-4">
-                                        <div>
-                                            <span class="yape-price__badge" aria-label="PayPal">
-                                                <img src="/brand/paypal-logo.svg" alt="PayPal" class="yape-price__logo yape-price__logo--paypal" width="100" height="24" loading="lazy" decoding="async" />
-                                            </span>
-                                            <h3 class="font-grotesk font-bold text-lg mt-2 mb-1">PayPal · CAD</h3>
-                                            <p class="text-xs text-gray-500 font-light m-0">
-                                                Cards and wallets from anywhere. Charged in Canadian dollars, then you come back here.
-                                            </p>
-                                        </div>
-                                        <div class="text-right shrink-0">
-                                            <div class="text-2xl font-grotesk font-bold">C$@LocalPricing.Cad(Model.CartTotal).ToString("0.00")</div>
-                                            <div class="text-[10px] font-mono-jb uppercase tracking-widest text-gray-400 mt-1">Canada · PayPal</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </label>
-                        </div>
-                        @if (Model.IsWorkshopOnlyCart)
-                        {
-                            <p class="yape-price__save yape-price__fee-note mt-4">@LocalPricing.WorkshopVisaFeeNote</p>
+                            <input type="hidden" asp-for="City" value="Cusco" />
+                            <input type="hidden" asp-for="ZipCode" value="08000" />
                         }
-                        else if (LocalPricing.YapeSavings(Model.CartTotal) > 0)
+                        else
                         {
-                            <p class="yape-price__save mt-4">
-                                <span>−S/@LocalPricing.YapeSavings(Model.CartTotal).ToString("0")</span> w/ cash or
-                                <img src="/brand/yape-logo.webp" alt="Yape" class="yape-price__logo yape-price__logo--inline" width="64" height="18" loading="lazy" decoding="async" />
-                            </p>
-                        }
-                    </section>
-
-                    <button type="submit" id="checkout-submit" class="w-full bg-black text-white py-5 font-mono-jb font-bold text-xs uppercase tracking-widest hover:bg-v-red transition-colors border border-black">
-                        Complete order — Yape S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")
-                    </button>
-                </form>
-            </div>
-
-            <!-- Right: Order Summary -->
-            <div class="w-full lg:w-[450px]">
-                <div class="bg-gray-50 p-8 md:p-12 border border-gray-100 sticky top-32">
-                    <h2 class="text-xs font-mono-jb font-bold uppercase tracking-widest mb-8 pb-4 border-b border-gray-200">Order Summary</h2>
-                    
-                    <div class="space-y-6 mb-10 max-h-[40vh] overflow-y-auto pr-4 custom-scrollbar">
-                        @foreach (var item in Model.CartItems)
-                        {
-                            <div class="flex gap-4 items-center">
-                                <div class="w-16 h-20 bg-white dark:bg-[#121014] border border-gray-200 relative shrink-0">
-                                    <img src="@item.ImageUrl" alt="@item.ProductName" class="w-full h-full object-cover" onerror="this.src='https://picsum.photos/200/300?random=@item.ProductId'">
-                                    <span class="absolute -top-2 -right-2 bg-black text-white w-5 h-5 flex items-center justify-center rounded-full text-[10px] font-bold font-mono-jb">
-                                        @item.Quantity
-                                    </span>
+                            <div class="mt-3">
+                                <label asp-for="Address">Street address</label>
+                                <input asp-for="Address" required autocomplete="street-address" />
+                            </div>
+                            <div class="checkout-pro__row checkout-pro__row--3 mt-3">
+                                <div>
+                                    <label asp-for="ZipCode">Postal</label>
+                                    <input asp-for="ZipCode" required autocomplete="postal-code" />
                                 </div>
-                                <div class="flex-1">
-                                    <h4 class="font-grotesk font-bold text-sm">@item.ProductName</h4>
-                                    <p class="text-[10px] text-gray-400 font-mono-jb uppercase tracking-widest">@item.ProductType</p>
-                                </div>
-                                <div class="font-mono-jb text-sm font-bold text-right">
-                                    <div>S/@LocalPricing.YapeSoles(item.Subtotal).ToString("0")</div>
-                                    <div class="text-[10px] text-gray-400 font-normal">$@item.Subtotal.ToString("F2")</div>
+                                <div class="checkout-pro__span2">
+                                    <label asp-for="City">City</label>
+                                    <input asp-for="City" required autocomplete="address-level2" />
                                 </div>
                             </div>
                         }
-                    </div>
+                    </section>
 
-                    <div class="space-y-4 border-t border-gray-200 pt-8 text-sm">
-                        <div class="flex justify-between">
-                            <span class="font-light text-gray-500">Yape / Plin</span>
-                            <span class="font-mono-jb font-bold">S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</span>
+                    @if (Model.HasExperienceItems)
+                    {
+                        <section class="checkout-pro__card">
+                            <h2>03 · During the session</h2>
+                            <p class="checkout-pro__help" style="margin-top:0">Sparkling water, a snack, or toast — we’ll have it at the table.</p>
+                            <div class="checkout-pro__addons">
+                                @foreach (var extra in ExperienceAddOns.All)
+                                {
+                                    <button type="submit" form="extras-form" name="sku" value="@extra.Sku" class="checkout-pro__addon">
+                                        <span>@extra.Name</span>
+                                        <strong>S/@LocalPricing.YapeSoles(extra.Usd).ToString("0")</strong>
+                                    </button>
+                                }
+                            </div>
+                            @{
+                                var extrasInCart = Model.CartItems.Where(i => string.Equals(i.ProductType, ExperienceAddOns.ProductType, StringComparison.OrdinalIgnoreCase)).ToList();
+                            }
+                            @if (extrasInCart.Count > 0)
+                            {
+                                <ul class="checkout-pro__extra-list">
+                                    @foreach (var extra in extrasInCart)
+                                    {
+                                        <li>
+                                            <div>
+                                                <div>@extra.ProductName</div>
+                                                <small>× @extra.Quantity · S/@LocalPricing.YapeSoles(extra.Subtotal).ToString("0")</small>
+                                            </div>
+                                            <button type="submit" form="extras-form" formaction="@Url.Page("/Checkout", "RemoveExtra", new { productId = extra.ProductId })">Remove</button>
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                        </section>
+                    }
+
+                    <section class="checkout-pro__card">
+                        <h2>@stepPay · Pay</h2>
+                        <p class="checkout-pro__help" style="margin-top:0">The amount next to the method you pick is what you pay. Yape is the listed soles price — no card fee. Culqi includes Perú 5%. PayPal USD and CAD are on the Canadian account — Visa cap 2.4%.</p>
+                        <div asp-validation-summary="All" class="checkout-pro__error"></div>
+                        <div class="checkout-pro__pay">
+                            <label>
+                                <input type="radio" name="PaymentMethod" value="Yape" checked class="sr-only peer" />
+                                <div class="checkout-pro__pay-card">
+                                    <div>
+                                        <img src="/brand/yape-logo.webp" alt="Yape" width="72" height="22" />
+                                        <div class="checkout-pro__pay-title">Yape / Plin · Perú</div>
+                                        <p>Soles after you place the order. QR on WhatsApp. No Visa fee.</p>
+                                    </div>
+                                    <div class="checkout-pro__pay-amt">
+                                        <strong>S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</strong>
+                                        <span>Best in Perú</span>
+                                    </div>
+                                </div>
+                            </label>
+                            <label>
+                                <input type="radio" name="PaymentMethod" value="Culqi" class="sr-only peer" />
+                                <div class="checkout-pro__pay-card">
+                                    <div>
+                                        <div class="checkout-pro__pay-title">Culqi · Visa / Mastercard</div>
+                                        <p>Local cards in soles. Perú card surcharge 5%.</p>
+                                        @if (!Model.CulqiReady)
+                                        {
+                                            <p class="checkout-pro__warn">Culqi keys not on this server yet — use Yape until secrets/culqi.json is filled in.</p>
+                                        }
+                                    </div>
+                                    <div class="checkout-pro__pay-amt">
+                                        <strong>S/@Model.CulqiTotalSoles.ToString("0")</strong>
+                                        <span>incl. 5%</span>
+                                    </div>
+                                </div>
+                            </label>
+                            <label>
+                                <input type="radio" name="PaymentMethod" value="PayPalUsd" class="sr-only peer" />
+                                <div class="checkout-pro__pay-card">
+                                    <div>
+                                        <img src="/brand/paypal-logo.svg" alt="PayPal" width="90" height="22" />
+                                        <div class="checkout-pro__pay-title">PayPal · USD</div>
+                                        <p>US / rest of world. Canadian PayPal — Visa surcharge capped at 2.4%.</p>
+                                    </div>
+                                    <div class="checkout-pro__pay-amt">
+                                        <strong>$@Model.PayPalUsdTotal.ToString("0.00")</strong>
+                                        <span>incl. 2.4%</span>
+                                    </div>
+                                </div>
+                            </label>
+                            <label>
+                                <input type="radio" name="PaymentMethod" value="PayPalCad" class="sr-only peer" />
+                                <div class="checkout-pro__pay-card">
+                                    <div>
+                                        <img src="/brand/paypal-logo.svg" alt="PayPal" width="90" height="22" />
+                                        <div class="checkout-pro__pay-title">PayPal · CAD</div>
+                                        <p>Canada. Visa/PayPal surcharge capped at 2.4%.</p>
+                                    </div>
+                                    <div class="checkout-pro__pay-amt">
+                                        <strong>C$@Model.PayPalCadTotal.ToString("0.00")</strong>
+                                        <span>incl. 2.4%</span>
+                                    </div>
+                                </div>
+                            </label>
                         </div>
-                        <div class="flex justify-between">
-                            <span class="font-light text-gray-500">PayPal</span>
-                            <span class="font-mono-jb font-bold">C$@LocalPricing.Cad(Model.CartTotal).ToString("0.00")</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="font-light text-gray-500">Shipping</span>
-                            <span class="text-green-600 font-mono-jb font-bold">FREE</span>
-                        </div>
-                        <div class="flex justify-between border-t border-black pt-4 mt-6">
-                            <span class="text-xl font-grotesk font-bold">Yape total</span>
-                            <span class="text-2xl font-grotesk font-bold">S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</span>
-                        </div>
-                        <p class="text-[10px] text-gray-400 font-mono-jb uppercase tracking-widest m-0">
-                            @(Model.IsWorkshopOnlyCart
-                                ? "Taxes included · " + LocalPricing.WorkshopVisaFeeNote + " on card"
-                                : "Taxes included · Yape is the local soles price")
-                        </p>
-                    </div>
-                </div>
+                    </section>
+
+                    <button type="submit" id="checkout-submit" class="checkout-pro__submit">
+                        Pay with Yape — S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")
+                    </button>
+                    <p class="checkout-pro__trust">Encrypted payment · WhatsApp confirmation · 12-hour booking cutoff</p>
+                </form>
             </div>
+
+            <aside class="checkout-pro__aside">
+                <div class="checkout-pro__receipt">
+                    <h2>Your order</h2>
+                    <div class="checkout-pro__lines">
+                        @foreach (var item in Model.CartItems)
+                        {
+                            <div class="checkout-pro__line">
+                                <div class="checkout-pro__thumb">
+                                    <img src="@item.ImageUrl" alt="" onerror="this.style.display='none'">
+                                </div>
+                                <div class="checkout-pro__line-copy">
+                                    <div>@item.ProductName</div>
+                                    @if (!string.IsNullOrWhiteSpace(item.Description))
+                                    {
+                                        <small>@item.Description</small>
+                                    }
+                                    else
+                                    {
+                                        <small>× @item.Quantity</small>
+                                    }
+                                </div>
+                                <div class="checkout-pro__line-price">$@item.Subtotal.ToString("0.00")</div>
+                            </div>
+                        }
+                    </div>
+                    <div class="checkout-pro__totals">
+                        <div><span>Subtotal</span><span>$@Model.CartTotal.ToString("0.00")</span></div>
+                        <div><span>Shipping</span><span>Free</span></div>
+                        <div class="bag-pro__due"><span>Yape / listed</span><span>S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</span></div>
+                    </div>
+                    <p class="checkout-pro__receipt-note">Card totals, including the surcharge, sit on the payment method you choose.</p>
+                    @if (Model.HasCoffeeItems)
+                    {
+                        <div class="mt-6">
+                            <partial name="_CoffeeLabBoard" model="Model.LabBoard" />
+                        </div>
+                    }
+                </div>
+            </aside>
         </div>
     </div>
 </div>
 
-<style>
-    .custom-scrollbar::-webkit-scrollbar {
-        width: 2px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-track {
-        background: #f1f1f1;
-    }
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-        background: #ddd;
-    }
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-        background: #bbb;
-    }
-</style>
-
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    @if (Model.CulqiReady)
+    {
+        <script src="https://checkout.culqi.com/js/v4"></script>
+    }
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const firstName = document.getElementById('FirstName');
@@ -245,22 +266,93 @@
             const fullName = document.getElementById('FullName');
 
             function updateFullName() {
-                fullName.value = (firstName.value + ' ' + lastName.value).trim();
+                if (!fullName) return;
+                fullName.value = ((firstName?.value || '') + ' ' + (lastName?.value || '')).trim();
             }
 
             firstName?.addEventListener('input', updateFullName);
             lastName?.addEventListener('input', updateFullName);
 
             const submit = document.getElementById('checkout-submit');
+            const form = document.getElementById('checkout-form');
+            const tokenInput = document.getElementById('CulqiToken');
             const yapeTotal = 'S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")';
-            const paypalTotal = 'C$@LocalPricing.Cad(Model.CartTotal).ToString("0.00")';
+            const culqiTotal = 'S/@Model.CulqiTotalSoles.ToString("0")';
+            const paypalUsdTotal = '$@Model.PayPalUsdTotal.ToString("0.00")';
+            const paypalCadTotal = 'C$@Model.PayPalCadTotal.ToString("0.00")';
+            const culqiReady = @(Model.CulqiReady ? "true" : "false");
+
+            function selectedMethod() {
+                return document.querySelector('input[name="PaymentMethod"]:checked')?.value;
+            }
+
+            function syncSubmitLabel() {
+                if (!submit) return;
+                const method = selectedMethod();
+                if (method === 'Yape') submit.textContent = 'Pay with Yape — ' + yapeTotal;
+                else if (method === 'Culqi') submit.textContent = 'Pay with Culqi — ' + culqiTotal;
+                else if (method === 'PayPalUsd') submit.textContent = 'Pay with PayPal — ' + paypalUsdTotal;
+                else if (method === 'PayPalCad' || method === 'PayPal') submit.textContent = 'Pay with PayPal — ' + paypalCadTotal;
+            }
+
             document.querySelectorAll('input[name="PaymentMethod"]').forEach(function (input) {
-                input.addEventListener('change', function () {
-                    if (!submit) return;
-                    if (this.value === 'Yape') submit.textContent = 'Complete order — Yape ' + yapeTotal;
-                    else if (this.value === 'PayPal') submit.textContent = 'Pay with PayPal — ' + paypalTotal;
-                    else submit.textContent = 'Pay with card — ' + yapeTotal;
+                input.addEventListener('change', syncSubmitLabel);
+            });
+            syncSubmitLabel();
+
+            function configureCulqi() {
+                if (typeof Culqi === 'undefined') return false;
+                Culqi.publicKey = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.CulqiPublicKey ?? ""));
+                const settings = {
+                    title: 'Purple Bean Coffee',
+                    currency: 'PEN',
+                    amount: @Model.CulqiAmountCentimos
+                };
+                @if (!string.IsNullOrWhiteSpace(Model.CulqiRsaId) && !string.IsNullOrWhiteSpace(Model.CulqiRsaPublicKey))
+                {
+                    <text>
+                    settings.xculqirsaid = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.CulqiRsaId));
+                    settings.rsapublickey = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.CulqiRsaPublicKey));
+                    </text>
+                }
+                Culqi.settings(settings);
+                Culqi.options({
+                    lang: 'auto',
+                    installments: false,
+                    paymentMethods: {
+                        tarjeta: true,
+                        yape: false,
+                        bancaMovil: false,
+                        agente: false,
+                        billetera: false,
+                        cuotealo: false
+                    }
                 });
+                return true;
+            }
+
+            window.culqi = function () {
+                if (typeof Culqi === 'undefined') return;
+                if (Culqi.token && Culqi.token.id) {
+                    tokenInput.value = Culqi.token.id;
+                    try { Culqi.close(); } catch (e) {}
+                    form.submit();
+                } else if (Culqi.error) {
+                    const msg = Culqi.error.user_message || Culqi.error.merchant_message || 'Culqi could not tokenize the card.';
+                    alert(msg);
+                }
+            };
+
+            form?.addEventListener('submit', function (e) {
+                updateFullName();
+                if (selectedMethod() !== 'Culqi') return;
+                if (tokenInput.value) return;
+                e.preventDefault();
+                if (!culqiReady || !configureCulqi()) {
+                    alert('Culqi is not connected yet. Use Yape for now.');
+                    return;
+                }
+                Culqi.open();
             });
         });
     </script>

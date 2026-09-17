@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using TheBestBean.Data;
 using TheBestBean.Models;
+using TheBestBean.Services;
 
 namespace TheBestBean.Pages
 {
@@ -13,10 +14,12 @@ namespace TheBestBean.Pages
     public class GreenBeansModel : PageModel
     {
         private readonly TheBestBeanContext _context;
+        private readonly CoffeeFreshnessService _freshness;
 
-        public GreenBeansModel(TheBestBeanContext context)
+        public GreenBeansModel(TheBestBeanContext context, CoffeeFreshnessService freshness)
         {
             _context = context;
+            _freshness = freshness;
         }
 
         [BindProperty(SupportsGet = true)]
@@ -29,6 +32,8 @@ namespace TheBestBean.Pages
 
         public Dictionary<string, string> PageContent { get; set; } = new Dictionary<string, string>();
         public List<FlavorZone> FlavorZones { get; set; } = new List<FlavorZone>();
+        public CoffeeLabBoard LabBoard { get; set; } = new();
+        public Dictionary<int, CoffeeLotStatus> LotsById { get; set; } = new();
 
         public async Task OnGetAsync()
         {
@@ -40,6 +45,9 @@ namespace TheBestBean.Pages
 
             PageContent = await _context.SiteContent.Where(c => c.Page == "GreenBeans").ToDictionaryAsync(c => c.Key, c => c.Value);
             FlavorZones = await _context.FlavorZones.ToListAsync();
+            LabBoard = await _freshness.LiveBoardAsync();
+            LotsById = LabBoard.Lots.ToDictionary(l => l.CoffeeBeanId);
+            ViewData["CoffeeLots"] = LotsById;
         }
 
         public async Task<IActionResult> OnPostDeleteAsync(int id)

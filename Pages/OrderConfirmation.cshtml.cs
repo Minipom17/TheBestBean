@@ -20,9 +20,15 @@ namespace TheBestBean.Pages
         public string CustomerName { get; set; } = string.Empty;
         public string CustomerEmail { get; set; } = string.Empty;
         public decimal OrderTotal { get; set; }
+        public decimal CardSurcharge { get; set; }
         public string PaymentMethod { get; set; } = "Yape";
         public string PaymentStatus { get; set; } = "Pending";
         public List<CartItem> OrderItems { get; set; } = new List<CartItem>();
+        public bool IsPayPalUsd => PayPalService.IsUsd(PaymentMethod);
+        public bool IsPayPal => PayPalService.IsPayPalMethod(PaymentMethod);
+        public bool IsCulqi => CulqiService.IsCulqiMethod(PaymentMethod);
+        public decimal PayPalUsdCharged => OrderTotal + CardSurcharge;
+        public decimal PayPalCadCharged => LocalPricing.Cad(OrderTotal) + CardSurcharge;
 
         public async Task<IActionResult> OnGetAsync(string? order)
         {
@@ -39,6 +45,7 @@ namespace TheBestBean.Pages
                 CustomerName = saved.FullName;
                 CustomerEmail = saved.Email;
                 OrderTotal = saved.TotalAmount;
+                CardSurcharge = saved.CardSurcharge;
                 PaymentMethod = saved.PaymentMethod;
                 PaymentStatus = saved.PaymentStatus;
                 OrderItems = saved.Items.Select(i => new CartItem

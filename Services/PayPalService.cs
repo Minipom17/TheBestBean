@@ -25,15 +25,29 @@ namespace TheBestBean.Services
 
         public bool IsConfigured => _options.IsConfigured;
 
-        public async Task<string?> CreateCheckoutUrlAsync(Order order, decimal cadAmount, string publicBaseUrl, CancellationToken ct = default)
+        public static bool IsPayPalMethod(string? paymentMethod) =>
+            !string.IsNullOrEmpty(paymentMethod)
+            && paymentMethod.StartsWith("PayPal", StringComparison.OrdinalIgnoreCase);
+
+        public static bool IsUsd(string? paymentMethod) =>
+            paymentMethod is "PayPalUsd" or "PayPal-USD" or "PaypalUsd";
+
+        public async Task<string?> CreateCheckoutUrlAsync(Order order, decimal amount, string currencyCode, string publicBaseUrl, CancellationToken ct = default)
         {
             if (!IsConfigured) return null;
+
+            var currency = currencyCode.Trim().ToUpperInvariant();
+            if (currency is not ("USD" or "CAD"))
+            {
+                _logger.LogError("PayPal currency {Currency} is not enabled", currency);
+                return null;
+            }
 
             var token = await GetAccessTokenAsync(ct);
             if (token == null) return null;
 
             var back = publicBaseUrl.TrimEnd('/');
-            var cad = cadAmount.ToString("0.00", CultureInfo.InvariantCulture);
+            var value = amount.ToString("0.00", CultureInfo.InvariantCulture);
             var payload = new
             {
                 intent = "CAPTURE",
@@ -46,8 +60,8 @@ namespace TheBestBean.Services
                         description = $"Purple Bean {order.OrderNumber}",
                         amount = new
                         {
-                            currency_code = "CAD",
-                            value = cad
+                            currency_code = currency,
+                            value
                         }
                     }
                 },
@@ -132,7 +146,7 @@ namespace TheBestBean.Services
                 return cached;
             }
 
-            var raw = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{_options.ClientId}:{_options.Secret}"));
+            var raw = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{_options.ResolvedClientId}:{_options.ResolvedSecret}"));
             using var request = new HttpRequestMessage(HttpMethod.Post, "v1/oauth2/token");
             request.Headers.Authorization = new AuthenticationHeaderValue("Basic", raw);
             request.Content = new FormUrlEncodedContent(new Dictionary<string, string>

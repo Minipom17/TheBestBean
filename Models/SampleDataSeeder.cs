@@ -1081,5 +1081,71 @@ namespace TheBestBean.Models
                 });
             }
         }
+
+        public static async Task SeedDemoRoastInventoryAsync(TheBestBeanContext context)
+        {
+            if (await context.BeanInventories.AnyAsync())
+            {
+                return;
+            }
+
+            var beans = await context.CoffeeBean.ToListAsync();
+            if (beans.Count == 0)
+            {
+                return;
+            }
+
+            CoffeeBean? Find(params string[] needles) =>
+                beans.FirstOrDefault(b => needles.Any(n => (b.Name ?? "").Contains(n, StringComparison.OrdinalIgnoreCase)));
+
+            var today = DateTime.UtcNow.Date;
+            var rows = new (CoffeeBean? Bean, decimal Kg, (int DaysAgo, string Level, decimal Grams)[] Roasts)[]
+            {
+                (Find("Catarata"), 3.2m, new[] { (10, "Light", 820m), (20, "profile", 780m) }),
+                (Find("SL28"), 4.0m, new[] { (5, "Light", 900m) }),
+                (Find("HIGHLAND", "SL09"), 2.8m, new[] { (20, "Medium", 740m) }),
+                (Find("NUMBER 13", "Number 13"), 1.6m, Array.Empty<(int, string, decimal)>()),
+                (Find("Punch"), 0.9m, new[] { (45, "Medium", 510m) }),
+                (Find("Cusco [Bourbon]"), 2.1m, new[] { (3, "profile", 600m) }),
+            };
+
+            foreach (var row in rows)
+            {
+                if (row.Bean == null)
+                {
+                    continue;
+                }
+
+                var inv = new BeanInventory
+                {
+                    Name = row.Bean.Name,
+                    CoffeeBeanId = row.Bean.Id,
+                    Country = "Peru",
+                    Process = row.Bean.ProcessingMethod,
+                    Variety = row.Bean.Variety,
+                    Farmer = row.Bean.Producer,
+                    TotalKg = row.Kg,
+                    IsActive = true,
+                    CreatedDate = DateTime.UtcNow,
+                    LastUpdated = DateTime.UtcNow
+                };
+                context.BeanInventories.Add(inv);
+                await context.SaveChangesAsync();
+
+                foreach (var roast in row.Roasts)
+                {
+                    context.RoastBatches.Add(new RoastBatch
+                    {
+                        BeanInventoryId = inv.Id,
+                        RoastDate = today.AddDays(-roast.DaysAgo),
+                        RoastLevel = roast.Level,
+                        RoastedWeightGrams = roast.Grams,
+                        GreenWeightGrams = Math.Round(roast.Grams / 0.86m, 0)
+                    });
+                }
+            }
+
+            await context.SaveChangesAsync();
+        }
     }
 }

@@ -51,9 +51,16 @@
             <partial name="_YapePrice" model="new DualPriceModel { Usd = Model.BasePriceUSD, Pen = Model.BasePricePEN, Compact = true, From = true, ShowCard = false }" />
         </div>
 
-        <p class="text-gray-600 dark:text-mist text-[11px] font-mono-tech leading-relaxed m-0 mt-2 mb-6" data-entity-id="@Model.Id" data-entity-type="CoffeeBean" data-editable="FlavorProfile">
+        <p class="text-gray-600 dark:text-mist text-[11px] font-mono-tech leading-relaxed m-0 mt-2 mb-2" data-entity-id="@Model.Id" data-entity-type="CoffeeBean" data-editable="FlavorProfile">
             @Model.FlavorProfile
         </p>
+        @{
+            var lots = ViewData["CoffeeLots"] as Dictionary<int, CoffeeLotStatus>;
+            if (lots != null && lots.TryGetValue(Model.Id, out var lot))
+            {
+                <p class="coffee-card-lot">@lot.CardLine</p>
+            }
+        }
 
         <!-- Quick Add Form -->
         <form method="post" asp-page="/Cart" asp-page-handler="AddToCart" class="mt-auto w-full">
@@ -62,6 +69,7 @@
             <input type="hidden" name="productType" value="Bean" />
             <input type="hidden" name="price" value="@Model.BasePriceUSD" />
             <input type="hidden" name="weight" value="100g" />
+            <input type="hidden" name="roastLevel" value="profile" />
             <input type="hidden" name="imageUrl" value="@Model.ImageUrl" />
             <input type="hidden" name="description" value="@Model.FlavorProfile" />
             <input type="hidden" name="quantity" value="1" />

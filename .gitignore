@@ -3,6 +3,9 @@ bin/
 obj/
 publish/
 
+# Local verify output
+tmp-verify-paypal/
+
 # Deployment archives (temporary files)
 deployment_archives/*.tar.gz
 *.tar.gz

@@ -13,11 +13,13 @@ namespace TheBestBean.Pages
     {
         private readonly CartService _cartService;
         private readonly TheBestBean.Data.TheBestBeanContext _context;
+        private readonly BookingCalendarService _calendar;
 
-        public TourModel(CartService cartService, TheBestBean.Data.TheBestBeanContext context)
+        public TourModel(CartService cartService, TheBestBean.Data.TheBestBeanContext context, BookingCalendarService calendar)
         {
             _cartService = cartService;
             _context = context;
+            _calendar = calendar;
         }
 
         public Experience? Tour { get; set; }
@@ -30,8 +32,10 @@ namespace TheBestBean.Pages
         public IReadOnlyList<string> WorkshopMaterials { get; set; } = Array.Empty<string>();
         public IReadOnlyList<LabRecipeCard> LabRecipes { get; set; } = Array.Empty<LabRecipeCard>();
         public ExperienceVenue.Venue? Venue { get; set; }
+        public List<ExperienceSlot> OpenSlots { get; set; } = new();
+        public string BookingError { get; set; } = string.Empty;
 
-        public IActionResult OnGet(string id)
+        public async Task<IActionResult> OnGetAsync(string id)
         {
             if (string.IsNullOrEmpty(id) || !int.TryParse(id, out int tourId))
             {
@@ -60,6 +64,8 @@ namespace TheBestBean.Pages
                 }
 
                 Venue = ExperienceVenue.Resolve(Tour);
+                await _calendar.EnsureUpcomingAsync(Tour.Id);
+                OpenSlots = await _calendar.OpenSlotsAsync(Tour.Id);
 
                 ApplyTourSeo(Tour);
                 Ga4Ecommerce.SetPageEvent(ViewData, "view_item", Ga4Ecommerce.Payload(new[]
@@ -354,23 +360,41 @@ namespace TheBestBean.Pages
             return "https://purplebean.coffee" + (path.StartsWith('/') ? path : "/" + path);
         }
 
-        public IActionResult OnPostAddToCart(int tourId, string title, decimal price, string date, string imageUrl, int participants = 1)
+        public async Task<IActionResult> OnPostAddToCartAsync(int tourId, string title, decimal price, string imageUrl, int slotId, int participants = 1)
         {
+            participants = Math.Clamp(participants, 1, CartService.MaxExperienceGuests);
+            var slot = await _calendar.FindOpenSlotAsync(slotId, participants);
+            if (slot == null)
+            {
+                Tour = _context.Experiences.FirstOrDefault(e => e.Id == tourId);
+                if (Tour != null)
+                {
+                    await _calendar.EnsureUpcomingAsync(Tour.Id);
+                    OpenSlots = await _calendar.OpenSlotsAsync(Tour.Id);
+                    Venue = ExperienceVenue.Resolve(Tour);
+                }
+                BookingError = "That time is no longer open. Pick another date on the calendar.";
+                PageContent = _context.SiteContent.Where(c => c.Page == "Tour").ToDictionary(c => c.Key, c => c.Value);
+                return Page();
+            }
+
+            var when = BookingCalendarService.FormatSlot(slot.StartAt);
             var cartItem = new CartItem
             {
-                ProductId = tourId + 1000, // Offset to avoid ID collisions with shop products
-                ProductName = $"{title} ({date})",
+                ProductId = tourId + 1000,
+                ProductName = $"{title} · {when}",
                 ProductType = "Experience",
                 Price = price,
                 Quantity = participants,
                 ImageUrl = string.IsNullOrEmpty(imageUrl) ? "/brand/placeholder.jpg" : imageUrl,
-                Description = $"Booking for {participants} person(s) on {date}"
+                Description = $"{participants} guest{(participants == 1 ? "" : "s")} · {when}",
+                SlotId = slot.Id
             };
 
             _cartService.AddToCart(HttpContext.Session, cartItem);
             Ga4Ecommerce.QueueAddToCart(TempData, cartItem);
 
-            TempData["CartMessage"] = $"{participants}x {title} booking added to cart!";
+            TempData["CartMessage"] = $"{title} reserved for {when}";
             return RedirectToPage("/Cart");
         }
     }

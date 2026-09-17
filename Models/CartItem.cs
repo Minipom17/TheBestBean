@@ -10,6 +10,10 @@ namespace TheBestBean.Models
         public string ImageUrl { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string Weight { get; set; } = string.Empty;
+        /// <summary>Experience calendar slot. Zero for shop items.</summary>
+        public int SlotId { get; set; }
+        /// <summary>Lab profile, light, medium, or dark. Empty for non-coffee.</summary>
+        public string RoastLevel { get; set; } = string.Empty;
 
         public decimal Subtotal => Price * Quantity;
     }

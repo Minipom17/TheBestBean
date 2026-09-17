@@ -1,0 +1,23 @@
+@page
+@model TheBestBean.Pages.PayPalTestModel
+@{
+    ViewData["Title"] = "PayPal $1 test";
+    ViewData["Robots"] = "noindex, nofollow";
+}
+
+<div class="checkout-pro">
+    <div class="checkout-pro__wrap" style="max-width: 36rem;">
+        <a asp-page="/Cart" class="checkout-pro__back">
+            <i class="bi bi-arrow-left"></i> Bag
+        </a>
+        <header class="checkout-pro__head">
+            <p class="checkout-pro__kicker">Internal · not in the shop</p>
+            <h1>PayPal $1 test</h1>
+            <p class="checkout-pro__lede">Puts a $1.00 line in your bag (PayPal USD is about $@Model.PayPalUsdTotal.ToString("0.00") with 2.4%). This is a real charge. Refund it in PayPal after if you want the dollar back.</p>
+        </header>
+        <form method="post" asp-route-pb_internal="1">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="checkout-pro__submit">Add $1 and go to checkout</button>
+        </form>
+    </div>
+</div>

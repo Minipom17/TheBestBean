@@ -49,7 +49,7 @@ namespace TheBestBean.Pages
 
             saved.PaymentStatus = "Failed";
             await _db.SaveChangesAsync();
-            TempData["MpError"] = "PayPal did not complete the CAD payment. Try again or use Yape.";
+            TempData["MpError"] = "PayPal did not complete the payment. Try again or use Yape.";
             return RedirectToPage("/Checkout");
         }
     }

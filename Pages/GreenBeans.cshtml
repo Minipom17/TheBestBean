@@ -2,7 +2,7 @@
 @model GreenBeansModel
 @{
     ViewData["Title"] = "Coffee";
-    ViewData["MetaDescription"] = "Shop specialty Peruvian coffee from Purple Bean Coffee. Single-origin beans from La Convención and Cajamarca, SCA scored, roasted in Cusco. Available roasted or as wholesale green beans.";
+    ViewData["MetaDescription"] = "Shop 86–91 point Peruvian coffee from Purple Bean. We source green, profile the roast, roast after you order, and ship the next day. Pick our roast or yours.";
 }
 @Html.AntiForgeryToken()
 
@@ -310,6 +310,8 @@
     
 </style>
 
+<partial name="_HowWeRoast" />
+<partial name="_CoffeeLabBoard" model="Model.LabBoard" />
 
 <!-- Section: Flavor Explorer (Receipt Style & Paper Background) -->
         <section class="flavor-explorer w-full dark:bg-night-2 border-y border-black dark:border-[rgba(214,208,200,0.12)] flex items-center justify-center py-4 lg:py-6 min-h-[calc(100vh-64px)]">
@@ -980,4 +982,30 @@
             processCurrentPosition();
         }
     });
+</script>
+<script type="application/ld+json">
+{
+  "@@context": "https://schema.org",
+  "@@type": "ItemList",
+  "itemListElement": [
+    @for(var i = 0; i < Model.Products.Count; i++)
+    {
+        var prod = Model.Products[i];
+        <text>
+        {
+          "@@type": "ListItem",
+          "position": @(i + 1),
+          "item": {
+            "@@type": "Product",
+            "name": "@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(prod.Name))",
+            "description": "@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(prod.FlavorProfile))",
+            "image": "@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(prod.ImageUrl))",
+            "url": "https://purplebean.coffee/Product?id=@prod.Id"
+          }
+        }
+        @(i < Model.Products.Count - 1 ? "," : "")
+        </text>
+    }
+  ]
+}
 </script>

@@ -56,6 +56,8 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 // Register services
 builder.Services.AddScoped<FarmProfileService>();
 builder.Services.AddScoped<TheBestBean.Services.CartService>();
+builder.Services.AddScoped<CoffeeFreshnessService>();
+builder.Services.AddScoped<BookingCalendarService>();
 builder.Services.AddSingleton(sp =>
 {
     var env = sp.GetRequiredService<IHostEnvironment>();
@@ -94,15 +96,68 @@ builder.Services.AddSingleton(sp =>
             opt.Mode = string.IsNullOrWhiteSpace(file.Mode) ? "Live" : file.Mode;
             opt.ClientId = file.ClientId;
             opt.Secret = file.Secret;
+            opt.Sandbox = file.Sandbox;
+            opt.Live = file.Live;
         }
     }
     var envId = Environment.GetEnvironmentVariable("PAYPAL_CLIENT_ID");
     var envSecret = Environment.GetEnvironmentVariable("PAYPAL_SECRET");
-    if (!string.IsNullOrWhiteSpace(envId)) opt.ClientId = envId;
-    if (!string.IsNullOrWhiteSpace(envSecret)) opt.Secret = envSecret;
+    if (!string.IsNullOrWhiteSpace(envId))
+    {
+        opt.ClientId = envId;
+        if (opt.IsSandbox)
+        {
+            opt.Sandbox ??= new PayPalAccountOptions();
+            opt.Sandbox.ClientId = envId;
+        }
+        else
+        {
+            opt.Live ??= new PayPalAccountOptions();
+            opt.Live.ClientId = envId;
+        }
+    }
+    if (!string.IsNullOrWhiteSpace(envSecret))
+    {
+        opt.Secret = envSecret;
+        if (opt.IsSandbox)
+        {
+            opt.Sandbox ??= new PayPalAccountOptions();
+            opt.Sandbox.Secret = envSecret;
+        }
+        else
+        {
+            opt.Live ??= new PayPalAccountOptions();
+            opt.Live.Secret = envSecret;
+        }
+    }
     return opt;
 });
 builder.Services.AddHttpClient<PayPalService>();
+builder.Services.AddSingleton(sp =>
+{
+    var env = sp.GetRequiredService<IHostEnvironment>();
+    var opt = new CulqiOptions();
+    var secretPath = Path.Combine(env.ContentRootPath, "secrets", "culqi.json");
+    if (File.Exists(secretPath))
+    {
+        var file = System.Text.Json.JsonSerializer.Deserialize<CulqiOptions>(
+            File.ReadAllText(secretPath),
+            new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        if (file != null)
+        {
+            if (!string.IsNullOrWhiteSpace(file.PublicKey)) opt.PublicKey = file.PublicKey;
+            if (!string.IsNullOrWhiteSpace(file.SecretKey)) opt.SecretKey = file.SecretKey;
+            if (!string.IsNullOrWhiteSpace(file.RsaId)) opt.RsaId = file.RsaId;
+            if (!string.IsNullOrWhiteSpace(file.RsaPublicKey)) opt.RsaPublicKey = file.RsaPublicKey;
+        }
+    }
+    var envPk = Environment.GetEnvironmentVariable("CULQI_PUBLIC_KEY");
+    var envSk = Environment.GetEnvironmentVariable("CULQI_SECRET_KEY");
+    if (!string.IsNullOrWhiteSpace(envPk)) opt.PublicKey = envPk;
+    if (!string.IsNullOrWhiteSpace(envSk)) opt.SecretKey = envSk;
+    return opt;
+});
+builder.Services.AddHttpClient<CulqiService>();
 
 // Add Response Compression
 builder.Services.AddResponseCompression(options =>
@@ -141,6 +196,10 @@ try
         // Clean seed for fresh DB
         await SampleDataSeeder.SeedSampleDataAsync(context);
         await SampleDataSeeder.FixDataAsync(context);
+        if (app.Environment.IsDevelopment())
+        {
+            await SampleDataSeeder.SeedDemoRoastInventoryAsync(context);
+        }
         
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();

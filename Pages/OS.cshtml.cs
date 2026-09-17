@@ -131,6 +131,7 @@ namespace TheBestBean.Pages
                     beanId = r.BeanInventoryId,
                     beanName = r.BeanInventory.Name,
                     date = r.RoastDate.ToString("yyyy-MM-dd"),
+                    roastLevel = r.RoastLevel,
                     roastTime = r.RoastTimeSeconds,
                     data = r.TemperatureDataJson,
                     events = r.EventsJson
@@ -164,7 +165,8 @@ namespace TheBestBean.Pages
                 DryEndTime = dto.DryEndTime,
                 TemperatureDataJson = JsonSerializer.Serialize(dto.TemperatureData ?? new List<object>()),
                 EventsJson = JsonSerializer.Serialize(dto.Events ?? new List<object>()),
-                Notes = dto.Notes
+                Notes = dto.Notes,
+                RoastLevel = dto.RoastLevel
             };
 
             _context.RoastBatches.Add(roast);
@@ -295,6 +297,7 @@ namespace TheBestBean.Pages
         public List<object>? TemperatureData { get; set; }
         public List<object>? Events { get; set; }
         public string? Notes { get; set; }
+        public string? RoastLevel { get; set; }
     }
 
     public class CuppingDto
