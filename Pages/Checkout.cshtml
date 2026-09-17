@@ -138,7 +138,7 @@
 
                     <section class="checkout-pro__card">
                         <h2>@stepPay · Pay</h2>
-                        <p class="checkout-pro__help" style="margin-top:0">The amount next to the method you pick is what you pay. Yape is the listed soles price — no card fee. Culqi includes Perú 5%. PayPal USD and CAD are on the Canadian account — Visa cap 2.4%.</p>
+                        <p class="checkout-pro__help" style="margin-top:0">The amount next to the method you pick is what you pay. Yape is the listed soles price — no card fee. Culqi includes Perú 5%. PayPal USD and CAD include Visa 2.4% worldwide.</p>
                         <div asp-validation-summary="All" class="checkout-pro__error"></div>
                         <div class="checkout-pro__pay">
                             <label>
@@ -178,7 +178,7 @@
                                     <div>
                                         <img src="/brand/paypal-logo.svg" alt="PayPal" width="90" height="22" />
                                         <div class="checkout-pro__pay-title">PayPal · USD</div>
-                                        <p>US / rest of world. Canadian PayPal — Visa surcharge capped at 2.4%.</p>
+                                        <p>US / rest of world. Visa surcharge capped at 2.4%.</p>
                                     </div>
                                     <div class="checkout-pro__pay-amt">
                                         <strong>$@Model.PayPalUsdTotal.ToString("0.00")</strong>
@@ -192,7 +192,7 @@
                                     <div>
                                         <img src="/brand/paypal-logo.svg" alt="PayPal" width="90" height="22" />
                                         <div class="checkout-pro__pay-title">PayPal · CAD</div>
-                                        <p>Canada. Visa/PayPal surcharge capped at 2.4%.</p>
+                                        <p>World · Visa/PayPal surcharge capped at 2.4%.</p>
                                     </div>
                                     <div class="checkout-pro__pay-amt">
                                         <strong>C$@Model.PayPalCadTotal.ToString("0.00")</strong>
@@ -237,7 +237,10 @@
                     </div>
                     <div class="checkout-pro__totals">
                         <div><span>Subtotal</span><span>$@Model.CartTotal.ToString("0.00")</span></div>
-                        <div><span>Shipping</span><span>Free</span></div>
+                        @if (!skipShip)
+                        {
+                            <div><span>Shipping</span><span>Free</span></div>
+                        }
                         <div class="bag-pro__due"><span>Yape / listed</span><span>S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</span></div>
                     </div>
                     <p class="checkout-pro__receipt-note">Card totals, including the surcharge, sit on the payment method you choose.</p>

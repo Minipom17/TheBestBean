@@ -631,14 +631,18 @@
         var hideDispatchDock = Context.Request.Path.StartsWithSegments("/Checkout")
             || Context.Request.Path.StartsWithSegments("/Cart")
             || Context.Request.Path.StartsWithSegments("/Tour");
+        var experiencesPath = Context.Request.Path.StartsWithSegments("/Experiences");
     }
     @if (!hideDispatchDock)
     {
-    <!-- Unified Delivery & WhatsApp Float Button -->
-    <a href="https://wa.me/51993779381" target="_blank" class="delivery-float" title="Delivery & WhatsApp Dispatch"
+    <!-- Unified Delivery & WhatsApp Float Button (truck is coffee shipping — hide on experiences) -->
+    <a href="https://wa.me/51993779381" target="_blank" class="delivery-float" title="@(experiencesPath ? "WhatsApp" : "Delivery & WhatsApp Dispatch")"
        onclick="if (typeof gtag === 'function') { gtag('event', 'whatsapp_click', { event_category: 'engagement', event_label: location.pathname, page_path: location.pathname, transport_type: 'beacon' }); gtag('event', 'generate_lead', { event_category: 'engagement', method: 'whatsapp', page_path: location.pathname, transport_type: 'beacon' }); }">
-        <i class="bi bi-truck text-xl"></i>
-        <span>//</span>
+        @if (!experiencesPath)
+        {
+            <i class="bi bi-truck text-xl"></i>
+            <span>//</span>
+        }
         <i class="bi bi-whatsapp text-xl"></i>
     </a>
     }

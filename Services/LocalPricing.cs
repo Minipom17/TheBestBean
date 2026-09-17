@@ -12,7 +12,7 @@ namespace TheBestBean.Services
         /// account, so both use Visa Canada’s 2.4% cap — not the US merchant 3% cap.
         /// Yape is not a card — no surcharge. Disclose on the method they pick, before they pay.
         /// </summary>
-        public const string WorkshopVisaFeeNote = "Visa 5% Perú · 2.4% Canada / USD";
+        public const string WorkshopVisaFeeNote = "Visa 5% Perú · 2.4% worldwide";
         public const decimal PeruCardSurchargeRate = 0.05m;
         public const decimal CanadaCardSurchargeRate = 0.024m;
         public const decimal UsdCardSurchargeRate = CanadaCardSurchargeRate;
@@ -41,9 +41,9 @@ namespace TheBestBean.Services
         public static string CardSurchargeLabel(string currency) =>
             (currency ?? "").Trim().ToUpperInvariant() switch
             {
-                "CAD" => "Visa 2.4% · Canada",
+                "CAD" => "Visa 2.4% · worldwide",
                 "PEN" => "Visa 5% · Perú",
-                _ => "Visa 2.4% · USD"
+                _ => "Visa 2.4% · worldwide"
             };
 
         /// <summary>Culqi/Visa soles total: Yape price plus Perú 5% card surcharge, whole soles.</summary>

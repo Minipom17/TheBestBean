@@ -81,12 +81,12 @@
             
             <!-- Reservation stays first on phones so guests can actually book -->
             <div class="lg:col-span-4 flex flex-col relative">
-                <div class="lg:sticky lg:top-32 bg-white dark:bg-[#121014] rounded-3xl border border-[#ece7df] p-6 md:p-8 shadow-[0_12px_40px_rgba(18,16,20,0.06)]">
+                <div class="tour-reserve lg:sticky lg:top-32 bg-white dark:bg-[#121014] rounded-3xl border border-[#ece7df] p-6 md:p-8 shadow-[0_12px_40px_rgba(18,16,20,0.06)]">
                     <div class="mb-2">
                         <p class="text-[10px] font-mono-jb font-bold uppercase tracking-widest text-[#722EA8] m-0 mb-2">Reserve a seat</p>
                         <div class="flex flex-col items-start gap-1">
                             <partial name="_WorkshopPrice" model="new DualPriceModel { Usd = Model.Tour.Price }" />
-                            <span class="text-[10px] font-mono font-bold tracking-widest text-[#FF3B1F] uppercase mt-1">Visa 5% Perú · 2.4% CAD / USD</span>
+                            <span class="text-[10px] font-mono font-bold tracking-widest text-[#FF3B1F] uppercase mt-1">@LocalPricing.WorkshopVisaFeeNote</span>
                         </div>
                         <p class="text-xs text-v-gray mt-2 m-0">per participant · Cusco time</p>
                     </div>

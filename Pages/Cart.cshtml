@@ -115,7 +115,10 @@
                         <div class="checkout-pro__totals">
                             <div><span>Items</span><span>@Model.ItemCount</span></div>
                             <div><span>Subtotal</span><span>$@Model.CartTotal.ToString("0.00")</span></div>
-                            <div><span>Shipping</span><span>Free</span></div>
+                            @if (!CartService.SkipsShipping(Model.CartItems))
+                            {
+                                <div><span>Shipping</span><span>Free</span></div>
+                            }
                             <div class="bag-pro__due"><span>Yape / listed</span><span>S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</span></div>
                         </div>
                         <p class="checkout-pro__receipt-note">Visa, Culqi, and PayPal amounts — including card fees — show when you pick a payment method.</p>
