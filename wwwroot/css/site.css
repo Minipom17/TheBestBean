@@ -2174,25 +2174,8 @@ html.dark .blog-back:hover {
     opacity: 0.7;
 }
 
-/* Tour reserve card: full-bleed calendar on phones / tablets */
+/* Tour reserve: keep calendar cells roomy on phones (width comes from page px-0) */
 @media (max-width: 767px) {
-    .tour-reserve {
-        position: relative;
-        left: 50%;
-        right: 50%;
-        margin-left: -50vw;
-        margin-right: -50vw;
-        width: 100vw;
-        max-width: 100vw;
-        border: 0 !important;
-        border-radius: 0 !important;
-        box-shadow: none !important;
-        padding: 1.25rem 1rem 1.5rem !important;
-        background: transparent !important;
-    }
-    html.dark .tour-reserve {
-        background: transparent !important;
-    }
     .tour-reserve .booking-cal__weekdays,
     .tour-reserve .booking-cal__grid {
         gap: 6px;
@@ -2200,22 +2183,6 @@ html.dark .blog-back:hover {
     .tour-reserve .booking-cal__day {
         min-height: 2.5rem;
         font-size: 0.95rem;
-    }
-}
-@media (min-width: 768px) and (max-width: 1023px) {
-    .tour-reserve {
-        position: relative;
-        left: 50%;
-        right: 50%;
-        margin-left: -50vw;
-        margin-right: -50vw;
-        width: 100vw;
-        max-width: 100vw;
-        border: 0 !important;
-        border-radius: 0 !important;
-        box-shadow: none !important;
-        padding: 1.5rem 1.5rem 1.75rem !important;
-        background: transparent !important;
     }
 }
 
