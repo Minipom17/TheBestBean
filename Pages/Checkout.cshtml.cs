@@ -39,11 +39,11 @@ namespace TheBestBean.Pages
         public int CulqiAmountCentimos => (int)(CulqiTotalSoles * 100m);
         public decimal CulqiTotalSoles => LocalPricing.CulqiSoles(CartTotal);
         public decimal CulqiSurchargeSoles => CulqiTotalSoles - LocalPricing.YapeSoles(CartTotal);
-        public decimal VisaSurchargeUsd => LocalPricing.CardSurcharge(CartTotal, "USD");
-        public decimal PayPalUsdTotal => LocalPricing.WithCardSurcharge(CartTotal, "USD");
+        public decimal VisaSurchargeUsd => 0m;
+        public decimal PayPalUsdTotal => CartTotal;
         public decimal PayPalCadSubtotal => LocalPricing.Cad(CartTotal);
-        public decimal PayPalCadSurcharge => LocalPricing.CardSurcharge(PayPalCadSubtotal, "CAD");
-        public decimal PayPalCadTotal => LocalPricing.WithCardSurcharge(PayPalCadSubtotal, "CAD");
+        public decimal PayPalCadSurcharge => 0m;
+        public decimal PayPalCadTotal => LocalPricing.Cad(CartTotal);
 
         [BindProperty]
         public string FirstName { get; set; } = string.Empty;

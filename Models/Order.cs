@@ -23,7 +23,7 @@ namespace TheBestBean.Models
         public string PayPalOrderId { get; set; } = string.Empty;
         public string CulqiChargeId { get; set; } = string.Empty;
         public decimal TotalAmount { get; set; }
-        /// <summary>Card surcharge in the charged currency. Zero for Yape. PEN 5%, CAD/USD 2.4% (Canadian PayPal cap).</summary>
+        /// <summary>Difference vs Yape when they paid with Perú card (Culqi). Zero for Yape and PayPal.</summary>
         public decimal CardSurcharge { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

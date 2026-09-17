@@ -1,6 +1,7 @@
 @model DualPriceModel
 @{
-    var soles = LocalPricing.YapeSoles(Model.Usd, Model.Pen);
+    var yape = LocalPricing.YapeSoles(Model.Usd, Model.Pen);
+    var cardPen = LocalPricing.CulqiSoles(Model.Usd, Model.Pen);
     var usdText = Model.Usd == decimal.Truncate(Model.Usd)
         ? Model.Usd.ToString("0")
         : Model.Usd.ToString("0.##");
@@ -11,5 +12,10 @@
         <span class="price-pair__amount">$@usdText</span>
         <span class="price-pair__usd">USD</span>
     </span>
-    <span class="price-pair__soles">S/@soles.ToString("0")</span>
+    <span class="price-pair__soles-col">
+        <span class="price-pair__soles">S/@yape.ToString("0")</span>
+        <span class="price-pair__soles-label">Yape / Plin</span>
+        <span class="price-pair__card-soles">S/@cardPen.ToString("0")</span>
+        <span class="price-pair__card-label">Card · Perú</span>
+    </span>
 </span>

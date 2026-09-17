@@ -1307,7 +1307,7 @@ html.dark .lab-recipe-dropdown__title {
 .price-pair,
 span.font-mono-jb:has(> span.mx-2) {
     display: inline-flex;
-    align-items: baseline;
+    align-items: flex-start;
     column-gap: 0.9em;
     white-space: nowrap;
 }
@@ -1364,6 +1364,42 @@ html.dark .price-pair__usd {
 }
 html.dark .price-pair--tour .price-pair__soles,
 html.dark .price-pair--compact .price-pair__soles {
+    color: #8B8490;
+}
+.price-pair__soles-col {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.12em;
+    line-height: 1;
+}
+.price-pair__soles-label,
+.price-pair__card-label {
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #8B8490;
+}
+.price-pair--tour .price-pair__card-soles {
+    font-size: 1.05rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: #8B8490;
+    margin-top: 0.35em;
+}
+.price-pair--compact .price-pair__card-soles {
+    font-size: 0.85rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: #8B8490;
+    margin-top: 0.28em;
+}
+html.dark .price-pair__card-soles,
+html.dark .price-pair__soles-label,
+html.dark .price-pair__card-label {
     color: #8B8490;
 }
 

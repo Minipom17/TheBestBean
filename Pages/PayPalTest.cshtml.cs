@@ -17,7 +17,7 @@ namespace TheBestBean.Pages
         }
 
         public decimal PriceUsd => CartService.PayPalTestPriceUsd;
-        public decimal PayPalUsdTotal => LocalPricing.WithCardSurcharge(PriceUsd, "USD");
+        public decimal PayPalUsdTotal => PriceUsd;
 
         public IActionResult OnGet()
         {
