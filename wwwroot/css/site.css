@@ -2273,10 +2273,11 @@ html.dark .blog-back:hover {
     }
     .checkout-pro__receipt {
         border-radius: 0;
-        padding: 1.25rem 1rem 1.35rem;
-        margin-left: -0.75rem;
-        margin-right: -0.75rem;
-        width: calc(100% + 1.5rem);
+        padding: 1.25rem 0 1.35rem;
+        margin: 0;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
     }
     .checkout-pro__submit {
         border-radius: 0.35rem;
@@ -2306,6 +2307,7 @@ html.dark .blog-back:hover {
     grid-template-columns: 1fr;
     gap: 1.75rem;
     align-items: start;
+    min-width: 0;
 }
 @media (min-width: 1024px) {
     .checkout-pro__grid {
@@ -2591,14 +2593,17 @@ a.checkout-pro__submit {
     margin: 0.85rem 0 0;
 }
 .checkout-pro__receipt {
-    background: #1C191F;
-    color: #F4F0EA;
-    border-radius: 0.5rem;
+    background: #fff;
+    color: #121014;
+    border-radius: 0;
     padding: 1.45rem 1.35rem 1.5rem;
     position: sticky;
     top: 6.5rem;
-    border-top: 3px solid #722EA8;
+    border: 1px solid #ece7df;
+    border-top: 3px solid #8B6FA0;
     box-shadow: none;
+    box-sizing: border-box;
+    max-width: 100%;
 }
 .checkout-pro__receipt h2 {
     font-size: 10px;
@@ -2606,7 +2611,8 @@ a.checkout-pro__submit {
     text-transform: uppercase;
     margin: 0 0 1.25rem;
     padding-bottom: 0.9rem;
-    border-bottom: 1px solid rgba(255,255,255,0.12);
+    border-bottom: 1px solid #ece7df;
+    color: #121014;
 }
 .checkout-pro__lines {
     display: flex;
@@ -2622,7 +2628,7 @@ a.checkout-pro__submit {
 .checkout-pro__thumb {
     width: 3rem;
     height: 3.5rem;
-    background: rgba(255,255,255,0.08);
+    background: #f4f0ea;
     overflow: hidden;
     border-radius: 0.4rem;
     flex-shrink: 0;
@@ -2640,7 +2646,7 @@ a.checkout-pro__submit {
 }
 .checkout-pro__line-copy small {
     display: block;
-    color: #a8a29a;
+    color: #8a847c;
     font-size: 10px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -2654,21 +2660,21 @@ a.checkout-pro__submit {
     display: flex;
     flex-direction: column;
     gap: 0.45rem;
-    border-top: 1px solid rgba(255,255,255,0.12);
+    border-top: 1px solid #ece7df;
     padding-top: 1rem;
     font-size: 13px;
 }
-.checkout-pro__totals div {
+.checkout-pro__totals > div:not(.checkout-pro__paypair) {
     display: flex;
     justify-content: space-between;
     gap: 1rem;
 }
-.checkout-pro__totals span:first-child { color: #a8a29a; }
+.checkout-pro__totals span:first-child { color: #8a847c; }
 .checkout-pro__receipt-note {
     font-size: 10px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: #a8a29a;
+    color: #8a847c;
     margin: 1.1rem 0 0;
     line-height: 1.45;
 }
@@ -2677,7 +2683,37 @@ a.checkout-pro__submit {
     font-weight: 650;
     margin-top: 0.35rem;
     padding-top: 0.65rem;
-    border-top: 1px solid rgba(255,255,255,0.12);
+    border-top: 1px solid #ece7df;
+}
+.checkout-pro__paypair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem 1rem;
+    margin-top: 0.55rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid #ece7df;
+}
+.checkout-pro__paypair > div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
+    min-width: 0;
+}
+.checkout-pro__paypair > div:only-child {
+    grid-column: 1 / -1;
+}
+.checkout-pro__paypair span {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #8a847c;
+}
+.checkout-pro__paypair strong {
+    font-size: 1.2rem;
+    letter-spacing: -0.03em;
+    font-weight: 650;
+    color: #121014;
 }
 .bag-pro__list {
     display: flex;
@@ -3097,14 +3133,14 @@ html.dark .lab-board__grind {
 .checkout-pro__aside .lab-board h2 { font-size: 1.05rem; color: inherit; }
 .checkout-pro__aside .lab-board__lede,
 .checkout-pro__aside .fresh-timeline__phase p,
-.checkout-pro__aside .lab-board__grind { color: #a8a29a; }
+.checkout-pro__aside .lab-board__grind { color: #8a847c; }
 .checkout-pro__aside .lab-board__lot {
     background: transparent;
-    border-color: rgba(255,255,255,0.14);
+    border-color: #ece7df;
 }
-.checkout-pro__aside .lab-board__name { color: #fff; }
-.checkout-pro__aside .lab-board__roasts strong { color: #fff; }
-.checkout-pro__aside .fresh-timeline { border-top-color: rgba(255,255,255,0.12); }
+.checkout-pro__aside .lab-board__name { color: #121014; }
+.checkout-pro__aside .lab-board__roasts strong { color: #121014; }
+.checkout-pro__aside .fresh-timeline { border-top-color: #ece7df; }
 
 .roast-pick {
     margin-bottom: 0.85rem;
@@ -3132,3 +3168,54 @@ html.dark .product-lot-line { color: #86efac; }
     margin: 0 0 0.75rem;
 }
 html.dark .coffee-card-lot { color: #86efac; }
+
+/* Mobile checkout/bag: last in file so these beat later desktop card/receipt rules. */
+@media (max-width: 767px) {
+    .checkout-pro {
+        overflow-x: hidden;
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .checkout-pro__wrap,
+    .checkout-pro__grid,
+    .checkout-pro__main,
+    .checkout-pro__aside {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+    }
+    .checkout-pro__wrap {
+        padding: 0 12px;
+        margin: 0 auto;
+    }
+    .checkout-pro__card,
+    .bag-pro__item.checkout-pro__card {
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        padding: 1.15rem 0 1.2rem;
+        background: transparent;
+        border-bottom: 1px solid #e8e2d8;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+    .checkout-pro__receipt {
+        background: #fff;
+        color: #121014;
+        border-radius: 0;
+        border: 0;
+        border-top: 3px solid #8B6FA0;
+        border-bottom: 1px solid #ece7df;
+        padding: 1.25rem 0 1.35rem;
+        margin: 0;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        position: static;
+    }
+    .checkout-pro__paypair {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}

@@ -119,11 +119,19 @@
                             {
                                 <div><span>Shipping</span><span>Free</span></div>
                             }
-                            <div class="bag-pro__due"><span>Yape / Plin</span><span>S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</span></div>
-                            @if (Model.IsWorkshopOnlyCart)
-                            {
-                                <div><span>Card · Perú</span><span>S/@LocalPricing.CulqiSoles(Model.CartTotal).ToString("0")</span></div>
-                            }
+                            <div class="checkout-pro__paypair">
+                                <div>
+                                    <span>Yape / Plin</span>
+                                    <strong>S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</strong>
+                                </div>
+                                @if (Model.IsWorkshopOnlyCart)
+                                {
+                                    <div>
+                                        <span>Card · Perú</span>
+                                        <strong>S/@LocalPricing.CulqiSoles(Model.CartTotal).ToString("0")</strong>
+                                    </div>
+                                }
+                            </div>
                         </div>
                         <p class="checkout-pro__receipt-note">Yape/Plin is the local price. Perú cards use the card price. PayPal is listed USD or CAD.</p>
                     </div>
