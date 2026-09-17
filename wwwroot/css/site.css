@@ -2227,27 +2227,59 @@ html.dark .blog-back:hover {
     min-height: 100vh;
     padding: 7.5rem 0 5rem;
 }
+.checkout-pro__wrap {
+    width: min(1120px, calc(100% - 2rem));
+    margin: 0 auto;
+}
 @media (max-width: 767px) {
     .checkout-pro {
         padding: 1.1rem 0 3.5rem;
     }
     .checkout-pro__wrap {
-        width: calc(100% - 1rem);
+        width: 100%;
+        max-width: none;
+        padding: 0 0.75rem;
+        box-sizing: border-box;
     }
     .checkout-pro__back {
         margin-bottom: 0.45rem;
+    }
+    .checkout-pro__form {
+        gap: 0;
+        margin-top: 0.5rem;
     }
     .checkout-pro__card,
     .bag-pro__item.checkout-pro__card {
         border: 0;
         border-radius: 0;
         box-shadow: none;
-        padding-left: 0;
-        padding-right: 0;
+        padding: 1.15rem 0 1.2rem;
         background: transparent;
+        border-bottom: 1px solid #e8e2d8;
+    }
+    .checkout-pro__card h2 {
+        margin-bottom: 0.85rem;
+    }
+    .checkout-pro input[type="text"],
+    .checkout-pro input[type="email"],
+    .checkout-pro input[type="tel"],
+    .checkout-pro select {
+        border-radius: 0.35rem;
+    }
+    .checkout-pro__pay-card {
+        border-radius: 0.35rem;
+        padding-left: 2.5rem;
+        padding-right: 0.85rem;
     }
     .checkout-pro__receipt {
-        border-radius: 1rem;
+        border-radius: 0;
+        padding: 1.25rem 1rem 1.35rem;
+        margin-left: -0.75rem;
+        margin-right: -0.75rem;
+        width: calc(100% + 1.5rem);
+    }
+    .checkout-pro__submit {
+        border-radius: 0.35rem;
     }
     .bag-pro__list {
         gap: 1.1rem;
@@ -2256,10 +2288,6 @@ html.dark .blog-back:hover {
     .checkout-pro__head h1 {
         font-size: 1.85rem;
     }
-}
-.checkout-pro__wrap {
-    width: min(1120px, calc(100% - 2rem));
-    margin: 0 auto;
 }
 .checkout-pro__back {
     display: inline-flex;
@@ -2563,12 +2591,14 @@ a.checkout-pro__submit {
     margin: 0.85rem 0 0;
 }
 .checkout-pro__receipt {
-    background: #121014;
+    background: #1C191F;
     color: #F4F0EA;
-    border-radius: 1.25rem;
-    padding: 1.6rem;
+    border-radius: 0.5rem;
+    padding: 1.45rem 1.35rem 1.5rem;
     position: sticky;
     top: 6.5rem;
+    border-top: 3px solid #722EA8;
+    box-shadow: none;
 }
 .checkout-pro__receipt h2 {
     font-size: 10px;
