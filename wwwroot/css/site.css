@@ -1331,12 +1331,10 @@ span.font-mono-jb > span.mx-2 {
     line-height: 1;
     color: #111;
 }
-.price-pair--tour .price-pair__amount,
-.price-pair--tour .price-pair__soles {
+.price-pair--tour .price-pair__amount {
     font-size: 1.65rem;
 }
-.price-pair--compact .price-pair__amount,
-.price-pair--compact .price-pair__soles {
+.price-pair--compact .price-pair__amount {
     font-size: 1.2rem;
 }
 html.dark .price-pair--tour .price-pair__main,
@@ -1354,23 +1352,17 @@ html.dark .price-pair--compact .price-pair__main {
 html.dark .price-pair__usd {
     color: #B9A3C9 !important;
 }
-.price-pair--tour .price-pair__soles,
-.price-pair--compact .price-pair__soles {
-    font-family: 'JetBrains Mono', monospace;
-    font-weight: 700;
-    letter-spacing: -0.03em;
-    line-height: 1;
-    color: #8B8490;
-}
-html.dark .price-pair--tour .price-pair__soles,
-html.dark .price-pair--compact .price-pair__soles {
-    color: #8B8490;
+.price-pair__soles-row {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: flex-start;
+    column-gap: 1em;
 }
 .price-pair__soles-col {
     display: inline-flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.12em;
+    gap: 0.18em;
     line-height: 1;
 }
 .price-pair__soles-label,
@@ -1381,22 +1373,27 @@ html.dark .price-pair--compact .price-pair__soles {
     text-transform: uppercase;
     color: #8B8490;
 }
-.price-pair--tour .price-pair__card-soles {
-    font-size: 1.05rem;
-    font-family: 'JetBrains Mono', monospace;
-    font-weight: 700;
-    letter-spacing: -0.03em;
-    color: #8B8490;
-    margin-top: 0.35em;
-}
+.price-pair--tour .price-pair__soles,
+.price-pair--tour .price-pair__card-soles,
+.price-pair--compact .price-pair__soles,
 .price-pair--compact .price-pair__card-soles {
-    font-size: 0.85rem;
     font-family: 'JetBrains Mono', monospace;
     font-weight: 700;
     letter-spacing: -0.03em;
+    line-height: 1;
     color: #8B8490;
-    margin-top: 0.28em;
+    margin-top: 0;
 }
+.price-pair--tour .price-pair__soles,
+.price-pair--tour .price-pair__card-soles {
+    font-size: 1.35rem;
+}
+.price-pair--compact .price-pair__soles,
+.price-pair--compact .price-pair__card-soles {
+    font-size: 1.05rem;
+}
+html.dark .price-pair--tour .price-pair__soles,
+html.dark .price-pair--compact .price-pair__soles,
 html.dark .price-pair__card-soles,
 html.dark .price-pair__soles-label,
 html.dark .price-pair__card-label {
