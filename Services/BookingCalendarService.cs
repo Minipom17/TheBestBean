@@ -37,7 +37,7 @@ namespace TheBestBean.Services
         {
             var utc = DateTime.SpecifyKind(startUtc, DateTimeKind.Utc);
             var lima = TimeZoneInfo.ConvertTimeFromUtc(utc, LimaZone);
-            return lima.ToString("ddd d MMM · HH:mm", System.Globalization.CultureInfo.GetCultureInfo("en-GB")) + " Cusco";
+            return lima.ToString("ddd d MMM · HH:mm", System.Globalization.CultureInfo.GetCultureInfo("en-GB"));
         }
 
         public static string FormatDay(DateTime startUtc)
