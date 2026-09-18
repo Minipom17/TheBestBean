@@ -1,15 +1,21 @@
 @model DualPriceModel
 @{
-    var soles = LocalPricing.YapeSoles(Model.Usd, Model.Pen);
-    var usdText = Model.Usd == decimal.Truncate(Model.Usd)
-        ? Model.Usd.ToString("0")
-        : Model.Usd.ToString("0.##");
+    var yape = LocalPricing.YapeSoles(Model.Usd, Model.Pen);
+    var cardPen = LocalPricing.CulqiSoles(Model.Usd, Model.Pen);
+    var usdText = Model.Usd.ToString("0.00");
     var sizeClass = Model.Compact ? "price-pair--compact" : "price-pair--tour";
+    var moneyClass = Model.Compact ? "money-pair" : "money-pair money-pair--tour";
 }
 <span class="price-pair @sizeClass">
-    <span class="price-pair__main">
-        <span class="price-pair__amount">$@usdText</span>
-        <span class="price-pair__usd">USD</span>
+    <span class="@moneyClass">
+        <strong>S/@yape.ToString("0")</strong>
+        <span>$@usdText</span>
     </span>
-    <span class="price-pair__soles">S/@soles.ToString("0")</span>
+    @if (Model.ShowCard)
+    {
+        <span class="price-pair__soles-col">
+            <span class="price-pair__card-soles">S/@cardPen.ToString("0")</span>
+            <span class="price-pair__card-label">Card · Perú</span>
+        </span>
+    }
 </span>

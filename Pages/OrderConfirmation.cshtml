@@ -187,7 +187,7 @@
         @if (Model.CardSurcharge > 0)
         {
             <div class="info-row">
-                <span class="info-label">Card surcharge</span>
+                <span class="info-label">Card · Perú</span>
                 <span class="info-value">
                     @(Model.IsPayPalUsd ? LocalPricing.CardSurchargeLabel("USD") + " · $" + Model.CardSurcharge.ToString("0.00")
                         : Model.IsPayPal ? LocalPricing.CardSurchargeLabel("CAD") + " · C$" + Model.CardSurcharge.ToString("0.00")
@@ -218,10 +218,17 @@
             <div class="order-item">
                 <div>
                     <div class="item-name">@item.ProductName</div>
-                    <div class="item-qty">Qty: @item.Quantity × S/@LocalPricing.YapeSoles(item.Price).ToString("0")</div>
+                    <div class="item-qty">
+                        Qty: @item.Quantity ×
+                        <span class="money-pair">
+                            <strong>S/@LocalPricing.YapeSoles(item.Price).ToString("0")</strong>
+                            <span>$@item.Price.ToString("0.00")</span>
+                        </span>
+                    </div>
                 </div>
-                <div style="font-weight: 600; color: var(--charcoal);">
-                    S/@LocalPricing.YapeSoles(item.Subtotal).ToString("0")
+                <div class="money-pair">
+                    <strong>S/@LocalPricing.YapeSoles(item.Subtotal).ToString("0")</strong>
+                    <span>$@item.Subtotal.ToString("0.00")</span>
                 </div>
             </div>
         }
@@ -252,7 +259,7 @@
                     <h4>Culqi paid</h4>
                     <p>
                         Card charged <strong>S/@LocalPricing.CulqiSoles(Model.OrderTotal).ToString("0")</strong>
-                        for order <strong>@Model.OrderNumber</strong> (includes Perú 5% Visa surcharge).
+                        for order <strong>@Model.OrderNumber</strong> (card price in Perú).
                     </p>
                 }
                 else if (Model.IsPayPal && string.Equals(Model.PaymentStatus, "Paid", StringComparison.OrdinalIgnoreCase))
@@ -265,10 +272,7 @@
                                 ? "$" + Model.PayPalUsdCharged.ToString("0.00")
                                 : "C$" + Model.PayPalCadCharged.ToString("0.00"))
                         </strong>
-                        for order <strong>@Model.OrderNumber</strong>
-                        @(Model.CardSurcharge > 0
-                            ? (Model.IsPayPalUsd ? " (includes 2.4% USD card surcharge)." : " (includes 2.4% Canada card surcharge).")
-                            : ".")
+                        for order <strong>@Model.OrderNumber</strong>.
                     </p>
                 }
                 else if (string.Equals(Model.PaymentStatus, "Paid", StringComparison.OrdinalIgnoreCase))

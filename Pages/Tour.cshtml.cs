@@ -255,6 +255,7 @@ namespace TheBestBean.Pages
             "Napkins",
             "Water for brewing",
             "Bottled water",
+            "Bananas",
             "Filters",
             "Coffee",
             "Snacks",

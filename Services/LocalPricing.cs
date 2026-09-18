@@ -1,21 +1,18 @@
 namespace TheBestBean.Services
 {
     /// <summary>
-    /// Local Yape/Plin soles vs international card USD.
-    /// Yape uses the listed PEN price (or ~3.4× USD, near mid-market). Card is shown in USD
-    /// and as a soles equivalent at a higher rate so bank FX + card fees are obvious.
+    /// Local Yape/Plin soles vs listed USD and the Perú card soles price.
     /// </summary>
     public static class LocalPricing
     {
         /// <summary>
-        /// Card surcharge: Culqi PEN is Perú 5%. PayPal USD and CAD run on the Canadian
-        /// account, so both use Visa Canada’s 2.4% cap — not the US merchant 3% cap.
-        /// Yape is not a card — no surcharge. Disclose on the method they pick, before they pay.
+        /// Two posted prices, shown from the first screen:
+        /// Yape/Plin = local soles. Perú cards (Culqi) = 5% above Yape (shop card price).
+        /// PayPal USD/CAD = listed USD / CAD FX with no extra %. PayPal forbids a PayPal
+        /// surcharge; we do not add Canada’s 2.4% Visa cap on top of PayPal.
         /// </summary>
-        public const string WorkshopVisaFeeNote = "Visa 5% Perú · 2.4% Canada / USD";
-        public const decimal PeruCardSurchargeRate = 0.05m;
-        public const decimal CanadaCardSurchargeRate = 0.024m;
-        public const decimal UsdCardSurchargeRate = CanadaCardSurchargeRate;
+        public const decimal PeruCardRate = 0.05m;
+        public const decimal PeruCardSurchargeRate = PeruCardRate;
 
         public const decimal YapeRate = 3.40m;
         public const decimal CardRate = 4.10m;
@@ -27,9 +24,8 @@ namespace TheBestBean.Services
         public static decimal CardSurchargeRateFor(string currency) =>
             (currency ?? "").Trim().ToUpperInvariant() switch
             {
-                "CAD" => CanadaCardSurchargeRate,
-                "PEN" => PeruCardSurchargeRate,
-                _ => UsdCardSurchargeRate
+                "PEN" => PeruCardRate,
+                _ => 0m
             };
 
         public static decimal CardSurcharge(decimal amount, string currency) =>
@@ -41,14 +37,13 @@ namespace TheBestBean.Services
         public static string CardSurchargeLabel(string currency) =>
             (currency ?? "").Trim().ToUpperInvariant() switch
             {
-                "CAD" => "Visa 2.4% · Canada",
-                "PEN" => "Visa 5% · Perú",
-                _ => "Visa 2.4% · USD"
+                "PEN" => "Card price · Perú",
+                _ => "Listed price"
             };
 
-        /// <summary>Culqi/Visa soles total: Yape price plus Perú 5% card surcharge, whole soles.</summary>
+        /// <summary>Perú card (Culqi) soles: Yape price plus 5%, whole soles.</summary>
         public static decimal CulqiSoles(decimal usd, decimal listedPen = 0) =>
-            Math.Round(YapeSoles(usd, listedPen) * (1m + PeruCardSurchargeRate), 0, MidpointRounding.AwayFromZero);
+            Math.Round(YapeSoles(usd, listedPen) * (1m + PeruCardRate), 0, MidpointRounding.AwayFromZero);
 
         public static decimal YapeSoles(decimal usd, decimal listedPen = 0)
         {

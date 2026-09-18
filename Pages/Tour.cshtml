@@ -75,18 +75,17 @@
     </div>
 
     <!-- Main Content -->
-    <div class="flex-grow max-w-[1600px] mx-auto w-full px-6 md:px-12 relative pb-32 font-sans text-v-black dark:text-[#D6D0C8] bg-v-white dark:bg-[#121014] mt-12 md:mt-24">
+    <div class="flex-grow max-w-[1600px] mx-auto w-full px-0 md:px-12 relative pb-32 font-sans text-v-black dark:text-[#D6D0C8] bg-v-white dark:bg-[#121014] mt-8 md:mt-24">
         
         <main class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 relative no-print">
             
             <!-- Reservation stays first on phones so guests can actually book -->
-            <div class="lg:col-span-4 flex flex-col relative">
-                <div class="lg:sticky lg:top-32 bg-white dark:bg-[#121014] rounded-3xl border border-[#ece7df] p-6 md:p-8 shadow-[0_12px_40px_rgba(18,16,20,0.06)]">
+            <div class="lg:col-span-4 flex flex-col relative px-4 md:px-0">
+                <div class="tour-reserve lg:sticky lg:top-32 bg-white dark:bg-[#121014] rounded-none md:rounded-3xl border-0 md:border md:border-[#ece7df] p-4 md:p-8 shadow-none md:shadow-[0_12px_40px_rgba(18,16,20,0.06)]">
                     <div class="mb-2">
                         <p class="text-[10px] font-mono-jb font-bold uppercase tracking-widest text-[#722EA8] m-0 mb-2">Reserve a seat</p>
-                        <div class="flex flex-col items-start gap-1">
+                        <div class="flex flex-col items-start">
                             <partial name="_WorkshopPrice" model="new DualPriceModel { Usd = Model.Tour.Price }" />
-                            <span class="text-[10px] font-mono font-bold tracking-widest text-[#FF3B1F] uppercase mt-1">Visa 5% Perú · 2.4% CAD / USD</span>
                         </div>
                         <p class="text-xs text-v-gray mt-2 m-0">per participant · Cusco time</p>
                     </div>
@@ -174,7 +173,7 @@
                 </div>
             </div>
 
-            <div class="lg:col-span-8 flex flex-col gap-16 pt-4">
+            <div class="lg:col-span-8 flex flex-col gap-16 pt-4 px-4 md:px-0">
                 
                 <!-- Title Block -->
                 <div>

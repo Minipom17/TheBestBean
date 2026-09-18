@@ -18,8 +18,8 @@
                         <p class="checkout-pro__kicker">Purple Bean Coffee · Cusco</p>
                         <h1>Your bag</h1>
                         <p class="checkout-pro__lede">@(Model.IsWorkshopOnlyCart
-                            ? $"Up to {CartService.MaxExperienceGuests} guests per session. Card fees show up when you choose how to pay."
-                            : "Listed price is Yape in soles. Visa and PayPal totals, with card fees, appear at checkout.")</p>
+                            ? $"Up to {CartService.MaxExperienceGuests} guests per session. Yape/Plin is the local price. Perú cards use the card price. PayPal is the listed USD or CAD."
+                            : "Listed price is Yape in soles. Perú cards use the card price. PayPal is the listed USD or CAD.")</p>
                     </header>
 
                     <div class="bag-pro__list">
@@ -55,7 +55,7 @@
                                                 <p class="bag-pro__desc">@item.Description</p>
                                             }
                                         </div>
-                                        <div class="bag-pro__price">
+                                        <div class="bag-pro__price money-pair">
                                             <strong>S/@LocalPricing.YapeSoles(item.Subtotal).ToString("0")</strong>
                                             <span>$@item.Subtotal.ToString("0.00")</span>
                                         </div>
@@ -114,11 +114,32 @@
                         <h2>Order summary</h2>
                         <div class="checkout-pro__totals">
                             <div><span>Items</span><span>@Model.ItemCount</span></div>
-                            <div><span>Subtotal</span><span>$@Model.CartTotal.ToString("0.00")</span></div>
-                            <div><span>Shipping</span><span>Free</span></div>
-                            <div class="bag-pro__due"><span>Yape / listed</span><span>S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</span></div>
+                            <div>
+                                <span>Subtotal</span>
+                                <span class="money-pair">
+                                    <strong>S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</strong>
+                                    <span>$@Model.CartTotal.ToString("0.00")</span>
+                                </span>
+                            </div>
+                            @if (!CartService.SkipsShipping(Model.CartItems))
+                            {
+                                <div><span>Shipping</span><span>Free</span></div>
+                            }
+                            <div class="checkout-pro__paypair">
+                                <div>
+                                    <span>Yape / Plin</span>
+                                    <strong>S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</strong>
+                                </div>
+                                @if (Model.IsWorkshopOnlyCart)
+                                {
+                                    <div>
+                                        <span>Card · Perú</span>
+                                        <strong>S/@LocalPricing.CulqiSoles(Model.CartTotal).ToString("0")</strong>
+                                    </div>
+                                }
+                            </div>
                         </div>
-                        <p class="checkout-pro__receipt-note">Visa, Culqi, and PayPal amounts — including card fees — show when you pick a payment method.</p>
+                        <p class="checkout-pro__receipt-note">Yape/Plin is the local price. Perú cards use the card price. PayPal is listed USD or CAD.</p>
                     </div>
                     <a asp-page="/Checkout" class="checkout-pro__submit bag-pro__cta">Continue to checkout</a>
                     <p class="checkout-pro__trust">No charge on this page · Pay on the next step</p>

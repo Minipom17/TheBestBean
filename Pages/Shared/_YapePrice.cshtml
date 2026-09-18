@@ -2,10 +2,11 @@
 @{
     var usd = Model.Usd;
     var yape = LocalPricing.YapeSoles(usd, Model.Pen);
-    var cardPen = LocalPricing.CardSoles(usd);
+    var cardPen = LocalPricing.CulqiSoles(usd, Model.Pen);
     var save = LocalPricing.YapeSavings(usd, Model.Pen);
     var compact = Model.Compact;
     var from = Model.From ? "From " : "";
+    var moneyClass = compact ? "money-pair" : "money-pair money-pair--tour";
 }
 
 <div class="yape-price @(compact ? "yape-price--compact" : "")"
@@ -13,23 +14,22 @@
      data-base-pen="@Model.Pen.ToString("0.##")"
      data-compact="@(compact ? "1" : "0")"
      data-from="@(from)">
-    <div class="yape-price__yape">
-        <span class="yape-price__badge" aria-label="Yape">
-            <img src="/brand/yape-logo.webp" alt="Yape" class="yape-price__logo" width="76" height="24" loading="lazy" decoding="async" />
+    <span class="yape-price__row">
+        <span class="@moneyClass">
+            <strong data-yape-soles>@(from)S/@yape.ToString("0")</strong>
+            <span data-card-usd>$@usd.ToString("0.00")</span>
         </span>
-        <span class="yape-price__soles" data-yape-soles>@(from)S/@yape.ToString("0")</span>
-    </div>
-    @if (Model.ShowCard)
-    {
-    <div class="yape-price__card">
-        <span class="yape-price__card-label">Card / PayPal</span>
-        <span class="yape-price__card-usd" data-card-usd>$@usd.ToString("0.00")</span>
-        <span class="yape-price__card-pen" data-card-pen>≈ S/@cardPen.ToString("0")</span>
-    </div>
-    }
+        @if (Model.ShowCard)
+        {
+            <span class="price-pair__soles-col">
+                <span class="price-pair__card-soles" data-card-pen>S/@cardPen.ToString("0")</span>
+                <span class="price-pair__card-label">Card · Perú</span>
+            </span>
+        }
+    </span>
     @if (!compact)
     {
-        <div class="flex flex-col gap-1 items-end mt-2 text-right">
+        <div class="flex flex-col gap-1 items-start mt-2">
             @if (!string.IsNullOrWhiteSpace(Model.FeeNote))
             {
                 <span class="text-[9px] font-mono font-bold tracking-widest text-[#FF3B1F] uppercase yape-price__fee-note">@Model.FeeNote</span>

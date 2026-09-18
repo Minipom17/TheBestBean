@@ -13,7 +13,7 @@
         <header class="checkout-pro__head">
             <p class="checkout-pro__kicker">Internal · not in the shop</p>
             <h1>PayPal $1 test</h1>
-            <p class="checkout-pro__lede">Puts a $1.00 line in your bag (PayPal USD is about $@Model.PayPalUsdTotal.ToString("0.00") with 2.4%). This is a real charge. Refund it in PayPal after if you want the dollar back.</p>
+            <p class="checkout-pro__lede">Puts a $1.00 line in your bag (PayPal USD is $@Model.PayPalUsdTotal.ToString("0.00")). This is a real charge. Refund it in PayPal after if you want the dollar back.</p>
         </header>
         <form method="post" asp-route-pb_internal="1">
             @Html.AntiForgeryToken()

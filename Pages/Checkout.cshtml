@@ -19,8 +19,8 @@
                     <p class="checkout-pro__kicker">Purple Bean Coffee · Cusco</p>
                     <h1>Checkout</h1>
                     <p class="checkout-pro__lede">@(Model.IsPayPalTestCart
-                        ? "Live PayPal $1 test. USD charges about $1.02 with the 2.4% card fee. This is a real charge on the business account."
-                        : isExperience ? "Confirm who is coming, add a snack if you like, then pay. Times are America/Lima." : "We roast after payment (our profile unless you picked another), ship the next day, and the bag rests on the way.")</p>
+                        ? "Live PayPal $1 test. USD charges $1.00. This is a real charge on the business account."
+                        : isExperience ? "Confirm who is coming, add extras if you like, then pay. Water and bananas are offered during the workshop. Times are America/Lima." : "We roast after payment (our profile unless you picked another), ship the next day, and the bag rests on the way.")</p>
                     <ol class="checkout-pro__steps" aria-label="Checkout steps">
                         <li>Contact</li>
                         <li>@(skipShip ? (isExperience ? "Guests" : "Details") : "Shipping")</li>
@@ -105,13 +105,16 @@
                     {
                         <section class="checkout-pro__card">
                             <h2>03 · During the session</h2>
-                            <p class="checkout-pro__help" style="margin-top:0">Sparkling water, a snack, or toast — we’ll have it at the table.</p>
+                            <p class="checkout-pro__help" style="margin-top:0">Water and bananas are offered during the workshop. Want more at the table? Add sparkling water, a snack, or toast below.</p>
                             <div class="checkout-pro__addons">
                                 @foreach (var extra in ExperienceAddOns.All)
                                 {
                                     <button type="submit" form="extras-form" name="sku" value="@extra.Sku" class="checkout-pro__addon">
                                         <span>@extra.Name</span>
-                                        <strong>S/@LocalPricing.YapeSoles(extra.Usd).ToString("0")</strong>
+                                        <span class="money-pair">
+                                            <strong>S/@LocalPricing.YapeSoles(extra.Usd).ToString("0")</strong>
+                                            <span>$@extra.Usd.ToString("0.00")</span>
+                                        </span>
                                     </button>
                                 }
                             </div>
@@ -126,7 +129,13 @@
                                         <li>
                                             <div>
                                                 <div>@extra.ProductName</div>
-                                                <small>× @extra.Quantity · S/@LocalPricing.YapeSoles(extra.Subtotal).ToString("0")</small>
+                                                <small>
+                                                    × @extra.Quantity
+                                                    <span class="money-pair">
+                                                        <strong>S/@LocalPricing.YapeSoles(extra.Subtotal).ToString("0")</strong>
+                                                        <span>$@extra.Subtotal.ToString("0.00")</span>
+                                                    </span>
+                                                </small>
                                             </div>
                                             <button type="submit" form="extras-form" formaction="@Url.Page("/Checkout", "RemoveExtra", new { productId = extra.ProductId })">Remove</button>
                                         </li>
@@ -138,7 +147,7 @@
 
                     <section class="checkout-pro__card">
                         <h2>@stepPay · Pay</h2>
-                        <p class="checkout-pro__help" style="margin-top:0">The amount next to the method you pick is what you pay. Yape is the listed soles price — no card fee. Culqi includes Perú 5%. PayPal USD and CAD are on the Canadian account — Visa cap 2.4%.</p>
+                        <p class="checkout-pro__help" style="margin-top:0">The amount next to the method you pick is what you pay. Yape/Plin is the local soles price. Cards in Perú pay the card price (5% more — same as shops here). PayPal USD and CAD are the listed amounts; PayPal only facilitates.</p>
                         <div asp-validation-summary="All" class="checkout-pro__error"></div>
                         <div class="checkout-pro__pay">
                             <label>
@@ -147,7 +156,7 @@
                                     <div>
                                         <img src="/brand/yape-logo.webp" alt="Yape" width="72" height="22" />
                                         <div class="checkout-pro__pay-title">Yape / Plin · Perú</div>
-                                        <p>Soles after you place the order. QR on WhatsApp. No Visa fee.</p>
+                                        <p>Soles after you place the order. QR on WhatsApp. Local wallet price.</p>
                                     </div>
                                     <div class="checkout-pro__pay-amt">
                                         <strong>S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</strong>
@@ -159,8 +168,12 @@
                                 <input type="radio" name="PaymentMethod" value="Culqi" class="sr-only peer" />
                                 <div class="checkout-pro__pay-card">
                                     <div>
-                                        <div class="checkout-pro__pay-title">Culqi · Visa / Mastercard</div>
-                                        <p>Local cards in soles. Perú card surcharge 5%.</p>
+                                        <div class="checkout-pro__pay-marks" aria-hidden="true">
+                                            <img src="/brand/visa-logo.svg" alt="" class="checkout-pro__mark checkout-pro__mark--visa" width="52" height="17" />
+                                            <img src="/brand/mastercard-logo.svg" alt="" class="checkout-pro__mark checkout-pro__mark--mc" width="36" height="22" />
+                                        </div>
+                                        <div class="checkout-pro__pay-title">Visa / Mastercard · soles</div>
+                                        <p>Visa / Mastercard in soles. Card price in Perú (5% above Yape).</p>
                                         @if (!Model.CulqiReady)
                                         {
                                             <p class="checkout-pro__warn">Culqi keys not on this server yet — use Yape until secrets/culqi.json is filled in.</p>
@@ -168,7 +181,7 @@
                                     </div>
                                     <div class="checkout-pro__pay-amt">
                                         <strong>S/@Model.CulqiTotalSoles.ToString("0")</strong>
-                                        <span>incl. 5%</span>
+                                        <span>Card · Perú</span>
                                     </div>
                                 </div>
                             </label>
@@ -176,13 +189,16 @@
                                 <input type="radio" name="PaymentMethod" value="PayPalUsd" class="sr-only peer" />
                                 <div class="checkout-pro__pay-card">
                                     <div>
-                                        <img src="/brand/paypal-logo.svg" alt="PayPal" width="90" height="22" />
-                                        <div class="checkout-pro__pay-title">PayPal · USD</div>
-                                        <p>US / rest of world. Canadian PayPal — Visa surcharge capped at 2.4%.</p>
+                                        <div class="checkout-pro__pay-marks" aria-hidden="true">
+                                            <img src="/brand/visa-logo.svg" alt="" class="checkout-pro__mark checkout-pro__mark--visa" width="52" height="17" />
+                                            <img src="/brand/paypal-logo.svg" alt="" class="checkout-pro__mark checkout-pro__mark--paypal" width="64" height="16" />
+                                        </div>
+                                        <div class="checkout-pro__pay-title">Visa · USD</div>
+                                        <p>Listed USD. PayPal facilitates the charge.</p>
                                     </div>
                                     <div class="checkout-pro__pay-amt">
                                         <strong>$@Model.PayPalUsdTotal.ToString("0.00")</strong>
-                                        <span>incl. 2.4%</span>
+                                        <span>Listed USD</span>
                                     </div>
                                 </div>
                             </label>
@@ -190,13 +206,16 @@
                                 <input type="radio" name="PaymentMethod" value="PayPalCad" class="sr-only peer" />
                                 <div class="checkout-pro__pay-card">
                                     <div>
-                                        <img src="/brand/paypal-logo.svg" alt="PayPal" width="90" height="22" />
-                                        <div class="checkout-pro__pay-title">PayPal · CAD</div>
-                                        <p>Canada. Visa/PayPal surcharge capped at 2.4%.</p>
+                                        <div class="checkout-pro__pay-marks" aria-hidden="true">
+                                            <img src="/brand/visa-logo.svg" alt="" class="checkout-pro__mark checkout-pro__mark--visa" width="52" height="17" />
+                                            <img src="/brand/paypal-logo.svg" alt="" class="checkout-pro__mark checkout-pro__mark--paypal" width="64" height="16" />
+                                        </div>
+                                        <div class="checkout-pro__pay-title">Visa · CAD</div>
+                                        <p>Listed CAD. PayPal facilitates the charge.</p>
                                     </div>
                                     <div class="checkout-pro__pay-amt">
                                         <strong>C$@Model.PayPalCadTotal.ToString("0.00")</strong>
-                                        <span>incl. 2.4%</span>
+                                        <span>Listed CAD</span>
                                     </div>
                                 </div>
                             </label>
@@ -231,16 +250,40 @@
                                         <small>× @item.Quantity</small>
                                     }
                                 </div>
-                                <div class="checkout-pro__line-price">$@item.Subtotal.ToString("0.00")</div>
+                                <div class="checkout-pro__line-price money-pair">
+                                    <strong>S/@LocalPricing.YapeSoles(item.Subtotal).ToString("0")</strong>
+                                    <span>$@item.Subtotal.ToString("0.00")</span>
+                                </div>
                             </div>
                         }
                     </div>
                     <div class="checkout-pro__totals">
-                        <div><span>Subtotal</span><span>$@Model.CartTotal.ToString("0.00")</span></div>
-                        <div><span>Shipping</span><span>Free</span></div>
-                        <div class="bag-pro__due"><span>Yape / listed</span><span>S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</span></div>
+                        <div>
+                            <span>Subtotal</span>
+                            <span class="money-pair">
+                                <strong>S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</strong>
+                                <span>$@Model.CartTotal.ToString("0.00")</span>
+                            </span>
+                        </div>
+                        @if (!skipShip)
+                        {
+                            <div><span>Shipping</span><span>Free</span></div>
+                        }
+                        <div class="checkout-pro__paypair">
+                            <div>
+                                <span>Yape / Plin</span>
+                                <strong>S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</strong>
+                            </div>
+                            @if (isExperience)
+                            {
+                                <div>
+                                    <span>Card · Perú</span>
+                                    <strong>S/@LocalPricing.CulqiSoles(Model.CartTotal).ToString("0")</strong>
+                                </div>
+                            }
+                        </div>
                     </div>
-                    <p class="checkout-pro__receipt-note">Card totals, including the surcharge, sit on the payment method you choose.</p>
+                    <p class="checkout-pro__receipt-note">Yape/Plin is the local price. Perú cards use the card price. PayPal is listed USD or CAD.</p>
                     @if (Model.HasCoffeeItems)
                     {
                         <div class="mt-6">
@@ -290,9 +333,9 @@
                 if (!submit) return;
                 const method = selectedMethod();
                 if (method === 'Yape') submit.textContent = 'Pay with Yape — ' + yapeTotal;
-                else if (method === 'Culqi') submit.textContent = 'Pay with Culqi — ' + culqiTotal;
-                else if (method === 'PayPalUsd') submit.textContent = 'Pay with PayPal — ' + paypalUsdTotal;
-                else if (method === 'PayPalCad' || method === 'PayPal') submit.textContent = 'Pay with PayPal — ' + paypalCadTotal;
+                else if (method === 'Culqi') submit.textContent = 'Pay with Visa — ' + culqiTotal;
+                else if (method === 'PayPalUsd') submit.textContent = 'Pay with Visa (PayPal) — ' + paypalUsdTotal;
+                else if (method === 'PayPalCad' || method === 'PayPal') submit.textContent = 'Pay with Visa (PayPal) — ' + paypalCadTotal;
             }
 
             document.querySelectorAll('input[name="PaymentMethod"]').forEach(function (input) {
