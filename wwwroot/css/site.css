@@ -1529,6 +1529,7 @@ html.dark .price-pair__card-label {
     align-items: flex-end;
     text-align: right;
     min-width: 0;
+    flex-shrink: 0;
 }
 .yape-price__yape {
     display: flex;
