@@ -1329,6 +1329,42 @@ html.dark .lab-recipe-dropdown__title {
     border-top: 1px solid #eee;
 }
 
+.money-pair,
+.bag-pro__price {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.4em;
+    white-space: nowrap;
+    flex-shrink: 0;
+    line-height: 1;
+}
+.money-pair strong,
+.bag-pro__price strong {
+    display: inline;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: #111;
+}
+.money-pair span,
+.bag-pro__price span {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0;
+    color: #8a847c;
+}
+.money-pair--tour strong {
+    font-size: 1.65rem;
+}
+html.dark .money-pair strong,
+html.dark .bag-pro__price strong {
+    color: #D6D0C8;
+}
+html.dark .money-pair span,
+html.dark .bag-pro__price span {
+    color: #8B8490;
+}
+
 .price-pair,
 span.font-mono-jb:has(> span.mx-2) {
     display: inline-flex;
@@ -1342,40 +1378,6 @@ span.font-mono-jb > span.mx-2 {
     font-weight: 400;
     margin-left: 0 !important;
     margin-right: 0 !important;
-}
-.price-pair--tour .price-pair__main,
-.price-pair--compact .price-pair__main {
-    display: inline-flex;
-    flex-direction: row;
-    align-items: baseline;
-    justify-content: flex-start;
-    gap: 0.35em;
-    font-family: 'JetBrains Mono', monospace;
-    font-weight: 700;
-    letter-spacing: -0.03em;
-    line-height: 1;
-    color: #111;
-}
-.price-pair--tour .price-pair__amount {
-    font-size: 1.65rem;
-}
-.price-pair--compact .price-pair__amount {
-    font-size: 1.2rem;
-}
-html.dark .price-pair--tour .price-pair__main,
-html.dark .price-pair--compact .price-pair__main {
-    color: #D6D0C8;
-}
-.price-pair__usd {
-    display: inline;
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    line-height: 1;
-    color: #722EA8 !important;
-}
-html.dark .price-pair__usd {
-    color: #B9A3C9 !important;
 }
 .price-pair__soles-row {
     display: inline-flex;
@@ -1514,12 +1516,19 @@ html.dark .price-pair__card-label {
 .yape-price {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
     gap: 0.45rem;
+}
+.yape-price__row {
+    display: inline-flex;
+    align-items: flex-start;
+    column-gap: 0.9em;
+    white-space: nowrap;
 }
 .yape-price--compact {
     align-items: flex-end;
     text-align: right;
-    min-width: 7.5rem;
+    min-width: 0;
 }
 .yape-price__yape {
     display: flex;
@@ -2463,8 +2472,8 @@ html.dark .blog-back:hover {
     flex-direction: column;
     gap: 0.35rem;
 }
-.checkout-pro__addon span { font-size: 13px; color: #121014; }
-.checkout-pro__addon strong { font-size: 12px; color: #722EA8; }
+.checkout-pro__addon > span:first-child { font-size: 13px; color: #121014; }
+.checkout-pro__addon .money-pair { margin-top: 0.1rem; }
 .checkout-pro__addon:hover { border-color: #722EA8; background: #faf7fd; }
 .checkout-pro__extra-list {
     list-style: none;
@@ -2484,12 +2493,19 @@ html.dark .blog-back:hover {
     padding: 0.75rem 0.9rem;
 }
 .checkout-pro__extra-list small {
-    display: block;
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.35em;
     font-size: 10px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: #9a948c;
     margin-top: 0.2rem;
+}
+.checkout-pro__extra-list .money-pair {
+    text-transform: none;
+    letter-spacing: 0;
 }
 .checkout-pro__extra-list button {
     border: 0;
@@ -2676,7 +2692,6 @@ a.checkout-pro__submit {
     margin-top: 0.3rem;
 }
 .checkout-pro__line-price {
-    font-size: 13px;
     white-space: nowrap;
 }
 .checkout-pro__totals {
@@ -2795,21 +2810,7 @@ a.checkout-pro__submit {
     line-height: 1.4;
 }
 .bag-pro__price {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 0.4em;
     text-align: right;
-    white-space: nowrap;
-    flex-shrink: 0;
-}
-.bag-pro__price strong {
-    display: inline;
-    font-size: 1.05rem;
-    letter-spacing: -0.03em;
-}
-.bag-pro__price span {
-    font-size: 11px;
-    color: #8a847c;
 }
 .bag-pro__row {
     display: flex;

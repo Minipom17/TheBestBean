@@ -111,7 +111,10 @@
                                 {
                                     <button type="submit" form="extras-form" name="sku" value="@extra.Sku" class="checkout-pro__addon">
                                         <span>@extra.Name</span>
-                                        <strong>S/@LocalPricing.YapeSoles(extra.Usd).ToString("0")</strong>
+                                        <span class="money-pair">
+                                            <strong>S/@LocalPricing.YapeSoles(extra.Usd).ToString("0")</strong>
+                                            <span>$@extra.Usd.ToString("0.00")</span>
+                                        </span>
                                     </button>
                                 }
                             </div>
@@ -126,7 +129,13 @@
                                         <li>
                                             <div>
                                                 <div>@extra.ProductName</div>
-                                                <small>× @extra.Quantity · S/@LocalPricing.YapeSoles(extra.Subtotal).ToString("0")</small>
+                                                <small>
+                                                    × @extra.Quantity
+                                                    <span class="money-pair">
+                                                        <strong>S/@LocalPricing.YapeSoles(extra.Subtotal).ToString("0")</strong>
+                                                        <span>$@extra.Subtotal.ToString("0.00")</span>
+                                                    </span>
+                                                </small>
                                             </div>
                                             <button type="submit" form="extras-form" formaction="@Url.Page("/Checkout", "RemoveExtra", new { productId = extra.ProductId })">Remove</button>
                                         </li>
@@ -241,12 +250,21 @@
                                         <small>× @item.Quantity</small>
                                     }
                                 </div>
-                                <div class="checkout-pro__line-price">$@item.Subtotal.ToString("0.00")</div>
+                                <div class="checkout-pro__line-price money-pair">
+                                    <strong>S/@LocalPricing.YapeSoles(item.Subtotal).ToString("0")</strong>
+                                    <span>$@item.Subtotal.ToString("0.00")</span>
+                                </div>
                             </div>
                         }
                     </div>
                     <div class="checkout-pro__totals">
-                        <div><span>Subtotal</span><span>$@Model.CartTotal.ToString("0.00")</span></div>
+                        <div>
+                            <span>Subtotal</span>
+                            <span class="money-pair">
+                                <strong>S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</strong>
+                                <span>$@Model.CartTotal.ToString("0.00")</span>
+                            </span>
+                        </div>
                         @if (!skipShip)
                         {
                             <div><span>Shipping</span><span>Free</span></div>

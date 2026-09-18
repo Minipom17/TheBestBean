@@ -55,7 +55,7 @@
                                                 <p class="bag-pro__desc">@item.Description</p>
                                             }
                                         </div>
-                                        <div class="bag-pro__price">
+                                        <div class="bag-pro__price money-pair">
                                             <strong>S/@LocalPricing.YapeSoles(item.Subtotal).ToString("0")</strong>
                                             <span>$@item.Subtotal.ToString("0.00")</span>
                                         </div>
@@ -114,7 +114,13 @@
                         <h2>Order summary</h2>
                         <div class="checkout-pro__totals">
                             <div><span>Items</span><span>@Model.ItemCount</span></div>
-                            <div><span>Subtotal</span><span>$@Model.CartTotal.ToString("0.00")</span></div>
+                            <div>
+                                <span>Subtotal</span>
+                                <span class="money-pair">
+                                    <strong>S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</strong>
+                                    <span>$@Model.CartTotal.ToString("0.00")</span>
+                                </span>
+                            </div>
                             @if (!CartService.SkipsShipping(Model.CartItems))
                             {
                                 <div><span>Shipping</span><span>Free</span></div>

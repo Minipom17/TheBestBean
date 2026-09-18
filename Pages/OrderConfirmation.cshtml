@@ -218,10 +218,17 @@
             <div class="order-item">
                 <div>
                     <div class="item-name">@item.ProductName</div>
-                    <div class="item-qty">Qty: @item.Quantity × S/@LocalPricing.YapeSoles(item.Price).ToString("0")</div>
+                    <div class="item-qty">
+                        Qty: @item.Quantity ×
+                        <span class="money-pair">
+                            <strong>S/@LocalPricing.YapeSoles(item.Price).ToString("0")</strong>
+                            <span>$@item.Price.ToString("0.00")</span>
+                        </span>
+                    </div>
                 </div>
-                <div style="font-weight: 600; color: var(--charcoal);">
-                    S/@LocalPricing.YapeSoles(item.Subtotal).ToString("0")
+                <div class="money-pair">
+                    <strong>S/@LocalPricing.YapeSoles(item.Subtotal).ToString("0")</strong>
+                    <span>$@item.Subtotal.ToString("0.00")</span>
                 </div>
             </div>
         }

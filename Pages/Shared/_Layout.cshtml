@@ -712,9 +712,8 @@
             window.renderYapePrice = function (root, usd, pen) {
                 if (!root) return;
                 const yapeRate = 3.40;
-                const cardRate = 4.10;
                 const yape = Math.round((pen > 0 ? pen : usd * yapeRate));
-                const cardPen = Math.round(usd * cardRate);
+                const cardPen = Math.round(yape * 1.05);
                 const save = Math.max(0, cardPen - yape);
                 const from = root.getAttribute('data-from') || '';
                 const soles = root.querySelector('[data-yape-soles]');
@@ -723,7 +722,7 @@
                 const saveEl = root.querySelector('[data-yape-save]');
                 if (soles) soles.textContent = from + 'S/' + yape;
                 if (cardUsd) cardUsd.textContent = '$' + Number(usd).toFixed(2);
-                if (cardPenEl) cardPenEl.textContent = '≈ S/' + cardPen;
+                if (cardPenEl) cardPenEl.textContent = 'S/' + cardPen;
                 if (saveEl) {
                     const saveAmt = saveEl.querySelector('[data-yape-save-amt]');
                     if (saveAmt) saveAmt.textContent = '−S/' + save;
