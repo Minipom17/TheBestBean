@@ -611,7 +611,13 @@
     
     @await RenderSectionAsync("Styles", required: false)
 </head>
-<body class="min-h-screen flex flex-col font-sans text-sm selection:bg-v-black selection:text-v-white relative bg-v-white dark:bg-night text-v-black dark:text-cream transition-colors duration-300">
+    @{
+        var hideDispatchDock = Context.Request.Path.StartsWithSegments("/Checkout")
+            || Context.Request.Path.StartsWithSegments("/Cart")
+            || Context.Request.Path.StartsWithSegments("/Tour");
+        var experiencesPath = Context.Request.Path.StartsWithSegments("/Experiences");
+    }
+<body class="min-h-screen flex flex-col font-sans text-sm selection:bg-v-black selection:text-v-white relative bg-v-white dark:bg-night text-v-black dark:text-cream transition-colors duration-300@(hideDispatchDock ? " no-dispatch-dock" : "")">
     @{
         var cartCount = 0;
         try {
@@ -627,12 +633,6 @@
     
     <partial name="_Footer" />
 
-    @{
-        var hideDispatchDock = Context.Request.Path.StartsWithSegments("/Checkout")
-            || Context.Request.Path.StartsWithSegments("/Cart")
-            || Context.Request.Path.StartsWithSegments("/Tour");
-        var experiencesPath = Context.Request.Path.StartsWithSegments("/Experiences");
-    }
     @if (!hideDispatchDock)
     {
     <!-- Unified Delivery & WhatsApp Float Button (truck is coffee shipping — hide on experiences) -->

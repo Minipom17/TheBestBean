@@ -104,6 +104,9 @@ html.dark footer img.brand-logo.brand-logo--cream {
     gap: 2rem 3rem;
     padding-right: 8.5rem;
 }
+.no-dispatch-dock .site-footer__inner {
+    padding-right: 0;
+}
 .site-footer__copy {
     flex: 1 1 16rem;
     max-width: 38rem;
@@ -135,6 +138,28 @@ html.dark .site-footer__copy span {
 }
 html.dark .site-footer__grid a:hover {
     color: #B9A3C9;
+}
+@media (max-width: 767px) {
+    .site-footer {
+        padding: 2.5rem 1.25rem 4.5rem;
+    }
+    .site-footer__inner {
+        padding-right: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 2rem;
+    }
+    .site-footer__copy {
+        flex: 1 1 auto;
+        max-width: none;
+    }
+    .site-footer__grid {
+        margin-left: 0;
+        width: 100%;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        column-gap: 0.85rem;
+        row-gap: 0.85rem;
+    }
 }
 
 body {
