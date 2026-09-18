@@ -38,7 +38,7 @@ else
   CLEANUP_KEY=1
   printf '%s\n' "$DEPLOY_SSH_KEY" > "$KEY_FILE"
 fi
-chmod 600 "$KEY_FILE"
+#chmod 600 "$KEY_FILE"
 trap '[[ "$CLEANUP_KEY" == 1 ]] && rm -f "$KEY_FILE"' EXIT
 
 SSH_AUTH_SOCK=

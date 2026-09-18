@@ -4205,3 +4205,25 @@ html.dark .product-sheet__process p:last-child {
         flex-wrap: wrap !important;
     }
 }
+
+/* Home hero alignment and title size */
+.coffee-intro .lab-board--compact h2 {
+    font-size: 1.65rem !important;
+    margin-bottom: 0.5rem !important;
+}
+.coffee-intro .lab-board__feed {
+    margin-top: auto !important;
+}
+
+/* Fix overlap in coffee lab board rows */
+.coffee-intro .lab-board__meta {
+    flex: 0 0 auto !important; /* Prevent meta from shrinking and overflowing */
+}
+.coffee-intro .lab-board__name-wrap {
+    flex: 1 1 auto !important; /* Allow name to take all the shrinkage */
+}
+
+/* Split the flexible gap to bring the title down 50% */
+.coffee-intro .lab-board__head {
+    margin-top: auto !important;
+}
