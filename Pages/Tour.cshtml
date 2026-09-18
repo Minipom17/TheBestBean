@@ -1,4 +1,4 @@
-@page "/Tour/{id}"
+@page "/Workshop/{id}"
 @model TheBestBean.Pages.TourModel
 @{
     Layout = "_Layout";
@@ -14,7 +14,7 @@
 
 @if (Model.Tour != null)
 {
-    <!-- Huge Hero Image — full-bleed on mobile, rounded inset on desktop; swipeable gallery -->
+    <!-- Hero band — cropped slice on desktop, swipeable gallery -->
     <div class="tour-media-bleed max-w-[1600px] mx-auto w-full mt-0 md:mt-6 no-print">
         @{
             var heroImage = Model.PageContent.GetValueOrDefault($"Tour_Hero_Image_{Model.Tour.Id}", Model.Tour.ImageUrl);
@@ -36,23 +36,23 @@
             var carouselId = $"tour-{Model.Tour.Id}";
             var heroPosParts = heroPos.Split(' ');
             var cssPos = heroPosParts.Length >= 2 ? $"{heroPosParts[0]} {heroPosParts[1]}" : "50% 50%";
-            var cssScale = heroPosParts.Length >= 3 ? heroPosParts[2] : "1.0";
         }
-        <div class="exp-carousel tour-media-frame w-full aspect-[15/11] md:aspect-[16/9] bg-gray-100 dark:bg-[#1C191F] overflow-hidden relative shadow-sm" data-carousel-id="@carouselId">
+        <div class="exp-carousel tour-media-frame tour-hero-frame w-full bg-gray-100 dark:bg-[#1C191F] overflow-hidden relative shadow-sm" data-carousel-id="@carouselId">
             @if (heroPhotos.Any())
             {
                 <div class="carousel-container absolute inset-0 w-full h-full flex transition-transform duration-500 ease-in-out" id="carousel-@carouselId" data-current="0">
                     @for (int i = 0; i < heroPhotos.Count; i++)
                     {
                         var img = heroPhotos[i];
+                        var isLabOverhead = img.Contains("cusco_lab_1", StringComparison.OrdinalIgnoreCase);
                         <div class="exp-carousel__slide">
                             @if (i == 0)
                             {
-                                <img src="@img" alt="@Model.Tour.Title" class="img-stark transition-transform" style="object-position: @cssPos; transform: scale(@cssScale);" draggable="false" data-entity-id="@Model.Tour.Id" data-entity-type="Experience" data-editable="ImageUrl" data-position-key="Tour_Hero_Pos_@Model.Tour.Id" data-saved-pos="@heroPos" />
+                                <img src="@img" alt="@Model.Tour.Title" class="img-stark@(isLabOverhead ? " hero-orient-90" : "")" style="object-position: @cssPos;" draggable="false" data-entity-id="@Model.Tour.Id" data-entity-type="Experience" data-editable="ImageUrl" data-position-key="Tour_Hero_Pos_@Model.Tour.Id" data-saved-pos="@heroPos" />
                             }
                             else
                             {
-                                <img src="@img" alt="@Model.Tour.Title" class="img-stark" draggable="false" loading="lazy" decoding="async" />
+                                <img src="@img" alt="@Model.Tour.Title" class="img-stark@(isLabOverhead ? " hero-orient-90" : "")" draggable="false" loading="lazy" decoding="async" />
                             }
                         </div>
                     }
@@ -77,18 +77,15 @@
     <!-- Main Content -->
     <div class="flex-grow max-w-[1600px] mx-auto w-full px-6 md:px-12 relative pb-32 font-sans text-v-black dark:text-[#D6D0C8] bg-v-white dark:bg-[#121014] mt-12 md:mt-24">
         
-        <main class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 relative no-print">
+        <main class="workshop-dossier relative no-print">
             
             <!-- Reservation stays first on phones so guests can actually book -->
-            <div class="lg:col-span-4 flex flex-col relative">
-                <div class="lg:sticky lg:top-32 bg-white dark:bg-[#121014] rounded-3xl border border-[#ece7df] p-6 md:p-8 shadow-[0_12px_40px_rgba(18,16,20,0.06)]">
+            <div class="workshop-dossier__reserve flex flex-col relative">
+                <div class="lg:sticky lg:top-32 bg-white dark:bg-[#121014] rounded-3xl border border-[#ece7df] p-6 md:p-8">
                     <div class="mb-2">
                         <p class="text-[10px] font-mono-jb font-bold uppercase tracking-widest text-[#722EA8] m-0 mb-2">Reserve a seat</p>
-                        <div class="flex flex-col items-start gap-1">
-                            <partial name="_WorkshopPrice" model="new DualPriceModel { Usd = Model.Tour.Price }" />
-                            <span class="text-[10px] font-mono font-bold tracking-widest text-[#FF3B1F] uppercase mt-1">Visa 5% Perú · 2.4% CAD / USD</span>
-                        </div>
-                        <p class="text-xs text-v-gray mt-2 m-0">per participant · Cusco time</p>
+                        <partial name="_WorkshopPrice" model="new DualPriceModel { Usd = Model.Tour.Price }" />
+                        <p class="text-xs text-v-gray mt-2 m-0">per person</p>
                     </div>
                     
                     <div class="flex flex-col gap-3 mt-6 pt-6 border-t border-gray-100">
@@ -169,12 +166,12 @@
                         <button type="submit" id="reserve-btn" disabled class="w-full bg-v-black text-v-white rounded-full py-4 font-bold tracking-tight text-lg hover:bg-v-red transition-colors border-0 cursor-pointer mt-5 mb-16 lg:mb-0 disabled:opacity-40 disabled:cursor-not-allowed relative z-[1]" data-entity-id="Tour_ReserveButton" data-entity-type="SiteContent" data-editable="Value">
                             Choose a date to reserve
                         </button>
-                        <p class="text-[10px] text-v-gray text-center mt-4 mb-0">Need a private time? <a href="https://wa.me/51993779381" class="text-[#722EA8]">WhatsApp +51 993 779 381</a></p>
+                        <p class="text-[10px] text-v-gray text-center mt-4 mb-0">Need a private time? <a href="@PurpleBeanContact.WhatsAppUrl" class="text-[#722EA8]">WhatsApp @PurpleBeanContact.WhatsAppDisplay</a></p>
                     </form>
                 </div>
             </div>
 
-            <div class="lg:col-span-8 flex flex-col gap-16 pt-4">
+            <div class="workshop-dossier__content flex flex-col gap-16 pt-4">
                 
                 <!-- Title Block -->
                 <div>
@@ -365,7 +362,7 @@
                     {
                         var img = Model.Tour.GalleryImages[i];
                         <div class="tour-media-frame snap-center shrink-0 w-[100vw] md:w-[600px] aspect-[15/11] overflow-hidden relative shadow-sm">
-                            <img src="@img" class="img-stark" alt="@Model.Tour.Title photo" loading="lazy" decoding="async" data-entity-id="@Model.Tour.Id" data-entity-type="Experience" data-editable="GalleryImage_@i" />
+                            <img src="@img" class="img-stark@(img.Contains("cusco_lab_1", StringComparison.OrdinalIgnoreCase) ? " hero-orient-90" : "")" alt="@Model.Tour.Title photo" loading="lazy" decoding="async" data-entity-id="@Model.Tour.Id" data-entity-type="Experience" data-editable="GalleryImage_@i" />
                         </div>
                     }
                 </div>
@@ -405,7 +402,7 @@ else
         <script type="application/ld+json">
         {
           "@@context": "https://schema.org",
-          "@@type": "TouristTrip",
+          "@@type": "Service",
           "name": "@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(Model.Tour.Title))",
           "description": "@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(Model.Tour.Description))",
           "image": "@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(Model.Tour.ImageUrl))",

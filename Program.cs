@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.HttpOverrides;
 using TheBestBean.Data;
@@ -15,6 +16,7 @@ builder.Services.AddLocalization(options => options.ResourcesPath = "Resources")
 builder.Services.AddRazorPages(options => 
 {
     options.Conventions.AuthorizeFolder("/Admin", "RequireAdminRole");
+    options.Conventions.AddPageRoute("/Tour", "/Expedition/{id}");
 }).AddViewLocalization().AddDataAnnotationsLocalization();
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -52,6 +54,41 @@ builder.Services.AddDbContext<TheBestBeanContext>(options =>
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<TheBestBeanContext>();
+builder.Services.AddSingleton(sp =>
+{
+    var env = sp.GetRequiredService<IHostEnvironment>();
+    var opt = new EmailOptions();
+    var secretPath = Path.Combine(env.ContentRootPath, "secrets", "email.json");
+    if (File.Exists(secretPath))
+    {
+        var file = System.Text.Json.JsonSerializer.Deserialize<EmailOptions>(
+            File.ReadAllText(secretPath),
+            new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        if (file != null)
+        {
+            opt.Host = file.Host;
+            opt.Port = file.Port > 0 ? file.Port : 587;
+            opt.User = file.User;
+            opt.Password = file.Password;
+            opt.From = string.IsNullOrWhiteSpace(file.From) ? file.User : file.From;
+            opt.UseSsl = file.UseSsl;
+        }
+    }
+    var envHost = Environment.GetEnvironmentVariable("SMTP_HOST");
+    var envUser = Environment.GetEnvironmentVariable("SMTP_USER");
+    var envPass = Environment.GetEnvironmentVariable("SMTP_PASSWORD");
+    var envFrom = Environment.GetEnvironmentVariable("SMTP_FROM");
+    if (!string.IsNullOrWhiteSpace(envHost)) opt.Host = envHost;
+    if (!string.IsNullOrWhiteSpace(envUser)) opt.User = envUser;
+    if (!string.IsNullOrWhiteSpace(envPass)) opt.Password = envPass;
+    if (!string.IsNullOrWhiteSpace(envFrom)) opt.From = envFrom;
+    if (int.TryParse(Environment.GetEnvironmentVariable("SMTP_PORT"), out var envPort) && envPort > 0)
+    {
+        opt.Port = envPort;
+    }
+    return opt;
+});
+builder.Services.AddTransient<IEmailSender, SmtpEmailSender>();
 
 // Register services
 builder.Services.AddScoped<FarmProfileService>();
@@ -287,6 +324,8 @@ app.UseAuthorization();
 
 app.MapGet("/Shop", () => Results.Redirect("/Coffee", permanent: true));
 app.MapGet("/GreenBeans", () => Results.Redirect("/Coffee", permanent: true));
+app.MapGet("/Tour/{id:int}", (int id) => Results.Redirect($"/Workshop/{id}", permanent: true));
+app.MapGet("/Tours", () => Results.Redirect("/Experiences", permanent: true));
 
 app.MapRazorPages();
 app.MapControllers();

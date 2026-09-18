@@ -27,7 +27,7 @@
     {
         <meta name="robots" content="@robots" />
     }
-    <meta name="description" content="@(ViewData["MetaDescription"] ?? "Specialty coffee shop and roasting lab in Cusco, Peru. Sourcing and roasting the finest high-altitude coffees, and offering immersive coffee tours and workshops.")">
+    <meta name="description" content="@(ViewData["MetaDescription"] ?? "Specialty coffee shop and roasting lab in Cusco, Peru. Sourcing and roasting high-altitude coffees, with workshops and farm experiences.")">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="@(ViewData["OgType"] ?? "website")">
@@ -135,7 +135,7 @@
         "width": 1200,
         "height": 1200
       },
-      "telephone": "+51993779381",
+      "telephone": "@PurpleBeanContact.TelE164",
       "url": "https://purplebean.coffee/",
       "sameAs": [
         "https://www.instagram.com/purple.beancoffee/"
@@ -627,21 +627,16 @@
     
     <partial name="_Footer" />
 
-    @{
-        var hideDispatchDock = Context.Request.Path.StartsWithSegments("/Checkout")
-            || Context.Request.Path.StartsWithSegments("/Cart")
-            || Context.Request.Path.StartsWithSegments("/Tour");
-    }
-    @if (!hideDispatchDock)
-    {
     <!-- Unified Delivery & WhatsApp Float Button -->
-    <a href="https://wa.me/51993779381" target="_blank" class="delivery-float" title="Delivery & WhatsApp Dispatch"
+    <a href="@PurpleBeanContact.WhatsAppUrl" target="_blank" class="delivery-float" title="Delivery & WhatsApp Dispatch"
        onclick="if (typeof gtag === 'function') { gtag('event', 'whatsapp_click', { event_category: 'engagement', event_label: location.pathname, page_path: location.pathname, transport_type: 'beacon' }); gtag('event', 'generate_lead', { event_category: 'engagement', method: 'whatsapp', page_path: location.pathname, transport_type: 'beacon' }); }">
         <i class="bi bi-truck text-xl"></i>
         <span>//</span>
         <i class="bi bi-whatsapp text-xl"></i>
     </a>
-    }
+    <button type="button" class="back-to-top" id="back-to-top" aria-label="Back to top">
+        <i class="bi bi-chevron-up" aria-hidden="true"></i>
+    </button>
 
     <script>
         // Theme Toggle Logic (init already done in <head> to prevent FOUC)
@@ -726,6 +721,19 @@
                     saveEl.hidden = save <= 0;
                 }
             };
+
+            (function () {
+                const btn = document.getElementById('back-to-top');
+                if (!btn) return;
+                const toggle = () => {
+                    btn.classList.toggle('is-visible', window.scrollY > 480);
+                };
+                window.addEventListener('scroll', toggle, { passive: true });
+                toggle();
+                btn.addEventListener('click', () => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            })();
 
             const storedCurrency = localStorage.getItem('Currency');
             if (!storedCurrency) {

@@ -24,6 +24,7 @@ namespace TheBestBean.Services
         public int CoffeeBeanId { get; init; }
         public string Name { get; init; } = "";
         public decimal GreenKg { get; init; }
+        public decimal RoastedKg { get; init; }
         public IReadOnlyList<RoastedDrop> Roasts { get; init; } = Array.Empty<RoastedDrop>();
 
         public bool HasGreen => GreenKg >= 0.05m;
@@ -36,7 +37,7 @@ namespace TheBestBean.Services
                 var latest = Roasts.FirstOrDefault();
                 if (HasGreen && latest != null)
                 {
-                    return $"{FormatKg(GreenKg)} green · last roast {latest.DaysAgo}d · {latest.Profile}";
+                    return $"{FormatKg(GreenKg)} green · last roast {FormatKg(RoastedKg)} {latest.DaysAgo}d · {latest.Profile}";
                 }
 
                 if (HasGreen)
@@ -55,8 +56,7 @@ namespace TheBestBean.Services
 
         public static string FormatKg(decimal kg)
         {
-            var rounded = Math.Round(kg, kg >= 10 ? 0 : 1);
-            return $"{rounded:0.#} kg";
+            return $"{Math.Round(kg, 1, MidpointRounding.AwayFromZero):0.0} kg";
         }
     }
 
@@ -66,6 +66,7 @@ namespace TheBestBean.Services
         public bool Compact { get; init; }
         public bool ShowTimeline { get; init; } = true;
         public bool ShowGrind { get; init; } = true;
+        public bool ShowLede { get; init; } = true;
         public string Kicker { get; init; } = "Lab · live";
         public string Title { get; init; } = "What’s in the lab";
         public FreshPhase? Highlight { get; init; }

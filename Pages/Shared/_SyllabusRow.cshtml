@@ -4,21 +4,27 @@
 @if (!string.IsNullOrWhiteSpace(Model.DetailBody))
 {
     <details class="tour-syllabus-details w-full min-w-0 group">
-        <summary class="tour-syllabus-details__summary w-full flex items-start gap-x-2 gap-y-1 min-w-0">
-            <span class="tour-syllabus-label shrink-0 mt-1">@Model.Label:</span>
-            <span class="syllabus-module-title flex-1 mr-auto min-w-0 mt-1">
-                @if (!string.IsNullOrWhiteSpace(Model.Title))
-                {
-                    <span class="syllabus-module-title__name">@Model.Title</span>
-                }
-                @if (!string.IsNullOrWhiteSpace(Model.Time))
-                {
-                    <span class="syllabus-module-title__time">@Model.Time</span>
-                }
-            </span>
-            <div class="flex items-center ml-2 mt-1 gap-1 opacity-80 group-hover:opacity-100 transition-opacity shrink-0">
-                <span class="exp-filter-label m-0" style="width: auto; flex: none;">details</span>
-                <span class="tour-syllabus-details__chevron" aria-hidden="true"></span>
+        <summary class="tour-syllabus-details__summary !block">
+            <div class="flex flex-col w-full min-w-0">
+                <div class="flex justify-end items-center gap-2 mb-1 w-full mt-0">
+                    @if (!string.IsNullOrWhiteSpace(Model.Time))
+                    {
+                        <span class="syllabus-module-title__time">@Model.Time</span>
+                    }
+                    <span class="syllabus-details-cta">
+                        <span class="syllabus-details-cta__label">details</span>
+                        <span class="tour-syllabus-details__chevron" aria-hidden="true"></span>
+                    </span>
+                </div>
+                <div class="syllabus-summary-line !whitespace-normal w-full !items-start !flex-col text-left mt-0.5">
+                    <span class="tour-syllabus-label block mb-1">@Model.Label:</span>
+                    <span class="syllabus-module-title !block w-full !whitespace-normal break-words">
+                        @if (!string.IsNullOrWhiteSpace(Model.Title))
+                        {
+                            <span class="syllabus-module-title__name !whitespace-normal break-words">@Model.Title</span>
+                        }
+                    </span>
+                </div>
             </div>
         </summary>
         <div class="tour-syllabus-details__body text-sm text-v-gray leading-relaxed font-normal pt-2">
@@ -28,23 +34,27 @@
 }
 else
 {
-    <div class="w-full flex items-start flex-wrap gap-x-2 gap-y-1 min-w-0">
-        <span class="tour-syllabus-label shrink-0 mt-1">@Model.Label:</span>
-        <span class="syllabus-module-title flex-1 mr-auto min-w-0 mt-1">
-            @if (!string.IsNullOrWhiteSpace(Model.Title))
-            {
-                <span class="syllabus-module-title__name">@Model.Title</span>
-            }
+    <div class="flex flex-col w-full min-w-0 pt-1">
+        <div class="flex justify-end items-center gap-2 mb-1 w-full mt-0">
             @if (!string.IsNullOrWhiteSpace(Model.Time))
             {
                 <span class="syllabus-module-title__time">@Model.Time</span>
             }
-        </span>
+        </div>
+        <div class="syllabus-summary-line !whitespace-normal w-full !items-start !flex-col text-left mt-0.5">
+            <span class="tour-syllabus-label block mb-1">@Model.Label:</span>
+            <span class="syllabus-module-title !block w-full !whitespace-normal break-words">
+                @if (!string.IsNullOrWhiteSpace(Model.Title))
+                {
+                    <span class="syllabus-module-title__name !whitespace-normal break-words">@Model.Title</span>
+                }
+            </span>
+        </div>
     </div>
 }
 @if (Model.Tags.Count > 0)
 {
-    <ul class="syllabus-tags">
+    <ul class="syllabus-tags mt-2">
         @foreach (var tag in Model.Tags)
         {
             <li class="syllabus-tag">@tag</li>

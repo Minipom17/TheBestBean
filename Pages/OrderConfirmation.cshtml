@@ -245,7 +245,7 @@
                 @if (string.Equals(Model.PaymentMethod, "Yape", StringComparison.OrdinalIgnoreCase))
                 {
                     <h4>Yape S/@LocalPricing.YapeSoles(Model.OrderTotal).ToString("0")</h4>
-                    <p>Yape or Plin to <strong>993 779 381</strong> (Purple Bean). Put order <strong>@Model.OrderNumber</strong> in the note. We’ll also send the QR on WhatsApp.</p>
+                    <p>Yape or Plin to <strong>@PurpleBeanContact.WhatsAppLocal</strong> (Purple Bean). Put order <strong>@Model.OrderNumber</strong> in the note. We’ll also send the QR on WhatsApp.</p>
                 }
                 else if (Model.IsCulqi && string.Equals(Model.PaymentStatus, "Paid", StringComparison.OrdinalIgnoreCase))
                 {
@@ -279,7 +279,7 @@
                 else
                 {
                     <h4>Payment</h4>
-                    <p>If PayPal didn’t finish, Yape or Plin to <strong>993 779 381</strong> with order <strong>@Model.OrderNumber</strong>.</p>
+                    <p>If PayPal didn’t finish, Yape or Plin to <strong>@PurpleBeanContact.WhatsAppLocal</strong> with order <strong>@Model.OrderNumber</strong>.</p>
                 }
             </div>
         </div>

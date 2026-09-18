@@ -21,7 +21,7 @@ namespace TheBestBean.Pages
         }
 
         public Product? Product { get; set; }
-        public List<Product> RelatedProducts { get; set; } = new();
+        public List<CoffeeBean> RelatedCoffees { get; set; } = new();
         public Dictionary<string, string> PageContent { get; set; } = new();
         public CoffeeLotStatus? Lot { get; set; }
         public CoffeeLabBoard? LotBoard { get; set; }
@@ -82,6 +82,24 @@ namespace TheBestBean.Pages
                     Title = "Green, roast, rest",
                     Highlight = Lot?.Roasts.FirstOrDefault()?.Phase
                 };
+
+                RelatedCoffees = (await _context.CoffeeBean
+                    .AsNoTracking()
+                    .Include(b => b.OriginCountry)
+                    .Include(b => b.CoffeeRegion)
+                    .Where(b => b.Id != bean.Id)
+                    .ToListAsync())
+                    .OrderByDescending(b => b.CoffeeRegionId == bean.CoffeeRegionId)
+                    .ThenByDescending(b => b.OriginCountryId == bean.OriginCountryId)
+                    .ThenByDescending(b => b.ScaScore)
+                    .Take(8)
+                    .ToList();
+
+                if (RelatedCoffees.Count > 0)
+                {
+                    var relatedLots = await _freshness.GetLotsAsync(RelatedCoffees.Select(b => b.Id));
+                    ViewData["CoffeeLots"] = relatedLots.ToDictionary(l => l.CoffeeBeanId);
+                }
             }
             else 
             {

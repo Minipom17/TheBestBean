@@ -63,7 +63,7 @@
                         <input type="hidden" asp-for="FullName" id="FullName" />
                         <div class="mt-3">
                             <label asp-for="Phone">WhatsApp / phone</label>
-                            <input asp-for="Phone" type="tel" required placeholder="+51 993…" autocomplete="tel" />
+                            <input asp-for="Phone" type="tel" required placeholder="+51 913…" autocomplete="tel" />
                         </div>
                         @if (skipShip)
                         {
@@ -212,7 +212,7 @@
 
             <aside class="checkout-pro__aside">
                 <div class="checkout-pro__receipt">
-                    <h2>Your order</h2>
+                    <h2>Order summary</h2>
                     <div class="checkout-pro__lines">
                         @foreach (var item in Model.CartItems)
                         {
@@ -236,11 +236,24 @@
                         }
                     </div>
                     <div class="checkout-pro__totals">
-                        <div><span>Subtotal</span><span>$@Model.CartTotal.ToString("0.00")</span></div>
-                        <div><span>Shipping</span><span>Free</span></div>
-                        <div class="bag-pro__due"><span>Yape / listed</span><span>S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</span></div>
+                        <div><span>Subtotal</span>
+                            <span class="money-pair">
+                                <strong>$@Model.CartTotal.ToString("0.00")</strong>
+                                <span>S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</span>
+                            </span>
+                        </div>
+                        <div class="checkout-pro__paypair">
+                            <div>
+                                <span>Cash price</span>
+                                <strong>S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</strong>
+                            </div>
+                            <div>
+                                <span>Card · Perú</span>
+                                <strong>S/@LocalPricing.CulqiSoles(Model.CartTotal).ToString("0")</strong>
+                            </div>
+                        </div>
                     </div>
-                    <p class="checkout-pro__receipt-note">Card totals, including the surcharge, sit on the payment method you choose.</p>
+                    <p class="checkout-pro__receipt-note">Cash / Yape / Plin is the local price. Perú cards use the card price. PayPal is listed USD or CAD.</p>
                     @if (Model.HasCoffeeItems)
                     {
                         <div class="mt-6">

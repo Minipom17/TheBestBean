@@ -8,8 +8,11 @@
 }
 <span class="price-pair @sizeClass">
     <span class="price-pair__main">
-        <span class="price-pair__amount">$@usdText</span>
-        <span class="price-pair__usd">USD</span>
+        @if (Model.From)
+        {
+            <span class="price-pair__from">From</span>
+        }
+        <span class="price-pair__usd" data-price-usd>$@usdText</span>
+        <span class="price-pair__soles" data-price-soles>S/@soles.ToString("0")</span>
     </span>
-    <span class="price-pair__soles">S/@soles.ToString("0")</span>
 </span>

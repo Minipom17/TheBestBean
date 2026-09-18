@@ -9,15 +9,15 @@
 <div class="fixed inset-0 w-full h-full z-[100] overflow-hidden bg-white dark:bg-[#1A2315] py-4" id="map-wrapper">
     
     <!-- EXIT BUTTON -->
-    <a href="/Experiences" class="absolute top-6 right-6 z-50 w-10 h-10 bg-v-black text-v-white border-none flex items-center justify-center hover:bg-v-red transition-colors cursor-pointer text-xl font-mono-jb no-underline">
+    <button onclick="history.back()" class="absolute top-6 right-6 z-50 w-10 h-10 bg-black text-white dark:bg-white dark:text-black border-none flex items-center justify-center hover:bg-red-600 dark:hover:bg-red-600 dark:hover:text-white transition-colors cursor-pointer text-xl font-mono-jb no-underline">
         &times;
-    </a>
+    </button>
 
     <!-- FLOATING LEGEND -->
-    <div class="absolute top-6 left-6 z-50 bg-white/90 dark:bg-[#111111]/90 text-black dark:text-white backdrop-blur-md shadow-sm p-6 w-[280px] md:w-[240px] rounded-lg border border-gray-200 dark:border-none">
-        <h3 class="font-mono-jb text-[11px] uppercase tracking-widest font-bold mb-4 border-b border-gray-300 dark:border-gray-600 pb-2">Legend</h3>
+    <div class="absolute bottom-24 left-6 md:top-6 md:bottom-auto md:left-6 z-50 bg-white/90 dark:bg-[#111111]/90 text-black dark:text-white backdrop-blur-md shadow-sm p-4 md:p-6 w-[200px] md:w-[240px] rounded-lg border border-gray-200 dark:border-none flex flex-col max-h-[35vh] md:max-h-none">
+        <h3 class="font-mono-jb text-[10px] md:text-[11px] uppercase tracking-widest font-bold mb-3 md:mb-4 border-b border-gray-300 dark:border-gray-600 pb-2">Legend</h3>
         
-        <ul class="flex flex-col gap-2 font-mono-jb text-[11px] md:text-[9px] uppercase tracking-wider m-0 p-0 list-none overflow-y-auto max-h-[60vh] pr-2" id="map-legend">
+        <ul class="flex flex-col gap-2 font-mono-jb text-[9px] uppercase tracking-wider m-0 p-0 list-none overflow-y-auto pr-2 flex-grow" id="map-legend">
             <li class="flex items-center gap-4 cursor-pointer hover:text-v-red transition-colors" data-target="megantoni">
                 <div class="w-3 h-3 rounded-full bg-[#82C341]"></div>
                 <span>Megantoni</span>
@@ -60,8 +60,8 @@
             </li>
         </ul>
         
-        <div class="mt-6 pt-3 border-t border-gray-300 dark:border-gray-600">
-            <button id="reset-map" class="w-full bg-transparent border-none text-left p-0 font-mono-jb text-[11px] md:text-[10px] uppercase tracking-widest font-bold text-black dark:text-white hover:text-v-red transition-colors cursor-pointer">
+        <div class="mt-3 md:mt-6 pt-3 border-t border-gray-300 dark:border-gray-600 shrink-0">
+            <button id="reset-map" class="w-full bg-transparent border-none text-left p-0 font-mono-jb text-[9px] md:text-[10px] uppercase tracking-widest font-bold text-black dark:text-white hover:text-red-600 transition-colors cursor-pointer">
                 Reveal All
             </button>
         </div>
@@ -77,8 +77,8 @@
     
     <!-- MAP CONTROLS -->
     <div class="absolute bottom-6 right-6 z-50 flex flex-col gap-2">
-        <button id="zoom-in" class="w-10 h-10 bg-v-black text-v-white border-none flex items-center justify-center hover:bg-v-red transition-colors cursor-pointer text-lg font-mono-jb">+</button>
-        <button id="zoom-out" class="w-10 h-10 bg-v-black text-v-white border-none flex items-center justify-center hover:bg-v-red transition-colors cursor-pointer text-lg font-mono-jb">-</button>
+        <button id="zoom-in" class="w-10 h-10 bg-black text-white dark:bg-white dark:text-black border-none flex items-center justify-center hover:bg-red-600 dark:hover:bg-red-600 dark:hover:text-white transition-colors cursor-pointer text-lg font-mono-jb">+</button>
+        <button id="zoom-out" class="w-10 h-10 bg-black text-white dark:bg-white dark:text-black border-none flex items-center justify-center hover:bg-red-600 dark:hover:bg-red-600 dark:hover:text-white transition-colors cursor-pointer text-lg font-mono-jb">-</button>
     </div>
 </div>
 

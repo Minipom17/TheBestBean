@@ -69,6 +69,9 @@ namespace TheBestBean.Services
 
                 var matches = inventory.Where(inv => Matches(inv, bean.Id, bean.Name)).ToList();
                 var green = matches.Sum(m => m.TotalKg);
+                var roastedKg = matches
+                    .SelectMany(m => m.RoastBatches)
+                    .Sum(r => (r.RoastedWeightGrams ?? 0m) / 1000m);
                 var drops = matches
                     .SelectMany(m => m.RoastBatches)
                     .OrderByDescending(r => r.RoastDate)
@@ -86,6 +89,7 @@ namespace TheBestBean.Services
                     CoffeeBeanId = bean.Id,
                     Name = bean.Name,
                     GreenKg = green,
+                    RoastedKg = roastedKg,
                     Roasts = drops
                 });
             }

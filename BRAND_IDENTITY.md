@@ -13,7 +13,7 @@
 | **Domain** | purplebean.coffee |
 | **Alt Brand / Label** | 12° Sur (used on About page and some product labels) |
 | **Instagram** | [@purple.beancoffee](https://instagram.com/purple.beancoffee) |
-| **WhatsApp** | +51 993 779 381 |
+| **WhatsApp** | +51 913 779 574 |
 | **Legacy Names (DO NOT USE)** | ~~Llama Coffee~~, ~~The Best Bean~~, ~~TheBestBean~~ |
 
 ---

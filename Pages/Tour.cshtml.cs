@@ -96,7 +96,7 @@ namespace TheBestBean.Pages
         private void ApplyTourSeo(Experience tour)
         {
             var heroImage = GetTourHeroImageUrl(tour);
-            var pageUrl = $"https://purplebean.coffee/Tour/{tour.Id}";
+            var pageUrl = $"https://purplebean.coffee{ExperienceUrls.PublicPath(tour)}";
             ViewData["CanonicalUrl"] = pageUrl;
             ViewData["Title"] = tour.Title;
             ViewData["OgType"] = "article";
@@ -126,7 +126,7 @@ namespace TheBestBean.Pages
             var listing = new Dictionary<string, object?>
             {
                 ["@context"] = "https://schema.org",
-                ["@type"] = new[] { "TouristAttraction", "Service" },
+                ["@type"] = "Service",
                 ["name"] = tour.Title,
                 ["description"] = description,
                 ["image"] = images,
@@ -172,7 +172,7 @@ namespace TheBestBean.Pages
                             ? "Workshop length varies by experience. Check the listing on purplebean.coffee for duration."
                             : $"{tour.Title} lasts {tour.Duration}."),
                     Q("Where is the Cusco coffee workshop?",
-                        $"{tour.Title} is hosted by Purple Bean Coffee near San Pedro Market in Cusco, Peru. Book on purplebean.coffee or WhatsApp +51 993 779 381.")
+                        $"{tour.Title} is hosted by Purple Bean Coffee near San Pedro Market in Cusco, Peru. Book on purplebean.coffee or WhatsApp {PurpleBeanContact.WhatsAppDisplay}.")
                 }
             };
 

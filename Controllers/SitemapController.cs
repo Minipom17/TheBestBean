@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Text;
 using System.Threading.Tasks;
 using TheBestBean.Data;
+using TheBestBean.Services;
 using System.Xml.Linq;
 using System.Linq;
 
@@ -69,13 +70,13 @@ namespace TheBestBean.Controllers
                 ));
             }
 
-            // Experiences (public URLs are /Tour/{id}, not /Experiences/{id})
+            // Experiences (public URLs are /Workshop/{id} or /Expedition/{id})
             var experiences = await _context.Experiences
                 .Where(e => e.Category != "Archived")
                 .ToListAsync();
             foreach (var exp in experiences)
             {
-                var loc = $"{baseUrl}/Tour/{exp.Id}";
+                        var loc = $"{baseUrl}{ExperienceUrls.PublicPath(exp)}";
                 var urlEl = new XElement(xmlns + "url",
                     new XElement(xmlns + "loc", loc),
                     new XElement(xmlns + "changefreq", "weekly"),

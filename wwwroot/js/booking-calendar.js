@@ -129,7 +129,7 @@
     });
 
     if (!slots.length && timesEl) {
-        timesEl.innerHTML = '<p class="text-sm m-0">No open seats online right now. <a href="https://wa.me/51993779381">WhatsApp us</a> for a date.</p>';
+        timesEl.innerHTML = '<p class="text-sm m-0">No open seats online right now. <a href="https://wa.me/51913779574">WhatsApp us</a> for a date.</p>';
         setSlot(null);
         render();
         return;

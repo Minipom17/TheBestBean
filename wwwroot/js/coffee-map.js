@@ -9617,7 +9617,7 @@ var productionByIso3 = {
 };
 var productionByName = {
   "Peru": "arabica",
-  "Colombia": "arabica",
+  "Peru": "arabica",
   "Brazil": "both",
   "Ecuador": "arabica",
   "Bolivia": "arabica",

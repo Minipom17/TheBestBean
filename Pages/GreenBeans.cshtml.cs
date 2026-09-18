@@ -45,8 +45,19 @@ namespace TheBestBean.Pages
 
             PageContent = await _context.SiteContent.Where(c => c.Page == "GreenBeans").ToDictionaryAsync(c => c.Key, c => c.Value);
             FlavorZones = await _context.FlavorZones.ToListAsync();
-            LabBoard = await _freshness.LiveBoardAsync();
-            LotsById = LabBoard.Lots.ToDictionary(l => l.CoffeeBeanId);
+            var live = await _freshness.LiveBoardAsync();
+            LotsById = live.Lots.ToDictionary(l => l.CoffeeBeanId);
+            LabBoard = new CoffeeLabBoard
+            {
+                Lots = live.Lots,
+                Compact = true,
+                ShowTimeline = false,
+                ShowGrind = false,
+                ShowLede = false,
+                Kicker = live.Kicker,
+                Title = live.Title,
+                Highlight = live.Highlight
+            };
             ViewData["CoffeeLots"] = LotsById;
         }
 

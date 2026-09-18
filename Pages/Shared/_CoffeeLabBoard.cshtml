@@ -8,56 +8,47 @@
     <header class="lab-board__head">
         <p class="lab-board__kicker">@board.Kicker</p>
         <h2>@board.Title</h2>
-        <p class="lab-board__lede">
-            We buy green from farmers and labs, profile the roast, then roast after you order and ship the next day so rest happens in transit. Most lots are for pour-over; the same coffee works as espresso if you want those flavors in the shot.
-        </p>
+        @if (board.ShowLede)
+        {
+            <p class="lab-board__lede">
+                We buy green from farmers and labs, profile the roast, then roast after you order and ship the next day so rest happens in transit. Most lots are for pour-over; the same coffee works as espresso if you want those flavors in the shot.
+            </p>
+        }
     </header>
 
     @if (board.Lots.Count > 0)
     {
+        var colors = new[] { "#FF6464", "#50A8EB", "#D193FF", "#92DBFF", "#FF9F43" };
+        int colorIndex = 0;
         <div class="lab-board__feed" role="list">
             @foreach (var lot in board.Lots)
             {
-                <article class="lab-board__lot" role="listitem">
-                    <div class="lab-board__lot-top">
-                        <a asp-page="/Product" asp-route-id="@lot.CoffeeBeanId" class="lab-board__name">@lot.Name</a>
-                        @if (lot.HasGreen)
-                        {
-                            <span class="lab-board__pill lab-board__pill--green">@CoffeeLotStatus.FormatKg(lot.GreenKg) green · ready to roast</span>
-                        }
-                        else
-                        {
-                            <span class="lab-board__pill">Roast to order</span>
-                        }
-                    </div>
-                    @if (lot.Roasts.Count > 0)
-                    {
-                        <ul class="lab-board__roasts">
-                            @foreach (var roast in lot.Roasts)
+                var latestRoast = lot.Roasts.FirstOrDefault();
+                var color = colors[colorIndex % colors.Length];
+                colorIndex++;
+                <a asp-page="/Product" asp-route-id="@lot.CoffeeBeanId" class="lab-board__row group" role="listitem">
+                    <span class="lab-board__meta">
+                        <span>
+                            @if (lot.HasGreen)
                             {
-                                <li data-phase="@roast.Phase.ToString().ToLowerInvariant()">
-                                    <strong>@roast.DaysAgo d ago</strong>
-                                    <span>@roast.Profile</span>
-                                    <span class="lab-board__phase">@roast.PhaseLabel</span>
-                                    @if (roast.WeightGrams is > 0)
-                                    {
-                                        <span>@(roast.WeightGrams >= 1000 ? $"{roast.WeightGrams / 1000m:0.#} kg" : $"{roast.WeightGrams:0} g") batch</span>
-                                    }
-                                </li>
+                                <text>[ @CoffeeLotStatus.FormatKg(lot.GreenKg) GREEN ]</text>
                             }
-                        </ul>
-                    }
-                    else
-                    {
-                        <p class="lab-board__empty-roast">No roast logged yet — we roast this after you pay.</p>
-                    }
-                </article>
+                            else
+                            {
+                                <text>[ ROAST TO ORDER ]</text>
+                            }
+                        </span>
+                        @if (latestRoast != null)
+                        {
+                            <span class="lab-board__meta-roast">@latestRoast.DaysAgo D AGO // @latestRoast.PhaseLabel // @latestRoast.Profile</span>
+                        }
+                    </span>
+                    <span class="lab-board__name-wrap">
+                        <span class="lab-board__name-link" style="border-bottom-color: @color;">@lot.Name</span>
+                    </span>
+                </a>
             }
         </div>
-    }
-    else
-    {
-        <p class="lab-board__empty">Green kg and roast dates post here from the lab. Until a lot is logged, we still roast to order after you pay.</p>
     }
 
     @if (board.ShowTimeline)

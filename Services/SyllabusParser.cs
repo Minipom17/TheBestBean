@@ -62,7 +62,25 @@ public static class SyllabusParser
             }
         }
 
+        if (string.IsNullOrWhiteSpace(title) && !string.IsNullOrWhiteSpace(detailBody))
+        {
+            title = PreviewFromHtml(detailBody);
+        }
+
         return new SyllabusItem(label, title, time, detailBody, tags);
+    }
+
+    private static string PreviewFromHtml(string html)
+    {
+        var text = Regex.Replace(html, "<[^>]+>", " ");
+        text = Regex.Replace(text, @"\s+", " ").Trim();
+        if (text.Length > 88)
+        {
+            var cut = text[..88];
+            var lastSpace = cut.LastIndexOf(' ');
+            text = (lastSpace > 40 ? cut[..lastSpace] : cut).TrimEnd(',', ';', ':') + "…";
+        }
+        return text;
     }
 
     private static IReadOnlyList<string> ParseTags(string? raw)

@@ -56,8 +56,8 @@
                                             }
                                         </div>
                                         <div class="bag-pro__price">
-                                            <strong>S/@LocalPricing.YapeSoles(item.Subtotal).ToString("0")</strong>
-                                            <span>$@item.Subtotal.ToString("0.00")</span>
+                                            <strong>$@item.Subtotal.ToString("0.00")</strong>
+                                            <span>S/@LocalPricing.YapeSoles(item.Subtotal).ToString("0")</span>
                                         </div>
                                     </div>
                                     <div class="bag-pro__row">
@@ -114,11 +114,25 @@
                         <h2>Order summary</h2>
                         <div class="checkout-pro__totals">
                             <div><span>Items</span><span>@Model.ItemCount</span></div>
-                            <div><span>Subtotal</span><span>$@Model.CartTotal.ToString("0.00")</span></div>
-                            <div><span>Shipping</span><span>Free</span></div>
-                            <div class="bag-pro__due"><span>Yape / listed</span><span>S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</span></div>
+                            <div>
+                                <span>Subtotal</span>
+                                <span class="money-pair">
+                                    <strong>$@Model.CartTotal.ToString("0.00")</strong>
+                                    <span>S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</span>
+                                </span>
+                            </div>
+                            <div class="checkout-pro__paypair">
+                                <div>
+                                    <span>Cash price</span>
+                                    <strong>S/@LocalPricing.YapeSoles(Model.CartTotal).ToString("0")</strong>
+                                </div>
+                                <div>
+                                    <span>Card · Perú</span>
+                                    <strong>S/@LocalPricing.CulqiSoles(Model.CartTotal).ToString("0")</strong>
+                                </div>
+                            </div>
                         </div>
-                        <p class="checkout-pro__receipt-note">Visa, Culqi, and PayPal amounts — including card fees — show when you pick a payment method.</p>
+                        <p class="checkout-pro__receipt-note">Cash / Yape / Plin is the local price. Perú cards use the card price. PayPal is listed USD or CAD.</p>
                     </div>
                     <a asp-page="/Checkout" class="checkout-pro__submit bag-pro__cta">Continue to checkout</a>
                     <p class="checkout-pro__trust">No charge on this page · Pay on the next step</p>

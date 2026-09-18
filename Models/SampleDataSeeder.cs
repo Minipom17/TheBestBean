@@ -46,6 +46,11 @@ namespace TheBestBean.Models
                 await userManager.CreateAsync(newAdmin, "AdminPass123!");
                 await userManager.AddToRoleAsync(newAdmin, "Admin");
             }
+            else if (!adminUser.EmailConfirmed)
+            {
+                adminUser.EmailConfirmed = true;
+                await userManager.UpdateAsync(adminUser);
+            }
         }
     
         public static async Task SeedSampleDataAsync(TheBestBeanContext context)
@@ -106,7 +111,7 @@ namespace TheBestBean.Models
                 _context.FlavorZones.AddRange(
                     new FlavorZone { Id = "fruity_citric", Name = "Citrus & Berries", Category = "Bright & Fruity", Description = "Driven by organic acids and vibrant fruit notes. Characterized by crisp brightness and delicate sweetness.", MarkersJson = "[\"Citric Acid\", \"Pineapple\", \"Orange\", \"Apple\", \"Floral\"]", Color = "#FFB800", BaryTargetJson = "{\"t\": 0.85, \"br\": 0.05, \"bl\": 0.1}", SpecsJson = "{\"roast\": [5, 20], \"body\": [10, 30], \"aftertaste\": [5, 25]}", RecommendationTitle = "Ethiopia Yirgacheffe", RecommendationOrigin = "Washed Process // Africa", RecommendationRoast = "Light Roast", RecommendationDesc = "A brilliantly bright washed coffee featuring sparkling acidity, bergamot, and crisp peach." },
                     new FlavorZone { Id = "floral_sweet", Name = "Floral Aromatics", Category = "Bright & Fruity", Description = "Highly volatile, delicate aromatics experienced primarily retro-nasally. Botanical perfumes and vanilla-like sweetness.", MarkersJson = "[\"Jasmine\", \"Vanilla\", \"Honey\", \"Chamomile\"]", Color = "#FF4D85", BaryTargetJson = "{\"t\": 0.5, \"br\": 0.1, \"bl\": 0.4}", SpecsJson = "{\"roast\": [10, 25], \"body\": [15, 35], \"aftertaste\": [20, 40]}", RecommendationTitle = "Panama Boquete Geisha", RecommendationOrigin = "Washed Process // Central America", RecommendationRoast = "Light Roast", RecommendationDesc = "World-renowned for its perfume-like aromatics. Expect intense jasmine and a delicate vanilla sweetness." },
-                    new FlavorZone { Id = "alcohol_fermented", Name = "Fermented & Winey", Category = "Funky & Boozy", Description = "Complex, pungent, and slightly boozy. Results from extended microbial fermentation during processing.", MarkersJson = "[\"Whiskey\", \"Winey\", \"Overripe Fruit\", \"Tropical\"]", Color = "#8A2BE2", BaryTargetJson = "{\"t\": 0.3, \"br\": 0.6, \"bl\": 0.1}", SpecsJson = "{\"roast\": [30, 50], \"body\": [70, 90], \"aftertaste\": [75, 95]}", RecommendationTitle = "Colombia Cauca Anaerobic", RecommendationOrigin = "Anaerobic Natural // South America", RecommendationRoast = "Light-Med Roast", RecommendationDesc = "A highly experimental microlot with heavy boozy notes of aged whiskey, dark cherry, and wine-like acidity." },
+                    new FlavorZone { Id = "alcohol_fermented", Name = "Fermented & Winey", Category = "Funky & Boozy", Description = "Complex, pungent, and slightly boozy. Results from extended microbial fermentation during processing.", MarkersJson = "[\"Whiskey\", \"Winey\", \"Overripe Fruit\", \"Tropical\"]", Color = "#8A2BE2", BaryTargetJson = "{\"t\": 0.3, \"br\": 0.6, \"bl\": 0.1}", SpecsJson = "{\"roast\": [30, 50], \"body\": [70, 90], \"aftertaste\": [75, 95]}", RecommendationTitle = "Peru Cauca Anaerobic", RecommendationOrigin = "Anaerobic Natural // South America", RecommendationRoast = "Light-Med Roast", RecommendationDesc = "A highly experimental microlot with heavy boozy notes of aged whiskey, dark cherry, and wine-like acidity." },
                     new FlavorZone { Id = "spices_pungent", Name = "Warm Spices", Category = "Funky & Boozy", Description = "Warm, sharp, and aromatic. Driven by dry brown spices and a robust, sometimes peppery finish.", MarkersJson = "[\"Cinnamon\", \"Clove\", \"Nutmeg\", \"Pepper\"]", Color = "#D11141", BaryTargetJson = "{\"t\": 0.1, \"br\": 0.8, \"bl\": 0.1}", SpecsJson = "{\"roast\": [60, 80], \"body\": [60, 85], \"aftertaste\": [70, 90]}", RecommendationTitle = "Sumatra Lintong", RecommendationOrigin = "Wet-Hulled // Indonesia", RecommendationRoast = "Med-Dark Roast", RecommendationDesc = "Heavy bodied and earthy. Dominated by cedar, warm cinnamon, and a lingering clove finish on the palate." },
                     new FlavorZone { Id = "nutty_cocoa", Name = "Nutty & Chocolate", Category = "Rich & Chocolatey", Description = "Decadent and heavy-bodied. Defined by the comforting familiarity of roasted nuts and deep chocolate richness.", MarkersJson = "[\"Dark Chocolate\", \"Cacao\", \"Hazelnut\", \"Almond\"]", Color = "#5D4037", BaryTargetJson = "{\"t\": 0.1, \"br\": 0.1, \"bl\": 0.8}", SpecsJson = "{\"roast\": [75, 95], \"body\": [80, 95], \"aftertaste\": [55, 80]}", RecommendationTitle = "Brazil Minas Gerais", RecommendationOrigin = "Natural Process // South America", RecommendationRoast = "Dark Roast", RecommendationDesc = "A comforting classic. Extremely low acidity with a thick body, delivering intense dark chocolate and roasted hazelnut." },
                     new FlavorZone { Id = "sweet_brown_sugar", Name = "Caramel & Syrup", Category = "Rich & Chocolatey", Description = "Rich, comforting sweetness resulting from caramelization during roasting. Highly viscous mouthfeel.", MarkersJson = "[\"Maple Syrup\", \"Caramelized\", \"Brown Sugar\", \"Molasses\"]", Color = "#FF6B00", BaryTargetJson = "{\"t\": 0.2, \"br\": 0.3, \"bl\": 0.5}", SpecsJson = "{\"roast\": [40, 60], \"body\": [50, 75], \"aftertaste\": [45, 65]}", RecommendationTitle = "Guatemala Antigua", RecommendationOrigin = "Washed Process // Central America", RecommendationRoast = "Medium Roast", RecommendationDesc = "Incredibly structured and sweet. Coats the palate like maple syrup, finishing with clear notes of baked apple." },
@@ -134,7 +139,7 @@ namespace TheBestBean.Models
             // Peru Farms
             var inkawasi = new CoffeeFarm { Name = "Inkawasi" };
             var huayopata = new CoffeeFarm { Name = "Huayopata Estate" };
-            // Colombia Farms
+            // Peru Farms
             var monteblanco = new CoffeeFarm { Name = "Monteblanco" };
             var elProgreso = new CoffeeFarm { Name = "El Progreso" };
             var buesaco = new CoffeeFarm { Name = "Minifundio Buesaco" };
@@ -205,7 +210,7 @@ namespace TheBestBean.Models
                 MapImageUrl = "/Media/LaConvencionMap.svg",
                 CoffeeFarm = monteblanco,
                 CoffeeRegion = huila,
-                OriginCountry = colombia
+                OriginCountry = peru
             };
 
             var punch = new CoffeeBean
@@ -320,11 +325,11 @@ namespace TheBestBean.Models
         {
             _context = context;
             
-            var colombia = await _context.OriginCountry.FirstOrDefaultAsync(c => c.Name == "Colombia");
-            if (colombia != null)
+            var peru = await _context.OriginCountry.FirstOrDefaultAsync(c => c.Name == "Peru");
+            if (peru != null)
             {
-                colombia.Name = "Colombia";
-                _context.OriginCountry.Update(colombia);
+                peru.Name = "Peru";
+                _context.OriginCountry.Update(peru);
             }
             
             var conflictingKeys = new[] { 
@@ -352,8 +357,8 @@ namespace TheBestBean.Models
                 _context.CoffeeRegion.Add(narino);
             }
 
-            // 2. Remove non-Peru/Colombia entries
-            var allowedCountries = new[] { "Peru", "Colombia" };
+            // 2. Remove non-Peru/Peru entries
+            var allowedCountries = new[] { "Peru", "Peru" };
             
             var beansToRemove = await _context.CoffeeBean
                 .Include(b => b.OriginCountry)
@@ -389,7 +394,7 @@ namespace TheBestBean.Models
         {
             var newLotNames = new[]
             {
-                "Cajamarca SL28 [72h]",
+                "SL28 - Cajamarca [Fransico Rodriguez]",
                 "La Catarata [Geisha]",
                 "Cajamarca [Bourbon]",
                 "Cusco [Bourbon]",
@@ -437,11 +442,11 @@ namespace TheBestBean.Models
 
             var lots = new List<CoffeeBean>();
 
-            if (!existing.Contains("Cajamarca SL28 [72h]"))
+            if (!existing.Contains("SL28 - Cajamarca [Fransico Rodriguez]"))
             {
                 lots.Add(new CoffeeBean
                 {
-                    Name = "Cajamarca SL28 [72h]",
+                    Name = "SL28 - Cajamarca [Fransico Rodriguez]",
                     FlavorProfile = "Blackcurrant, red berries, tropical fruit",
                     FlavorProfileES = "Grosella negra, frutos rojos, fruta tropical",
                     Rating = 4.8m,
@@ -869,7 +874,7 @@ namespace TheBestBean.Models
                 Month = "Year-round",
                 Difficulty = "All Levels",
                 Duration = "1 HOUR",
-                Price = 25,
+                Price = 32,
                 Tag = "1 HOUR",
                 ImageUrl = "/Media/experiences/tour-22/cynthia-hero.jpg?v=1",
                 Description = "One hour with Cynthia and Pavel. She leads the sensory side (cupping, roast); he brews V60. Sit, taste, and learn how variety and process — washed, natural, honey — change the cup. All levels; coffee is made for you.",
@@ -900,7 +905,7 @@ namespace TheBestBean.Models
                 Month = "Year-round",
                 Difficulty = "All Levels",
                 Duration = "1 HOUR",
-                Price = 25,
+                Price = 32,
                 Tag = "1 HOUR",
                 ImageUrl = "/Media/experiences/tour-25/cynthia-brew-01.webp?v=2",
                 Description = "An hour on the bar — you prepare your own coffee. We explain roast levels and brew ratios, give you a recipe, then you brew it and run it again to sharpen your technique.",
@@ -946,7 +951,7 @@ namespace TheBestBean.Models
                 Month = "Year-round",
                 Difficulty = "Beginner",
                 Duration = "1 HOUR",
-                Price = 25,
+                Price = 32,
                 Tag = "1 HOUR",
                 ImageUrl = "/Media/experiences/tour-26/cynthia-cupping-01.webp?v=2",
                 Description = "Four rounds of cupping in one hour. We teach you how to smell — crack the crust, use the steam, wake up your senses — then taste four coffees: an 81-point baseline, two specialty lots (~85 and 86–87), and one super lot.",
@@ -978,7 +983,7 @@ namespace TheBestBean.Models
                 Month = "Year-round",
                 Difficulty = "All Levels",
                 Duration = "2.5 HOURS",
-                Price = 50,
+                Price = 52,
                 ImageUrl = odarGallery[0],
                 Description = "Hosted by Odar, a certified Q grader, at his factory and café two minutes apart in Cusco. Same craft as the main lab, with more time on sensory: Peruvian varieties, V60 at the factory, a guided SCA cupping, then roast-floor work — sorting greens, spotting quakers, and tasting acidity in the bean.",
                 DescriptionES = "Con Odar, Q grader certificado, en su fábrica y café a dos minutos en Cusco. Más tiempo en lo sensorial: variedades del Perú, V60 en fábrica, catación SCA guiada y trabajo en tueste.",
@@ -986,9 +991,9 @@ namespace TheBestBean.Models
                 LongDescriptionES = "Odar tiene fábrica y café a dos minutos en Cusco. Diez minutos de variedades y altitud, V60 en la fábrica, rueda de sabores y catación guiada, y al final clasificación de verde, quakers y morder el grano para la acidez.",
                 Syllabus = new List<string>
                 {
-                    "Intro & V60: Peru and Cusco varieties, high altitude (10 min), then how the cone works, ratio, and a brew at the factory",
-                    "Sensory: flavor wheel, the SCA, cupping forms, then a guided cupping with Odar (Q grader)",
-                    "Roast: sort greens with the roast master, pick quakers and defects, bite the bean for acidity"
+                    "Intro & V60: Peru and Cusco varieties, high altitude (10 min) || Ten minutes on varieties in Peru and Cusco and why altitude matters, then a V60 at the factory: how the cone works, ratio, and a cup.",
+                    "Sensory: flavor wheel, the SCA, cupping forms, then a guided cupping with Odar (Q grader) (45 min) || The flavor wheel, what the SCA is, how a cupping form is scored, and a guided cupping with Odar.",
+                    "Roast: sort greens with the roast master, pick quakers and defects, bite the bean for acidity (54 min) || Close on the roast floor: sort green beans before they go in, pick quakers and defects after, and bite a bean to feel acidity."
                 },
                 ProvidedEquipment = new List<string>
                 {
@@ -1009,11 +1014,11 @@ namespace TheBestBean.Models
                 Month = "Year-round",
                 Difficulty = "All Levels",
                 Duration = "2.5 HOURS",
-                Price = 50,
+                Price = 52,
                 ImageUrl = "",
                 Description = "Hosted by Cinthya, a Q grader, competition judge, and roaster. Her roaster sits away from the tasting room, so this session stays on the bar: V60 pour-over, espresso, and a guided cupping. A strong option when the main laboratory is full.",
                 DescriptionES = "Con Cinthya, Q grader, jueza y tostadora. El tostador queda lejos del área de cata, así que la sesión es V60, espresso y catación guiada. Alternativa cuando el laboratorio principal está lleno.",
-                LongDescription = "Cinthya is a roaster, a Q grader, and a judge. Her roaster is not next to the presentation space, so this tour does not walk the roast floor. You stay with brew and sensory: V60 pour-over, espresso on the machine, and a cupping she leads. Photos of her space will go up when we have them.",
+                LongDescription = "Cinthya is a roaster, a Q grader, and a judge. Her roaster is not next to the presentation space, so this session does not walk the roast floor. You stay with brew and sensory: V60 pour-over, espresso on the machine, and a cupping she leads. Photos of her space will go up when we have them.",
                 LongDescriptionES = "Cinthya es tostadora, Q grader y jueza. El tostador no está junto al espacio de presentación, así que el recorrido es V60, espresso y catación. Subiremos fotos de su local cuando las tengamos.",
                 Syllabus = new List<string>
                 {
@@ -1048,6 +1053,21 @@ namespace TheBestBean.Models
             if (cinthyaLab != null)
             {
                 cinthyaLab.Category = "Archived";
+            }
+
+            var cuscoLab = await _context.Experiences.FirstOrDefaultAsync(e => e.Title.Contains("Cusco Coffee Laboratory"));
+            if (cuscoLab != null)
+            {
+                cuscoLab.Price = 52;
+                cuscoLab.Duration = "2.5 HOURS";
+                cuscoLab.Tag = "FEATURED";
+                cuscoLab.Syllabus = new List<string>
+                {
+                    "Welcome: V60 in hand, walk the lab|8 min||<p>Guests sit down with a pour-over already brewed, then walk the roasting setup, espresso bars, and cupping table.</p>",
+                    "Part 1: You brew a V60|43 min||<p>Filtered coffee in plain language, a demo, then you brew at your own station from a recipe card — grind, bloom, and two pours.</p>",
+                    "Part 2: Espresso & milk|45 min||<p>Pull a shot on the machine, texture milk, and build a cappuccino or flat white. Taste what extraction and foam actually do.</p>",
+                    "Part 3: Roast a batch to take home|54 min||<p>We run a roast together and cover the fundamentals. Everyone leaves with 160 grams of that coffee.</p>"
+                };
             }
 
             var keep = new[]
@@ -1104,9 +1124,13 @@ namespace TheBestBean.Models
                 (Find("Catarata"), 3.2m, new[] { (10, "Light", 820m), (20, "profile", 780m) }),
                 (Find("SL28"), 4.0m, new[] { (5, "Light", 900m) }),
                 (Find("HIGHLAND", "SL09"), 2.8m, new[] { (20, "Medium", 740m) }),
-                (Find("NUMBER 13", "Number 13"), 1.6m, Array.Empty<(int, string, decimal)>()),
-                (Find("Punch"), 0.9m, new[] { (45, "Medium", 510m) }),
                 (Find("Cusco [Bourbon]"), 2.1m, new[] { (3, "profile", 600m) }),
+                (Find("Geisha Korea - Cajamarca [Angel M]"), 3.0m, new[] { (5, "Light", 800m) }),
+                (Find("Geisha R17 - Cajamarca [Angel M]"), 3.0m, new[] { (6, "Light", 800m) }),
+                (Find("Geisha Alto - Cajamarca [Angel M]"), 3.0m, new[] { (7, "Light", 800m) }),
+                (Find("Caturai - Cajamarca [Miguel Cortez]"), 3.0m, new[] { (8, "Light", 800m) }),
+                (Find("Geisha - Cajamarca [ Miguel Cortez]"), 3.0m, new[] { (9, "Light", 800m) }),
+                (Find("Geisha - Cajamarca [Miguel Cortez]"), 3.0m, new[] { (10, "Light", 800m) }),
             };
 
             foreach (var row in rows)
