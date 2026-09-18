@@ -2591,13 +2591,13 @@ a.checkout-pro__submit {
     margin: 0.85rem 0 0;
 }
 .checkout-pro__receipt {
-    background: #fff;
+    background: #EAE4DA;
     color: #121014;
     border-radius: 0;
     padding: 1.45rem 1.35rem 1.5rem;
     position: sticky;
     top: 6.5rem;
-    border: 1px solid #ece7df;
+    border: 1px solid #e0d9ce;
     border-top: 3px solid #8B6FA0;
     box-shadow: none;
     box-sizing: border-box;
@@ -3200,12 +3200,12 @@ html.dark .coffee-card-lot { color: #86efac; }
         box-sizing: border-box;
     }
     .checkout-pro__receipt {
-        background: #fff;
+        background: #EAE4DA;
         color: #121014;
         border-radius: 0;
         border: 0;
         border-top: 3px solid #8B6FA0;
-        border-bottom: 1px solid #ece7df;
+        border-bottom: 1px solid #e0d9ce;
         /* Break out of wrap padding so the panel is edge-to-edge; keep text inset. */
         width: calc(100% + 32px);
         max-width: none;
