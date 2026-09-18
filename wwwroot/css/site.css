@@ -4227,3 +4227,16 @@ html.dark .product-sheet__process p:last-child {
 .coffee-intro .lab-board__head {
     margin-top: auto !important;
 }
+
+/* Ensure cursor shows up in the kicker */
+.lab-board__kicker .offerings-cursor {
+    display: inline-block;
+    vertical-align: text-bottom;
+    margin-left: 0.35rem;
+    height: 10px;
+    width: 6px;
+    background-color: #111111;
+}
+html.dark .lab-board__kicker .offerings-cursor {
+    background-color: #D6D0C8;
+}

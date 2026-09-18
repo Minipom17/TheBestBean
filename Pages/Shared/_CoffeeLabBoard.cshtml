@@ -6,7 +6,7 @@
 
 <section class="lab-board@(compact ? " lab-board--compact" : "")" aria-label="Coffee freshness">
     <header class="lab-board__head">
-        <p class="lab-board__kicker">@board.Kicker</p>
+        <p class="lab-board__kicker">@board.Kicker <span class="offerings-cursor" aria-hidden="true"></span></p>
         <h2>@board.Title</h2>
         @if (board.ShowLede)
         {
