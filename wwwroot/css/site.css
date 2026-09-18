@@ -2235,7 +2235,7 @@ html.dark .blog-back:hover {
     .checkout-pro__wrap {
         width: 100%;
         max-width: none;
-        padding: 0 0.75rem;
+        padding: 0 16px;
         box-sizing: border-box;
     }
     .checkout-pro__back {
@@ -2270,10 +2270,11 @@ html.dark .blog-back:hover {
     }
     .checkout-pro__receipt {
         border-radius: 0;
-        padding: 1.25rem 0 1.35rem;
-        margin: 0;
-        width: 100%;
-        max-width: 100%;
+        padding: 1.25rem 16px 1.4rem;
+        margin-left: -16px;
+        margin-right: -16px;
+        width: calc(100% + 32px);
+        max-width: none;
         box-sizing: border-box;
     }
     .checkout-pro__submit {
@@ -3183,7 +3184,7 @@ html.dark .coffee-card-lot { color: #86efac; }
         box-sizing: border-box;
     }
     .checkout-pro__wrap {
-        padding: 0 12px;
+        padding: 0 16px;
         margin: 0 auto;
     }
     .checkout-pro__card,
@@ -3205,10 +3206,12 @@ html.dark .coffee-card-lot { color: #86efac; }
         border: 0;
         border-top: 3px solid #8B6FA0;
         border-bottom: 1px solid #ece7df;
-        padding: 1.25rem 0 1.35rem;
-        margin: 0;
-        width: 100%;
-        max-width: 100%;
+        /* Break out of wrap padding so the panel is edge-to-edge; keep text inset. */
+        width: calc(100% + 32px);
+        max-width: none;
+        margin-left: -16px;
+        margin-right: -16px;
+        padding: 1.25rem 16px 1.4rem;
         box-sizing: border-box;
         position: static;
     }
