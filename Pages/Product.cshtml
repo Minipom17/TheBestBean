@@ -27,10 +27,15 @@
         <!-- 1. Main Header -->
         @{
             var heroPosKey = $"Product_{Model.Product.Id}_ImageUrl_Position";
-            var isAngelPhoto = (Model.Product.ImageUrl ?? "").Contains("angel-cajamarca", StringComparison.OrdinalIgnoreCase);
-            var heroPos = Model.PageContent != null && Model.PageContent.ContainsKey(heroPosKey)
-                ? Model.PageContent[heroPosKey]
-                : (isAngelPhoto ? "50% 32%" : "50% 50%");
+            var imageUrl = Model.Product.ImageUrl ?? "";
+            var isBrandBeanPhoto = imageUrl.Contains("/brand/beans/", StringComparison.OrdinalIgnoreCase)
+                || imageUrl.Contains("/Media/beans/", StringComparison.OrdinalIgnoreCase);
+            var isAngelPhoto = imageUrl.Contains("angel-cajamarca", StringComparison.OrdinalIgnoreCase);
+            var heroPos = isBrandBeanPhoto
+                ? "50% 50% 1.0"
+                : (Model.PageContent != null && Model.PageContent.ContainsKey(heroPosKey)
+                    ? Model.PageContent[heroPosKey]
+                    : (isAngelPhoto ? "50% 32%" : "50% 50%"));
         }
         <div class="product-buy">
             <div class="product-buy__visual">
