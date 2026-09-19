@@ -452,14 +452,14 @@
                         </p>
                     </div>
                     
-                    <!-- NEW RECEIPT STYLE CARD -->
-                    <div class="bg-white border border-gray-300 p-4 relative group hover:border-[#FF5A36] transition-colors cursor-pointer w-full max-w-[400px]">
+                    <!-- Stock coffee card (matched to triangle zone) -->
+                    <a id="rec-card" href="/Coffee" class="bg-white border border-gray-300 p-4 relative group hover:border-[#FF5A36] transition-colors cursor-pointer w-full max-w-[400px] text-decoration-none block">
                         
                         <!-- Top Metadata Grid (Inspired by the label reference) -->
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-2 font-mono text-[7px] uppercase tracking-widest text-gray-500 border-b border-gray-200 pb-2 mb-3">
                             <div>
                                 <span class="block text-black font-bold mb-1">Origin</span>
-                                <span id="rec-origin" class="text-black">Yirgacheffe</span>
+                                <span id="rec-origin" class="text-black">Peru</span>
                             </div>
                             <div>
                                 <span class="block text-black font-bold mb-1">Process</span>
@@ -467,27 +467,28 @@
                             </div>
                             <div>
                                 <span class="block text-black font-bold mb-1">Altitude</span>
-                                <span id="rec-altitude" class="text-black">1950 MASL</span>
+                                <span id="rec-altitude" class="text-black">—</span>
                             </div>
                             <div>
-                                <span class="block text-black font-bold mb-1">Roast</span>
-                                <span id="rec-roast" class="text-black">Light</span>
+                                <span class="block text-black font-bold mb-1">SCA</span>
+                                <span id="rec-roast" class="text-black">—</span>
                             </div>
                         </div>
                         
                         <!-- Massive Coral Title -->
                         <h4 id="rec-title" class="text-2xl font-bold text-[#FF5A36] tracking-tight leading-none mb-2">
-                            YIRGACHEFFE
+                            Loading…
                         </h4>
                         
                         <p id="rec-desc" class="font-mono text-[8px] text-gray-600 leading-relaxed uppercase mb-3 max-w-sm">
-                            A brilliantly bright washed coffee featuring sparkling acidity, bergamot, and crisp peach. Driven by organic acids and vibrant fruit notes.
+                            Pick a flavor on the map to match a lot we have in the lab.
                         </p>
+                        <p id="rec-stock" class="font-mono text-[8px] font-bold uppercase tracking-widest text-[#1D4C3A] mb-3"></p>
                         
-                        <button class="inline-flex items-center gap-2 font-mono text-[8px] font-bold tracking-widest uppercase text-black group-hover:text-[#FF5A36] transition-colors border-b border-black group-hover:border-[#FF5A36] pb-1">
-                            View Expedition / Shop &rarr;
-                        </button>
-                    </div>
+                        <span class="inline-flex items-center gap-2 font-mono text-[8px] font-bold tracking-widest uppercase text-black group-hover:text-[#FF5A36] transition-colors border-b border-black group-hover:border-[#FF5A36] pb-1">
+                            Shop this lot &rarr;
+                        </span>
+                    </a>
                 </div>
 
             </div>
@@ -616,6 +617,8 @@
         const recAltitude = document.getElementById('rec-altitude');
         const recRoast = document.getElementById('rec-roast');
         const recDesc = document.getElementById('rec-desc');
+        const recStock = document.getElementById('rec-stock');
+        const recCard = document.getElementById('rec-card');
         
         const rangeRoast = document.getElementById('flavor-slider');
 
@@ -647,6 +650,60 @@
             }
         }));
 
+        // Live shop lots — recommend only what we actually have
+        const shopLots = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ShopLotsJson));
+
+        function tokenize(text) {
+            return (text || '').toLowerCase().split(/[^a-z0-9]+/).filter(t => t.length > 2);
+        }
+
+        function scoreLotForZone(lot, zone) {
+            const hay = tokenize([lot.flavor, lot.name, lot.variety, lot.region, lot.process].join(' '));
+            const needles = tokenize([zone.name, zone.category, zone.description, ...(zone.markers || [])].join(' '));
+            let score = 0;
+            needles.forEach(n => { if (hay.includes(n)) score += 2; });
+            // Soft category biases for our Peru menu
+            const cat = (zone.category || '').toLowerCase();
+            const name = (lot.name || '').toLowerCase();
+            const flavor = (lot.flavor || '').toLowerCase();
+            if (cat.includes('bright') || cat.includes('fruity')) {
+                if (/geisha|sl28|citrus|floral|berry|lemongrass|lavender/.test(name + ' ' + flavor)) score += 4;
+            }
+            if (cat.includes('chocolate') || cat.includes('rich')) {
+                if (/bourbon|marsellesa|cacao|caramel|sugar|honey/.test(name + ' ' + flavor)) score += 4;
+            }
+            if (cat.includes('funky') || cat.includes('boozy')) {
+                if (/ferment|wine|tropical|berry|anaerobic/.test(flavor)) score += 3;
+            }
+            if (lot.hasGreen) score += 5;
+            if (lot.sca >= 87) score += 1;
+            return score;
+        }
+
+        function pickShopLot(zone) {
+            if (!shopLots.length) return null;
+            const ranked = shopLots
+                .map(lot => ({ lot, score: scoreLotForZone(lot, zone) }))
+                .sort((a, b) => b.score - a.score || b.lot.sca - a.lot.sca);
+            return ranked[0]?.lot || shopLots[0];
+        }
+
+        function applyShopRecommendation(zone) {
+            const lot = pickShopLot(zone);
+            if (!lot || !recTitle) return;
+            recTitle.textContent = lot.name;
+            if (recOrigin) recOrigin.textContent = lot.region || lot.origin || 'Peru';
+            if (recProcess) recProcess.textContent = lot.process || 'Washed';
+            if (recAltitude) recAltitude.textContent = lot.altitude || '—';
+            if (recRoast) recRoast.textContent = lot.sca ? ('SCA ' + Number(lot.sca).toFixed(lot.sca % 1 ? 2 : 0)) : '—';
+            if (recDesc) recDesc.textContent = lot.flavor || zone.description || '';
+            if (recStock) {
+                recStock.textContent = lot.hasGreen
+                    ? (Number(lot.greenKg).toFixed(1) + ' kg green in the lab')
+                    : 'Roast to order';
+            }
+            if (recCard) recCard.setAttribute('href', '/Product/' + lot.id);
+        }
         // Math Helpers (using percentage coords 0-100)
         function getBarycentric(px, py) {
             const ax = 50, ay = 0;
@@ -775,15 +832,7 @@
                     profileTitle.textContent = z.name;
                     profileDesc.textContent = z.description;
                     tagsContainer.textContent = (z.markers || []).join(' // ');
-                    
-                    if (z.recommendation) {
-                        recTitle.textContent = z.recommendation.title || '';
-                        const splitOrigin = (z.recommendation.origin || '').split('//');
-                        if (recOrigin) recOrigin.textContent = splitOrigin.length > 1 ? splitOrigin[1].trim() : splitOrigin[0];
-                        if (recProcess) recProcess.textContent = splitOrigin.length > 1 ? splitOrigin[0].trim() : 'Washed';
-                        if (recRoast) recRoast.textContent = z.recommendation.roast || '';
-                        if (recDesc) recDesc.textContent = z.recommendation.desc || '';
-                    }
+                    applyShopRecommendation(z);
 
                     // Re-enable inline editing if the script is globally available
                     if (window.initInlineEditing) window.initInlineEditing();
@@ -804,12 +853,7 @@
                         if (z2.markers && z2.markers[i]) mergedMarkers.push(z2.markers[i]);
                     }
                     tagsContainer.textContent = mergedMarkers.join(' // ');
-
-                    recTitle.textContent = 'Curated Field Blend';
-                    if(recOrigin) recOrigin.textContent = 'Post-Harvest Blend';
-                    if(recProcess) recProcess.textContent = 'Mixed Process';
-                    if(recRoast) recRoast.textContent = 'Omni-Roast';
-                    if(recDesc) recDesc.textContent = `A tailored coffee experience designed to bridge the gap between ${z1.markers[0].toLowerCase()} and ${z2.markers[0].toLowerCase()}.`;
+                    applyShopRecommendation(z1);
                 }
                 
                 profileDetails.style.opacity = '1';

@@ -34,6 +34,7 @@ namespace TheBestBean.Pages
         public List<FlavorZone> FlavorZones { get; set; } = new List<FlavorZone>();
         public CoffeeLabBoard LabBoard { get; set; } = new();
         public Dictionary<int, CoffeeLotStatus> LotsById { get; set; } = new();
+        public List<object> ShopLotsJson { get; set; } = new();
 
         public async Task OnGetAsync()
         {
@@ -49,7 +50,10 @@ namespace TheBestBean.Pages
             LotsById = live.Lots.ToDictionary(l => l.CoffeeBeanId);
             LabBoard = new CoffeeLabBoard
             {
-                Lots = live.Lots,
+                Lots = live.Lots
+                    .Where(l => l.HasGreen || l.HasRoast)
+                    .Take(10)
+                    .ToList(),
                 Compact = true,
                 ShowTimeline = false,
                 ShowGrind = false,
@@ -59,6 +63,25 @@ namespace TheBestBean.Pages
                 Highlight = live.Highlight
             };
             ViewData["CoffeeLots"] = LotsById;
+
+            ShopLotsJson = Products.Select(p =>
+            {
+                LotsById.TryGetValue(p.Id, out var lot);
+                return (object)new
+                {
+                    id = p.Id,
+                    name = CoffeeDisplayName.ForLab(p.Name),
+                    flavor = p.FlavorProfile ?? "",
+                    process = p.ProcessingMethod ?? "",
+                    altitude = p.Altitude ?? "",
+                    variety = p.Variety ?? "",
+                    origin = p.OriginCountry?.Name ?? "Peru",
+                    region = p.CoffeeRegion?.Name ?? "",
+                    sca = p.ScaScore,
+                    greenKg = lot?.GreenKg ?? 0m,
+                    hasGreen = lot?.HasGreen ?? false
+                };
+            }).ToList();
         }
 
         public async Task<IActionResult> OnPostDeleteAsync(int id)

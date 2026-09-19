@@ -18,7 +18,7 @@ namespace TheBestBean.Services
 
         private static readonly HashSet<string> KeepBracketTokens = new(StringComparer.OrdinalIgnoreCase)
         {
-            "Geisha", "Bourbon", "Marsellesa", "Catuai", "Catuar", "Caturra", "Typica",
+            "Geisha", "Bourbon", "Marsellesa", "Catuai", "Caturra", "Typica",
             "SL09", "SL28", "Pachamara", "Inca Geisha", "SL09 / Inca Geisha"
         };
 
@@ -33,8 +33,8 @@ namespace TheBestBean.Services
             cleaned = FarmerBracket.Replace(cleaned, "");
             cleaned = StripPersonBracketIfNotVariety(cleaned);
             cleaned = Regex.Replace(cleaned, @"\s{2,}", " ").Trim();
-            cleaned = Regex.Replace(cleaned, @"Caturai", "Catuar", RegexOptions.IgnoreCase);
-            cleaned = Regex.Replace(cleaned, @"Catuai", "Catuar", RegexOptions.IgnoreCase);
+            cleaned = Regex.Replace(cleaned, @"Caturai", "Catuai", RegexOptions.IgnoreCase);
+            cleaned = Regex.Replace(cleaned, @"Catuar", "Catuai", RegexOptions.IgnoreCase);
             return cleaned;
         }
 

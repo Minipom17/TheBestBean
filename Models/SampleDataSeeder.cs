@@ -401,7 +401,7 @@ namespace TheBestBean.Models
         }
 
         /// <summary>
-        /// Strip farmer names from lot titles, fix Catuar spelling, merge duplicate Geisha lots,
+        /// Strip farmer names from lot titles, fix Catuai spelling, merge duplicate Geisha lots,
         /// and point bean photos at equal-padded brand assets when present.
         /// </summary>
         private static async Task NormalizeCoffeeLotNamesAndImagesAsync()
@@ -433,7 +433,7 @@ namespace TheBestBean.Models
                     return "/brand/beans/Pachamara.jpg";
                 if (n.Contains("Cajamarca", StringComparison.OrdinalIgnoreCase) && n.Contains("Bourbon", StringComparison.OrdinalIgnoreCase))
                     return "/brand/beans/bourbon-pablino.jpg";
-                if (n.Contains("Catuar", StringComparison.OrdinalIgnoreCase) || n.Contains("Caturai", StringComparison.OrdinalIgnoreCase))
+                if (n.Contains("Catuai", StringComparison.OrdinalIgnoreCase) || n.Contains("Caturai", StringComparison.OrdinalIgnoreCase) || n.Contains("Catuar", StringComparison.OrdinalIgnoreCase))
                     return "/brand/beans/bourbon_miguel.jpg";
                 if (n.Contains("Geisha Alto", StringComparison.OrdinalIgnoreCase)) return "/brand/beans/porte_bajo_angle-m.jpg";
                 if (n.Contains("Geisha Korea", StringComparison.OrdinalIgnoreCase) || n.Contains("Geisha R17", StringComparison.OrdinalIgnoreCase))
@@ -453,9 +453,9 @@ namespace TheBestBean.Models
                 if (!string.IsNullOrWhiteSpace(bean.Variety))
                 {
                     if (bean.Variety.Contains("Caturai", StringComparison.OrdinalIgnoreCase)
-                        || bean.Variety.Equals("Catuai", StringComparison.OrdinalIgnoreCase))
+                        || bean.Variety.Contains("Catuar", StringComparison.OrdinalIgnoreCase))
                     {
-                        bean.Variety = "Catuar";
+                        bean.Variety = "Catuai";
                     }
                 }
 
@@ -1259,7 +1259,7 @@ namespace TheBestBean.Models
                 (Find("Geisha Korea"), 3.0m, new[] { (5, "Light", 800m) }),
                 (Find("Geisha R17"), 3.0m, new[] { (6, "Light", 800m) }),
                 (Find("Geisha Alto"), 3.0m, new[] { (7, "Light", 800m) }),
-                (Find("Catuar", "Caturai", "Catuai"), 3.0m, new[] { (8, "Light", 800m) }),
+                (Find("Catuai", "Caturai", "Catuar"), 3.0m, new[] { (8, "Light", 800m) }),
                 (Find("Geisha - Cajamarca"), 3.0m, new[] { (9, "Light", 800m) }),
             };
 
