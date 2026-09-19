@@ -1235,11 +1235,6 @@ namespace TheBestBean.Models
 
         public static async Task SeedDemoRoastInventoryAsync(TheBestBeanContext context)
         {
-            if (await context.BeanInventories.AnyAsync())
-            {
-                return;
-            }
-
             var beans = await context.CoffeeBean.ToListAsync();
             if (beans.Count == 0)
             {
@@ -1250,7 +1245,7 @@ namespace TheBestBean.Models
                 beans.FirstOrDefault(b => needles.Any(n => (b.Name ?? "").Contains(n, StringComparison.OrdinalIgnoreCase)));
 
             var today = DateTime.UtcNow.Date;
-            var rows = new (CoffeeBean? Bean, decimal Kg, (int DaysAgo, string Level, decimal Grams)[] Roasts)[]
+            var preferred = new (CoffeeBean? Bean, decimal Kg, (int DaysAgo, string Level, decimal Grams)[] Roasts)[]
             {
                 (Find("Catarata"), 3.2m, new[] { (10, "Light", 820m), (20, "profile", 780m) }),
                 (Find("SL28"), 4.0m, new[] { (5, "Light", 900m) }),
@@ -1260,25 +1255,32 @@ namespace TheBestBean.Models
                 (Find("Geisha R17"), 3.0m, new[] { (6, "Light", 800m) }),
                 (Find("Geisha Alto"), 3.0m, new[] { (7, "Light", 800m) }),
                 (Find("Catuai", "Caturai", "Catuar"), 3.0m, new[] { (8, "Light", 800m) }),
-                (Find("Geisha - Cajamarca"), 3.0m, new[] { (9, "Light", 800m) }),
+                (Find("Geisha - Cajamarca"), 6.0m, new[] { (9, "Light", 800m) }),
             };
 
-            foreach (var row in rows)
+            var existingBeanIds = await context.BeanInventories
+                .Where(i => i.IsActive && i.CoffeeBeanId != null)
+                .Select(i => i.CoffeeBeanId!.Value)
+                .Distinct()
+                .ToListAsync();
+            var covered = existingBeanIds.ToHashSet();
+
+            async Task AddInv(CoffeeBean bean, decimal kg, (int DaysAgo, string Level, decimal Grams)[] roasts)
             {
-                if (row.Bean == null)
+                if (!covered.Add(bean.Id))
                 {
-                    continue;
+                    return;
                 }
 
                 var inv = new BeanInventory
                 {
-                    Name = row.Bean.Name,
-                    CoffeeBeanId = row.Bean.Id,
+                    Name = CoffeeDisplayName.ForLab(bean.Name),
+                    CoffeeBeanId = bean.Id,
                     Country = "Peru",
-                    Process = row.Bean.ProcessingMethod,
-                    Variety = row.Bean.Variety,
-                    Farmer = row.Bean.Producer,
-                    TotalKg = row.Kg,
+                    Process = bean.ProcessingMethod,
+                    Variety = bean.Variety,
+                    Farmer = bean.Producer,
+                    TotalKg = kg,
                     IsActive = true,
                     CreatedDate = DateTime.UtcNow,
                     LastUpdated = DateTime.UtcNow
@@ -1286,7 +1288,7 @@ namespace TheBestBean.Models
                 context.BeanInventories.Add(inv);
                 await context.SaveChangesAsync();
 
-                foreach (var roast in row.Roasts)
+                foreach (var roast in roasts)
                 {
                     context.RoastBatches.Add(new RoastBatch
                     {
@@ -1297,6 +1299,29 @@ namespace TheBestBean.Models
                         GreenWeightGrams = Math.Round(roast.Grams / 0.86m, 0)
                     });
                 }
+            }
+
+            foreach (var row in preferred)
+            {
+                if (row.Bean != null)
+                {
+                    await AddInv(row.Bean, row.Kg, row.Roasts);
+                }
+            }
+
+            // Fill remaining shop lots so the lab board can show a production-scale dense list locally
+            var fallbackKg = new[] { 6.0m, 3.0m, 2.5m, 2.0m, 1.5m };
+            var fi = 0;
+            foreach (var bean in beans.OrderBy(b => b.Id))
+            {
+                if (covered.Contains(bean.Id))
+                {
+                    continue;
+                }
+
+                var kg = fallbackKg[fi % fallbackKg.Length];
+                fi++;
+                await AddInv(bean, kg, new[] { (4, "Light", 750m) });
             }
 
             await context.SaveChangesAsync();
