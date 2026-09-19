@@ -3854,12 +3854,12 @@ html.dark .product-hero-frame {
     inset: 0;
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
     object-position: center;
     background: #fafaf7;
 }
 .coffee-bean-photo {
-    object-fit: contain !important;
+    object-fit: cover !important;
     object-position: center center !important;
     background: #fafaf7;
     mix-blend-mode: normal;
@@ -3875,7 +3875,7 @@ html.dark .coffee-product-card .aspect-square {
     background: #1C191F;
 }
 .bag-pro__photo img {
-    object-fit: contain;
+    object-fit: cover;
     object-position: center;
     background: #fafaf7;
 }
