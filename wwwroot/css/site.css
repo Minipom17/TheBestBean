@@ -3604,15 +3604,153 @@ html.dark .lab-board__grind {
     margin: 0 0 0.75rem;
 }
 html.dark .coffee-card-lot { color: #86efac; }
+
+/* Shop card: identity above image, origin under image, roast under cart */
+.coffee-card-head {
+    padding: 1rem 1rem 0.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+.coffee-card-kicker {
+    margin: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #9ca3af;
+}
+html.dark .coffee-card-kicker { color: #8B8490; }
+.coffee-card-title {
+    margin: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    line-height: 1.25;
+    color: #111;
+}
+html.dark .coffee-card-title { color: #D6D0C8; }
+.coffee-card-sca {
+    margin: 0.15rem 0 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #111;
+}
+html.dark .coffee-card-sca { color: #D6D0C8; }
+.coffee-card-price {
+    margin-top: 0.35rem;
+}
 .coffee-card-notes {
-    min-height: 3.3em;
-    margin: 0.7rem 0 0;
+    margin: 0.45rem 0 0;
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
     line-height: 1.45;
     color: #4b5563;
 }
 html.dark .coffee-card-notes { color: #9a948c; }
+.coffee-card-stock-green {
+    margin: 0.55rem 0 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #16A34A;
+}
+html.dark .coffee-card-stock-green { color: #86efac; }
+
+.coffee-card-media {
+    display: block;
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: #f3f0ea;
+    border-top: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e5e7eb;
+}
+html.dark .coffee-card-media {
+    border-color: #3A353C;
+    background: #1C191F;
+}
+.coffee-card-media__img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover !important;
+    object-position: center 45% !important;
+    /* Bean stills shoot on cream table — zoom until beans hit the frame edges */
+    transform: scale(1.42);
+    transform-origin: center center;
+    background: transparent !important;
+}
+.coffee-product-card:hover .coffee-card-media__img {
+    transform: scale(1.48);
+    transition: transform 0.8s ease;
+}
+
+.coffee-card-origin {
+    margin: 0;
+    padding: 0.75rem 1rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.45rem 1rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+html.dark .coffee-card-origin { border-bottom-color: #3A353C; }
+@media (min-width: 480px) {
+    .coffee-card-origin {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+.coffee-card-origin__row {
+    min-width: 0;
+}
+.coffee-card-origin dt {
+    margin: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #9ca3af;
+}
+html.dark .coffee-card-origin dt { color: #8B8490; }
+.coffee-card-origin dd {
+    margin: 0.15rem 0 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: #111;
+    line-height: 1.3;
+}
+html.dark .coffee-card-origin dd { color: #D6D0C8; }
+
+.coffee-card-actions {
+    margin-top: auto;
+    padding: 0.85rem 1rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+}
+.coffee-card-stock-roast {
+    margin: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #8B5A2B;
+    text-align: left;
+}
+html.dark .coffee-card-stock-roast { color: #c4a07a; }
+
+/* legacy meta strip (kept for any leftover refs) */
 .coffee-card-stock {
     display: flex;
     flex-direction: row;
@@ -3889,6 +4027,9 @@ html.dark .product-hero-frame {
 html.dark .coffee-bean-photo,
 html.dark .product-hero-frame__img {
     background: #1C191F;
+}
+.coffee-product-card .coffee-bean-photo {
+    background: transparent !important;
 }
 .coffee-product-card .aspect-square {
     background: #fafaf7;
