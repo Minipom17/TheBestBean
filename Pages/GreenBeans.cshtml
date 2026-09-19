@@ -642,12 +642,7 @@
             color: z.Color || '#FF5A36',
             baryTarget: JSON.parse(z.BaryTargetJson || '{"t": 0.33, "br": 0.33, "bl": 0.33}'),
             specs: JSON.parse(z.SpecsJson || '{"roast": [45, 55], "body": [45, 55], "aftertaste": [45, 55]}'),
-            recommendation: { 
-                title: z.RecommendationTitle, 
-                origin: z.RecommendationOrigin, 
-                roast: z.RecommendationRoast, 
-                desc: z.RecommendationDesc 
-            }
+            recommendation: null // unused — card always picks from shopLots
         }));
 
         // Live shop lots — recommend only what we actually have
