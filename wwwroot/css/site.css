@@ -1542,11 +1542,26 @@ html.dark .price-pair--compact .price-pair__soles {
 .experiences-page .expedition-item {
     min-width: 0;
     max-width: 100%;
+    overflow-x: clip;
+}
+.experiences-page .lab-item > a,
+.experiences-page .expedition-item > a,
+.experiences-page .hour-lab-card > a {
+    min-width: 0;
+    max-width: 100%;
 }
 .experiences-page .lab-item p,
 .experiences-page .expedition-item p {
     overflow-wrap: anywhere;
     word-break: break-word;
+}
+/* Hour-lab carousels: raw <img> slides must each be exactly one frame wide */
+.experiences-page .exp-carousel .carousel-container > img {
+    flex: 0 0 100%;
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 /* Yape vs card pricing */
@@ -4046,9 +4061,11 @@ html.dark .product-sheet__process p:last-child {
 
 .exp-section {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 2.5rem;
     position: relative;
+    min-width: 0;
+    max-width: 100%;
 }
 @media (min-width: 1024px) {
     .exp-section {
@@ -4068,22 +4085,29 @@ html.dark .product-sheet__process p:last-child {
 }
 .exp-meta-line {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     align-items: baseline;
-    gap: 0.6rem;
+    gap: 0.35rem 0.6rem;
     margin-bottom: 1rem;
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    white-space: nowrap;
     min-width: 0;
+    max-width: 100%;
 }
 .exp-meta-line__venue {
-    flex: 1 1 auto;
+    flex: 1 1 100%;
     min-width: 0;
-    white-space: nowrap;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+@media (min-width: 768px) {
+    .exp-meta-line__venue {
+        flex: 1 1 auto;
+    }
 }
 .exp-dossier {
     display: grid;
@@ -4100,22 +4124,27 @@ html.dark .product-sheet__process p:last-child {
 
 .hour-lab-card {
     height: 100%;
+    min-width: 0;
+    max-width: 100%;
 }
 .hour-lab-card__meta {
     display: flex;
     align-items: center;
-    flex-wrap: nowrap;
-    gap: 0.45rem;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.45rem;
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    white-space: nowrap;
     margin-bottom: 0.5rem;
+    min-width: 0;
+    max-width: 100%;
 }
 .hour-lab-card__title {
     min-height: 2.6em;
+    max-width: 100%;
+    overflow-wrap: anywhere;
 }
 @media (min-width: 768px) {
     .hour-lab-card__title {
@@ -4131,9 +4160,17 @@ html.dark .product-sheet__process p:last-child {
     color: #8B8490;
     margin: 0 0 0.75rem;
     min-height: 2.6em;
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 .hour-lab-card__copy {
     flex-grow: 1;
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 

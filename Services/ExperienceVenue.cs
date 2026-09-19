@@ -38,8 +38,7 @@ public static class ExperienceVenue
             return new Venue("Cusco City", "Santiago", "Belén · 15 min from Plaza de Armas", -13.52825, -71.98236);
         }
 
-        // Next door to Sta. Teresa 385 (D'Manolos barbershop). Their space is not on Google Maps;
-        // a dropped pin here avoids snapping the listing to the barber.
+        // Calle Santa Teresa 365 — walk note points to the SUNAT in front of the door.
         if (title.Contains("Tasting Hour", StringComparison.OrdinalIgnoreCase)
             || title.Contains("Brew Your Own", StringComparison.OrdinalIgnoreCase)
             || title.Contains("Introduction to Cupping", StringComparison.OrdinalIgnoreCase)
@@ -47,7 +46,7 @@ public static class ExperienceVenue
             || title.Contains("Cynthia", StringComparison.OrdinalIgnoreCase)
             || title.Contains("Peru Tasting", StringComparison.OrdinalIgnoreCase))
         {
-            return new Venue("Cusco City", "Calle Santa Teresa", "next to Sta. Teresa 385", -13.51612, -71.98120);
+            return new Venue("Cusco City", "Calle Santa Teresa 365", "in front of the SUNAT", -13.51612, -71.98120);
         }
 
         var category = experience.Category ?? string.Empty;
