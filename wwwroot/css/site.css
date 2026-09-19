@@ -1555,13 +1555,26 @@ html.dark .price-pair--compact .price-pair__soles {
     overflow-wrap: anywhere;
     word-break: break-word;
 }
-/* Hour-lab carousels: raw <img> slides must each be exactly one frame wide */
+/* Hour-lab carousels: raw <img> slides must each be exactly one frame wide.
+   Override the absolute cover rule used by tour frames — flex slides need flow layout. */
 .experiences-page .exp-carousel .carousel-container > img {
-    flex: 0 0 100%;
-    width: 100%;
-    max-width: 100%;
-    height: 100%;
+    position: relative !important;
+    inset: auto !important;
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100% !important;
     object-fit: cover;
+}
+.experiences-page .exp-carousel {
+    max-width: 100%;
+    overflow: hidden;
+}
+.experiences-page .hour-lab-card__meta,
+.experiences-page .exp-meta-line {
+    white-space: normal !important;
+    flex-wrap: wrap !important;
+    max-width: 100% !important;
 }
 
 /* Yape vs card pricing */
