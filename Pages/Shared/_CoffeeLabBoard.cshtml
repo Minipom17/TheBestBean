@@ -23,28 +23,21 @@
         <div class="lab-board__feed" role="list">
             @foreach (var lot in board.Lots)
             {
-                var latestRoast = lot.Roasts.FirstOrDefault();
                 var color = colors[colorIndex % colors.Length];
                 colorIndex++;
                 <a asp-page="/Product" asp-route-id="@lot.CoffeeBeanId" class="lab-board__row group" role="listitem">
                     <span class="lab-board__meta">
-                        <span>
-                            @if (lot.HasGreen)
-                            {
-                                <text>[ @CoffeeLotStatus.FormatKg(lot.GreenKg) GREEN ]</text>
-                            }
-                            else
-                            {
-                                <text>[ ROAST TO ORDER ]</text>
-                            }
-                        </span>
-                        @if (latestRoast != null)
+                        @if (lot.HasGreen)
                         {
-                            <span class="lab-board__meta-roast">@latestRoast.DaysAgo D AGO // @latestRoast.PhaseLabel // @latestRoast.Profile</span>
+                            <text>[ @CoffeeLotStatus.FormatKg(lot.GreenKg) GREEN ]</text>
+                        }
+                        else
+                        {
+                            <text>[ ROAST TO ORDER ]</text>
                         }
                     </span>
                     <span class="lab-board__name-wrap">
-                        <span class="lab-board__name-link" style="border-bottom-color: @color;">@lot.Name</span>
+                        <span class="lab-board__name-link" style="border-bottom-color: @color;">@CoffeeDisplayName.ForLab(lot.Name)</span>
                     </span>
                 </a>
             }

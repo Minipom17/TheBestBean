@@ -392,6 +392,7 @@ namespace TheBestBean.Models
             await SeedNewOriginLotsAsync();
             await ApplyAngelCatarataPhotosAsync();
             await ApplyCoffeeRetailAsync();
+            await NormalizeCoffeeLotNamesAndImagesAsync();
             await ApplyOriginExpeditionsAsync();
             await ApplyCuscoWorkshopRosterAsync();
 
@@ -399,21 +400,142 @@ namespace TheBestBean.Models
             await _context.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Strip farmer names from lot titles, fix Catuar spelling, merge duplicate Geisha lots,
+        /// and point bean photos at equal-padded brand assets when present.
+        /// </summary>
+        private static async Task NormalizeCoffeeLotNamesAndImagesAsync()
+        {
+            var beans = await _context.CoffeeBean.ToListAsync();
+            if (beans.Count == 0)
+            {
+                return;
+            }
+
+            var imageMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["/Media/beans/SL28.jpg"] = "/brand/beans/SL28.jpg",
+                ["/Media/beans/bourbon-pablino.jpg"] = "/brand/beans/bourbon-pablino.jpg",
+                ["/Media/beans/Pachamara.jpg"] = "/brand/beans/Pachamara.jpg",
+                ["/Media/beans/Meselessa.jpg"] = "/brand/beans/Meselessa.jpg",
+                ["/Media/beans/Geisha_Aug28_Angel-m.jpg"] = "/brand/beans/Geisha_Aug28_Angel-m.jpg",
+                ["/Media/beans/porte_bajo_angle-m.jpg"] = "/brand/beans/porte_bajo_angle-m.jpg",
+                ["/Media/beans/Geisha_mas_o_menos.jpg"] = "/brand/beans/Geisha_mas_o_menos.jpg",
+                ["/Media/beans/bourbon_miguel.jpg"] = "/brand/beans/bourbon_miguel.jpg",
+            };
+
+            string? BeanPhotoFor(CoffeeBean bean)
+            {
+                var n = bean.Name ?? "";
+                if (n.Contains("SL28", StringComparison.OrdinalIgnoreCase)) return "/brand/beans/SL28.jpg";
+                if (n.Contains("Marsellesa", StringComparison.OrdinalIgnoreCase)) return "/brand/beans/Meselessa.jpg";
+                if (n.Contains("Cusco", StringComparison.OrdinalIgnoreCase) && n.Contains("Bourbon", StringComparison.OrdinalIgnoreCase))
+                    return "/brand/beans/Pachamara.jpg";
+                if (n.Contains("Cajamarca", StringComparison.OrdinalIgnoreCase) && n.Contains("Bourbon", StringComparison.OrdinalIgnoreCase))
+                    return "/brand/beans/bourbon-pablino.jpg";
+                if (n.Contains("Catuar", StringComparison.OrdinalIgnoreCase) || n.Contains("Caturai", StringComparison.OrdinalIgnoreCase))
+                    return "/brand/beans/bourbon_miguel.jpg";
+                if (n.Contains("Geisha Alto", StringComparison.OrdinalIgnoreCase)) return "/brand/beans/porte_bajo_angle-m.jpg";
+                if (n.Contains("Geisha Korea", StringComparison.OrdinalIgnoreCase) || n.Contains("Geisha R17", StringComparison.OrdinalIgnoreCase))
+                    return "/brand/beans/Geisha_Aug28_Angel-m.jpg";
+                if (n.Contains("Geisha - Cajamarca", StringComparison.OrdinalIgnoreCase)) return "/brand/beans/Geisha_mas_o_menos.jpg";
+                return null;
+            }
+
+            foreach (var bean in beans)
+            {
+                var display = CoffeeDisplayName.ForLab(bean.Name);
+                if (!string.IsNullOrWhiteSpace(display) && !string.Equals(bean.Name, display, StringComparison.Ordinal))
+                {
+                    bean.Name = display;
+                }
+
+                if (!string.IsNullOrWhiteSpace(bean.Variety))
+                {
+                    if (bean.Variety.Contains("Caturai", StringComparison.OrdinalIgnoreCase)
+                        || bean.Variety.Equals("Catuai", StringComparison.OrdinalIgnoreCase))
+                    {
+                        bean.Variety = "Catuar";
+                    }
+                }
+
+                if (!string.IsNullOrWhiteSpace(bean.ImageUrl))
+                {
+                    var key = bean.ImageUrl.Split('?')[0];
+                    if (imageMap.TryGetValue(key, out var mapped))
+                    {
+                        bean.ImageUrl = mapped;
+                    }
+                    else if (key.Contains("Green_bean", StringComparison.OrdinalIgnoreCase)
+                             || key.EndsWith(".svg", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var photo = BeanPhotoFor(bean);
+                        if (photo != null)
+                        {
+                            bean.ImageUrl = photo;
+                        }
+                    }
+                }
+                else
+                {
+                    var photo = BeanPhotoFor(bean);
+                    if (photo != null)
+                    {
+                        bean.ImageUrl = photo;
+                    }
+                }
+            }
+
+            // Merge exact duplicate display names (e.g. two Geisha - Cajamarca rows).
+            var dupGroups = beans
+                .GroupBy(b => CoffeeDisplayName.ForLab(b.Name), StringComparer.OrdinalIgnoreCase)
+                .Where(g => g.Count() > 1)
+                .ToList();
+
+            foreach (var group in dupGroups)
+            {
+                var keep = group.OrderBy(b => b.Id).First();
+                foreach (var drop in group.Where(b => b.Id != keep.Id))
+                {
+                    var inv = await _context.BeanInventories.Where(i => i.CoffeeBeanId == drop.Id).ToListAsync();
+                    foreach (var row in inv)
+                    {
+                        row.CoffeeBeanId = keep.Id;
+                        if (string.IsNullOrWhiteSpace(row.Name) || CoffeeFreshnessService.NamesMatch(row.Name, drop.Name))
+                        {
+                            row.Name = keep.Name;
+                        }
+                    }
+                    _context.CoffeeBean.Remove(drop);
+                }
+            }
+        }
+
         private static async Task SeedNewOriginLotsAsync()
         {
             var newLotNames = new[]
             {
-                "SL28 - Cajamarca [Fransico Rodriguez]",
+                "SL28 - Cajamarca",
                 "La Catarata [Geisha]",
                 "Cajamarca [Bourbon]",
                 "Cusco [Bourbon]",
                 "Cajamarca [Marsellesa]"
             };
             var existing = await _context.CoffeeBean
-                .Where(b => newLotNames.Contains(b.Name))
+                .Where(b => newLotNames.Contains(b.Name)
+                    || b.Name == "SL28 - Cajamarca [Fransico Rodriguez]")
                 .Select(b => b.Name)
                 .ToListAsync();
-            if (existing.Count == newLotNames.Length) return;
+            var hasSl28 = existing.Any(n => n.StartsWith("SL28 - Cajamarca", StringComparison.OrdinalIgnoreCase));
+            var existingSet = existing.ToHashSet(StringComparer.OrdinalIgnoreCase);
+            if (hasSl28
+                && existingSet.Contains("La Catarata [Geisha]")
+                && existingSet.Contains("Cajamarca [Bourbon]")
+                && existingSet.Contains("Cusco [Bourbon]")
+                && existingSet.Contains("Cajamarca [Marsellesa]"))
+            {
+                return;
+            }
 
             var peru = await _context.OriginCountry.FirstOrDefaultAsync(c => c.Name == "Peru");
             if (peru == null)
@@ -451,11 +573,11 @@ namespace TheBestBean.Models
 
             var lots = new List<CoffeeBean>();
 
-            if (!existing.Contains("SL28 - Cajamarca [Fransico Rodriguez]"))
+            if (!hasSl28)
             {
                 lots.Add(new CoffeeBean
                 {
-                    Name = "SL28 - Cajamarca [Fransico Rodriguez]",
+                    Name = "SL28 - Cajamarca",
                     FlavorProfile = "Blackcurrant, red berries, tropical fruit",
                     FlavorProfileES = "Grosella negra, frutos rojos, fruta tropical",
                     Rating = 4.8m,
@@ -466,7 +588,7 @@ namespace TheBestBean.Models
                     Producer = "Cajamarca smallholders",
                     Variety = "SL28",
                     Altitude = "1700–1950 msnm",
-                    ImageUrl = "/Media/Green_bean.svg",
+                    ImageUrl = "/brand/beans/SL28.jpg",
                     ProducerDescription = "SL28 is a Kenyan selection now planted in Peru’s northern highlands. This lot comes from Cajamarca, where cool nights and high altitude slow cherry ripening and concentrate the variety’s blackcurrant character.",
                     ProducerDescriptionES = "SL28 es una selección keniana ahora cultivada en la sierra norte del Perú. Este lote proviene de Cajamarca, donde las noches frías y la altura alargan la maduración y concentran el carácter a grosella negra de la variedad.",
                     ProcessingDescription = "Ripe cherries are sorted, then held for a 72-hour fermentation before drying. The extended fermentation builds tropical fruit and berry intensity on top of SL28’s classic blackcurrant acidity.",
@@ -479,7 +601,7 @@ namespace TheBestBean.Models
                 });
             }
 
-            if (!existing.Contains("La Catarata [Geisha]"))
+            if (!existingSet.Contains("La Catarata [Geisha]"))
             {
                 lots.Add(new CoffeeBean
                 {
@@ -508,7 +630,7 @@ namespace TheBestBean.Models
                 });
             }
 
-            if (!existing.Contains("Cajamarca [Bourbon]"))
+            if (!existingSet.Contains("Cajamarca [Bourbon]"))
             {
                 lots.Add(new CoffeeBean
                 {
@@ -523,7 +645,7 @@ namespace TheBestBean.Models
                     Producer = "Cajamarca producers",
                     Variety = "Bourbon",
                     Altitude = "1600–2000 msnm",
-                    ImageUrl = "/Media/Green_bean.svg",
+                    ImageUrl = "/brand/beans/bourbon-pablino.jpg",
                     ProducerDescription = "Bourbon sits on Cajamarca’s higher slopes in Jaén and San Ignacio, typically 1,600–2,000 msnm, beside Typica. Smallholders in cooperatives such as Cenfrocafé and APROCASSI deliver cherry to central mills for consistent washed lots.",
                     ProducerDescriptionES = "El Borbón ocupa las laderas altas de Cajamarca en Jaén y San Ignacio, entre 1.600 y 2.000 msnm, junto al Típica. Pequeños productores de cooperativas como Cenfrocafé y APROCASSI entregan cereza a molinos centrales para lotes lavados consistentes.",
                     ProcessingDescription = "Fully washed: depulped, fermented 18–36 hours, washed, and dried on patios or raised beds. The process keeps fruit influence off the cup so Bourbon’s brown-sugar sweetness and Cajamarca citric structure can read clearly.",
@@ -536,7 +658,7 @@ namespace TheBestBean.Models
                 });
             }
 
-            if (!existing.Contains("Cusco [Bourbon]"))
+            if (!existingSet.Contains("Cusco [Bourbon]"))
             {
                 lots.Add(new CoffeeBean
                 {
@@ -551,7 +673,7 @@ namespace TheBestBean.Models
                     Producer = "La Convención producers",
                     Variety = "Bourbon",
                     Altitude = "1600–2000 msnm",
-                    ImageUrl = "/Media/Green_bean.svg",
+                    ImageUrl = "/brand/beans/Pachamara.jpg",
                     ProducerDescription = "Bourbon plantings in Cusco are older and less common than in the north. They sit on steep La Convención slopes above about 1,600 msnm, often under native shade, with families processing cherry on-farm.",
                     ProducerDescriptionES = "Las plantaciones de Borbón en Cusco son más antiguas y menos comunes que en el norte. Están en laderas empinadas de La Convención sobre unos 1.600 msnm, a menudo bajo sombra nativa, con familias que procesan en finca.",
                     ProcessingDescription = "Fully washed after selective picking. Fermentation is typically 16–36 hours, then parchment is dried on raised beds. Some Cusco farms extend fermentation; this lot is a classic washed Bourbon to show the valley’s gentler, floral cup.",
@@ -564,7 +686,7 @@ namespace TheBestBean.Models
                 });
             }
 
-            if (!existing.Contains("Cajamarca [Marsellesa]"))
+            if (!existingSet.Contains("Cajamarca [Marsellesa]"))
             {
                 lots.Add(new CoffeeBean
                 {
@@ -579,7 +701,7 @@ namespace TheBestBean.Models
                     Producer = "Cajamarca producers",
                     Variety = "Marsellesa",
                     Altitude = "1400–1800 msnm",
-                    ImageUrl = "/Media/Green_bean.svg",
+                    ImageUrl = "/brand/beans/Meselessa.jpg",
                     ProducerDescription = "Marsellesa is a Sarchimor (Timor Hybrid 832/2 × Villa Sarchi) released by CIRAD-ECOM in 2009. Cenfrocafé and the Junta Nacional del Café promoted it in Peru for rust resistance without giving up cup quality. In Cajamarca it is planted from about 1,400–1,800 msnm in Jaén, San Ignacio, and Cutervo.",
                     ProducerDescriptionES = "Marsellesa es un Sarchimor (Timor Hybrid 832/2 × Villa Sarchi) liberado por CIRAD-ECOM en 2009. Cenfrocafé y la Junta Nacional del Café la impulsaron en el Perú por resistencia a la roya sin sacrificar taza. En Cajamarca se planta entre unos 1.400 y 1.800 msnm en Jaén, San Ignacio y Cutervo.",
                     ProcessingDescription = "Washed, in the Cajamarca mill style: depulped, fermented, washed clean, and dried. At altitude Marsellesa shows the chocolate-citrus cup World Coffee Research flags for this variety — cleaner than older Catimors.",
@@ -1134,12 +1256,11 @@ namespace TheBestBean.Models
                 (Find("SL28"), 4.0m, new[] { (5, "Light", 900m) }),
                 (Find("HIGHLAND", "SL09"), 2.8m, new[] { (20, "Medium", 740m) }),
                 (Find("Cusco [Bourbon]"), 2.1m, new[] { (3, "profile", 600m) }),
-                (Find("Geisha Korea - Cajamarca [Angel M]"), 3.0m, new[] { (5, "Light", 800m) }),
-                (Find("Geisha R17 - Cajamarca [Angel M]"), 3.0m, new[] { (6, "Light", 800m) }),
-                (Find("Geisha Alto - Cajamarca [Angel M]"), 3.0m, new[] { (7, "Light", 800m) }),
-                (Find("Caturai - Cajamarca [Miguel Cortez]"), 3.0m, new[] { (8, "Light", 800m) }),
-                (Find("Geisha - Cajamarca [ Miguel Cortez]"), 3.0m, new[] { (9, "Light", 800m) }),
-                (Find("Geisha - Cajamarca [Miguel Cortez]"), 3.0m, new[] { (10, "Light", 800m) }),
+                (Find("Geisha Korea"), 3.0m, new[] { (5, "Light", 800m) }),
+                (Find("Geisha R17"), 3.0m, new[] { (6, "Light", 800m) }),
+                (Find("Geisha Alto"), 3.0m, new[] { (7, "Light", 800m) }),
+                (Find("Catuar", "Caturai", "Catuai"), 3.0m, new[] { (8, "Light", 800m) }),
+                (Find("Geisha - Cajamarca"), 3.0m, new[] { (9, "Light", 800m) }),
             };
 
             foreach (var row in rows)

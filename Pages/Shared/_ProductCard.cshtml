@@ -32,9 +32,9 @@
         <a asp-page="/Product" asp-route-id="@Model.Id" class="block w-full h-full text-decoration-none">
             <img 
                 src="@Model.ImageUrl" 
-                alt="Peruvian specialty coffee beans: @Model.Name"
+                alt="Peruvian specialty coffee beans: @CoffeeDisplayName.ForLab(Model.Name)"
                 loading="lazy"
-                class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 mix-blend-multiply dark:mix-blend-normal"
+                class="coffee-bean-photo w-full h-full transition-transform duration-1000 group-hover:scale-105"
                 data-entity-id="@Model.Id" data-entity-type="CoffeeBean" data-editable="ImageUrl"
             />
         </a>
@@ -44,7 +44,7 @@
         <div class="flex flex-col gap-2">
             <a asp-page="/Product" asp-route-id="@Model.Id" class="text-decoration-none hover:opacity-75 transition-opacity block">
                 <h3 class="text-sm font-bold font-mono-jb uppercase tracking-wider m-0 text-[#111] dark:text-cream" data-entity-id="@Model.Id" data-entity-type="CoffeeBean" data-editable="Name">
-                    @Model.Name
+                    @CoffeeDisplayName.ForLab(Model.Name)
                 </h3>
             </a>
             <partial name="_WorkshopPrice" model="new DualPriceModel { Usd = Model.BasePriceUSD, Pen = Model.BasePricePEN, Compact = true, From = true }" />

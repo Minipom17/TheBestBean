@@ -81,7 +81,7 @@ html.dark footer img.brand-logo.brand-logo--cream {
 }
 
 .site-footer {
-    padding: 2rem 1.5rem 5.5rem;
+    padding: 2rem 1rem 5.5rem;
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
     font-weight: 700;
@@ -91,22 +91,25 @@ html.dark footer img.brand-logo.brand-logo--cream {
 }
 @media (min-width: 768px) {
     .site-footer {
-        padding: 2.25rem 3rem 5.5rem;
+        padding: 2.25rem 2rem 5.5rem;
     }
 }
 .site-footer__inner {
     max-width: 1600px;
     margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+.site-footer__info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+.site-footer__row {
     display: grid;
-    grid-template-columns: 7.5rem minmax(0, 1.3fr);
-    grid-template-areas:
-        "hq-l hq-c"
-        "src-l src-c"
-        "nav1 nav1"
-        "log-l log-c"
-        "nav2 nav2";
-    column-gap: 0.85rem;
-    row-gap: 0.65rem;
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+    column-gap: 0.75rem;
     align-items: start;
 }
 .site-footer__label {
@@ -118,22 +121,19 @@ html.dark footer img.brand-logo.brand-logo--cream {
 .site-footer__text {
     margin: 0;
 }
-.site-footer__label--hq { grid-area: hq-l; }
-.site-footer__text--hq { grid-area: hq-c; }
-.site-footer__label--src { grid-area: src-l; }
-.site-footer__text--src { grid-area: src-c; }
-.site-footer__label--log { grid-area: log-l; }
-.site-footer__text--log { grid-area: log-c; }
 .site-footer__nav {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
     column-gap: 1rem;
-    row-gap: 0.35rem;
+    row-gap: 0.45rem;
     min-width: 0;
+    padding-top: 0.35rem;
+    border-top: 1px solid rgba(17, 17, 17, 0.12);
 }
-.site-footer__nav--top { grid-area: nav1; }
-.site-footer__nav--bot { grid-area: nav2; }
+html.dark .site-footer__nav {
+    border-top-color: rgba(214, 208, 200, 0.14);
+}
 .site-footer__nav a {
     color: inherit;
     text-decoration: none;
@@ -147,18 +147,26 @@ html.dark .site-footer__nav a:hover {
 }
 @media (min-width: 900px) {
     .site-footer__inner {
-        grid-template-columns: 7.5rem minmax(0, 1.3fr) minmax(22rem, 1fr);
-        grid-template-areas:
-            "hq-l hq-c ."
-            "src-l src-c nav1"
-            "log-l log-c nav2";
-        column-gap: 2rem;
-        row-gap: 0.7rem;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 2rem;
+    }
+    .site-footer__info {
+        flex: 1 1 auto;
+        max-width: 42rem;
     }
     .site-footer__nav {
+        flex: 0 1 auto;
         justify-content: flex-end;
-        column-gap: 1rem;
-        padding-right: 3rem;
+        max-width: 22rem;
+        padding-top: 0;
+        border-top: none;
+        border-left: 1px solid rgba(17, 17, 17, 0.12);
+        padding-left: 1.5rem;
+    }
+    html.dark .site-footer__nav {
+        border-left-color: rgba(214, 208, 200, 0.14);
     }
 }
 
@@ -3047,10 +3055,10 @@ html.dark .how-roast {
 .how-roast__inner {
     max-width: 1600px;
     margin: 0 auto;
-    padding: 2.5rem 1.5rem 2.75rem;
+    padding: 2.5rem 1rem 2.75rem;
 }
 @media (min-width: 768px) {
-    .how-roast__inner { padding: 3.5rem 3rem; }
+    .how-roast__inner { padding: 3.5rem 2rem; }
 }
 .how-roast__kicker {
     font-family: 'JetBrains Mono', monospace;
@@ -3064,14 +3072,24 @@ html.dark .how-roast {
     font-size: clamp(1.6rem, 4vw, 2.6rem);
     letter-spacing: -0.04em;
     line-height: 1.05;
-    margin: 0 0 0.85rem;
+    margin: 0 0 0.55rem;
     max-width: 18ch;
+}
+.how-roast__details {
+    margin-top: 0.15rem;
+    max-width: 42rem;
+}
+.how-roast__details .tour-syllabus-details__summary {
+    padding: 0.15rem 0;
+}
+.how-roast__details-body {
+    padding-top: 0.85rem;
 }
 .how-roast__lede {
     max-width: 42rem;
     font-size: 0.95rem;
     line-height: 1.55;
-    margin: 0 0 1.75rem;
+    margin: 0 0 1.25rem;
     color: #222;
 }
 html.dark .how-roast__lede { color: #D6D0C8; }
@@ -3116,10 +3134,10 @@ html.dark .how-roast__steps p { color: #a8a29a; }
 .lab-board {
     max-width: 1600px;
     margin: 0 auto;
-    padding: 2.25rem 1.5rem 2.5rem;
+    padding: 2.25rem 1rem 2.5rem;
 }
 @media (min-width: 768px) {
-    .lab-board { padding: 2.75rem 3rem 3rem; }
+    .lab-board { padding: 2.75rem 2rem 3rem; }
 }
 .lab-board--compact {
     max-width: none;
@@ -3269,7 +3287,7 @@ html.dark .coffee-intro {
 .coffee-intro__inner {
     max-width: 1600px;
     margin: 0 auto;
-    padding: 1.75rem 1.5rem 1.85rem;
+    padding: 1.75rem 1rem 1.85rem;
     display: grid;
     grid-template-columns: 1fr;
     gap: 1.5rem 2rem;
@@ -3277,38 +3295,26 @@ html.dark .coffee-intro {
 }
 @media (min-width: 768px) {
     .coffee-intro__inner {
-        padding: 2.15rem 3rem 2.25rem;
+        padding: 2.15rem 2rem 2.25rem;
     }
 }
 @media (min-width: 1024px) {
     .coffee-intro__inner {
         grid-template-columns: minmax(0, 1.2fr) minmax(20rem, 0.8fr);
-        grid-template-rows: auto auto;
-        gap: 1rem 0.5rem;
-        align-items: end;
+        gap: 1rem 1.25rem;
+        align-items: start;
     }
-    .coffee-intro .how-roast,
-    .coffee-intro .how-roast__inner {
-        display: contents;
-    }
-    .coffee-intro .how-roast__copy {
+    .coffee-intro .how-roast {
         grid-column: 1;
         grid-row: 1;
-        max-width: 36rem;
-        align-self: start;
-    }
-    .coffee-intro .how-roast__steps {
-        grid-column: 1;
-        grid-row: 2;
-        align-self: end;
     }
     .coffee-intro .lab-board,
     .coffee-intro .lab-board--compact {
         display: flex;
         flex-direction: column;
-        justify-content: flex-end;
+        justify-content: flex-start;
         grid-column: 2;
-        grid-row: 1 / span 2;
+        grid-row: 1;
         align-self: stretch;
         width: 100%;
         min-width: 0;
@@ -3367,12 +3373,15 @@ html.dark .coffee-intro {
 .coffee-intro .how-roast h2 {
     font-size: clamp(1.65rem, 3.6vw, 2.45rem);
     max-width: 18ch;
-    margin-bottom: 0.7rem;
+    margin-bottom: 0.35rem;
 }
 .coffee-intro .how-roast__lede {
     font-size: 0.98rem;
     line-height: 1.55;
-    margin-bottom: 0;
+    margin-bottom: 1.1rem;
+    max-width: 36rem;
+}
+.coffee-intro .how-roast__details {
     max-width: 36rem;
 }
 .coffee-intro .how-roast__steps {
@@ -3845,7 +3854,33 @@ html.dark .product-hero-frame {
     inset: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    object-position: center;
+    background: #fafaf7;
+}
+.coffee-bean-photo {
+    object-fit: contain !important;
+    object-position: center center !important;
+    background: #fafaf7;
+    mix-blend-mode: normal;
+}
+html.dark .coffee-bean-photo,
+html.dark .product-hero-frame__img {
+    background: #1C191F;
+}
+.coffee-product-card .aspect-square {
+    background: #fafaf7;
+}
+html.dark .coffee-product-card .aspect-square {
+    background: #1C191F;
+}
+.bag-pro__photo img {
+    object-fit: contain;
+    object-position: center;
+    background: #fafaf7;
+}
+html.dark .bag-pro__photo img {
+    background: #1C191F;
 }
 .product-roast {
     margin-top: auto;

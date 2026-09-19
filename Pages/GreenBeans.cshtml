@@ -494,10 +494,10 @@
         </section>
         <!-- END FLAVOR EXPLORER -->
 
-        <section aria-label="Coffee Products" class="container mx-auto px-4 md:px-8 py-16">
+        <section aria-label="Coffee Products" class="container mx-auto px-3 md:px-6 py-12 md:py-16">
             <!-- Filters — horizontal scroll strip matching product stat tags -->
             <div class="relative mb-12">
-                <div class="flex overflow-x-auto gap-0 scrollbar-hide snap-x snap-mandatory -mx-4 px-4 md:mx-0 md:px-0 md:flex-wrap md:justify-center md:gap-2">
+                <div class="flex overflow-x-auto gap-0 scrollbar-hide snap-x snap-mandatory -mx-3 px-3 md:mx-0 md:px-0 md:flex-wrap md:justify-center md:gap-2">
                 @{
                     var initialFilter = !string.IsNullOrEmpty(Model.Type) ? Model.Type.ToLower() : (!string.IsNullOrEmpty(Model.Filter) ? Model.Filter : "All");
                     var filters = new Dictionary<string, string> 
@@ -574,7 +574,7 @@
             .edit-mode-only { display: none !important; }
             body.edit-mode .edit-mode-only { display: block !important; }
         </style>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-4 md:gap-x-6 gap-y-10 md:gap-y-14">
             @if (User.Identity?.IsAuthenticated == true)
             {
                 <a href="/Admin/Coffees/Create" class="add-coffee-card flex-col justify-center items-center border-2 border-dashed border-gray-300 dark:border-[#3A353C] rounded-2xl md:rounded-3xl hover:border-black dark:hover:border-white transition-colors h-full min-h-[400px] text-gray-400 hover:text-black dark:hover:text-white text-decoration-none group cursor-pointer bg-white/50 dark:bg-[#1C191F]/50 backdrop-blur-sm">

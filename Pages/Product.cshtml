@@ -19,7 +19,7 @@
 @if (Model.Product != null)
 {
     <!-- Back Button -->
-    <article class="container-fluid px-6 py-4" style="max-width: 1400px; margin: 0 auto;">
+    <article class="container-fluid px-3 md:px-6 py-4" style="max-width: 1400px; margin: 0 auto;">
         <a href="/Coffee" class="flex items-center gap-2 text-xs font-mono font-bold mb-3 hover:text-swiss-red transition-colors" style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; font-family: 'JetBrains Mono', monospace; font-weight: 700; margin-bottom: 0.75rem; color: #111; text-decoration: none; background: none; border: none; cursor: pointer; padding: 0;">
             <i class="bi bi-arrow-left"></i> BACK TO CATALOG
         </a>
@@ -40,7 +40,7 @@
                         var cssPos = heroPosParts.Length >= 2 ? $"{heroPosParts[0]} {heroPosParts[1]}" : "50% 50%";
                         var cssScale = heroPosParts.Length >= 3 ? heroPosParts[2] : "1.0";
                     }
-                    <img src="@Model.Product.ImageUrl" alt="@Model.Product.Name" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="ImageUrl" data-position-key="Product_@(Model.Product.Id)_ImageUrl_Position" data-saved-pos="@heroPos" class="product-hero-frame__img" style="object-position: @cssPos; transform: scale(@cssScale);">
+                    <img src="@Model.Product.ImageUrl" alt="@CoffeeDisplayName.ForLab(Model.Product.Name)" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="ImageUrl" data-position-key="Product_@(Model.Product.Id)_ImageUrl_Position" data-saved-pos="@heroPos" class="product-hero-frame__img coffee-bean-photo" style="object-position: @cssPos; transform: scale(@cssScale);">
                 </div>
                 @if (Model.Product.Name.Contains("Chuncho"))
                 {
@@ -145,7 +145,7 @@
                 
                 <span class="font-mono text-[10px] text-swiss-red font-bold uppercase tracking-widest mb-1" style="font-family: 'JetBrains Mono', monospace; color: #FF3B30;">@Model.Product.Type</span>
                 <div class="flex items-center gap-3 mb-2 flex-wrap">
-                    <h1 class="font-grotesk text-3xl md:text-4xl font-bold leading-tight m-0" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="Name" style="font-family: 'Inter', sans-serif;">@Model.Product.Name</h1>
+                    <h1 class="font-grotesk text-3xl md:text-4xl font-bold leading-tight m-0" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="Name" style="font-family: 'Inter', sans-serif;">@CoffeeDisplayName.ForLab(Model.Product.Name)</h1>
                     <span class="bg-black text-white px-2 py-0.5 text-xs font-bold font-mono tracking-widest rounded-sm whitespace-nowrap" style="font-family: 'JetBrains Mono', monospace;">SCA @Model.Product.ScaScore.ToString("0.##")</span>
                 </div>
                 <div class="mb-3" id="main-product-price" data-base-usd="@Model.Product.BasePriceUSD" data-base-pen="@Model.Product.BasePricePEN">
