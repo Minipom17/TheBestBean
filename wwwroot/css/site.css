@@ -3605,17 +3605,30 @@ html.dark .lab-board__grind {
 }
 html.dark .coffee-card-lot { color: #86efac; }
 
-/* Shop card: identity above image, origin under image, roast under cart */
+/* Shop card — dense 2-col head, shorter media, origin strip, cart+roast row */
 .coffee-card-head {
-    padding: 1rem 1rem 0.85rem;
+    padding: 0.7rem 0.85rem 0.65rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.35rem 0.85rem;
+    align-items: start;
+}
+.coffee-card-head__main {
+    min-width: 0;
+}
+.coffee-card-head__meta {
     display: flex;
     flex-direction: column;
-    gap: 0.2rem;
+    align-items: flex-end;
+    text-align: right;
+    gap: 0.12rem;
+    flex-shrink: 0;
+    padding-top: 0.95rem; /* align under kicker with title */
 }
 .coffee-card-kicker {
-    margin: 0;
+    margin: 0 0 0.1rem;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
+    font-size: 8px;
     font-weight: 700;
     letter-spacing: 0.16em;
     text-transform: uppercase;
@@ -3625,42 +3638,52 @@ html.dark .coffee-card-kicker { color: #8B8490; }
 .coffee-card-title {
     margin: 0;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.95rem;
+    font-size: 0.82rem;
     font-weight: 700;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.03em;
     text-transform: uppercase;
-    line-height: 1.25;
+    line-height: 1.2;
     color: #111;
 }
 html.dark .coffee-card-title { color: #D6D0C8; }
 .coffee-card-sca {
-    margin: 0.15rem 0 0;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: #111;
-}
-html.dark .coffee-card-sca { color: #D6D0C8; }
-.coffee-card-price {
-    margin-top: 0.35rem;
-}
-.coffee-card-notes {
-    margin: 0.45rem 0 0;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    line-height: 1.45;
-    color: #4b5563;
-}
-html.dark .coffee-card-notes { color: #9a948c; }
-.coffee-card-stock-green {
-    margin: 0.55rem 0 0;
+    margin: 0;
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
     font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #111;
+    white-space: nowrap;
+}
+html.dark .coffee-card-sca { color: #D6D0C8; }
+.coffee-card-price {
+    margin: 0;
+}
+.coffee-card-price .price-pair--compact .price-pair__main {
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+}
+.coffee-card-notes {
+    margin: 0.25rem 0 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    line-height: 1.35;
+    color: #4b5563;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+html.dark .coffee-card-notes { color: #9a948c; }
+.coffee-card-stock-green {
+    margin: 0.15rem 0 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
     letter-spacing: 0.04em;
     color: #16A34A;
+    white-space: nowrap;
 }
 html.dark .coffee-card-stock-green { color: #86efac; }
 
@@ -3668,7 +3691,7 @@ html.dark .coffee-card-stock-green { color: #86efac; }
     display: block;
     position: relative;
     width: 100%;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 16 / 10;
     overflow: hidden;
     background: #f3f0ea;
     border-top: 1px solid #e5e7eb;
@@ -3684,69 +3707,80 @@ html.dark .coffee-card-media {
     display: block;
     object-fit: cover !important;
     object-position: center 45% !important;
-    /* Bean stills shoot on cream table — zoom until beans hit the frame edges */
-    transform: scale(1.42);
+    transform: scale(1.35);
     transform-origin: center center;
     background: transparent !important;
 }
 .coffee-product-card:hover .coffee-card-media__img {
-    transform: scale(1.48);
+    transform: scale(1.4);
     transition: transform 0.8s ease;
 }
 
 .coffee-card-origin {
     margin: 0;
-    padding: 0.75rem 1rem;
+    padding: 0.45rem 0.85rem;
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 0.45rem 1rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.35rem 0.65rem;
     border-bottom: 1px solid #e5e7eb;
 }
 html.dark .coffee-card-origin { border-bottom-color: #3A353C; }
-@media (min-width: 480px) {
-    .coffee-card-origin {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-}
 .coffee-card-origin__row {
     min-width: 0;
 }
 .coffee-card-origin dt {
     margin: 0;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 8px;
+    font-size: 7px;
     font-weight: 700;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     color: #9ca3af;
 }
 html.dark .coffee-card-origin dt { color: #8B8490; }
 .coffee-card-origin dd {
-    margin: 0.15rem 0 0;
+    margin: 0.05rem 0 0;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
+    font-size: 9px;
     font-weight: 600;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.01em;
     color: #111;
-    line-height: 1.3;
+    line-height: 1.25;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 html.dark .coffee-card-origin dd { color: #D6D0C8; }
 
 .coffee-card-actions {
     margin-top: auto;
-    padding: 0.85rem 1rem 1rem;
+    padding: 0.55rem 0.85rem 0.7rem;
     display: flex;
-    flex-direction: column;
-    gap: 0.55rem;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.65rem;
+}
+.coffee-card-actions__form {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
+}
+.coffee-card-actions__btn {
+    width: 100%;
+    padding: 0.65rem 0.75rem !important;
+    font-size: 11px !important;
 }
 .coffee-card-stock-roast {
     margin: 0;
+    flex: 0 0 auto;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 700;
     letter-spacing: 0.04em;
     color: #8B5A2B;
-    text-align: left;
+    text-align: right;
+    white-space: nowrap;
 }
 html.dark .coffee-card-stock-roast { color: #c4a07a; }
 
