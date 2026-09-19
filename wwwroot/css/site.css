@@ -3272,6 +3272,18 @@ html.dark .lab-board--compact .lab-board__head {
     font-size: 10px;
     max-width: 11rem;
 }
+.lab-board__kg {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #6b7280;
+    flex: 0 0 auto;
+    min-width: 2.1rem;
+    tabular-nums: true;
+    font-variant-numeric: tabular-nums;
+}
+html.dark .lab-board__kg { color: #9a948c; }
 
 .coffee-intro {
     width: 100%;
@@ -4304,75 +4316,115 @@ html.dark .product-sheet__process p:last-child {
     }
 }
 
-/* Home hero alignment and title size */
+/* Ultra-dense lab list: 2-col on phones so ~9–12 lots fit above the fold */
 .coffee-intro .lab-board--compact h2 {
-    font-size: 1.25rem !important;
-    margin-bottom: 0.25rem !important;
+    font-size: 1.05rem !important;
+    margin-bottom: 0.1rem !important;
 }
 .coffee-intro .lab-board__feed {
-    margin-top: 0 !important;
+    margin-top: 0.1rem !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 0.55rem;
+    row-gap: 0;
 }
-
-/* Compact single-line lab rows so the list fits on a phone first screen */
 .coffee-intro .lab-board__row {
     flex-direction: row !important;
     flex-wrap: nowrap !important;
     align-items: baseline !important;
-    justify-content: space-between !important;
-    gap: 0.45rem 0.75rem !important;
-    padding: 0.22rem 0 !important;
+    justify-content: flex-start !important;
+    gap: 0.28rem !important;
+    padding: 0.18rem 0 !important;
+    min-width: 0;
+}
+.coffee-intro .lab-board__kg {
+    font-size: 8px !important;
+    min-width: 1.7rem;
+    letter-spacing: 0.02em;
+}
+.coffee-intro .lab-board__kg::after {
+    content: "kg";
+    margin-left: 0.12em;
+    font-weight: 500;
+    opacity: 0.7;
+    text-transform: lowercase;
 }
 .coffee-intro .lab-board__meta {
-    flex: 0 0 auto !important;
-    width: auto !important;
-    min-width: 0 !important;
-    white-space: nowrap !important;
-    font-size: 8px !important;
-    letter-spacing: 0.08em !important;
+    display: none !important;
 }
 .coffee-intro .lab-board__name-wrap {
     flex: 1 1 auto !important;
     width: auto !important;
     min-width: 0 !important;
-    justify-content: flex-end !important;
-    text-align: right !important;
+    justify-content: flex-start !important;
+    text-align: left !important;
 }
 .coffee-intro .lab-board__name-link {
     max-width: 100% !important;
     white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
-    font-size: 10px !important;
+    font-size: 8.5px !important;
+    letter-spacing: 0.02em !important;
+    border-bottom-width: 1.5px !important;
 }
 .coffee-intro .lab-board__kicker {
-    margin-bottom: 0.15rem !important;
+    margin-bottom: 0.1rem !important;
     font-size: 8px !important;
 }
 .coffee-intro .lab-board--compact .lab-board__head {
-    margin-bottom: 0.1rem !important;
-    padding-bottom: 0.25rem !important;
+    margin-bottom: 0.05rem !important;
+    padding-bottom: 0.2rem !important;
 }
 .coffee-intro__inner {
-    padding-top: 1rem !important;
-    padding-bottom: 1rem !important;
-    gap: 0.85rem !important;
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+    gap: 0.65rem !important;
 }
 .coffee-intro .how-roast h2 {
-    font-size: clamp(1.35rem, 5.5vw, 2rem) !important;
-    margin-bottom: 0.2rem !important;
+    font-size: clamp(1.2rem, 5vw, 1.85rem) !important;
+    margin-bottom: 0.15rem !important;
 }
 .coffee-intro .how-roast__kicker {
-    margin-bottom: 0.35rem !important;
+    margin-bottom: 0.25rem !important;
+}
+.coffee-intro .how-roast__lede {
+    font-size: 0.82rem !important;
+    line-height: 1.4 !important;
+    margin-bottom: 0.55rem !important;
+}
+@media (min-width: 640px) {
+    .coffee-intro .lab-board__feed {
+        grid-template-columns: 1fr 1fr 1fr;
+        column-gap: 0.75rem;
+    }
+    .coffee-intro .lab-board__name-link {
+        font-size: 9.5px !important;
+    }
 }
 @media (min-width: 1024px) {
-    .coffee-intro .lab-board--compact h2 {
-        font-size: 1.45rem !important;
+    .coffee-intro .lab-board__feed {
+        grid-template-columns: 1fr;
+        column-gap: 0;
     }
-    .coffee-intro .lab-board__meta {
+    .coffee-intro .lab-board--compact h2 {
+        font-size: 1.35rem !important;
+    }
+    .coffee-intro .lab-board__kg {
         font-size: 9px !important;
+        min-width: 2.1rem;
     }
     .coffee-intro .lab-board__name-link {
         font-size: 11px !important;
+    }
+    .coffee-intro .lab-board__row {
+        justify-content: space-between !important;
+        gap: 0.45rem 0.75rem !important;
+        padding: 0.22rem 0 !important;
+    }
+    .coffee-intro .lab-board__name-wrap {
+        justify-content: flex-end !important;
+        text-align: right !important;
     }
 }
 

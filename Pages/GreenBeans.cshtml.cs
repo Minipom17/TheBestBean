@@ -50,9 +50,12 @@ namespace TheBestBean.Pages
             LotsById = live.Lots.ToDictionary(l => l.CoffeeBeanId);
             LabBoard = new CoffeeLabBoard
             {
+                // Green-first board: denser mobile list of what is actually on hand
                 Lots = live.Lots
-                    .Where(l => l.HasGreen || l.HasRoast)
-                    .Take(10)
+                    .Where(l => l.HasGreen)
+                    .OrderByDescending(l => l.GreenKg)
+                    .ThenBy(l => CoffeeDisplayName.ForLab(l.Name))
+                    .Take(12)
                     .ToList(),
                 Compact = true,
                 ShowTimeline = false,
@@ -64,24 +67,50 @@ namespace TheBestBean.Pages
             };
             ViewData["CoffeeLots"] = LotsById;
 
-            ShopLotsJson = Products.Select(p =>
-            {
-                LotsById.TryGetValue(p.Id, out var lot);
-                return (object)new
+            // Flavor card: only coffees with green (or any lot if none green)
+            var stock = Products
+                .Select(p =>
                 {
-                    id = p.Id,
-                    name = CoffeeDisplayName.ForLab(p.Name),
-                    flavor = p.FlavorProfile ?? "",
-                    process = p.ProcessingMethod ?? "",
-                    altitude = p.Altitude ?? "",
-                    variety = p.Variety ?? "",
-                    origin = p.OriginCountry?.Name ?? "Peru",
-                    region = p.CoffeeRegion?.Name ?? "",
-                    sca = p.ScaScore,
-                    greenKg = lot?.GreenKg ?? 0m,
-                    hasGreen = lot?.HasGreen ?? false
-                };
-            }).ToList();
+                    LotsById.TryGetValue(p.Id, out var lot);
+                    return new
+                    {
+                        id = p.Id,
+                        name = CoffeeDisplayName.ForLab(p.Name),
+                        flavor = p.FlavorProfile ?? "",
+                        process = p.ProcessingMethod ?? "",
+                        altitude = p.Altitude ?? "",
+                        variety = p.Variety ?? "",
+                        origin = p.OriginCountry?.Name ?? "Peru",
+                        region = p.CoffeeRegion?.Name ?? "",
+                        sca = p.ScaScore,
+                        greenKg = lot?.GreenKg ?? 0m,
+                        hasGreen = lot?.HasGreen ?? false
+                    };
+                })
+                .Where(p => p.hasGreen)
+                .ToList();
+            if (stock.Count == 0)
+            {
+                stock = Products.Select(p =>
+                {
+                    LotsById.TryGetValue(p.Id, out var lot);
+                    return new
+                    {
+                        id = p.Id,
+                        name = CoffeeDisplayName.ForLab(p.Name),
+                        flavor = p.FlavorProfile ?? "",
+                        process = p.ProcessingMethod ?? "",
+                        altitude = p.Altitude ?? "",
+                        variety = p.Variety ?? "",
+                        origin = p.OriginCountry?.Name ?? "Peru",
+                        region = p.CoffeeRegion?.Name ?? "",
+                        sca = p.ScaScore,
+                        greenKg = lot?.GreenKg ?? 0m,
+                        hasGreen = lot?.HasGreen ?? false
+                    };
+                }).ToList();
+            }
+            ShopLotsJson = stock.Cast<object>().ToList();
         }
 
         public async Task<IActionResult> OnPostDeleteAsync(int id)

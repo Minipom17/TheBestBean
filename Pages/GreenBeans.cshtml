@@ -689,8 +689,16 @@
         }
 
         function applyShopRecommendation(zone) {
+            // Never fall back to FlavorZone.Recommendation* (Guatemala Antigua, etc.) —
+            // only coffees currently in stock / ShopLotsJson.
             const lot = pickShopLot(zone);
-            if (!lot || !recTitle) return;
+            if (!lot || !recTitle) {
+                if (recTitle) recTitle.textContent = 'No stock match';
+                if (recDesc) recDesc.textContent = 'Pick another flavor — we only recommend lots on hand.';
+                if (recStock) recStock.textContent = '';
+                if (recCard) recCard.setAttribute('href', '/Coffee');
+                return;
+            }
             recTitle.textContent = lot.name;
             if (recOrigin) recOrigin.textContent = lot.region || lot.origin || 'Peru';
             if (recProcess) recProcess.textContent = lot.process || 'Washed';
