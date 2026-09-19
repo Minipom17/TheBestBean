@@ -815,8 +815,8 @@
                     
                     <div class="flex flex-col md:flex-row border-b-[3px] border-black bg-stone-50">
                         <div class="flex-1 border-b-[3px] md:border-b-0 md:border-r-[3px] border-black p-2">
-                            <span class="text-[9px] text-gray-400 mb-1 block">ORIGIN COUNTRY</span>
-                            <input type="text" id="invCountry" class="w-full bg-transparent outline-none font-black uppercase border-none focus:ring-0 p-0 m-0" />
+                            <span class="text-[9px] text-gray-400 mb-1 block">REGION</span>
+                            <input type="text" id="invRegion" class="w-full bg-transparent outline-none font-black uppercase border-none focus:ring-0 p-0 m-0" />
                         </div>
                         <div class="flex-1 border-b-[3px] md:border-b-0 md:border-r-[3px] border-black p-2">
                             <span class="text-[9px] text-gray-400 mb-1 block">FARMER / ESTATE</span>
@@ -829,6 +829,43 @@
                         <div class="flex-1 p-2">
                             <span class="text-[9px] text-gray-400 mb-1 block">COST PER KG ($)</span>
                             <input type="number" id="invCost" class="w-full bg-transparent outline-none font-black uppercase border-none focus:ring-0 p-0 m-0" />
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col md:flex-row border-b-[3px] border-black bg-stone-50">
+                        <div class="flex-1 border-b-[3px] md:border-b-0 md:border-r-[3px] border-black p-2">
+                            <span class="text-[9px] text-gray-400 mb-1 block">ELEVATION (MASL)</span>
+                            <input type="number" id="invElevation" class="w-full bg-transparent outline-none font-black uppercase border-none focus:ring-0 p-0 m-0" />
+                        </div>
+                        <div class="flex-1 border-b-[3px] md:border-b-0 md:border-r-[3px] border-black p-2">
+                            <span class="text-[9px] text-gray-400 mb-1 block">VARIETY</span>
+                            <input type="text" id="invVariety" class="w-full bg-transparent outline-none font-black uppercase border-none focus:ring-0 p-0 m-0" />
+                        </div>
+                        <div class="flex-1 border-b-[3px] md:border-b-0 md:border-r-[3px] border-black p-2">
+                            <span class="text-[9px] text-gray-400 mb-1 block">HUMIDITY (%)</span>
+                            <input type="number" step="0.1" id="invHumidity" class="w-full bg-transparent outline-none font-black uppercase border-none focus:ring-0 p-0 m-0" />
+                        </div>
+                        <div class="flex-1 p-2">
+                            <span class="text-[9px] text-gray-400 mb-1 block">DENSITY (g/L)</span>
+                            <input type="number" step="0.1" id="invDensity" class="w-full bg-transparent outline-none font-black uppercase border-none focus:ring-0 p-0 m-0" />
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col md:flex-row border-b-[3px] border-black bg-stone-50">
+                        <div class="flex-[2] border-b-[3px] md:border-b-0 md:border-r-[3px] border-black p-2">
+                            <span class="text-[9px] text-gray-400 mb-1 block">FLAVOR PROFILE</span>
+                            <input type="text" id="invProfile" class="w-full bg-transparent outline-none font-black uppercase border-none focus:ring-0 p-0 m-0" />
+                        </div>
+                        <div class="flex-1 p-2">
+                            <span class="text-[9px] text-gray-400 mb-1 block">SCA SCORE</span>
+                            <input type="number" step="0.25" id="invSca" class="w-full bg-transparent outline-none font-black uppercase border-none focus:ring-0 p-0 m-0" />
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col md:flex-row border-b-[3px] border-black bg-stone-50">
+                        <div class="flex-1 p-2">
+                            <span class="text-[9px] text-gray-400 mb-1 block">IMAGE (JPG/PNG/WEBP)</span>
+                            <input type="file" id="invImage" accept=".jpg,.jpeg,.png,.webp" class="w-full text-xs font-mono" />
                         </div>
                     </div>
                     
@@ -1283,11 +1320,18 @@
     function openBeanForm() { 
         document.getElementById('invId').value = '';
         document.getElementById('invName').value = '';
-        document.getElementById('invCountry').value = '';
+        document.getElementById('invRegion').value = '';
         document.getElementById('invFarmer').value = '';
         document.getElementById('invProcess').value = 'Washed';
         document.getElementById('invWeight').value = '';
         document.getElementById('invCost').value = '';
+        document.getElementById('invElevation').value = '';
+        document.getElementById('invVariety').value = '';
+        document.getElementById('invHumidity').value = '';
+        document.getElementById('invDensity').value = '';
+        document.getElementById('invProfile').value = '';
+        document.getElementById('invSca').value = '';
+        document.getElementById('invImage').value = '';
         document.getElementById('formTitle').innerText = 'New Shipment';
         document.getElementById('beanForm').style.display = 'block'; 
         window.scrollTo(0, 0);
@@ -1297,11 +1341,17 @@
         if(!bean) return;
         document.getElementById('invId').value = bean.id;
         document.getElementById('invName').value = bean.name || '';
-        document.getElementById('invCountry').value = bean.country || '';
+        document.getElementById('invRegion').value = bean.region || '';
         document.getElementById('invFarmer').value = bean.farmer || '';
         document.getElementById('invProcess').value = bean.process || 'Washed';
         document.getElementById('invWeight').value = bean.totalKg || '';
         document.getElementById('invCost').value = bean.costPerKg || '';
+        document.getElementById('invElevation').value = bean.elevationMeters || '';
+        document.getElementById('invVariety').value = bean.variety || '';
+        document.getElementById('invHumidity').value = bean.humidity || '';
+        document.getElementById('invDensity').value = bean.density || '';
+        document.getElementById('invProfile').value = bean.flavorProfile || '';
+        document.getElementById('invSca').value = bean.scaScore || '';
         document.getElementById('formTitle').innerText = 'Edit Shipment';
         document.getElementById('beanForm').style.display = 'block';
         window.scrollTo(0, 0);
@@ -1318,13 +1368,24 @@
         const formData = new FormData();
         formData.append('id', beanId);
         formData.append('name', name);
-        formData.append('country', document.getElementById('invCountry').value || '');
+        formData.append('region', document.getElementById('invRegion').value || '');
         formData.append('farmer', document.getElementById('invFarmer').value || '');
         formData.append('process', document.getElementById('invProcess').value || '');
         formData.append('totalKg', parseFloat(document.getElementById('invWeight').value) || 0);
         formData.append('costPerKg', document.getElementById('invCost').value || '');
+        formData.append('elevationMeters', document.getElementById('invElevation').value || '');
+        formData.append('variety', document.getElementById('invVariety').value || '');
+        formData.append('humidity', document.getElementById('invHumidity').value || '');
+        formData.append('density', document.getElementById('invDensity').value || '');
+        formData.append('flavorProfile', document.getElementById('invProfile').value || '');
+        formData.append('scaScore', document.getElementById('invSca').value || '');
         formData.append('hasCertificates', document.getElementById('invHasCertificates').value === 'true');
         
+        const imgFile = document.getElementById('invImage').files[0];
+        if (imgFile) {
+            formData.append('image', imgFile);
+        }
+
         const certFile = document.getElementById('invCertificate').files[0];
         if (certFile) {
             formData.append('certificate', certFile);
@@ -1342,10 +1403,17 @@
                 // Clear form
                 document.getElementById('invId').value = '';
                 document.getElementById('invName').value = '';
-                document.getElementById('invCountry').value = '';
+                document.getElementById('invRegion').value = '';
                 document.getElementById('invFarmer').value = '';
                 document.getElementById('invWeight').value = '';
                 document.getElementById('invCost').value = '';
+                document.getElementById('invElevation').value = '';
+                document.getElementById('invVariety').value = '';
+                document.getElementById('invHumidity').value = '';
+                document.getElementById('invDensity').value = '';
+                document.getElementById('invProfile').value = '';
+                document.getElementById('invSca').value = '';
+                document.getElementById('invImage').value = '';
                 document.getElementById('invHasCertificates').value = 'false';
                 document.getElementById('invCertificate').value = '';
                 document.getElementById('certificateUploadRow').style.display = 'none';
@@ -1372,22 +1440,43 @@
         ];
 
         inventory.forEach(b => { 
-            const imgSrc = defaultImages[(b.id || 0) % defaultImages.length];
+            const imgSrc = b.imageUrl || defaultImages[(b.id || 0) % defaultImages.length];
             const imageHtml = `<img src="${imgSrc}" alt="${b.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />`; 
             c.innerHTML += `
-                <div onclick="editBean(${b.id})" class="group cursor-pointer border border-transparent hover:border-gray-200 transition-colors p-4 -m-4 bg-white dark:bg-[#121014] text-black dark:text-[#D6D0C8]">
-                    <div class="w-full aspect-square bg-gray-100 dark:bg-[#1C191F] mb-6 overflow-hidden relative">
+                <div onclick="editBean(${b.id})" class="group cursor-pointer flex flex-col bg-white dark:bg-[#1C191F] border border-gray-200 dark:border-[#3A353C] transition-all h-full">
+                    <div class="aspect-square w-full overflow-hidden bg-transparent relative">
+                        <div class="absolute top-4 left-4 right-4 z-20 flex justify-between items-start pointer-events-none">
+                            <div class="flex flex-wrap gap-1.5">
+                                ${b.region ? `<span class="bg-black/50 text-white text-[10px] font-bold px-2 py-1 uppercase tracking-widest">${b.region}</span>` : ''}
+                                ${b.process ? `<span class="bg-black/50 text-white text-[10px] font-bold px-2 py-1 uppercase tracking-widest">${b.process}</span>` : ''}
+                                ${b.variety ? `<span class="bg-black/50 text-white text-[10px] font-bold px-2 py-1 uppercase tracking-widest">${b.variety}</span>` : ''}
+                                ${(!b.region && !b.process && !b.variety) ? `<span class="bg-black/50 text-white text-[10px] font-bold px-2 py-1 uppercase tracking-widest">Coffee</span>` : ''}
+                            </div>
+                        </div>
                         <img src="/Media/Green_bean.svg" alt="Green Bean" class="absolute top-4 right-4 w-8 h-8 opacity-50 z-10" />
-                        ${imageHtml}
+                        <img src="${imgSrc}" alt="${b.name}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 mix-blend-multiply dark:mix-blend-normal" />
                     </div>
-                    <div class="flex justify-between items-baseline mb-2">
-                        <h3 class="text-xl font-bold tracking-tight m-0">${b.name}</h3>
-                        <span class="font-mono text-xs font-bold">${b.totalKg.toFixed(1)} kg</span>
-                    </div>
-                    <p class="text-xs text-gray-500 uppercase tracking-widest font-bold mb-4">${b.country || 'Unknown'}</p>
-                    <div class="border-t border-dotted border-gray-300 pt-4 font-mono text-[10px] uppercase font-bold text-gray-500 space-y-2">
-                        <div class="flex justify-between"><span>PROCESS</span><span class="text-black dark:text-[#D6D0C8]">${b.process || '-'}</span></div>
-                        <div class="flex justify-between"><span>COST/KG</span><span class="text-black dark:text-[#D6D0C8]">$${b.costPerKg || '0.00'}</span></div>
+                    
+                    <div class="flex flex-col flex-grow p-4 md:p-6 border-t border-gray-200 dark:border-[#3A353C]">
+                        <div class="flex flex-col gap-2">
+                            <h3 class="text-sm font-bold font-mono uppercase tracking-wider m-0 text-[#111] dark:text-[#D6D0C8]">
+                                ${b.name}
+                            </h3>
+                            <div class="font-mono text-[11px] text-gray-500 uppercase tracking-widest font-bold">
+                                ${b.country || 'Unknown'} ${b.farmer ? `[${b.farmer}]` : ''}
+                            </div>
+                        </div>
+
+                        <div class="mt-auto pt-6 flex justify-between items-end">
+                            <div class="flex flex-col">
+                                <span class="text-[9px] text-gray-400 font-bold uppercase tracking-widest mb-1">STOCK</span>
+                                <span class="font-mono text-xs font-bold text-[#111] dark:text-[#D6D0C8]">${b.totalKg.toFixed(1)} kg</span>
+                            </div>
+                            <div class="flex flex-col text-right">
+                                <span class="text-[9px] text-gray-400 font-bold uppercase tracking-widest mb-1">COST/KG</span>
+                                <span class="font-mono text-xs font-bold text-[#111] dark:text-[#D6D0C8]">$${b.costPerKg || '0.00'}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>`; 
         }); 

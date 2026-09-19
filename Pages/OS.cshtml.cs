@@ -40,7 +40,15 @@ namespace TheBestBean.Pages
                     farmer = b.Farmer ?? "",
                     process = b.Process ?? "",
                     totalKg = b.TotalKg,
-                    costPerKg = b.CostPerKg
+                    costPerKg = b.CostPerKg,
+                    region = b.Region ?? "",
+                    variety = b.Variety ?? "",
+                    humidity = b.Humidity,
+                    density = b.Density,
+                    elevationMeters = b.ElevationMeters,
+                    flavorProfile = b.FlavorProfile ?? "",
+                    scaScore = b.ScaScore,
+                    imageUrl = b.ImageUrl
                 })
                 .ToListAsync();
 
@@ -75,9 +83,32 @@ namespace TheBestBean.Pages
             }
 
             bean.Name = name;
-            bean.Country = form["country"].ToString();
+            bean.Country = "Peru";
             bean.Farmer = form["farmer"].ToString();
             bean.Process = form["process"].ToString();
+            bean.Region = form["region"].ToString();
+            bean.Variety = form["variety"].ToString();
+            bean.FlavorProfile = form["flavorProfile"].ToString();
+            
+            if (int.TryParse(form["elevationMeters"].ToString(), out var elevation))
+                bean.ElevationMeters = elevation;
+            else
+                bean.ElevationMeters = null;
+                
+            if (decimal.TryParse(form["scaScore"].ToString(), out var sca))
+                bean.ScaScore = sca;
+            else
+                bean.ScaScore = null;
+            
+            if (decimal.TryParse(form["humidity"].ToString(), out var humidity))
+                bean.Humidity = humidity;
+            else
+                bean.Humidity = null;
+                
+            if (decimal.TryParse(form["density"].ToString(), out var density))
+                bean.Density = density;
+            else
+                bean.Density = null;
             
             if (decimal.TryParse(form["totalKg"].ToString(), out var totalKg))
                 bean.TotalKg = totalKg;
@@ -94,7 +125,7 @@ namespace TheBestBean.Pages
             if (certificateFile != null && certificateFile.Length > 0)
             {
                 var ext = Path.GetExtension(certificateFile.FileName).ToLower();
-                var allowedExtensions = new[] { ".pdf", ".webp", ".webp", ".webp" };
+                var allowedExtensions = new[] { ".pdf", ".png", ".jpg", ".jpeg" };
                 if (!allowedExtensions.Contains(ext))
                 {
                     return BadRequest("Certificate must be a PDF, PNG, or JPEG file");
@@ -109,6 +140,28 @@ namespace TheBestBean.Pages
                     await certificateFile.CopyToAsync(stream);
                 }
                 bean.CertificateFilePath = $"/uploads/certificates/{fileName}";
+            }
+
+            // Handle image file upload
+            var imageFile = form.Files["image"];
+            if (imageFile != null && imageFile.Length > 0)
+            {
+                var ext = Path.GetExtension(imageFile.FileName).ToLower();
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
+                if (!allowedExtensions.Contains(ext))
+                {
+                    return BadRequest("Image must be a JPG, PNG, or WEBP file");
+                }
+                
+                var uploadsRoot = Path.Combine("wwwroot", "uploads", "beans");
+                Directory.CreateDirectory(uploadsRoot);
+                var fileName = $"bean_{Guid.NewGuid():N}{ext}";
+                var filePath = Path.Combine(uploadsRoot, fileName);
+                using (var stream = System.IO.File.Create(filePath))
+                {
+                    await imageFile.CopyToAsync(stream);
+                }
+                bean.ImageUrl = $"/uploads/beans/{fileName}";
             }
 
             bean.LastUpdated = DateTime.Now;
@@ -280,6 +333,22 @@ namespace TheBestBean.Pages
         public decimal TotalKg { get; set; }
         [JsonPropertyName("costPerKg")]
         public decimal? CostPerKg { get; set; }
+        [JsonPropertyName("region")]
+        public string? Region { get; set; }
+        [JsonPropertyName("variety")]
+        public string? Variety { get; set; }
+        [JsonPropertyName("humidity")]
+        public decimal? Humidity { get; set; }
+        [JsonPropertyName("density")]
+        public decimal? Density { get; set; }
+        [JsonPropertyName("elevationMeters")]
+        public int? ElevationMeters { get; set; }
+        [JsonPropertyName("flavorProfile")]
+        public string? FlavorProfile { get; set; }
+        [JsonPropertyName("scaScore")]
+        public decimal? ScaScore { get; set; }
+        [JsonPropertyName("imageUrl")]
+        public string? ImageUrl { get; set; }
     }
 
     public class RoastDto

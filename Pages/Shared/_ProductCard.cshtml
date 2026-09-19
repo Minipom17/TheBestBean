@@ -62,7 +62,7 @@
             }
         }
         <div class="coffee-card-stock mt-auto">
-            @if (lot != null)
+            @if (lot != null && (lot.HasGreen || lot.RoastedKg >= 0.05m))
             {
                 <span class="coffee-card-stock__green">@CoffeeLotStatus.FormatKg(lot.GreenKg) green</span>
                 <span class="coffee-card-stock__roast">@CoffeeLotStatus.FormatKg(lot.RoastedKg) roasted</span>

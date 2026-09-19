@@ -79,11 +79,6 @@ namespace TheBestBean.Services
                     .Select(r => ToDrop(r, today))
                     .ToList();
 
-                if (green <= 0 && drops.Count == 0 && filter == null)
-                {
-                    continue;
-                }
-
                 lots.Add(new CoffeeLotStatus
                 {
                     CoffeeBeanId = bean.Id,

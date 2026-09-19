@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TheBestBean.Data;
 
@@ -10,9 +11,11 @@ using TheBestBean.Data;
 namespace TheBestBean.Migrations
 {
     [DbContext(typeof(TheBestBeanContext))]
-    partial class TheBestBeanContextModelSnapshot : ModelSnapshot
+    [Migration("20260918212300_AddHumidityAndDensityToGreenStock")]
+    partial class AddHumidityAndDensityToGreenStock
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.9");
@@ -246,10 +249,6 @@ namespace TheBestBean.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("FlavorProfile")
-                        .HasMaxLength(500)
-                        .HasColumnType("TEXT");
-
                     b.Property<int?>("HarvestYear")
                         .HasColumnType("INTEGER");
 
@@ -258,10 +257,6 @@ namespace TheBestBean.Migrations
 
                     b.Property<decimal?>("Humidity")
                         .HasColumnType("decimal(5, 2)");
-
-                    b.Property<string>("ImageUrl")
-                        .HasMaxLength(500)
-                        .HasColumnType("TEXT");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("INTEGER");
@@ -292,9 +287,6 @@ namespace TheBestBean.Migrations
                     b.Property<string>("Region")
                         .HasMaxLength(200)
                         .HasColumnType("TEXT");
-
-                    b.Property<decimal?>("ScaScore")
-                        .HasColumnType("decimal(5, 2)");
 
                     b.Property<decimal>("TotalKg")
                         .HasColumnType("decimal(10, 2)");

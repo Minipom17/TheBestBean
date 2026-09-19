@@ -121,37 +121,46 @@ namespace TheBestBean.Models
             }
 
 
-            // Seed Countries
-            var peru = new OriginCountry { Name = "Peru" };
-            var colombia = new OriginCountry { Name = "Colombia" };
+            if (!_context.OriginCountry.Any())
+            {
+                var peruSeed = new OriginCountry { Name = "Peru" };
+                var colombiaSeed = new OriginCountry { Name = "Colombia" };
+                _context.OriginCountry.AddRange(peruSeed, colombiaSeed);
 
-            _context.OriginCountry.AddRange(peru, colombia);
+                var cuscoSeed = new CoffeeRegion { Name = "La Convención, Cusco" };
+                var juninSeed = new CoffeeRegion { Name = "Junín" };
+                var huilaSeed = new CoffeeRegion { Name = "Huila [Pitalito]" };
+                var narinoSeed = new CoffeeRegion { Name = "Nariño" };
+                _context.CoffeeRegion.AddRange(cuscoSeed, juninSeed, huilaSeed, narinoSeed);
 
-            // Seed Regions
-            var cusco = new CoffeeRegion { Name = "La Convención, Cusco" };
-            var junin = new CoffeeRegion { Name = "Junín" };
-            var huila = new CoffeeRegion { Name = "Huila [Pitalito]" };
-            var narino = new CoffeeRegion { Name = "Nariño" };
+                var inkawasiSeed = new CoffeeFarm { Name = "Inkawasi" };
+                var huayopataSeed = new CoffeeFarm { Name = "Huayopata Estate" };
+                var monteblancoSeed = new CoffeeFarm { Name = "Monteblanco" };
+                var elProgresoSeed = new CoffeeFarm { Name = "El Progreso" };
+                var buesacoSeed = new CoffeeFarm { Name = "Minifundio Buesaco" };
+                var ccelcSeed = new CoffeeFarm { Name = "CCELC Cooperative" };
+                _context.CoffeeFarm.AddRange(inkawasiSeed, huayopataSeed, monteblancoSeed, elProgresoSeed, buesacoSeed, ccelcSeed);
 
-            _context.CoffeeRegion.AddRange(cusco, junin, huila, narino);
-
-            // Seed Farms
-            // Peru Farms
-            var inkawasi = new CoffeeFarm { Name = "Inkawasi" };
-            var huayopata = new CoffeeFarm { Name = "Huayopata Estate" };
-            // Peru Farms
-            var monteblanco = new CoffeeFarm { Name = "Monteblanco" };
-            var elProgreso = new CoffeeFarm { Name = "El Progreso" };
-            var buesaco = new CoffeeFarm { Name = "Minifundio Buesaco" };
-            var ccelc = new CoffeeFarm { Name = "CCELC Cooperative" };
-
-            _context.CoffeeFarm.AddRange(inkawasi, huayopata, monteblanco, elProgreso, buesaco, ccelc);
-
-            await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+            }
 
             // Create Coffee Beans
             if (!_context.CoffeeBean.Any())
             {
+            var peru = await _context.OriginCountry.FirstOrDefaultAsync(c => c.Name == "Peru")
+                ?? _context.OriginCountry.Add(new OriginCountry { Name = "Peru" }).Entity;
+            var cusco = await _context.CoffeeRegion.FirstOrDefaultAsync(r => r.Name == "La Convención, Cusco")
+                ?? _context.CoffeeRegion.Add(new CoffeeRegion { Name = "La Convención, Cusco" }).Entity;
+            var huila = await _context.CoffeeRegion.FirstOrDefaultAsync(r => r.Name.StartsWith("Huila"))
+                ?? _context.CoffeeRegion.Add(new CoffeeRegion { Name = "Huila [Pitalito]" }).Entity;
+            var inkawasi = await _context.CoffeeFarm.FirstOrDefaultAsync(f => f.Name == "Inkawasi")
+                ?? _context.CoffeeFarm.Add(new CoffeeFarm { Name = "Inkawasi" }).Entity;
+            var huayopata = await _context.CoffeeFarm.FirstOrDefaultAsync(f => f.Name == "Huayopata Estate")
+                ?? _context.CoffeeFarm.Add(new CoffeeFarm { Name = "Huayopata Estate" }).Entity;
+            var monteblanco = await _context.CoffeeFarm.FirstOrDefaultAsync(f => f.Name == "Monteblanco")
+                ?? _context.CoffeeFarm.Add(new CoffeeFarm { Name = "Monteblanco" }).Entity;
+            await _context.SaveChangesAsync();
+
                 // PERU BEANS
             var superHighland = new CoffeeBean
             {
@@ -362,7 +371,7 @@ namespace TheBestBean.Models
             
             var beansToRemove = await _context.CoffeeBean
                 .Include(b => b.OriginCountry)
-                .Where(b => !allowedCountries.Contains(b.OriginCountry.Name))
+                .Where(b => b.OriginCountry != null && !allowedCountries.Contains(b.OriginCountry.Name))
                 .ToListAsync();
             
             if (beansToRemove.Any())

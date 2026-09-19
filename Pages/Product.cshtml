@@ -128,16 +128,20 @@
             </div>
             
             <div class="product-buy__info">
-                <div class="mb-2 font-mono-jb text-[10px] font-bold text-gray-500 uppercase tracking-widest leading-relaxed">
-                    <p class="mb-0.5" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="Producer">
-                        @(string.IsNullOrEmpty(Model.Product.Producer) ? "Guiliar Pérez Cuéllar" : Model.Product.Producer)
-                    </p>
-                    <p class="text-black dark:text-white mb-0.5" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="Origin">
-                        @(string.IsNullOrEmpty(Model.Product.Origin) ? "LA GRANJA" : Model.Product.Origin)
-                        · @(string.IsNullOrEmpty(Model.Product.Variety) ? "PINK BOURBON" : Model.Product.Variety) — @(string.IsNullOrEmpty(Model.Product.ProcessingMethod) ? "WASHED" : Model.Product.ProcessingMethod)
-                        · @(Model.PageContent != null && Model.PageContent.ContainsKey($"Product_{Model.Product.Id}_Country") ? Model.PageContent[$"Product_{Model.Product.Id}_Country"] : "Peru")
-                    </p>
-                </div>
+                <dl class="product-lot-facts">
+                    <div>
+                        <dt>Region</dt>
+                        <dd data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="Origin">@(string.IsNullOrEmpty(Model.Product.Origin) ? "La Granja" : Model.Product.Origin)</dd>
+                    </div>
+                    <div>
+                        <dt>Farmer</dt>
+                        <dd data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="Producer">@(string.IsNullOrEmpty(Model.Product.Producer) ? "Guiliar Pérez Cuéllar" : Model.Product.Producer)</dd>
+                    </div>
+                    <div>
+                        <dt>Process</dt>
+                        <dd data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="ProcessingMethod">@(string.IsNullOrEmpty(Model.Product.ProcessingMethod) ? "Washed" : Model.Product.ProcessingMethod)</dd>
+                    </div>
+                </dl>
                 
                 <span class="font-mono text-[10px] text-swiss-red font-bold uppercase tracking-widest mb-1" style="font-family: 'JetBrains Mono', monospace; color: #FF3B30;">@Model.Product.Type</span>
                 <div class="flex items-center gap-3 mb-2 flex-wrap">
@@ -148,7 +152,7 @@
                     <partial name="_WorkshopPrice" model="new DualPriceModel { Usd = Model.Product.BasePriceUSD, Pen = Model.Product.BasePricePEN }" />
                 </div>
                 <p class="font-sans text-gray-600 dark:text-gray-300 mb-3 leading-snug text-sm" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="FlavorProfile" style="font-family: 'Inter', sans-serif;">@Model.Product.Description</p>
-                @if (Model.Product.Type == "Bean" && Model.Lot != null)
+                @if (Model.Product.Type == "Bean" && Model.Lot != null && (Model.Lot.HasGreen || Model.Lot.RoastedKg >= 0.05m))
                 {
                     <div class="coffee-card-stock product-lot-stock">
                         <span class="coffee-card-stock__green">@CoffeeLotStatus.FormatKg(Model.Lot.GreenKg) green</span>

@@ -59,9 +59,29 @@ namespace TheBestBean.Models
         [Display(Name = "Harvest Year")]
         public int? HarvestYear { get; set; }
 
+        [Display(Name = "Flavor Profile")]
+        [StringLength(500)]
+        public string? FlavorProfile { get; set; }
+
+        [Display(Name = "SCA Score")]
+        [Column(TypeName = "decimal(5, 2)")]
+        public decimal? ScaScore { get; set; }
+
+        [Display(Name = "Humidity (%)")]
+        [Column(TypeName = "decimal(5, 2)")]
+        public decimal? Humidity { get; set; }
+
+        [Display(Name = "Density (g/L)")]
+        [Column(TypeName = "decimal(10, 2)")]
+        public decimal? Density { get; set; }
+
         [Display(Name = "Notes")]
         [StringLength(1000)]
         public string? Notes { get; set; }
+
+        [Display(Name = "Image File Path")]
+        [StringLength(500)]
+        public string? ImageUrl { get; set; }
 
         [Display(Name = "Date Created")]
         public DateTime CreatedDate { get; set; } = DateTime.Now;
