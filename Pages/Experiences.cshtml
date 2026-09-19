@@ -176,11 +176,11 @@
                 {
                     <div class="flex flex-col gap-6">
                         <div class="font-mono-jb text-[10px] font-bold uppercase tracking-widest text-v-gray">1-hour workshops · Cusco City</div>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-12">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-12 min-w-0 w-full">
                             @foreach (var exp in hourLabs)
                             {
                                 var labGeo = ExperienceGeo.Locate(exp);
-                                <article class="hour-lab-card lab-item flex flex-col group" data-region="@labGeo.Region" data-place="@labGeo.PlaceKey" data-frequency="@ExperienceGeo.WhenKey(exp.Month)" data-time="@GetTimeCategory(exp.Duration)">
+                                <article class="hour-lab-card lab-item flex flex-col group min-w-0 max-w-full" data-region="@labGeo.Region" data-place="@labGeo.PlaceKey" data-frequency="@ExperienceGeo.WhenKey(exp.Month)" data-time="@GetTimeCategory(exp.Duration)">
                                     @{
                                         var hourPhotos = (exp.GalleryImages != null && exp.GalleryImages.Any())
                                             ? exp.GalleryImages
@@ -211,12 +211,12 @@
                                             </button>
                                         }
                                     </div>
-                                    <a href="@ExperienceUrls.PublicPath(exp)" class="text-decoration-none text-slate-900 dark:text-[#D6D0C8] flex flex-col h-full group">
+                                    <a href="@ExperienceUrls.PublicPath(exp)" class="text-decoration-none text-slate-900 dark:text-[#D6D0C8] flex flex-col h-full group min-w-0 max-w-full">
                                         <div class="hour-lab-card__meta">
                                             <div class="w-1.5 h-1.5 bg-v-yellow shrink-0"></div>
-                                            <span class="text-v-black dark:text-[#D6D0C8]">@ShortDuration(exp.Duration)</span>
-                                            <span class="text-gray-300">/</span>
-                                            <span class="text-[#722EA8]">@(Model.NextSlotLabels.GetValueOrDefault(exp.Id))</span>
+                                            <span class="text-v-black dark:text-[#D6D0C8] shrink-0">@ShortDuration(exp.Duration)</span>
+                                            <span class="text-gray-300 shrink-0">/</span>
+                                            <span class="text-[#722EA8] min-w-0">@(Model.NextSlotLabels.GetValueOrDefault(exp.Id))</span>
                                         </div>
                                         <h3 class="hour-lab-card__title text-xl md:text-2xl font-semibold tracking-tight text-v-black dark:text-[#D6D0C8] m-0 mb-2">
                                         @{

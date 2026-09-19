@@ -963,22 +963,22 @@ namespace TheBestBean.Models
                 Price = 32,
                 Tag = "1 HOUR",
                 ImageUrl = "/Media/experiences/tour-26/cynthia-cupping-01.webp?v=2",
-                Description = "Four rounds of cupping in one hour. We teach you how to smell — crack the crust, use the steam, wake up your senses — then taste four coffees: an 81-point baseline, two specialty lots (~85 and 86–87), and one super lot.",
-                DescriptionES = "Cuatro rondas de catación en una hora. Cómo oler — romper la costra, usar el vapor — y cuatro cafés: un 81 básico, dos de especialidad (~85 y 86–87) y un súper lote.",
-                LongDescription = "Your first cupping, paced for travelers. We open with smell: break the crust, use the steam, and activate your senses before any sip. Then four coffees in four rounds — an 81-point everyday cup as baseline, two specialty lots around 85 and 86–87, and one super coffee so you feel the jump in quality. Same protocol each round: smell, slurp, note what you taste, talk.",
-                LongDescriptionES = "Primera catación a ritmo de viajero. Abrimos con el olfato: romper la costra, usar el vapor, activar los sentidos. Luego cuatro cafés: un 81 cotidiano, dos de especialidad (~85 y 86–87) y un súper café. Misma pauta: oler, sorber, anotar, hablar.",
+                Description = "Four rounds of cupping in one hour. We teach you how to smell — crack the crust, use the steam, wake up your senses — then taste four coffees: an 84-point baseline, specialty lots around ~86–88, and a top cup near 88–90.",
+                DescriptionES = "Cuatro rondas de catación en una hora. Cómo oler — romper la costra, usar el vapor — y cuatro cafés: un 84 de base, especialidad ~86–88 y una taza alta cerca de 88–90.",
+                LongDescription = "Your first cupping, paced for everyone. We open with smell: break the crust, use the steam, and activate your senses before any sip. Then four coffees in four rounds — an 84-point baseline, specialty lots around ~86 and ~88, and a top cup near 88–90 so you feel the climb in quality. Same protocol each round: smell, slurp, note what you taste, talk.",
+                LongDescriptionES = "Primera catación para todos. Abrimos con el olfato: romper la costra, usar el vapor, activar los sentidos. Luego cuatro cafés: un 84 de base, especialidad ~86 y ~88, y una taza alta cerca de 88–90. Misma pauta: oler, sorber, anotar, hablar.",
                 Syllabus = new List<string>
                 {
                     "Smell first: crack the crust, use the steam, activate your senses (10 min)||Before any slurp we teach how to smell coffee properly — break the crust, lean in to the steam, and wake up your nose. This is the foundation for every round that follows.",
-                    "Round 1: the 81-point cup — everyday coffee as a baseline (12 min)||Your first scored coffee is a solid everyday lot around 81 points. Learn the cupping protocol: smell dry and wet, slurp, and note acidity, body, and sweetness without overthinking it.",
-                    "Rounds 2–3: specialty lots around 85 and 86–87 (25 min)||Two higher-scoring coffees side by side. Notice how clarity, sweetness, and complexity jump compared to the baseline — we talk through what changed on the farm and in the roast.",
-                    "Round 4: the super coffee — what a high score tastes like (13 min)||One exceptional lot to finish. Feel the gap between good, specialty, and truly standout coffee. Close with questions and what to look for when buying beans."
+                    "Round 1: the 84-point cup — a solid specialty baseline (12 min)||Your first scored coffee sits around 84 points. Learn the cupping protocol: smell dry and wet, slurp, and note acidity, body, and sweetness without overthinking it.",
+                    "Rounds 2–3: specialty lots around ~86 and ~88 (25 min)||Two higher-scoring coffees side by side. Notice how clarity, sweetness, and complexity jump compared to the baseline — we talk through what changed on the farm and in the roast.",
+                    "Round 4: near 88–90 — what a high score tastes like (13 min)||One exceptional lot to finish. Feel the gap between good specialty and a top cup. Close with questions and what to look for when buying beans."
                 },
                 ProvidedEquipment = new List<string>
                 {
                     "Four cupping rounds",
                     "Spoons, bowls, and a cupping form",
-                    "Four coffees: 81 · ~85 · 86–87 · super lot"
+                    "Four coffees: 84 · ~86 · ~88 · 88–90"
                 },
                 RequiredGear = new List<string>(),
                 GalleryImages = cynthiaCuppingGallery
