@@ -36,10 +36,6 @@
             <div class="coffee-card-price">
                 <partial name="_WorkshopPrice" model="new DualPriceModel { Usd = Model.BasePriceUSD, Pen = Model.BasePricePEN, Compact = true, From = false }" />
             </div>
-            @if (lot != null && lot.HasGreen)
-            {
-                <p class="coffee-card-stock-green">@CoffeeLotStatus.FormatKg(lot.GreenKg) green</p>
-            }
         </div>
     </div>
 
@@ -97,7 +93,10 @@
         </form>
         @if (lot != null)
         {
-            <p class="coffee-card-stock-roast">@CoffeeLotStatus.FormatKg(lot.RoastedKg) roasted</p>
+            <div class="coffee-card-stock-row">
+                <span class="coffee-card-stock-green">@CoffeeLotStatus.FormatKg(lot.GreenKg) green</span>
+                <span class="coffee-card-stock-roast">@CoffeeLotStatus.FormatKg(lot.RoastedKg) roasted</span>
+            </div>
         }
     </div>
 </article>
