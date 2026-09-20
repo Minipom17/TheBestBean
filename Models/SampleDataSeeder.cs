@@ -402,7 +402,7 @@ namespace TheBestBean.Models
 
         /// <summary>
         /// Strip farmer names from lot titles, fix Catuai spelling, merge duplicate Geisha lots,
-        /// and point bean photos at equal-padded brand assets when present.
+        /// and point bean photos at full-frame brand assets (no center-crop).
         /// </summary>
         private static async Task NormalizeCoffeeLotNamesAndImagesAsync()
         {
@@ -412,33 +412,43 @@ namespace TheBestBean.Models
                 return;
             }
 
+            // ?v=fullframe busts browsers still holding the old center-cropped JPEGs.
+            const string cacheTag = "?v=fullframe";
             var imageMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
-                ["/Media/beans/SL28.jpg"] = "/brand/beans/SL28.jpg",
-                ["/Media/beans/bourbon-pablino.jpg"] = "/brand/beans/bourbon-pablino.jpg",
-                ["/Media/beans/Pachamara.jpg"] = "/brand/beans/Pachamara.jpg",
-                ["/Media/beans/Meselessa.jpg"] = "/brand/beans/Meselessa.jpg",
-                ["/Media/beans/Geisha_Aug28_Angel-m.jpg"] = "/brand/beans/Geisha_Aug28_Angel-m.jpg",
-                ["/Media/beans/porte_bajo_angle-m.jpg"] = "/brand/beans/porte_bajo_angle-m.jpg",
-                ["/Media/beans/Geisha_mas_o_menos.jpg"] = "/brand/beans/Geisha_mas_o_menos.jpg",
-                ["/Media/beans/bourbon_miguel.jpg"] = "/brand/beans/bourbon_miguel.jpg",
+                ["/Media/beans/SL28.jpg"] = "/brand/beans/SL28.jpg" + cacheTag,
+                ["/Media/beans/bourbon-pablino.jpg"] = "/brand/beans/bourbon-pablino.jpg" + cacheTag,
+                ["/Media/beans/Pachamara.jpg"] = "/brand/beans/Pachamara.jpg" + cacheTag,
+                ["/Media/beans/Meselessa.jpg"] = "/brand/beans/Meselessa.jpg" + cacheTag,
+                ["/Media/beans/Geisha_Aug28_Angel-m.jpg"] = "/brand/beans/Geisha_Aug28_Angel-m.jpg" + cacheTag,
+                ["/Media/beans/porte_bajo_angle-m.jpg"] = "/brand/beans/porte_bajo_angle-m.jpg" + cacheTag,
+                ["/Media/beans/Geisha_mas_o_menos.jpg"] = "/brand/beans/Geisha_mas_o_menos.jpg" + cacheTag,
+                ["/Media/beans/bourbon_miguel.jpg"] = "/brand/beans/bourbon_miguel.jpg" + cacheTag,
+                ["/brand/beans/SL28.jpg"] = "/brand/beans/SL28.jpg" + cacheTag,
+                ["/brand/beans/bourbon-pablino.jpg"] = "/brand/beans/bourbon-pablino.jpg" + cacheTag,
+                ["/brand/beans/Pachamara.jpg"] = "/brand/beans/Pachamara.jpg" + cacheTag,
+                ["/brand/beans/Meselessa.jpg"] = "/brand/beans/Meselessa.jpg" + cacheTag,
+                ["/brand/beans/Geisha_Aug28_Angel-m.jpg"] = "/brand/beans/Geisha_Aug28_Angel-m.jpg" + cacheTag,
+                ["/brand/beans/porte_bajo_angle-m.jpg"] = "/brand/beans/porte_bajo_angle-m.jpg" + cacheTag,
+                ["/brand/beans/Geisha_mas_o_menos.jpg"] = "/brand/beans/Geisha_mas_o_menos.jpg" + cacheTag,
+                ["/brand/beans/bourbon_miguel.jpg"] = "/brand/beans/bourbon_miguel.jpg" + cacheTag,
             };
 
             string? BeanPhotoFor(CoffeeBean bean)
             {
                 var n = bean.Name ?? "";
-                if (n.Contains("SL28", StringComparison.OrdinalIgnoreCase)) return "/brand/beans/SL28.jpg";
-                if (n.Contains("Marsellesa", StringComparison.OrdinalIgnoreCase)) return "/brand/beans/Meselessa.jpg";
+                if (n.Contains("SL28", StringComparison.OrdinalIgnoreCase)) return "/brand/beans/SL28.jpg" + cacheTag;
+                if (n.Contains("Marsellesa", StringComparison.OrdinalIgnoreCase)) return "/brand/beans/Meselessa.jpg" + cacheTag;
                 if (n.Contains("Cusco", StringComparison.OrdinalIgnoreCase) && n.Contains("Bourbon", StringComparison.OrdinalIgnoreCase))
-                    return "/brand/beans/Pachamara.jpg";
+                    return "/brand/beans/Pachamara.jpg" + cacheTag;
                 if (n.Contains("Cajamarca", StringComparison.OrdinalIgnoreCase) && n.Contains("Bourbon", StringComparison.OrdinalIgnoreCase))
-                    return "/brand/beans/bourbon-pablino.jpg";
+                    return "/brand/beans/bourbon-pablino.jpg" + cacheTag;
                 if (n.Contains("Catuai", StringComparison.OrdinalIgnoreCase) || n.Contains("Caturai", StringComparison.OrdinalIgnoreCase) || n.Contains("Catuar", StringComparison.OrdinalIgnoreCase))
-                    return "/brand/beans/bourbon_miguel.jpg";
-                if (n.Contains("Geisha Alto", StringComparison.OrdinalIgnoreCase)) return "/brand/beans/porte_bajo_angle-m.jpg";
+                    return "/brand/beans/bourbon_miguel.jpg" + cacheTag;
+                if (n.Contains("Geisha Alto", StringComparison.OrdinalIgnoreCase)) return "/brand/beans/porte_bajo_angle-m.jpg" + cacheTag;
                 if (n.Contains("Geisha Korea", StringComparison.OrdinalIgnoreCase) || n.Contains("Geisha R17", StringComparison.OrdinalIgnoreCase))
-                    return "/brand/beans/Geisha_Aug28_Angel-m.jpg";
-                if (n.Contains("Geisha - Cajamarca", StringComparison.OrdinalIgnoreCase)) return "/brand/beans/Geisha_mas_o_menos.jpg";
+                    return "/brand/beans/Geisha_Aug28_Angel-m.jpg" + cacheTag;
+                if (n.Contains("Geisha - Cajamarca", StringComparison.OrdinalIgnoreCase)) return "/brand/beans/Geisha_mas_o_menos.jpg" + cacheTag;
                 return null;
             }
 
@@ -471,6 +481,15 @@ namespace TheBestBean.Models
                     {
                         var photo = BeanPhotoFor(bean);
                         if (photo != null)
+                        {
+                            bean.ImageUrl = photo;
+                        }
+                    }
+                    else
+                    {
+                        // Force cache-bust on any existing brand bean photo URL.
+                        var photo = BeanPhotoFor(bean);
+                        if (photo != null && key.StartsWith("/brand/beans/", StringComparison.OrdinalIgnoreCase))
                         {
                             bean.ImageUrl = photo;
                         }

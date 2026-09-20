@@ -3743,28 +3743,26 @@ html.dark .coffee-card-stock-roast { color: #c4a07a; }
     display: block;
     position: relative;
     width: 100%;
-    /* Studio bean shots are square — match them so there is no letterbox frame. */
-    aspect-ratio: 1 / 1;
-    overflow: hidden;
+    /* Let the photo set height — no crop box, no letterbox frame. */
+    line-height: 0;
     background: transparent;
     border: none;
+    overflow: visible;
 }
 html.dark .coffee-card-media {
     background: transparent;
 }
 .coffee-card-media__img {
     width: 100%;
-    height: 100%;
+    height: auto;
     display: block;
     object-fit: contain !important;
     object-position: center center !important;
-    transform: none;
-    transform-origin: center center;
+    transform: none !important;
     background: transparent !important;
 }
 .coffee-product-card:hover .coffee-card-media__img {
-    transform: scale(1.02);
-    transition: transform 0.8s ease;
+    transform: none !important;
 }
 
 .coffee-card-origin {
@@ -4031,7 +4029,7 @@ html.dark .related-coffees__btn:hover {
     width: 100%;
 }
 .related-coffees__slide .coffee-card-media {
-    aspect-ratio: 1 / 1;
+    /* natural image height */
 }
 .related-coffees__slide .coffee-card-metrics {
     min-width: 0;
@@ -4183,8 +4181,9 @@ html.dark .product-buy > .coffee-card-metrics {
 .product-hero-frame {
     position: relative;
     width: 100%;
-    aspect-ratio: 1 / 1;
-    overflow: hidden;
+    /* Natural photo size — no forced crop box. */
+    line-height: 0;
+    overflow: visible;
     background: transparent;
     border: none;
 }
@@ -4192,25 +4191,22 @@ html.dark .product-hero-frame {
     background: transparent;
 }
 .product-hero-frame__img {
-    position: absolute;
-    inset: 0;
+    position: static;
     width: 100%;
-    height: 100%;
+    height: auto;
+    display: block;
     object-fit: contain;
     object-position: center;
-    transform-origin: center center;
+    transform: none !important;
     background: transparent;
 }
 .product-hero-frame .coffee-bean-photo {
     object-fit: contain !important;
     object-position: center center !important;
     transform: none !important;
-    transform-origin: center center;
 }
 .product-hero-frame__img--fill {
-    /* Legacy class: keep full bean photos visible (no crop/zoom). */
     transform: none !important;
-    transform-origin: center center;
 }
 .product-origin-map {
     display: flex;
