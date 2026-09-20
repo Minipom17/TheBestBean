@@ -3605,28 +3605,25 @@ html.dark .lab-board__grind {
 }
 html.dark .coffee-card-lot { color: #86efac; }
 
-/* Shop card — dense 2-col head, shorter media, origin strip, cart+roast row */
+/* Shop card: identity + weights/price above image; origin under image */
 .coffee-card-head {
-    padding: 0.7rem 0.85rem 0.65rem;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 0.35rem 0.85rem;
-    align-items: start;
-}
-.coffee-card-head__main {
-    min-width: 0;
-}
-.coffee-card-head__meta {
+    padding: 0.75rem 0.95rem 0.7rem;
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
-    text-align: right;
-    gap: 0.12rem;
-    flex-shrink: 0;
-    padding-top: 0.95rem;
+    gap: 0.55rem;
+}
+.coffee-card-identity {
+    min-width: 0;
+}
+.coffee-card-identity__top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.15rem;
 }
 .coffee-card-kicker {
-    margin: 0 0 0.1rem;
+    margin: 0;
     font-family: 'JetBrains Mono', monospace;
     font-size: 8px;
     font-weight: 700;
@@ -3638,11 +3635,11 @@ html.dark .coffee-card-kicker { color: #8B8490; }
 .coffee-card-title {
     margin: 0;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.82rem;
+    font-size: 0.86rem;
     font-weight: 700;
     letter-spacing: 0.03em;
     text-transform: uppercase;
-    line-height: 1.2;
+    line-height: 1.25;
     color: #111;
 }
 html.dark .coffee-card-title { color: #D6D0C8; }
@@ -3657,18 +3654,11 @@ html.dark .coffee-card-title { color: #D6D0C8; }
     white-space: nowrap;
 }
 html.dark .coffee-card-sca { color: #D6D0C8; }
-.coffee-card-price {
-    margin: 0;
-}
-.coffee-card-price .price-pair--compact .price-pair__main {
-    justify-content: flex-end;
-    flex-wrap: nowrap;
-}
 .coffee-card-notes {
-    margin: 0.25rem 0 0;
+    margin: 0.28rem 0 0;
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
-    line-height: 1.35;
+    line-height: 1.4;
     color: #4b5563;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -3676,16 +3666,49 @@ html.dark .coffee-card-sca { color: #D6D0C8; }
     overflow: hidden;
 }
 html.dark .coffee-card-notes { color: #9a948c; }
-.coffee-card-stock-green {
-    margin: 0;
+.coffee-card-metrics {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 0.75rem;
+    width: 100%;
+}
+.coffee-card-stock-green,
+.coffee-card-stock-roast {
+    flex: 1 1 auto;
+    min-width: 0;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
+    font-size: 10px;
     font-weight: 700;
-    letter-spacing: 0.04em;
-    color: #16A34A;
+    letter-spacing: 0.03em;
     white-space: nowrap;
 }
+.coffee-card-stock-green {
+    margin: 0;
+    color: #16A34A;
+    text-align: left;
+}
 html.dark .coffee-card-stock-green { color: #86efac; }
+.coffee-card-stock-roast {
+    margin: 0;
+    color: #8B5A2B;
+    text-align: left;
+}
+html.dark .coffee-card-stock-roast { color: #c4a07a; }
+.coffee-card-price {
+    margin: 0;
+    margin-left: auto;
+    flex: 0 0 auto;
+    text-align: right;
+}
+.coffee-card-price .price-pair--compact .price-pair__main {
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+}
+.coffee-card-price .price-pair--compact .price-pair__usd {
+    font-size: 1.05rem;
+}
 
 .coffee-card-media {
     display: block;
@@ -3718,18 +3741,24 @@ html.dark .coffee-card-media {
 
 .coffee-card-origin {
     margin: 0;
-    padding: 0.45rem 0.85rem;
+    padding: 0.65rem 0.95rem;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0.35rem 0.65rem;
+    gap: 0.4rem 0.75rem;
     border-bottom: 1px solid #e5e7eb;
+    text-align: center;
 }
 html.dark .coffee-card-origin { border-bottom-color: #3A353C; }
 .coffee-card-origin__row {
     min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 .coffee-card-origin dt {
     margin: 0;
+    width: 100%;
+    text-align: center;
     font-family: 'JetBrains Mono', monospace;
     font-size: 7px;
     font-weight: 700;
@@ -3739,13 +3768,15 @@ html.dark .coffee-card-origin { border-bottom-color: #3A353C; }
 }
 html.dark .coffee-card-origin dt { color: #8B8490; }
 .coffee-card-origin dd {
-    margin: 0.05rem 0 0;
+    margin: 0.12rem 0 0;
+    width: 100%;
+    text-align: center;
     font-family: 'JetBrains Mono', monospace;
     font-size: 9px;
     font-weight: 600;
     letter-spacing: 0.01em;
     color: #111;
-    line-height: 1.25;
+    line-height: 1.3;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -3755,11 +3786,10 @@ html.dark .coffee-card-origin dd { color: #D6D0C8; }
 
 .coffee-card-actions {
     margin-top: auto;
-    padding: 0.55rem 0.85rem 0.7rem;
+    padding: 0.65rem 0.95rem 0.85rem;
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: 0.4rem;
 }
 .coffee-card-actions__form {
     width: 100%;
@@ -3767,29 +3797,9 @@ html.dark .coffee-card-origin dd { color: #D6D0C8; }
 }
 .coffee-card-actions__btn {
     width: 100%;
-    padding: 0.65rem 0.75rem !important;
+    padding: 0.7rem 0.75rem !important;
     font-size: 11px !important;
 }
-.coffee-card-stock-row {
-    display: flex;
-    flex-direction: row;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 0.75rem;
-    width: 100%;
-}
-.coffee-card-stock-roast {
-    margin: 0;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    color: #8B5A2B;
-    text-align: right;
-    white-space: nowrap;
-    margin-left: auto;
-}
-html.dark .coffee-card-stock-roast { color: #c4a07a; }
 
 /* legacy meta strip (kept for any leftover refs) */
 .coffee-card-stock {
@@ -3975,84 +3985,8 @@ html.dark .related-coffees__btn:hover {
     height: 100%;
 }
 
-/* Narrow carousel: reflow dense shop card into a neat, symmetrical stack */
-.related-coffees__slide .coffee-card-head {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    grid-template-areas:
-        "kicker kicker"
-        "title  title"
-        "sca    price"
-        "notes  notes";
-    gap: 0.28rem 0.75rem;
-    align-items: baseline;
-    padding: 0.85rem 1rem 0.75rem;
-}
-.related-coffees__slide .coffee-card-head__main,
-.related-coffees__slide .coffee-card-head__meta {
-    display: contents;
-}
-.related-coffees__slide .coffee-card-kicker {
-    grid-area: kicker;
-    margin: 0;
-}
-.related-coffees__slide .coffee-card-title-link {
-    grid-area: title;
-}
-.related-coffees__slide .coffee-card-title {
-    font-size: 0.78rem;
-    line-height: 1.25;
-}
-.related-coffees__slide .coffee-card-sca {
-    grid-area: sca;
-    justify-self: start;
-}
-.related-coffees__slide .coffee-card-price {
-    grid-area: price;
-    justify-self: end;
-}
-.related-coffees__slide .coffee-card-price .price-pair--compact .price-pair__main {
-    justify-content: flex-end;
-}
-.related-coffees__slide .coffee-card-notes {
-    grid-area: notes;
-    margin: 0.15rem 0 0;
-    font-size: 9.5px;
-    line-height: 1.4;
-    -webkit-line-clamp: 2;
-}
 .related-coffees__slide .coffee-card-media {
     aspect-ratio: 4 / 3;
-}
-.related-coffees__slide .coffee-card-origin {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0.5rem;
-    padding: 0.7rem 1rem;
-    text-align: center;
-}
-.related-coffees__slide .coffee-card-origin__row {
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-.related-coffees__slide .coffee-card-origin dt {
-    width: 100%;
-    text-align: center;
-}
-.related-coffees__slide .coffee-card-origin dd {
-    width: 100%;
-    text-align: center;
-    font-size: 8.5px;
-    line-height: 1.3;
-    -webkit-line-clamp: 2;
-}
-.related-coffees__slide .coffee-card-actions {
-    padding: 0.65rem 1rem 0.85rem;
-}
-.related-coffees__slide .coffee-card-stock-row {
-    padding: 0 0.1rem;
 }
 
 .back-to-top {

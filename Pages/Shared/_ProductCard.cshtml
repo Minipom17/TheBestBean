@@ -6,6 +6,8 @@
     {
         lot = found;
     }
+    var greenKg = lot?.GreenKg ?? 0m;
+    var roastKg = lot?.RoastedKg ?? 0m;
     var region = Model.CoffeeRegion?.Name;
     var farmer = string.IsNullOrWhiteSpace(Model.Producer) ? null : Model.Producer.Trim();
     var process = Model.ProcessingMethod;
@@ -20,8 +22,11 @@
      data-type="@(Model.Name.Contains("Roast") || Model.Name.Contains("Roasted") ? "roasted" : "green")">
 
     <div class="coffee-card-head">
-        <div class="coffee-card-head__main">
-            <p class="coffee-card-kicker">Bean</p>
+        <div class="coffee-card-identity">
+            <div class="coffee-card-identity__top">
+                <p class="coffee-card-kicker">Bean</p>
+                <p class="coffee-card-sca">SCA @Model.ScaScore.ToString("0.##")</p>
+            </div>
             <a asp-page="/Product" asp-route-id="@Model.Id" class="coffee-card-title-link text-decoration-none hover:opacity-75 transition-opacity block">
                 <h3 class="coffee-card-title" data-entity-id="@Model.Id" data-entity-type="CoffeeBean" data-editable="Name">
                     @CoffeeDisplayName.ForLab(Model.Name)
@@ -31,8 +36,9 @@
                 @Model.FlavorProfile
             </p>
         </div>
-        <div class="coffee-card-head__meta">
-            <p class="coffee-card-sca">SCA @Model.ScaScore.ToString("0.##")</p>
+        <div class="coffee-card-metrics">
+            <span class="coffee-card-stock-green">@CoffeeLotStatus.FormatKg(greenKg) green</span>
+            <span class="coffee-card-stock-roast">@CoffeeLotStatus.FormatKg(roastKg) roasted</span>
             <div class="coffee-card-price">
                 <partial name="_WorkshopPrice" model="new DualPriceModel { Usd = Model.BasePriceUSD, Pen = Model.BasePricePEN, Compact = true, From = false }" />
             </div>
@@ -91,12 +97,5 @@
                 Add to Cart
             </button>
         </form>
-        @if (lot != null)
-        {
-            <div class="coffee-card-stock-row">
-                <span class="coffee-card-stock-green">@CoffeeLotStatus.FormatKg(lot.GreenKg) green</span>
-                <span class="coffee-card-stock-roast">@CoffeeLotStatus.FormatKg(lot.RoastedKg) roasted</span>
-            </div>
-        }
     </div>
 </article>
