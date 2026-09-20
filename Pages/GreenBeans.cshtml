@@ -312,10 +312,110 @@
 
 <section class="coffee-intro">
     <div class="coffee-intro__inner">
-        <partial name="_HowWeRoast" />
         <partial name="_CoffeeLabBoard" model="Model.LabBoard" />
     </div>
 </section>
+
+        <section aria-label="Coffee Products" class="container mx-auto px-3 md:px-6 py-12 md:py-16">
+            <!-- Filters — horizontal scroll strip matching product stat tags -->
+            <div class="relative mb-12">
+                <div class="flex overflow-x-auto gap-0 scrollbar-hide snap-x snap-mandatory -mx-3 px-3 md:mx-0 md:px-0 md:flex-wrap md:justify-center md:gap-2">
+                @{
+                    var initialFilter = !string.IsNullOrEmpty(Model.Type) ? Model.Type.ToLower() : (!string.IsNullOrEmpty(Model.Filter) ? Model.Filter : "All");
+                    var filters = new Dictionary<string, string> 
+                    { 
+                        { "All", "All" }, 
+                        { "green", "Green Coffee" },
+                        { "roasted", "Roasted Coffee" },
+                        { "Peru", "Peru" }, 
+                        { "Colombia", "Colombia (Coming Soon)" }, 
+                        { "Washed", "Washed" }, 
+                        { "Natural", "Natural" } 
+                    };
+                    foreach (var filter in filters)
+                    {
+                        var isSelected = filter.Key.Equals(initialFilter, StringComparison.OrdinalIgnoreCase);
+                        <button type="button" data-filter="@filter.Key" class="filter-btn snap-start shrink-0 md:shrink whitespace-nowrap px-3 py-1.5 font-mono-jb text-[8px] uppercase tracking-widest font-bold border-r border-gray-300 dark:border-[#2A262C] transition-all last:border-r-0 md:border md:rounded-none md:last:border-r @(isSelected ? "bg-black text-white dark:bg-cream dark:text-night" : "bg-white text-black dark:bg-[#1C191F] dark:text-mist hover:bg-gray-100 dark:hover:bg-[#2A262C]")">
+                            @filter.Value
+                        </button>
+                    }
+                }
+                </div>
+            </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const buttons = document.querySelectorAll('.filter-btn');
+                const cards = document.querySelectorAll('.product-card-container');
+
+                function applyFilter(filter) {
+                    const lowerFilter = filter.toLowerCase();
+                    buttons.forEach(b => {
+                        const on = b.getAttribute('data-filter').toLowerCase() === lowerFilter;
+                        b.classList.toggle('bg-black', on);
+                        b.classList.toggle('text-white', on);
+                        b.classList.toggle('dark:bg-cream', on);
+                        b.classList.toggle('dark:text-night', on);
+                        b.classList.toggle('bg-white', !on);
+                        b.classList.toggle('text-black', !on);
+                        b.classList.toggle('dark:bg-[#1C191F]', !on);
+                        b.classList.toggle('dark:text-mist', !on);
+                    });
+
+                    document.querySelectorAll('.coffee-product-card').forEach(card => {
+                        const origin = (card.getAttribute('data-origin') || '').toLowerCase();
+                        const process = (card.getAttribute('data-process') || '').toLowerCase();
+                        const coffeeType = (card.getAttribute('data-type') || '').toLowerCase();
+                        const match = lowerFilter === 'all'
+                            || origin.includes(lowerFilter)
+                            || process.includes(lowerFilter)
+                            || coffeeType === lowerFilter;
+                        card.style.display = match ? '' : 'none';
+                    });
+                }
+
+                buttons.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const filter = this.getAttribute('data-filter');
+                        applyFilter(filter);
+                    });
+                });
+
+                // Apply initial filter if set in query
+                const urlParams = new URLSearchParams(window.location.search);
+                const typeParam = urlParams.get('type') || urlParams.get('filter');
+                if (typeParam) {
+                    applyFilter(typeParam);
+                }
+            });
+        </script>
+        
+        <style>
+            .add-coffee-card { display: none; }
+            body.edit-mode .add-coffee-card { display: flex; }
+            .edit-mode-only { display: none !important; }
+            body.edit-mode .edit-mode-only { display: block !important; }
+        </style>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-4 md:gap-x-6 gap-y-10 md:gap-y-14">
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <a href="/Admin/Coffees/Create" class="add-coffee-card flex-col justify-center items-center border-2 border-dashed border-gray-300 dark:border-[#3A353C] rounded-2xl md:rounded-3xl hover:border-black dark:hover:border-white transition-colors h-full min-h-[400px] text-gray-400 hover:text-black dark:hover:text-white text-decoration-none group cursor-pointer bg-white/50 dark:bg-[#1C191F]/50 backdrop-blur-sm">
+                    <div class="flex flex-col items-center justify-center gap-4 transition-transform duration-300 group-hover:scale-110">
+                        <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                        <span class="font-mono text-sm font-bold tracking-widest uppercase">Add Coffee</span>
+                    </div>
+                </a>
+            }
+            @foreach (var product in Model.Products)
+            {
+                <partial name="_ProductCard" model="product" />
+            }
+        </div>
+    </section>
+
+        <partial name="_HowWeRoast" />
 
 <!-- Section: Flavor Explorer (Receipt Style & Paper Background) -->
         <section class="flavor-explorer w-full dark:bg-night-2 border-y border-black dark:border-[rgba(214,208,200,0.12)] flex items-center justify-center py-4 lg:py-6 min-h-[calc(100vh-64px)]">
@@ -495,104 +595,7 @@
         </section>
         <!-- END FLAVOR EXPLORER -->
 
-        <section aria-label="Coffee Products" class="container mx-auto px-3 md:px-6 py-12 md:py-16">
-            <!-- Filters — horizontal scroll strip matching product stat tags -->
-            <div class="relative mb-12">
-                <div class="flex overflow-x-auto gap-0 scrollbar-hide snap-x snap-mandatory -mx-3 px-3 md:mx-0 md:px-0 md:flex-wrap md:justify-center md:gap-2">
-                @{
-                    var initialFilter = !string.IsNullOrEmpty(Model.Type) ? Model.Type.ToLower() : (!string.IsNullOrEmpty(Model.Filter) ? Model.Filter : "All");
-                    var filters = new Dictionary<string, string> 
-                    { 
-                        { "All", "All" }, 
-                        { "green", "Green Coffee" },
-                        { "roasted", "Roasted Coffee" },
-                        { "Peru", "Peru" }, 
-                        { "Colombia", "Colombia (Coming Soon)" }, 
-                        { "Washed", "Washed" }, 
-                        { "Natural", "Natural" } 
-                    };
-                    foreach (var filter in filters)
-                    {
-                        var isSelected = filter.Key.Equals(initialFilter, StringComparison.OrdinalIgnoreCase);
-                        <button type="button" data-filter="@filter.Key" class="filter-btn snap-start shrink-0 md:shrink whitespace-nowrap px-3 py-1.5 font-mono-jb text-[8px] uppercase tracking-widest font-bold border-r border-gray-300 dark:border-[#2A262C] transition-all last:border-r-0 md:border md:rounded-none md:last:border-r @(isSelected ? "bg-black text-white dark:bg-cream dark:text-night" : "bg-white text-black dark:bg-[#1C191F] dark:text-mist hover:bg-gray-100 dark:hover:bg-[#2A262C]")">
-                            @filter.Value
-                        </button>
-                    }
-                }
-                </div>
-            </div>
 
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const buttons = document.querySelectorAll('.filter-btn');
-                const cards = document.querySelectorAll('.product-card-container');
-
-                function applyFilter(filter) {
-                    const lowerFilter = filter.toLowerCase();
-                    buttons.forEach(b => {
-                        const on = b.getAttribute('data-filter').toLowerCase() === lowerFilter;
-                        b.classList.toggle('bg-black', on);
-                        b.classList.toggle('text-white', on);
-                        b.classList.toggle('dark:bg-cream', on);
-                        b.classList.toggle('dark:text-night', on);
-                        b.classList.toggle('bg-white', !on);
-                        b.classList.toggle('text-black', !on);
-                        b.classList.toggle('dark:bg-[#1C191F]', !on);
-                        b.classList.toggle('dark:text-mist', !on);
-                    });
-
-                    document.querySelectorAll('.coffee-product-card').forEach(card => {
-                        const origin = (card.getAttribute('data-origin') || '').toLowerCase();
-                        const process = (card.getAttribute('data-process') || '').toLowerCase();
-                        const coffeeType = (card.getAttribute('data-type') || '').toLowerCase();
-                        const match = lowerFilter === 'all'
-                            || origin.includes(lowerFilter)
-                            || process.includes(lowerFilter)
-                            || coffeeType === lowerFilter;
-                        card.style.display = match ? '' : 'none';
-                    });
-                }
-
-                buttons.forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const filter = this.getAttribute('data-filter');
-                        applyFilter(filter);
-                    });
-                });
-
-                // Apply initial filter if set in query
-                const urlParams = new URLSearchParams(window.location.search);
-                const typeParam = urlParams.get('type') || urlParams.get('filter');
-                if (typeParam) {
-                    applyFilter(typeParam);
-                }
-            });
-        </script>
-        
-        <style>
-            .add-coffee-card { display: none; }
-            body.edit-mode .add-coffee-card { display: flex; }
-            .edit-mode-only { display: none !important; }
-            body.edit-mode .edit-mode-only { display: block !important; }
-        </style>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-4 md:gap-x-6 gap-y-10 md:gap-y-14">
-            @if (User.Identity?.IsAuthenticated == true)
-            {
-                <a href="/Admin/Coffees/Create" class="add-coffee-card flex-col justify-center items-center border-2 border-dashed border-gray-300 dark:border-[#3A353C] rounded-2xl md:rounded-3xl hover:border-black dark:hover:border-white transition-colors h-full min-h-[400px] text-gray-400 hover:text-black dark:hover:text-white text-decoration-none group cursor-pointer bg-white/50 dark:bg-[#1C191F]/50 backdrop-blur-sm">
-                    <div class="flex flex-col items-center justify-center gap-4 transition-transform duration-300 group-hover:scale-110">
-                        <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                        </svg>
-                        <span class="font-mono text-sm font-bold tracking-widest uppercase">Add Coffee</span>
-                    </div>
-                </a>
-            }
-            @foreach (var product in Model.Products)
-            {
-                <partial name="_ProductCard" model="product" />
-            }
-        </div>
-    </section>
 
 
 

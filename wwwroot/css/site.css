@@ -3327,29 +3327,19 @@ html.dark .coffee-intro {
 }
 @media (min-width: 1024px) {
     .coffee-intro__inner {
-        display: grid;
-        grid-template-columns: minmax(0, 1.2fr) minmax(20rem, 0.8fr);
-        gap: 1rem 1.25rem;
-        align-items: start;
-    }
-    .coffee-intro .how-roast {
-        grid-column: 1;
-        grid-row: 1;
-        order: 0;
+        display: block;
+        max-width: 1400px;
+        padding: 2.15rem 2rem 2.25rem;
     }
     .coffee-intro .lab-board,
     .coffee-intro .lab-board--compact {
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
-        grid-column: 2;
-        grid-row: 1;
-        align-self: stretch;
         width: 100%;
         min-width: 0;
         max-width: 100%;
         overflow: visible;
-        order: 0;
     }
     .coffee-intro .lab-board__head {
         margin-bottom: 0.15rem;
