@@ -3686,8 +3686,27 @@ html.dark .coffee-card-notes { color: #9a948c; }
 .coffee-product-card .coffee-card-head { order: 1; }
 .coffee-product-card .coffee-card-media { order: 2; }
 .coffee-product-card .coffee-card-origin { order: 3; }
-.coffee-product-card .coffee-card-metrics { order: 4; }
+.coffee-product-card .coffee-card-metrics {
+    order: 4;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+    align-items: baseline;
+    gap: 0.35rem 0.5rem;
+}
 .coffee-product-card .coffee-card-actions { order: 5; }
+.coffee-product-card .coffee-card-stock-green {
+    justify-self: start;
+}
+.coffee-product-card .coffee-card-stock-roast {
+    margin-left: 0;
+    flex: none;
+    justify-self: center;
+    text-align: center;
+}
+.coffee-product-card .coffee-card-price {
+    margin-left: 0;
+    justify-self: end;
+}
 .coffee-card-stock-green,
 .coffee-card-stock-roast {
     min-width: 0;
@@ -4027,10 +4046,6 @@ html.dark .related-coffees__btn:hover {
 }
 .related-coffees__slide .coffee-card-metrics {
     min-width: 0;
-    gap: 0.35rem 0.5rem;
-}
-.related-coffees__slide .coffee-card-stock-roast {
-    flex: 0 0 auto;
 }
 
 .back-to-top {
