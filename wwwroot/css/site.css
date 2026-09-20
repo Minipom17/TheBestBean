@@ -3729,13 +3729,13 @@ html.dark .coffee-card-media {
     height: 100%;
     display: block;
     object-fit: cover !important;
-    object-position: center 45% !important;
-    transform: scale(1.35);
+    object-position: center center !important;
+    transform: scale(1.62);
     transform-origin: center center;
     background: transparent !important;
 }
 .coffee-product-card:hover .coffee-card-media__img {
-    transform: scale(1.4);
+    transform: scale(1.7);
     transition: transform 0.8s ease;
 }
 
@@ -3799,6 +3799,9 @@ html.dark .coffee-card-origin dd { color: #D6D0C8; }
     width: 100%;
     padding: 0.7rem 0.75rem !important;
     font-size: 11px !important;
+}
+.coffee-card-price--after-cart {
+    display: none;
 }
 
 /* legacy meta strip (kept for any leftover refs) */
@@ -3977,16 +3980,36 @@ html.dark .related-coffees__btn:hover {
     display: none;
 }
 .related-coffees__slide {
-    flex: 0 0 min(21rem, 86vw);
+    flex: 0 0 min(22.5rem, 88vw);
     scroll-snap-align: start;
     min-width: 0;
 }
 .related-coffees__slide .coffee-product-card {
     height: 100%;
 }
-
 .related-coffees__slide .coffee-card-media {
     aspect-ratio: 4 / 3;
+}
+.related-coffees__slide .coffee-card-price--head {
+    display: none;
+}
+.related-coffees__slide .coffee-card-metrics {
+    justify-content: space-between;
+}
+.related-coffees__slide .coffee-card-stock-roast {
+    text-align: right;
+    margin-left: auto;
+}
+.related-coffees__slide .coffee-card-price--after-cart {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 0.5rem;
+    margin-left: 0;
+    text-align: center;
+}
+.related-coffees__slide .coffee-card-price--after-cart .price-pair--compact .price-pair__main {
+    justify-content: center;
 }
 
 .back-to-top {

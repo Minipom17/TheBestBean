@@ -39,7 +39,7 @@
         <div class="coffee-card-metrics">
             <span class="coffee-card-stock-green">@CoffeeLotStatus.FormatKg(greenKg) green</span>
             <span class="coffee-card-stock-roast">@CoffeeLotStatus.FormatKg(roastKg) roasted</span>
-            <div class="coffee-card-price">
+            <div class="coffee-card-price coffee-card-price--head">
                 <partial name="_WorkshopPrice" model="new DualPriceModel { Usd = Model.BasePriceUSD, Pen = Model.BasePricePEN, Compact = true, From = false }" />
             </div>
         </div>
@@ -97,5 +97,8 @@
                 Add to Cart
             </button>
         </form>
+        <div class="coffee-card-price coffee-card-price--after-cart">
+            <partial name="_WorkshopPrice" model="new DualPriceModel { Usd = Model.BasePriceUSD, Pen = Model.BasePricePEN, Compact = true, From = false }" />
+        </div>
     </div>
 </article>
