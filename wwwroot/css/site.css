@@ -3967,12 +3967,92 @@ html.dark .related-coffees__btn:hover {
     display: none;
 }
 .related-coffees__slide {
-    flex: 0 0 min(18.5rem, 78vw);
+    flex: 0 0 min(21rem, 86vw);
     scroll-snap-align: start;
     min-width: 0;
 }
 .related-coffees__slide .coffee-product-card {
     height: 100%;
+}
+
+/* Narrow carousel: reflow dense shop card into a neat, symmetrical stack */
+.related-coffees__slide .coffee-card-head {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+        "kicker kicker"
+        "title  title"
+        "sca    price"
+        "notes  notes";
+    gap: 0.28rem 0.75rem;
+    align-items: baseline;
+    padding: 0.85rem 1rem 0.75rem;
+}
+.related-coffees__slide .coffee-card-head__main,
+.related-coffees__slide .coffee-card-head__meta {
+    display: contents;
+}
+.related-coffees__slide .coffee-card-kicker {
+    grid-area: kicker;
+    margin: 0;
+}
+.related-coffees__slide .coffee-card-title-link {
+    grid-area: title;
+}
+.related-coffees__slide .coffee-card-title {
+    font-size: 0.78rem;
+    line-height: 1.25;
+}
+.related-coffees__slide .coffee-card-sca {
+    grid-area: sca;
+    justify-self: start;
+}
+.related-coffees__slide .coffee-card-price {
+    grid-area: price;
+    justify-self: end;
+}
+.related-coffees__slide .coffee-card-price .price-pair--compact .price-pair__main {
+    justify-content: flex-end;
+}
+.related-coffees__slide .coffee-card-notes {
+    grid-area: notes;
+    margin: 0.15rem 0 0;
+    font-size: 9.5px;
+    line-height: 1.4;
+    -webkit-line-clamp: 2;
+}
+.related-coffees__slide .coffee-card-media {
+    aspect-ratio: 4 / 3;
+}
+.related-coffees__slide .coffee-card-origin {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+    padding: 0.7rem 1rem;
+    text-align: center;
+}
+.related-coffees__slide .coffee-card-origin__row {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.related-coffees__slide .coffee-card-origin dt {
+    width: 100%;
+    text-align: center;
+}
+.related-coffees__slide .coffee-card-origin dd {
+    width: 100%;
+    text-align: center;
+    font-size: 8.5px;
+    line-height: 1.3;
+    -webkit-line-clamp: 2;
+}
+.related-coffees__slide .coffee-card-actions {
+    padding: 0.65rem 1rem 0.85rem;
+}
+.related-coffees__slide .coffee-card-stock-row {
+    padding: 0 0.1rem;
 }
 
 .back-to-top {
