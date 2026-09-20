@@ -164,7 +164,7 @@ namespace TheBestBean.Models
                 // PERU BEANS
             var superHighland = new CoffeeBean
             {
-                Name = "Super Highland [SL09 / Inca Geisha]",
+                Name = "SL09 [Cusco]",
                 FlavorProfile = "Black currant, savory, complex acidity",
                 Rating = 4.8m,
                 ProcessingMethod = "Washed",
@@ -172,7 +172,7 @@ namespace TheBestBean.Models
                 ProducerDescription = "SL09 is our flagship coffee, grown by the Huadquiña cooperative in La Convención, Cusco. This cooperative consists of 300+ smallholder farmers dedicated to organic practices and preserving traditional Peruvian coffee varieties. Currently in stock and available for both local sale and international export.",
                 ProcessingDescription = "SL09 is fully washed and fermented for 24-36 hours, then carefully dried on raised beds. This processing method results in a clean, bright cup that highlights the chocolate and caramel notes characteristic of La Convención coffees. The beans are then sorted and prepared for export or local roasting.",
                 OriginDescription = "SL09 comes from La Convención province in Cusco, Peru's premier coffee-producing region. This area stretches from the high Andes to the edge of the Amazon rainforest, producing some of the world's finest organic coffee at altitudes between 1000-1600 meters.",
-                Variety = "SL09 / Inca Geisha",
+                Variety = "SL09",
                 Altitude = "2230 msnm",
                 ImageUrl = "/Media/Green_bean.svg",
                 ProducerImageUrl = "https://images.unsplash.com/photo-1596627689932-349099c26d7c?q=80&w=1600&auto=format&fit=crop",
@@ -184,13 +184,13 @@ namespace TheBestBean.Models
 
             var num13 = new CoffeeBean
             {
-                Name = "Number 13 [Geisha]",
+                Name = "Geisha [Cusco]",
                 FlavorProfile = "Jasmine, lemongrass, bergamot",
                 Rating = 4.9m,
                 ProcessingMethod = "Washed",
                 Producer = "Oscar Vilches",
                 ProducerDescription = "Grown by smallholder farmers in the Cusco region, particularly the Huadquiña cooperative and other local cooperatives. These farmers are dedicated to organic practices, sustainable farming, and preserving traditional Peruvian coffee varieties. Each batch represents the hard work of families who have cultivated coffee in these high-altitude regions for generations.",
-                ProcessingDescription = "This Number 13 [Geisha] is fully washed and fermented for 24 hours. The result is a clean cup that highlights the terroir of the Cusco region.",
+                ProcessingDescription = "This Geisha [Cusco] is fully washed and fermented for 24 hours. The result is a clean cup that highlights the terroir of the Cusco region.",
                 OriginDescription = "Explore the Cusco region where this coffee is grown. The high-altitude farms, diverse microclimates, and traditional farming methods create exceptional quality coffee with unique flavor profiles.",
                 Variety = "Geisha",
                 Altitude = "2200 msnm",
@@ -204,13 +204,13 @@ namespace TheBestBean.Models
 
             var papi = new CoffeeBean
             {
-                Name = "Regular Papi [Bourbon]",
+                Name = "Bourbon [Cusco]",
                 FlavorProfile = "Pink lemonade, floral, silky body",
                 Rating = 4.7m,
                 ProcessingMethod = "Washed",
-                Producer = "Rodrigo Sanchez",
+                Producer = "La Convención producers",
                 ProducerDescription = "Grown by smallholder farmers in the Cusco region, dedicated to organic practices and preserving traditional Peruvian coffee varieties.",
-                ProcessingDescription = "This Regular Papi [Bourbon] is processed using traditional methods from the Cusco region, carefully selected to bring out the unique characteristics of Peruvian coffee.",
+                ProcessingDescription = "This Bourbon [Cusco] is processed using traditional methods from the Cusco region, carefully selected to bring out the unique characteristics of Peruvian coffee.",
                 OriginDescription = "Explore the Cusco region where this coffee is grown. The high-altitude farms, diverse microclimates, and traditional farming methods create exceptional quality coffee with unique flavor profiles.",
                 Variety = "Bourbon",
                 Altitude = "1700 msnm",
@@ -218,19 +218,19 @@ namespace TheBestBean.Models
                 ProducerImageUrl = "https://images.unsplash.com/photo-1596627689932-349099c26d7c?q=80&w=1600&auto=format&fit=crop",
                 MapImageUrl = "/Media/LaConvencionMap.svg",
                 CoffeeFarm = monteblanco,
-                CoffeeRegion = huila,
+                CoffeeRegion = cusco,
                 OriginCountry = peru
             };
 
             var punch = new CoffeeBean
             {
-                Name = "Punch [Geisha]",
+                Name = "Geisha [Cusco]",
                 FlavorProfile = "Floral, peach, tea-like",
                 Rating = 4.8m,
                 ProcessingMethod = "Washed",
                 Producer = "Teodocia Alvarez",
                 ProducerDescription = "Grown by smallholder farmers in the Cusco region, particularly the Huadquiña cooperative and other local cooperatives. These farmers are dedicated to organic practices, sustainable farming, and preserving traditional Peruvian coffee varieties. Each batch represents the hard work of families who have cultivated coffee in these high-altitude regions for generations.",
-                ProcessingDescription = "This Punch [Geisha] is fully washed and fermented for 24 hours. The result is a clean cup that highlights the terroir of the Cusco region.",
+                ProcessingDescription = "This Geisha [Cusco] is fully washed and fermented for 24 hours. The result is a clean cup that highlights the terroir of the Cusco region.",
                 OriginDescription = "Explore the Cusco region where this coffee is grown. The high-altitude farms, diverse microclimates, and traditional farming methods create exceptional quality coffee with unique flavor profiles.",
                 Variety = "Geisha",
                 Altitude = "1850 msnm",
@@ -401,12 +401,14 @@ namespace TheBestBean.Models
         }
 
         /// <summary>
-        /// Strip farmer names from lot titles, fix Catuai spelling, merge duplicate Geisha lots,
-        /// and point bean photos at full-frame brand assets (no center-crop).
+        /// Normalize lot titles to Variety [Cusco|Cajamarca], fix Catuai spelling,
+        /// merge duplicate titles, and point photos at full-frame brand assets.
         /// </summary>
         private static async Task NormalizeCoffeeLotNamesAndImagesAsync()
         {
-            var beans = await _context.CoffeeBean.ToListAsync();
+            var beans = await _context.CoffeeBean
+                .Include(b => b.CoffeeRegion)
+                .ToListAsync();
             if (beans.Count == 0)
             {
                 return;
@@ -436,36 +438,74 @@ namespace TheBestBean.Models
 
             string? BeanPhotoFor(CoffeeBean bean)
             {
-                var n = bean.Name ?? "";
+                var title = CoffeeDisplayName.Standard(bean.Name, bean.Variety, bean.CoffeeRegion?.Name);
+                var n = $"{title} {bean.Name} {bean.Variety}";
                 if (n.Contains("SL28", StringComparison.OrdinalIgnoreCase)) return "/brand/beans/SL28.jpg" + cacheTag;
                 if (n.Contains("Marsellesa", StringComparison.OrdinalIgnoreCase)) return "/brand/beans/Meselessa.jpg" + cacheTag;
-                if (n.Contains("Cusco", StringComparison.OrdinalIgnoreCase) && n.Contains("Bourbon", StringComparison.OrdinalIgnoreCase))
+                if (n.Contains("Bourbon", StringComparison.OrdinalIgnoreCase) && n.Contains("Cusco", StringComparison.OrdinalIgnoreCase))
                     return "/brand/beans/Pachamara.jpg" + cacheTag;
-                if (n.Contains("Cajamarca", StringComparison.OrdinalIgnoreCase) && n.Contains("Bourbon", StringComparison.OrdinalIgnoreCase))
+                if (n.Contains("Bourbon", StringComparison.OrdinalIgnoreCase) && n.Contains("Cajamarca", StringComparison.OrdinalIgnoreCase))
                     return "/brand/beans/bourbon-pablino.jpg" + cacheTag;
-                if (n.Contains("Catuai", StringComparison.OrdinalIgnoreCase) || n.Contains("Caturai", StringComparison.OrdinalIgnoreCase) || n.Contains("Catuar", StringComparison.OrdinalIgnoreCase))
+                if (n.Contains("Catuai", StringComparison.OrdinalIgnoreCase))
                     return "/brand/beans/bourbon_miguel.jpg" + cacheTag;
                 if (n.Contains("Geisha Alto", StringComparison.OrdinalIgnoreCase)) return "/brand/beans/porte_bajo_angle-m.jpg" + cacheTag;
                 if (n.Contains("Geisha Korea", StringComparison.OrdinalIgnoreCase) || n.Contains("Geisha R17", StringComparison.OrdinalIgnoreCase))
                     return "/brand/beans/Geisha_Aug28_Angel-m.jpg" + cacheTag;
-                if (n.Contains("Geisha - Cajamarca", StringComparison.OrdinalIgnoreCase)) return "/brand/beans/Geisha_mas_o_menos.jpg" + cacheTag;
+                if (n.Contains("Geisha", StringComparison.OrdinalIgnoreCase) && n.Contains("Cajamarca", StringComparison.OrdinalIgnoreCase))
+                    return "/brand/beans/Geisha_mas_o_menos.jpg" + cacheTag;
                 return null;
+            }
+
+            // Regular Papi was seeded under Huila (Colombia) but copy says Cusco — force Cusco.
+            var cuscoRegion = await _context.CoffeeRegion
+                .FirstOrDefaultAsync(r => r.Name.Contains("Cusco"));
+            foreach (var bean in beans)
+            {
+                if (bean.Name != null
+                    && bean.Name.Contains("Regular Papi", StringComparison.OrdinalIgnoreCase)
+                    && cuscoRegion != null)
+                {
+                    bean.CoffeeRegionId = cuscoRegion.Id;
+                    bean.CoffeeRegion = cuscoRegion;
+                }
             }
 
             foreach (var bean in beans)
             {
-                var display = CoffeeDisplayName.ForLab(bean.Name);
-                if (!string.IsNullOrWhiteSpace(display) && !string.Equals(bean.Name, display, StringComparison.Ordinal))
-                {
-                    bean.Name = display;
-                }
-
                 if (!string.IsNullOrWhiteSpace(bean.Variety))
                 {
                     if (bean.Variety.Contains("Caturai", StringComparison.OrdinalIgnoreCase)
                         || bean.Variety.Contains("Catuar", StringComparison.OrdinalIgnoreCase))
                     {
                         bean.Variety = "Catuai";
+                    }
+
+                    if (bean.Variety.Contains("SL09", StringComparison.OrdinalIgnoreCase))
+                    {
+                        bean.Variety = "SL09";
+                    }
+
+                    if (bean.Variety.Contains("Meselessa", StringComparison.OrdinalIgnoreCase)
+                        || bean.Variety.Contains("Mariseisa", StringComparison.OrdinalIgnoreCase))
+                    {
+                        bean.Variety = "Marsellesa";
+                    }
+                }
+
+                var standard = CoffeeDisplayName.Standard(bean.Name, bean.Variety, bean.CoffeeRegion?.Name);
+                if (!string.IsNullOrWhiteSpace(standard) && !string.Equals(bean.Name, standard, StringComparison.Ordinal))
+                {
+                    var oldName = bean.Name;
+                    bean.Name = standard;
+                    // Keep inventory rows linked by name in sync with the shop title.
+                    var invRows = await _context.BeanInventories
+                        .Where(i => i.CoffeeBeanId == bean.Id
+                            || (oldName != null && i.Name == oldName))
+                        .ToListAsync();
+                    foreach (var row in invRows)
+                    {
+                        row.Name = standard;
+                        row.CoffeeBeanId = bean.Id;
                     }
                 }
 
@@ -487,7 +527,6 @@ namespace TheBestBean.Models
                     }
                     else
                     {
-                        // Force cache-bust on any existing brand bean photo URL.
                         var photo = BeanPhotoFor(bean);
                         if (photo != null && key.StartsWith("/brand/beans/", StringComparison.OrdinalIgnoreCase))
                         {
@@ -505,9 +544,9 @@ namespace TheBestBean.Models
                 }
             }
 
-            // Merge exact duplicate display names (e.g. two Geisha - Cajamarca rows).
+            // Merge exact duplicate display names (same Variety [Region]).
             var dupGroups = beans
-                .GroupBy(b => CoffeeDisplayName.ForLab(b.Name), StringComparer.OrdinalIgnoreCase)
+                .GroupBy(b => CoffeeDisplayName.Standard(b.Name, b.Variety, b.CoffeeRegion?.Name), StringComparer.OrdinalIgnoreCase)
                 .Where(g => g.Count() > 1)
                 .ToList();
 
@@ -534,6 +573,11 @@ namespace TheBestBean.Models
         {
             var newLotNames = new[]
             {
+                "SL28 [Cajamarca]",
+                "Geisha [Cajamarca]",
+                "Bourbon [Cajamarca]",
+                "Bourbon [Cusco]",
+                "Marsellesa [Cajamarca]",
                 "SL28 - Cajamarca",
                 "La Catarata [Geisha]",
                 "Cajamarca [Bourbon]",
@@ -542,16 +586,17 @@ namespace TheBestBean.Models
             };
             var existing = await _context.CoffeeBean
                 .Where(b => newLotNames.Contains(b.Name)
-                    || b.Name == "SL28 - Cajamarca [Fransico Rodriguez]")
+                    || b.Name.Contains("SL28"))
                 .Select(b => b.Name)
                 .ToListAsync();
-            var hasSl28 = existing.Any(n => n.StartsWith("SL28 - Cajamarca", StringComparison.OrdinalIgnoreCase));
+            var hasSl28 = existing.Any(n => n.Contains("SL28", StringComparison.OrdinalIgnoreCase));
             var existingSet = existing.ToHashSet(StringComparer.OrdinalIgnoreCase);
+            bool Has(params string[] aliases) => aliases.Any(a => existingSet.Contains(a));
             if (hasSl28
-                && existingSet.Contains("La Catarata [Geisha]")
-                && existingSet.Contains("Cajamarca [Bourbon]")
-                && existingSet.Contains("Cusco [Bourbon]")
-                && existingSet.Contains("Cajamarca [Marsellesa]"))
+                && Has("Geisha [Cajamarca]", "La Catarata [Geisha]")
+                && Has("Bourbon [Cajamarca]", "Cajamarca [Bourbon]")
+                && Has("Bourbon [Cusco]", "Cusco [Bourbon]")
+                && Has("Marsellesa [Cajamarca]", "Cajamarca [Marsellesa]"))
             {
                 return;
             }
@@ -596,7 +641,7 @@ namespace TheBestBean.Models
             {
                 lots.Add(new CoffeeBean
                 {
-                    Name = "SL28 - Cajamarca",
+                    Name = "SL28 [Cajamarca]",
                     FlavorProfile = "Blackcurrant, red berries, tropical fruit",
                     FlavorProfileES = "Grosella negra, frutos rojos, fruta tropical",
                     Rating = 4.8m,
@@ -620,11 +665,11 @@ namespace TheBestBean.Models
                 });
             }
 
-            if (!existingSet.Contains("La Catarata [Geisha]"))
+            if (!Has("Geisha [Cajamarca]", "La Catarata [Geisha]"))
             {
                 lots.Add(new CoffeeBean
                 {
-                    Name = "La Catarata [Geisha]",
+                    Name = "Geisha [Cajamarca]",
                     FlavorProfile = "Citrus, lemongrass, lavender, stone fruit",
                     FlavorProfileES = "Cítricos, lemongrass, lavanda, fruta de hueso",
                     Rating = 5.0m,
@@ -649,11 +694,11 @@ namespace TheBestBean.Models
                 });
             }
 
-            if (!existingSet.Contains("Cajamarca [Bourbon]"))
+            if (!Has("Bourbon [Cajamarca]", "Cajamarca [Bourbon]"))
             {
                 lots.Add(new CoffeeBean
                 {
-                    Name = "Cajamarca [Bourbon]",
+                    Name = "Bourbon [Cajamarca]",
                     FlavorProfile = "Brown sugar, citrus, stone fruit",
                     FlavorProfileES = "Azúcar morena, cítricos, fruta de hueso",
                     Rating = 4.6m,
@@ -677,11 +722,11 @@ namespace TheBestBean.Models
                 });
             }
 
-            if (!existingSet.Contains("Cusco [Bourbon]"))
+            if (!Has("Bourbon [Cusco]", "Cusco [Bourbon]"))
             {
                 lots.Add(new CoffeeBean
                 {
-                    Name = "Cusco [Bourbon]",
+                    Name = "Bourbon [Cusco]",
                     FlavorProfile = "Floral, caramel, soft acidity",
                     FlavorProfileES = "Floral, caramelo, acidez suave",
                     Rating = 4.6m,
@@ -705,11 +750,11 @@ namespace TheBestBean.Models
                 });
             }
 
-            if (!existingSet.Contains("Cajamarca [Marsellesa]"))
+            if (!Has("Marsellesa [Cajamarca]", "Cajamarca [Marsellesa]"))
             {
                 lots.Add(new CoffeeBean
                 {
-                    Name = "Cajamarca [Marsellesa]",
+                    Name = "Marsellesa [Cajamarca]",
                     FlavorProfile = "Cacao, citrus, honey, stone fruit",
                     FlavorProfileES = "Cacao, cítricos, miel, fruta de hueso",
                     Rating = 4.7m,

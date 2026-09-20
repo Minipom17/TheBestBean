@@ -187,8 +187,14 @@ namespace TheBestBean.Services
 
         internal static bool NamesMatch(string? a, string? b)
         {
-            var left = Norm(a);
-            var right = Norm(b);
+            var left = Norm(CoffeeDisplayName.Standard(a));
+            var right = Norm(CoffeeDisplayName.Standard(b));
+            if (string.IsNullOrEmpty(left) || string.IsNullOrEmpty(right))
+            {
+                left = Norm(a);
+                right = Norm(b);
+            }
+
             if (string.IsNullOrEmpty(left) || string.IsNullOrEmpty(right))
             {
                 return false;
