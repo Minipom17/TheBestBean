@@ -3745,7 +3745,7 @@ html.dark .coffee-card-stock-roast { color: #c4a07a; }
     width: 100%;
     aspect-ratio: 16 / 10;
     overflow: hidden;
-    background: #f3f0ea;
+    background: #fff;
     border-top: 1px solid #e5e7eb;
     border-bottom: 1px solid #e5e7eb;
 }
@@ -3757,14 +3757,14 @@ html.dark .coffee-card-media {
     width: 100%;
     height: 100%;
     display: block;
-    object-fit: cover !important;
+    object-fit: contain !important;
     object-position: center center !important;
-    transform: scale(1.62);
+    transform: none;
     transform-origin: center center;
     background: transparent !important;
 }
 .coffee-product-card:hover .coffee-card-media__img {
-    transform: scale(1.7);
+    transform: scale(1.02);
     transition: transform 0.8s ease;
 }
 
@@ -4186,7 +4186,7 @@ html.dark .product-buy > .coffee-card-metrics {
     width: 100%;
     aspect-ratio: 1 / 1;
     overflow: hidden;
-    background: transparent;
+    background: #fff;
     border: 1px solid #e5e7eb;
 }
 html.dark .product-hero-frame {
@@ -4198,18 +4198,20 @@ html.dark .product-hero-frame {
     inset: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     object-position: center;
     transform-origin: center center;
     background: transparent;
 }
 .product-hero-frame .coffee-bean-photo {
-    object-fit: cover !important;
+    object-fit: contain !important;
     object-position: center center !important;
+    transform: none !important;
     transform-origin: center center;
 }
 .product-hero-frame__img--fill {
-    transform: scale(1.62) !important;
+    /* Legacy class: keep full bean photos visible (no crop/zoom). */
+    transform: none !important;
     transform-origin: center center;
 }
 .product-origin-map {
@@ -4252,7 +4254,7 @@ html.dark .product-hero-frame {
     transform-origin: center center;
 }
 .coffee-bean-photo {
-    object-fit: cover !important;
+    object-fit: contain !important;
     object-position: center center !important;
     background: transparent;
     mix-blend-mode: normal;
