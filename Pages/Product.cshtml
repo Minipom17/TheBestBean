@@ -41,9 +41,18 @@
             <div class="product-buy__visual">
                 <div class="product-hero-frame">
                     @{
-                        var heroPosParts = heroPos.Split(' ');
+                        var heroPosParts = heroPos.Split(' ', StringSplitOptions.RemoveEmptyEntries);
                         var cssPos = heroPosParts.Length >= 2 ? $"{heroPosParts[0]} {heroPosParts[1]}" : "50% 50%";
-                        var cssScale = heroPosParts.Length >= 3 ? heroPosParts[2] : "1.0";
+                        // Bean stills are shot on a cream table — default zoom fills the frame
+                        // (shop cards use ~1.35). Keep an explicit saved scale if an editor set one.
+                        var cssScale = "1.35";
+                        if (heroPosParts.Length >= 3
+                            && decimal.TryParse(heroPosParts[2], System.Globalization.NumberStyles.Number,
+                                System.Globalization.CultureInfo.InvariantCulture, out var savedScale)
+                            && savedScale > 1.05m)
+                        {
+                            cssScale = savedScale.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                        }
                     }
                     <img src="@Model.Product.ImageUrl" alt="@CoffeeDisplayName.ForLab(Model.Product.Name)" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="ImageUrl" data-position-key="Product_@(Model.Product.Id)_ImageUrl_Position" data-saved-pos="@heroPos" class="product-hero-frame__img coffee-bean-photo" style="object-position: @cssPos; transform: scale(@cssScale);">
                 </div>

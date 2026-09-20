@@ -4043,11 +4043,11 @@ html.dark .back-to-top:hover {
     width: 100%;
     aspect-ratio: 1 / 1;
     overflow: hidden;
-    background: #fff;
-    border: 1px solid #f3f0ea;
+    background: #111;
+    border: 1px solid #e5e7eb;
 }
 html.dark .product-hero-frame {
-    background: #1C191F;
+    background: #0c0a0e;
     border-color: #3A353C;
 }
 .product-hero-frame__img {
@@ -4057,17 +4057,17 @@ html.dark .product-hero-frame {
     height: 100%;
     object-fit: cover;
     object-position: center;
-    background: #fafaf7;
+    background: transparent;
 }
 .coffee-bean-photo {
     object-fit: cover !important;
     object-position: center center !important;
-    background: #fafaf7;
+    background: transparent;
     mix-blend-mode: normal;
 }
 html.dark .coffee-bean-photo,
 html.dark .product-hero-frame__img {
-    background: #1C191F;
+    background: transparent;
 }
 .coffee-product-card .coffee-bean-photo {
     background: transparent !important;
