@@ -3920,8 +3920,13 @@ html.dark .coffee-card-meta {
 .related-coffees {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 3.5rem 1.5rem 4.5rem;
+    padding: 3.5rem 0.75rem 4.5rem;
     border-top: 1px solid #e5e7eb;
+}
+@media (min-width: 768px) {
+    .related-coffees {
+        padding: 3.5rem 1.5rem 4.5rem;
+    }
 }
 html.dark .related-coffees {
     border-top-color: #3A353C;
@@ -3984,6 +3989,8 @@ html.dark .related-coffees__btn:hover {
 .related-coffees__track {
     display: flex;
     gap: 1.5rem;
+    width: 100%;
+    min-width: 0;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
@@ -3995,15 +4002,39 @@ html.dark .related-coffees__btn:hover {
     display: none;
 }
 .related-coffees__slide {
-    flex: 0 0 min(22.5rem, 88vw);
+    box-sizing: border-box;
+    flex: 0 0 100%;
+    width: 100%;
+    max-width: 100%;
     scroll-snap-align: start;
     min-width: 0;
 }
+@media (min-width: 768px) {
+    .related-coffees__slide {
+        flex: 0 0 min(22.5rem, 42vw);
+        width: auto;
+        max-width: none;
+    }
+}
 .related-coffees__slide .coffee-product-card {
     height: 100%;
+    width: 100%;
 }
 .related-coffees__slide .coffee-card-media {
     aspect-ratio: 4 / 3;
+}
+.related-coffees__slide .coffee-card-metrics {
+    min-width: 0;
+    gap: 0.35rem 0.5rem;
+}
+.related-coffees__slide .coffee-card-price .price-pair--compact .price-pair__amount,
+.related-coffees__slide .coffee-card-price .price-pair--compact .price-pair__usd,
+.related-coffees__slide .coffee-card-price .price-pair--compact .price-pair__soles {
+    font-size: 10px;
+    letter-spacing: 0.03em;
+}
+.related-coffees__slide .coffee-card-stock-roast {
+    flex: 0 0 auto;
 }
 
 .back-to-top {
