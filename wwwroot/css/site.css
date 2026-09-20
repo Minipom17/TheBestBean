@@ -3690,7 +3690,6 @@ html.dark .coffee-card-notes { color: #9a948c; }
 .coffee-product-card .coffee-card-actions { order: 5; }
 .coffee-card-stock-green,
 .coffee-card-stock-roast {
-    flex: 1 1 auto;
     min-width: 0;
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
@@ -3700,14 +3699,17 @@ html.dark .coffee-card-notes { color: #9a948c; }
 }
 .coffee-card-stock-green {
     margin: 0;
+    flex: 0 0 auto;
     color: #16A34A;
     text-align: left;
 }
 html.dark .coffee-card-stock-green { color: #86efac; }
 .coffee-card-stock-roast {
     margin: 0;
+    margin-left: auto;
+    flex: 1 1 auto;
     color: #8B5A2B;
-    text-align: left;
+    text-align: right;
 }
 html.dark .coffee-card-stock-roast { color: #c4a07a; }
 .coffee-card-price {
