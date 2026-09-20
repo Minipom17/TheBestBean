@@ -4036,15 +4036,58 @@ html.dark .back-to-top:hover {
 .product-buy {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 1.5rem;
-    align-items: stretch;
+    gap: 1rem 1.25rem;
+    align-items: start;
     margin-bottom: 3.5rem;
+}
+.product-buy__identity {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+.product-buy__title {
+    margin: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    line-height: 1.2;
+    color: #111;
+}
+html.dark .product-buy__title { color: #D6D0C8; }
+.product-buy__notes {
+    margin: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    line-height: 1.45;
+    color: #4b5563;
+}
+html.dark .product-buy__notes { color: #9a948c; }
+.product-buy__identity .coffee-card-metrics {
+    margin-top: 0.15rem;
+}
+@media (min-width: 768px) {
+    .product-buy__title {
+        font-size: 1.85rem;
+    }
 }
 @media (min-width: 1024px) {
     .product-buy {
-        grid-template-columns: minmax(17rem, 22rem) minmax(0, 1fr);
+        grid-template-columns: minmax(0, 1fr) minmax(17rem, 22rem);
+        grid-template-areas:
+            "identity identity"
+            "visual   info"
+            "facts    info";
         gap: 1.25rem 2.25rem;
+        align-items: start;
     }
+    .product-buy__identity { grid-area: identity; }
+    .product-buy__visual { grid-area: visual; }
+    .product-lot-facts { grid-area: facts; }
+    .product-buy__info { grid-area: info; }
+    .product-buy__title { font-size: 2.05rem; }
 }
 .product-buy__visual {
     display: flex;
@@ -4057,7 +4100,7 @@ html.dark .back-to-top:hover {
     width: 100%;
     aspect-ratio: 1 / 1;
     overflow: hidden;
-    background: #111;
+    background: transparent;
     border: 1px solid #e5e7eb;
 }
 html.dark .product-hero-frame {
@@ -4071,7 +4114,17 @@ html.dark .product-hero-frame {
     height: 100%;
     object-fit: cover;
     object-position: center;
+    transform-origin: center center;
     background: transparent;
+}
+.product-hero-frame .coffee-bean-photo {
+    object-fit: cover !important;
+    object-position: center center !important;
+    transform-origin: center center;
+}
+.product-hero-frame__img--fill {
+    transform: scale(1.62) !important;
+    transform-origin: center center;
 }
 .coffee-bean-photo {
     object-fit: cover !important;
@@ -4101,7 +4154,7 @@ html.dark .bag-pro__photo img {
     background: #1C191F;
 }
 .product-roast {
-    margin-top: auto;
+    margin-top: 1rem;
     padding-top: 1rem;
     border-top: 1px solid #e5e7eb;
 }
@@ -4110,26 +4163,27 @@ html.dark .product-roast {
 }
 .product-lot-facts {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 0.65rem 1.25rem;
-    margin: 0 0 0.85rem;
-    padding: 0 0 0.85rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem 0.75rem;
+    margin: 0;
+    padding: 0.35rem 0 0.85rem;
     border-bottom: 1px solid #e5e7eb;
-}
-@media (min-width: 640px) {
-    .product-lot-facts {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        align-items: start;
-    }
+    text-align: center;
+    align-items: start;
 }
 html.dark .product-lot-facts {
     border-bottom-color: #3A353C;
 }
 .product-lot-facts div {
     min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 .product-lot-facts dt {
     margin: 0 0 0.2rem;
+    width: 100%;
+    text-align: center;
     font-family: 'JetBrains Mono', monospace;
     font-size: 8px;
     font-weight: 700;
@@ -4139,6 +4193,8 @@ html.dark .product-lot-facts {
 }
 .product-lot-facts dd {
     margin: 0;
+    width: 100%;
+    text-align: center;
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.78rem;
     font-weight: 700;

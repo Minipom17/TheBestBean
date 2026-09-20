@@ -32,20 +32,35 @@
                 || imageUrl.Contains("/Media/beans/", StringComparison.OrdinalIgnoreCase);
             var isAngelPhoto = imageUrl.Contains("angel-cajamarca", StringComparison.OrdinalIgnoreCase);
             var heroPos = isBrandBeanPhoto
-                ? "50% 50% 1.0"
+                ? "50% 50% 1.62"
                 : (Model.PageContent != null && Model.PageContent.ContainsKey(heroPosKey)
                     ? Model.PageContent[heroPosKey]
                     : (isAngelPhoto ? "50% 32%" : "50% 50%"));
         }
         <div class="product-buy">
+            <div class="product-buy__identity">
+                <div class="coffee-card-identity__top">
+                    <p class="coffee-card-kicker">@Model.Product.Type</p>
+                    <p class="coffee-card-sca">SCA @Model.Product.ScaScore.ToString("0.##")</p>
+                </div>
+                <h1 class="product-buy__title" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="Name">@CoffeeDisplayName.ForLab(Model.Product.Name)</h1>
+                <p class="product-buy__notes" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="FlavorProfile">
+                    @(string.IsNullOrWhiteSpace(Model.Product.FlavorProfile) ? Model.Product.Description : Model.Product.FlavorProfile)
+                </p>
+                <div class="coffee-card-metrics" id="main-product-price" data-base-usd="@Model.Product.BasePriceUSD" data-base-pen="@Model.Product.BasePricePEN">
+                    <span class="coffee-card-stock-green">@CoffeeLotStatus.FormatKg(Model.Lot?.GreenKg ?? 0m) green</span>
+                    <span class="coffee-card-stock-roast">@CoffeeLotStatus.FormatKg(Model.Lot?.RoastedKg ?? 0m) roasted</span>
+                    <div class="coffee-card-price">
+                        <partial name="_WorkshopPrice" model="new DualPriceModel { Usd = Model.Product.BasePriceUSD, Pen = Model.Product.BasePricePEN, Compact = true }" />
+                    </div>
+                </div>
+            </div>
             <div class="product-buy__visual">
                 <div class="product-hero-frame">
                     @{
                         var heroPosParts = heroPos.Split(' ', StringSplitOptions.RemoveEmptyEntries);
                         var cssPos = heroPosParts.Length >= 2 ? $"{heroPosParts[0]} {heroPosParts[1]}" : "50% 50%";
-                        // Bean stills are shot on a cream table — default zoom fills the frame
-                        // (shop cards use ~1.35). Keep an explicit saved scale if an editor set one.
-                        var cssScale = "1.35";
+                        var cssScale = isBrandBeanPhoto ? "1.62" : "1.0";
                         if (heroPosParts.Length >= 3
                             && decimal.TryParse(heroPosParts[2], System.Globalization.NumberStyles.Number,
                                 System.Globalization.CultureInfo.InvariantCulture, out var savedScale)
@@ -54,7 +69,7 @@
                             cssScale = savedScale.ToString(System.Globalization.CultureInfo.InvariantCulture);
                         }
                     }
-                    <img src="@Model.Product.ImageUrl" alt="@CoffeeDisplayName.ForLab(Model.Product.Name)" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="ImageUrl" data-position-key="Product_@(Model.Product.Id)_ImageUrl_Position" data-saved-pos="@heroPos" class="product-hero-frame__img coffee-bean-photo" style="object-position: @cssPos; transform: scale(@cssScale);">
+                    <img src="@Model.Product.ImageUrl" alt="@CoffeeDisplayName.ForLab(Model.Product.Name)" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="ImageUrl" data-position-key="Product_@(Model.Product.Id)_ImageUrl_Position" data-saved-pos="@heroPos" class="product-hero-frame__img coffee-bean-photo @(isBrandBeanPhoto ? "product-hero-frame__img--fill" : "")" style="object-position: @cssPos; transform: scale(@cssScale);">
                 </div>
                 @if (Model.Product.Name.Contains("Chuncho"))
                 {
@@ -71,109 +86,24 @@
                         </div>
                     </div>
                 }
-                @if (Model.Product.Type == "Bean")
-                {
-                    <div class="product-roast">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="font-mono-jb text-[10px] font-bold uppercase tracking-widest text-black dark:text-white flex items-center gap-2">
-                                Roast: <span id="roast-status" class="text-swiss-red">Recommended</span>
-                            </span>
-                            <label class="flex items-center gap-2 cursor-pointer">
-                                <span class="font-mono-jb text-[10px] uppercase tracking-widest text-gray-500">Custom</span>
-                                <input type="checkbox" id="custom-roast-toggle" class="peer sr-only" onchange="toggleRoastSlider()">
-                                <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-black relative"></div>
-                            </label>
-                        </div>
-
-                        <div id="roast-slider-container" class="hidden opacity-0 transition-opacity duration-300 pt-2">
-                            <div class="relative pt-6 pb-2">
-                                <input type="range" min="1" max="3" step="1" value="2" id="roast-slider" class="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 accent-black dark:accent-white" oninput="updateRoastLevel()">
-                                <div class="flex justify-between text-[10px] font-mono-jb font-bold uppercase tracking-widest mt-4 text-gray-500">
-                                    <span>Filter</span>
-                                    <span>Medium</span>
-                                    <span>Espresso</span>
-                                </div>
-                            </div>
-                        </div>
-                        <p class="text-[10px] font-mono-jb text-gray-500 mt-2 leading-relaxed">Default is the profile we developed for this lot. Most of our coffee is roasted for pour-over; it still works as espresso if you want those flavors in the shot.</p>
-
-                        <script>
-                            function toggleRoastSlider() {
-                                const isChecked = document.getElementById('custom-roast-toggle').checked;
-                                const container = document.getElementById('roast-slider-container');
-                                const status = document.getElementById('roast-status');
-                                const hiddenInput = document.getElementById('product-selected-roast');
-
-                                if (isChecked) {
-                                    container.classList.remove('hidden');
-                                    setTimeout(() => container.classList.remove('opacity-0'), 10);
-                                    if (typeof updateRoastLevel === 'function') updateRoastLevel();
-                                } else {
-                                    container.classList.add('opacity-0');
-                                    setTimeout(() => container.classList.add('hidden'), 300);
-                                    if (status) {
-                                        status.innerText = "Recommended";
-                                        status.classList.add('text-swiss-red');
-                                        status.classList.remove('text-black', 'dark:text-white');
-                                    }
-                                    if (hiddenInput) hiddenInput.value = "profile";
-                                }
-                            }
-
-                            function updateRoastLevel() {
-                                const val = document.getElementById('roast-slider').value;
-                                const status = document.getElementById('roast-status');
-                                const hiddenInput = document.getElementById('product-selected-roast');
-                                
-                                let level = "medium";
-                                if (val == 1) level = "light";
-                                if (val == 3) level = "dark";
-
-                                if (status) {
-                                    status.innerText = level;
-                                    status.classList.remove('text-swiss-red');
-                                    status.classList.add('text-black', 'dark:text-white');
-                                }
-                                if (hiddenInput) hiddenInput.value = level;
-                            }
-                        </script>
-                    </div>
-                }
             </div>
+
+            <dl class="product-lot-facts">
+                <div>
+                    <dt>Region</dt>
+                    <dd data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="Origin">@(string.IsNullOrEmpty(Model.Product.Origin) ? "La Granja" : Model.Product.Origin)</dd>
+                </div>
+                <div>
+                    <dt>Farmer</dt>
+                    <dd data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="Producer">@(string.IsNullOrEmpty(Model.Product.Producer) ? "Guiliar Pérez Cuéllar" : Model.Product.Producer)</dd>
+                </div>
+                <div>
+                    <dt>Process</dt>
+                    <dd data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="ProcessingMethod">@(string.IsNullOrEmpty(Model.Product.ProcessingMethod) ? "Washed" : Model.Product.ProcessingMethod)</dd>
+                </div>
+            </dl>
             
             <div class="product-buy__info">
-                <dl class="product-lot-facts">
-                    <div>
-                        <dt>Region</dt>
-                        <dd data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="Origin">@(string.IsNullOrEmpty(Model.Product.Origin) ? "La Granja" : Model.Product.Origin)</dd>
-                    </div>
-                    <div>
-                        <dt>Farmer</dt>
-                        <dd data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="Producer">@(string.IsNullOrEmpty(Model.Product.Producer) ? "Guiliar Pérez Cuéllar" : Model.Product.Producer)</dd>
-                    </div>
-                    <div>
-                        <dt>Process</dt>
-                        <dd data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="ProcessingMethod">@(string.IsNullOrEmpty(Model.Product.ProcessingMethod) ? "Washed" : Model.Product.ProcessingMethod)</dd>
-                    </div>
-                </dl>
-                
-                <span class="font-mono text-[10px] text-swiss-red font-bold uppercase tracking-widest mb-1" style="font-family: 'JetBrains Mono', monospace; color: #FF3B30;">@Model.Product.Type</span>
-                <div class="flex items-center gap-3 mb-2 flex-wrap">
-                    <h1 class="font-grotesk text-3xl md:text-4xl font-bold leading-tight m-0" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="Name" style="font-family: 'Inter', sans-serif;">@CoffeeDisplayName.ForLab(Model.Product.Name)</h1>
-                    <span class="bg-black text-white px-2 py-0.5 text-xs font-bold font-mono tracking-widest rounded-sm whitespace-nowrap" style="font-family: 'JetBrains Mono', monospace;">SCA @Model.Product.ScaScore.ToString("0.##")</span>
-                </div>
-                <div class="mb-3" id="main-product-price" data-base-usd="@Model.Product.BasePriceUSD" data-base-pen="@Model.Product.BasePricePEN">
-                    <partial name="_WorkshopPrice" model="new DualPriceModel { Usd = Model.Product.BasePriceUSD, Pen = Model.Product.BasePricePEN }" />
-                </div>
-                <p class="font-sans text-gray-600 dark:text-gray-300 mb-3 leading-snug text-sm" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="FlavorProfile" style="font-family: 'Inter', sans-serif;">@Model.Product.Description</p>
-                @if (Model.Product.Type == "Bean" && Model.Lot != null && (Model.Lot.HasGreen || Model.Lot.RoastedKg >= 0.05m))
-                {
-                    <div class="coffee-card-stock product-lot-stock">
-                        <span class="coffee-card-stock__green">@CoffeeLotStatus.FormatKg(Model.Lot.GreenKg) green</span>
-                        <span class="coffee-card-stock__roast">@CoffeeLotStatus.FormatKg(Model.Lot.RoastedKg) roasted</span>
-                    </div>
-                }
-                
                 <div class="product-buy__form border-t border-gray-200 dark:border-dark-border pt-3">
                     <form method="post" asp-page-handler="AddToCart">
                         <input type="hidden" name="productId" value="@Model.Product.Id" />
@@ -306,6 +236,74 @@
                         </div>
                     </form>
                 </div>
+                @if (Model.Product.Type == "Bean")
+                {
+                    <div class="product-roast">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-mono-jb text-[10px] font-bold uppercase tracking-widest text-black dark:text-white flex items-center gap-2">
+                                Roast: <span id="roast-status" class="text-swiss-red">Recommended</span>
+                            </span>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <span class="font-mono-jb text-[10px] uppercase tracking-widest text-gray-500">Custom</span>
+                                <input type="checkbox" id="custom-roast-toggle" class="peer sr-only" onchange="toggleRoastSlider()">
+                                <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-black relative"></div>
+                            </label>
+                        </div>
+
+                        <div id="roast-slider-container" class="hidden opacity-0 transition-opacity duration-300 pt-2">
+                            <div class="relative pt-6 pb-2">
+                                <input type="range" min="1" max="3" step="1" value="2" id="roast-slider" class="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 accent-black dark:accent-white" oninput="updateRoastLevel()">
+                                <div class="flex justify-between text-[10px] font-mono-jb font-bold uppercase tracking-widest mt-4 text-gray-500">
+                                    <span>Filter</span>
+                                    <span>Medium</span>
+                                    <span>Espresso</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-[10px] font-mono-jb text-gray-500 mt-2 leading-relaxed">Default is the profile we developed for this lot. Most of our coffee is roasted for pour-over; it still works as espresso if you want those flavors in the shot.</p>
+
+                        <script>
+                            function toggleRoastSlider() {
+                                const isChecked = document.getElementById('custom-roast-toggle').checked;
+                                const container = document.getElementById('roast-slider-container');
+                                const status = document.getElementById('roast-status');
+                                const hiddenInput = document.getElementById('product-selected-roast');
+
+                                if (isChecked) {
+                                    container.classList.remove('hidden');
+                                    setTimeout(() => container.classList.remove('opacity-0'), 10);
+                                    if (typeof updateRoastLevel === 'function') updateRoastLevel();
+                                } else {
+                                    container.classList.add('opacity-0');
+                                    setTimeout(() => container.classList.add('hidden'), 300);
+                                    if (status) {
+                                        status.innerText = "Recommended";
+                                        status.classList.add('text-swiss-red');
+                                        status.classList.remove('text-black', 'dark:text-white');
+                                    }
+                                    if (hiddenInput) hiddenInput.value = "profile";
+                                }
+                            }
+
+                            function updateRoastLevel() {
+                                const val = document.getElementById('roast-slider').value;
+                                const status = document.getElementById('roast-status');
+                                const hiddenInput = document.getElementById('product-selected-roast');
+
+                                let level = "medium";
+                                if (val == 1) level = "light";
+                                if (val == 3) level = "dark";
+
+                                if (status) {
+                                    status.innerText = level;
+                                    status.classList.remove('text-swiss-red');
+                                    status.classList.add('text-black', 'dark:text-white');
+                                }
+                                if (hiddenInput) hiddenInput.value = level;
+                            }
+                        </script>
+                    </div>
+                }
             </div>
         </div>
 
