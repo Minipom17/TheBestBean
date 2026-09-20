@@ -36,13 +36,6 @@
                 @Model.FlavorProfile
             </p>
         </div>
-        <div class="coffee-card-metrics">
-            <span class="coffee-card-stock-green">@CoffeeLotStatus.FormatKg(greenKg) green</span>
-            <span class="coffee-card-stock-roast">@CoffeeLotStatus.FormatKg(roastKg) roasted</span>
-            <div class="coffee-card-price coffee-card-price--head">
-                <partial name="_WorkshopPrice" model="new DualPriceModel { Usd = Model.BasePriceUSD, Pen = Model.BasePricePEN, Compact = true, From = false }" />
-            </div>
-        </div>
     </div>
 
     <a asp-page="/Product" asp-route-id="@Model.Id" class="coffee-card-media text-decoration-none" aria-label="@CoffeeDisplayName.ForLab(Model.Name)">
@@ -54,6 +47,14 @@
             data-entity-id="@Model.Id" data-entity-type="CoffeeBean" data-editable="ImageUrl"
         />
     </a>
+
+    <div class="coffee-card-metrics">
+        <span class="coffee-card-stock-green">@CoffeeLotStatus.FormatKg(greenKg) green</span>
+        <span class="coffee-card-stock-roast">@CoffeeLotStatus.FormatKg(roastKg) roasted</span>
+        <div class="coffee-card-price">
+            <partial name="_WorkshopPrice" model="new DualPriceModel { Usd = Model.BasePriceUSD, Pen = Model.BasePricePEN, Compact = true, From = false }" />
+        </div>
+    </div>
 
     @if (hasOriginMeta)
     {
@@ -97,8 +98,5 @@
                 Add to Cart
             </button>
         </form>
-        <div class="coffee-card-price coffee-card-price--after-cart">
-            <partial name="_WorkshopPrice" model="new DualPriceModel { Usd = Model.BasePriceUSD, Pen = Model.BasePricePEN, Compact = true, From = false }" />
-        </div>
     </div>
 </article>

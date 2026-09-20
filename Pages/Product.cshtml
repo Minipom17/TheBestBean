@@ -47,13 +47,6 @@
                 <p class="product-buy__notes" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="FlavorProfile">
                     @(string.IsNullOrWhiteSpace(Model.Product.FlavorProfile) ? Model.Product.Description : Model.Product.FlavorProfile)
                 </p>
-                <div class="coffee-card-metrics" id="main-product-price" data-base-usd="@Model.Product.BasePriceUSD" data-base-pen="@Model.Product.BasePricePEN">
-                    <span class="coffee-card-stock-green">@CoffeeLotStatus.FormatKg(Model.Lot?.GreenKg ?? 0m) green</span>
-                    <span class="coffee-card-stock-roast">@CoffeeLotStatus.FormatKg(Model.Lot?.RoastedKg ?? 0m) roasted</span>
-                    <div class="coffee-card-price">
-                        <partial name="_WorkshopPrice" model="new DualPriceModel { Usd = Model.Product.BasePriceUSD, Pen = Model.Product.BasePricePEN, Compact = true }" />
-                    </div>
-                </div>
             </div>
             <div class="product-buy__visual">
                 <div class="product-hero-frame">
@@ -86,6 +79,14 @@
                         </div>
                     </div>
                 }
+            </div>
+
+            <div class="coffee-card-metrics" id="main-product-price" data-base-usd="@Model.Product.BasePriceUSD" data-base-pen="@Model.Product.BasePricePEN">
+                <span class="coffee-card-stock-green">@CoffeeLotStatus.FormatKg(Model.Lot?.GreenKg ?? 0m) green</span>
+                <span class="coffee-card-stock-roast">@CoffeeLotStatus.FormatKg(Model.Lot?.RoastedKg ?? 0m) roasted</span>
+                <div class="coffee-card-price">
+                    <partial name="_WorkshopPrice" model="new DualPriceModel { Usd = Model.Product.BasePriceUSD, Pen = Model.Product.BasePricePEN, Compact = true }" />
+                </div>
             </div>
 
             <dl class="product-lot-facts">

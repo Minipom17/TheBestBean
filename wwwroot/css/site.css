@@ -3629,9 +3629,9 @@ html.dark .coffee-card-lot { color: #86efac; }
     font-weight: 700;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: #9ca3af;
+    color: #FF5A36;
 }
-html.dark .coffee-card-kicker { color: #8B8490; }
+html.dark .coffee-card-kicker { color: #FF5A36; }
 .coffee-card-title {
     margin: 0;
     font-family: 'JetBrains Mono', monospace;
@@ -3673,7 +3673,13 @@ html.dark .coffee-card-notes { color: #9a948c; }
     justify-content: space-between;
     gap: 0.5rem 0.75rem;
     width: 100%;
+    padding: 0.65rem 0.95rem;
 }
+.coffee-product-card .coffee-card-head { order: 1; }
+.coffee-product-card .coffee-card-metrics { order: 2; }
+.coffee-product-card .coffee-card-media { order: 3; }
+.coffee-product-card .coffee-card-origin { order: 4; }
+.coffee-product-card .coffee-card-actions { order: 5; }
 .coffee-card-stock-green,
 .coffee-card-stock-roast {
     flex: 1 1 auto;
@@ -3799,9 +3805,6 @@ html.dark .coffee-card-origin dd { color: #D6D0C8; }
     width: 100%;
     padding: 0.7rem 0.75rem !important;
     font-size: 11px !important;
-}
-.coffee-card-price--after-cart {
-    display: none;
 }
 
 /* legacy meta strip (kept for any leftover refs) */
@@ -3989,28 +3992,14 @@ html.dark .related-coffees__btn:hover {
 }
 .related-coffees__slide .coffee-card-media {
     aspect-ratio: 4 / 3;
-}
-.related-coffees__slide .coffee-card-price--head {
-    display: none;
+    order: 2;
 }
 .related-coffees__slide .coffee-card-metrics {
+    order: 3;
     justify-content: space-between;
 }
-.related-coffees__slide .coffee-card-stock-roast {
-    text-align: right;
-    margin-left: auto;
-}
-.related-coffees__slide .coffee-card-price--after-cart {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    margin-top: 0.5rem;
-    margin-left: 0;
-    text-align: center;
-}
-.related-coffees__slide .coffee-card-price--after-cart .price-pair--compact .price-pair__main {
-    justify-content: center;
-}
+.related-coffees__slide .coffee-card-origin { order: 4; }
+.related-coffees__slide .coffee-card-actions { order: 5; }
 
 .back-to-top {
     position: fixed;
@@ -4088,9 +4077,9 @@ html.dark .product-buy__title { color: #D6D0C8; }
     color: #4b5563;
 }
 html.dark .product-buy__notes { color: #9a948c; }
-.product-buy__identity .coffee-card-metrics {
-    margin-top: 0.15rem;
-    max-width: 36rem;
+.product-buy > .coffee-card-metrics {
+    padding: 0.4rem 0 0.15rem;
+    max-width: none;
 }
 @media (min-width: 768px) {
     .product-buy__title {
@@ -4103,12 +4092,14 @@ html.dark .product-buy__notes { color: #9a948c; }
         grid-template-areas:
             "identity identity"
             "visual   info"
+            "metrics  info"
             "facts    info";
         gap: 1.25rem 2.25rem;
         align-items: start;
     }
     .product-buy__identity { grid-area: identity; }
     .product-buy__visual { grid-area: visual; }
+    .product-buy > .coffee-card-metrics { grid-area: metrics; }
     .product-lot-facts { grid-area: facts; }
     .product-buy__info { grid-area: info; }
     .product-buy__title { font-size: 2.05rem; }
