@@ -4067,6 +4067,7 @@ html.dark .product-buy__title { color: #D6D0C8; }
 html.dark .product-buy__notes { color: #9a948c; }
 .product-buy__identity .coffee-card-metrics {
     margin-top: 0.15rem;
+    max-width: 36rem;
 }
 @media (min-width: 768px) {
     .product-buy__title {
