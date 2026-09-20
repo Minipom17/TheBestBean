@@ -4290,12 +4290,13 @@ html.dark .product-lot-facts dd {
 
 .product-sheet {
     margin: 0 0 4.5rem;
-    background: #f7f4ef;
-    border-top: 3px solid #722EA8;
-    padding: 1.5rem 1.35rem 1.65rem;
+    background: transparent;
+    border-top: 1px solid #e5e7eb;
+    padding: 1.75rem 0 0.25rem;
 }
 html.dark .product-sheet {
-    background: #1C191F;
+    background: transparent;
+    border-top-color: #3A353C;
 }
 .product-sheet__head {
     display: flex;
@@ -4304,18 +4305,18 @@ html.dark .product-sheet {
     gap: 1rem;
     margin-bottom: 1.25rem;
     padding-bottom: 0.9rem;
-    border-bottom: 1px solid #e0d9ce;
+    border-bottom: 1px solid #e5e7eb;
 }
 html.dark .product-sheet__head {
     border-bottom-color: #3A353C;
 }
 .product-sheet__kicker {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
+    font-size: 10px;
     font-weight: 700;
-    letter-spacing: 0.16em;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: #722EA8;
+    color: #FF5A36;
     margin: 0 0 0.3rem;
 }
 .product-sheet h2,
@@ -4343,23 +4344,28 @@ html.dark .product-sheet h3 {
     font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    border: 1px solid #722EA8;
-    color: #722EA8;
+    border: 1px solid #111;
+    color: #111;
     padding: 0.35rem 0.55rem;
+    background: transparent;
+}
+html.dark .product-sheet__stamps span {
+    border-color: #D6D0C8;
+    color: #D6D0C8;
 }
 .product-sheet__steps {
     list-style: none;
     margin: 0 0 1.25rem;
-    padding: 0.75rem 0.15rem 0.9rem;
+    padding: 0.15rem 0 0.9rem;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 0.65rem 1rem;
-    border-bottom: 1px solid #e0d9ce;
+    gap: 0.85rem 1.25rem;
+    border-bottom: 1px solid #e5e7eb;
 }
 @media (min-width: 768px) {
     .product-sheet__steps {
         grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 0.75rem;
+        gap: 0.75rem 1.25rem;
     }
 }
 html.dark .product-sheet__steps {
@@ -4370,19 +4376,24 @@ html.dark .product-sheet__steps {
     flex-direction: column;
     gap: 0.25rem;
     min-width: 0;
+    border-top: 2px solid #111;
+    padding-top: 0.7rem;
+}
+html.dark .product-sheet__steps li {
+    border-top-color: #D6D0C8;
 }
 .product-sheet__steps span {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
+    font-size: 10px;
     font-weight: 700;
-    letter-spacing: 0.14em;
-    color: #722EA8;
+    letter-spacing: 0.16em;
+    color: #FF5A36;
 }
 .product-sheet__steps strong {
-    font-family: 'Inter', sans-serif;
-    font-size: 0.92rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
     font-weight: 700;
-    letter-spacing: -0.02em;
+    letter-spacing: 0.02em;
     color: #111;
 }
 html.dark .product-sheet__steps strong {
@@ -4406,21 +4417,31 @@ html.dark .product-sheet__steps strong {
     padding: 0;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1px;
-    background: #e0d9ce;
-    border: 1px solid #e0d9ce;
+    gap: 0;
+    background: transparent;
+    border: 0;
+    border-top: 1px solid #e5e7eb;
 }
 html.dark .product-sheet__specs {
-    background: #3A353C;
+    background: transparent;
     border-color: #3A353C;
 }
 .product-sheet__specs li {
-    background: #fbfaf7;
-    padding: 0.7rem 0.8rem 0.8rem;
-    min-height: 4.4rem;
+    background: transparent;
+    padding: 0.7rem 0.85rem 0.8rem 0;
+    min-height: 0;
+    border-bottom: 1px solid #e5e7eb;
+    border-right: 1px solid #e5e7eb;
+}
+.product-sheet__specs li:nth-child(2n) {
+    padding-right: 0;
+    padding-left: 0.85rem;
+    border-right: 0;
 }
 html.dark .product-sheet__specs li {
-    background: #121014;
+    background: transparent;
+    border-bottom-color: #3A353C;
+    border-right-color: #3A353C;
 }
 .product-sheet__specs-span {
     grid-column: 1 / -1;
@@ -4446,13 +4467,14 @@ html.dark .product-sheet__specs strong {
     color: #D6D0C8;
 }
 .product-sheet__process {
-    background: #fff;
-    border: 1px solid #e0d9ce;
-    padding: 1.1rem 1.15rem 1.2rem;
+    background: transparent;
+    border: 0;
+    border-top: 2px solid #111;
+    padding: 0.85rem 0 0;
 }
 html.dark .product-sheet__process {
-    background: #121014;
-    border-color: #3A353C;
+    background: transparent;
+    border-top-color: #D6D0C8;
 }
 .product-sheet__process h3 {
     font-size: 1.15rem;
