@@ -4292,7 +4292,8 @@ html.dark .product-lot-facts dd {
     margin: 0 0 4.5rem;
     background: transparent;
     border-top: 1px solid #e5e7eb;
-    padding: 1.75rem 0 0.25rem;
+    padding: 2.25rem 0 0.25rem;
+    scroll-margin-top: 4.75rem;
 }
 html.dark .product-sheet {
     background: transparent;
@@ -4306,6 +4307,15 @@ html.dark .product-sheet {
     margin-bottom: 1.25rem;
     padding-bottom: 0.9rem;
     border-bottom: 1px solid #e5e7eb;
+}
+@media (max-width: 767px) {
+    .product-sheet__head {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .product-sheet__stamps {
+        justify-content: flex-start;
+    }
 }
 html.dark .product-sheet__head {
     border-bottom-color: #3A353C;
