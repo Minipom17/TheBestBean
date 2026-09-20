@@ -3723,9 +3723,11 @@ html.dark .coffee-card-stock-roast { color: #c4a07a; }
     flex-wrap: nowrap;
     align-items: baseline;
 }
+.coffee-card-price .price-pair--compact .price-pair__amount,
 .coffee-card-price .price-pair--compact .price-pair__usd,
 .coffee-card-price .price-pair--compact .price-pair__soles {
-    font-size: 1.15rem;
+    font-size: 10px;
+    letter-spacing: 0.03em;
 }
 
 .coffee-card-media {
@@ -4027,12 +4029,6 @@ html.dark .related-coffees__btn:hover {
     min-width: 0;
     gap: 0.35rem 0.5rem;
 }
-.related-coffees__slide .coffee-card-price .price-pair--compact .price-pair__amount,
-.related-coffees__slide .coffee-card-price .price-pair--compact .price-pair__usd,
-.related-coffees__slide .coffee-card-price .price-pair--compact .price-pair__soles {
-    font-size: 8px;
-    letter-spacing: 0.03em;
-}
 .related-coffees__slide .coffee-card-stock-roast {
     flex: 0 0 auto;
 }
@@ -4145,10 +4141,11 @@ html.dark .product-buy > .coffee-card-metrics {
     padding-top: 0;
     text-align: right;
 }
+.product-buy__size-price.coffee-card-price .price-pair--compact .price-pair__amount,
 .product-buy__size-price.coffee-card-price .price-pair--compact .price-pair__usd,
 .product-buy__size-price.coffee-card-price .price-pair--compact .price-pair__soles {
-    font-size: 10px;
-    letter-spacing: 0.03em;
+    font-size: 1rem;
+    letter-spacing: -0.03em;
 }
 @media (min-width: 768px) {
     .product-buy__title {
