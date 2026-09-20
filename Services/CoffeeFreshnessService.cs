@@ -89,6 +89,8 @@ namespace TheBestBean.Services
                 });
             }
 
+            lots = DeduplicateLots(lots);
+
             if (filter == null)
             {
                 lots = lots
@@ -99,6 +101,21 @@ namespace TheBestBean.Services
             }
 
             return lots;
+        }
+
+        /// <summary>
+        /// Collapse near-duplicate shop lots (same display name after stripping farmer brackets).
+        /// Keep the row with the most green, then the most recent roast.
+        /// </summary>
+        private static List<CoffeeLotStatus> DeduplicateLots(List<CoffeeLotStatus> lots)
+        {
+            return lots
+                .GroupBy(l => CoffeeDisplayName.ForLab(l.Name), StringComparer.OrdinalIgnoreCase)
+                .Select(g => g
+                    .OrderByDescending(l => l.GreenKg)
+                    .ThenByDescending(l => l.Roasts.FirstOrDefault()?.RoastDate ?? DateTime.MinValue)
+                    .First())
+                .ToList();
         }
 
         public async Task<CoffeeLotStatus?> GetLotAsync(int coffeeBeanId, CancellationToken ct = default)

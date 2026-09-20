@@ -18,9 +18,12 @@ Pass `--days 28` for a month. Pipe JSON into the reply; do not dump raw tables u
 If the script exits 2, the service account is not set up yet. Tell the user to:
 
 1. Enable **Google Analytics Data API** in Google Cloud
-2. Create service account `purplebean-ga4-reader`, download JSON → `secrets/ga4-service-account.json`
+2. Create service account `purplebean-ga4-reader`, download JSON
 3. GA4 Admin → Property access → add that email as **Viewer**
-4. Copy `scripts/ga4.env.example` → `scripts/ga4.env` and set the numeric **Property ID** (not `G-TR8742RMGE`)
+4. Set Cursor secrets (preferred for cloud agents):
+   - `GA4_PROPERTY_ID` — numeric Property ID (not `G-TR8742RMGE`)
+   - `GA4_SERVICE_ACCOUNT_JSON` — full JSON key body
+   Or: save JSON → `secrets/ga4-service-account.json` and copy `scripts/ga4.env.example` → `scripts/ga4.env`
 
 Never print or commit the JSON key or `scripts/ga4.env`.
 

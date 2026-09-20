@@ -39,6 +39,7 @@ def load_env_file(path: Path) -> None:
 
 
 def resolve_credentials() -> Path | None:
+    """Prefer GOOGLE_APPLICATION_CREDENTIALS file; else materialize GA4_SERVICE_ACCOUNT_JSON secret."""
     raw = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS", "").strip()
     candidates = []
     if raw:
@@ -50,6 +51,22 @@ def resolve_credentials() -> Path | None:
         if path.is_file():
             os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = str(path)
             return path
+
+    # Cursor / cloud secret: full service-account JSON as env string
+    json_blob = os.environ.get("GA4_SERVICE_ACCOUNT_JSON", "").strip()
+    if json_blob:
+        try:
+            parsed = json.loads(json_blob)
+        except json.JSONDecodeError:
+            sys.stderr.write("GA4_SERVICE_ACCOUNT_JSON is set but is not valid JSON.\n")
+            return None
+        secrets_dir = ROOT / "secrets"
+        secrets_dir.mkdir(parents=True, exist_ok=True)
+        out = secrets_dir / "ga4-service-account.json"
+        out.write_text(json.dumps(parsed), encoding="utf-8")
+        out.chmod(0o600)
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = str(out)
+        return out
     return None
 
 
@@ -97,9 +114,10 @@ def main() -> int:
         sys.stderr.write(
             "GA4 is not wired yet.\n"
             "  1. Enable Google Analytics Data API in Google Cloud\n"
-            "  2. Create a service account JSON key -> secrets/ga4-service-account.json\n"
+            "  2. Create service account purplebean-ga4-reader → JSON key\n"
             "  3. Add that email as Viewer on the GA4 property\n"
-            "  4. Copy scripts/ga4.env.example to scripts/ga4.env and set GA4_PROPERTY_ID\n"
+            "  4. Set Cursor secrets GA4_PROPERTY_ID + GA4_SERVICE_ACCOUNT_JSON\n"
+            "     (or secrets/ga4-service-account.json + scripts/ga4.env)\n"
             "Measurement ID G-TR8742RMGE is the website tag, not the Property ID.\n"
         )
         return 2
