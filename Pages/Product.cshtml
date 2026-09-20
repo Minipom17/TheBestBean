@@ -96,12 +96,9 @@
                 </div>
             </dl>
 
-            <div class="coffee-card-metrics" id="main-product-price" data-base-usd="@Model.Product.BasePriceUSD" data-base-pen="@Model.Product.BasePricePEN">
+            <div class="coffee-card-metrics">
                 <span class="coffee-card-stock-green">@CoffeeLotStatus.FormatKg(Model.Lot?.GreenKg ?? 0m) green</span>
                 <span class="coffee-card-stock-roast">@CoffeeLotStatus.FormatKg(Model.Lot?.RoastedKg ?? 0m) roasted</span>
-                <div class="coffee-card-price">
-                    <partial name="_WorkshopPrice" model="new DualPriceModel { Usd = Model.Product.BasePriceUSD, Pen = Model.Product.BasePricePEN, Compact = true }" />
-                </div>
             </div>
             
             <div class="product-buy__info">
@@ -116,25 +113,30 @@
                         <input type="hidden" name="description" value="@Model.Product.Description" />
 
                         <!-- Weight Selection -->
-                        <div class="mb-3 font-mono-jb">
-                            <label class="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2 block">Size / Weight</label>
-                            <div class="flex gap-2">
-                                <label class="cursor-pointer">
-                                    <input type="radio" name="weight-select" value="100g" checked class="peer sr-only" onchange="updateProductWeight('100g')" />
-                                    <div class="px-4 py-2 border border-black bg-transparent text-black peer-checked:bg-black peer-checked:text-white dark:border-[#D6D0C8] dark:text-[#D6D0C8] dark:peer-checked:bg-[#D6D0C8] dark:peer-checked:text-black transition-all font-bold text-xs font-mono">100g</div>
-                                </label>
-                                <label class="cursor-pointer">
-                                    <input type="radio" name="weight-select" value="200g" class="peer sr-only" onchange="updateProductWeight('200g')" />
-                                    <div class="px-4 py-2 border border-black bg-transparent text-black peer-checked:bg-black peer-checked:text-white dark:border-[#D6D0C8] dark:text-[#D6D0C8] dark:peer-checked:bg-[#D6D0C8] dark:peer-checked:text-black transition-all font-bold text-xs font-mono">200g</div>
-                                </label>
-                                <label class="cursor-pointer">
-                                    <input type="radio" name="weight-select" value="500g" class="peer sr-only" onchange="updateProductWeight('500g')" />
-                                    <div class="px-4 py-2 border border-black bg-transparent text-black peer-checked:bg-black peer-checked:text-white dark:border-[#D6D0C8] dark:text-[#D6D0C8] dark:peer-checked:bg-[#D6D0C8] dark:peer-checked:text-black transition-all font-bold text-xs font-mono">500g</div>
-                                </label>
-                                <label class="cursor-pointer">
-                                    <input type="radio" name="weight-select" value="1kg" class="peer sr-only" onchange="updateProductWeight('1kg')" />
-                                    <div class="px-4 py-2 border border-black bg-transparent text-black peer-checked:bg-black peer-checked:text-white dark:border-[#D6D0C8] dark:text-[#D6D0C8] dark:peer-checked:bg-[#D6D0C8] dark:peer-checked:text-black transition-all font-bold text-xs font-mono">1kg</div>
-                                </label>
+                        <div class="product-buy__size mb-3 font-mono-jb">
+                            <div class="product-buy__size-pick">
+                                <label class="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2 block">Size / Weight</label>
+                                <div class="flex gap-2">
+                                    <label class="cursor-pointer">
+                                        <input type="radio" name="weight-select" value="100g" checked class="peer sr-only" onchange="updateProductWeight('100g')" />
+                                        <div class="px-4 py-2 border border-black bg-transparent text-black peer-checked:bg-black peer-checked:text-white dark:border-[#D6D0C8] dark:text-[#D6D0C8] dark:peer-checked:bg-[#D6D0C8] dark:peer-checked:text-black transition-all font-bold text-xs font-mono">100g</div>
+                                    </label>
+                                    <label class="cursor-pointer">
+                                        <input type="radio" name="weight-select" value="200g" class="peer sr-only" onchange="updateProductWeight('200g')" />
+                                        <div class="px-4 py-2 border border-black bg-transparent text-black peer-checked:bg-black peer-checked:text-white dark:border-[#D6D0C8] dark:text-[#D6D0C8] dark:peer-checked:bg-[#D6D0C8] dark:peer-checked:text-black transition-all font-bold text-xs font-mono">200g</div>
+                                    </label>
+                                    <label class="cursor-pointer">
+                                        <input type="radio" name="weight-select" value="500g" class="peer sr-only" onchange="updateProductWeight('500g')" />
+                                        <div class="px-4 py-2 border border-black bg-transparent text-black peer-checked:bg-black peer-checked:text-white dark:border-[#D6D0C8] dark:text-[#D6D0C8] dark:peer-checked:bg-[#D6D0C8] dark:peer-checked:text-black transition-all font-bold text-xs font-mono">500g</div>
+                                    </label>
+                                    <label class="cursor-pointer">
+                                        <input type="radio" name="weight-select" value="1kg" class="peer sr-only" onchange="updateProductWeight('1kg')" />
+                                        <div class="px-4 py-2 border border-black bg-transparent text-black peer-checked:bg-black peer-checked:text-white dark:border-[#D6D0C8] dark:text-[#D6D0C8] dark:peer-checked:bg-[#D6D0C8] dark:peer-checked:text-black transition-all font-bold text-xs font-mono">1kg</div>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="product-buy__size-price coffee-card-price" id="main-product-price" data-base-usd="@Model.Product.BasePriceUSD" data-base-pen="@Model.Product.BasePricePEN">
+                                <partial name="_WorkshopPrice" model="new DualPriceModel { Usd = Model.Product.BasePriceUSD, Pen = Model.Product.BasePricePEN, Compact = true }" />
                             </div>
                         </div>
 

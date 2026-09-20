@@ -1411,8 +1411,10 @@ span.font-mono-jb > span.mx-2 {
     font-size: 1.65rem;
 }
 .price-pair--compact .price-pair__amount,
-.price-pair--compact .price-pair__usd {
-    font-size: 1.2rem;
+.price-pair--compact .price-pair__usd,
+.price-pair--compact .price-pair__soles {
+    font-size: 1.15rem;
+    letter-spacing: -0.03em;
 }
 html.dark .price-pair--tour .price-pair__main,
 html.dark .price-pair--compact .price-pair__main {
@@ -1429,13 +1431,19 @@ html.dark .price-pair--compact .price-pair__main {
 html.dark .price-pair__usd {
     color: #D6D0C8;
 }
-.price-pair--tour .price-pair__soles,
-.price-pair--compact .price-pair__soles {
+.price-pair--tour .price-pair__soles {
     display: inline;
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.65rem;
     font-weight: 700;
     letter-spacing: 0.14em;
+    line-height: 1;
+    color: #722EA8 !important;
+}
+.price-pair--compact .price-pair__soles {
+    display: inline;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
     line-height: 1;
     color: #722EA8 !important;
 }
@@ -3711,9 +3719,11 @@ html.dark .coffee-card-stock-roast { color: #c4a07a; }
 .coffee-card-price .price-pair--compact .price-pair__main {
     justify-content: flex-end;
     flex-wrap: nowrap;
+    align-items: baseline;
 }
-.coffee-card-price .price-pair--compact .price-pair__usd {
-    font-size: 1.05rem;
+.coffee-card-price .price-pair--compact .price-pair__usd,
+.coffee-card-price .price-pair--compact .price-pair__soles {
+    font-size: 1.15rem;
 }
 
 .coffee-card-media {
@@ -4077,6 +4087,26 @@ html.dark .product-buy__notes { color: #9a948c; }
 }
 html.dark .product-buy > .coffee-card-metrics {
     border-bottom-color: #3A353C;
+}
+.product-buy__size {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem 1rem;
+}
+.product-buy__size-pick {
+    min-width: 0;
+    flex: 1 1 auto;
+}
+.product-buy__size-price {
+    flex: 0 0 auto;
+    margin-left: 0;
+    padding-top: 0.05rem;
+    text-align: right;
+}
+.product-buy__size-price .price-pair--compact .price-pair__usd,
+.product-buy__size-price .price-pair--compact .price-pair__soles {
+    font-size: 1.15rem;
 }
 @media (min-width: 768px) {
     .product-buy__title {
