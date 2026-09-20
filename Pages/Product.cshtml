@@ -541,7 +541,7 @@
             <!-- 5. Map & Origin -->
             <div class="border-t border-gray-200 dark:border-dark-border py-16" style="border-top: 1px solid #e5e7eb; padding: 4rem 0;">
                 <div class="flex flex-col md:flex-row gap-12 items-center w-full">
-                    <a href="/OriginMap" class="map-container w-full md:w-1/2 aspect-[4/3] md:aspect-square overflow-hidden group relative flex items-center justify-center transition-all duration-300" style="display: flex; align-items: center; justify-content: center; text-decoration: none; cursor: pointer;">
+                    <a href="/OriginMap" class="product-origin-map map-container group relative" aria-label="Open interactive origin map">
                         @{
                             var originText = Model.Product.Origin ?? "";
                             var isCajamarcaLot = originText.Contains("Cajamarca", StringComparison.OrdinalIgnoreCase)
@@ -551,7 +551,7 @@
                                 ? "/images/maps/cajamarca-jaen.svg"
                                 : (string.IsNullOrWhiteSpace(Model.Product.MapImageUrl) ? "/Media/LaConvencionMap.svg" : Model.Product.MapImageUrl);
                         }
-                        <img src="@mapImageFallback" alt="@(isCajamarcaLot ? "Cajamarca coffee map — Jaén and San Ignacio" : "Map")" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="MapImageUrl" data-position-key="Product_@(Model.Product.Id)_MapImageUrl_Position" class="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105" style="width: 100%; height: 100%; object-fit: contain; object-position: @(Model.PageContent != null && Model.PageContent.ContainsKey($"Product_{Model.Product.Id}_MapImageUrl_Position") ? Model.PageContent[$"Product_{Model.Product.Id}_MapImageUrl_Position"] : "50% 50%");" loading="lazy">
+                        <img src="@mapImageFallback" alt="@(isCajamarcaLot ? "Cajamarca coffee map — Jaén and San Ignacio" : "Map")" data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="MapImageUrl" data-position-key="Product_@(Model.Product.Id)_MapImageUrl_Position" class="product-origin-map__img" style="object-position: @(Model.PageContent != null && Model.PageContent.ContainsKey($"Product_{Model.Product.Id}_MapImageUrl_Position") ? Model.PageContent[$"Product_{Model.Product.Id}_MapImageUrl_Position"] : "50% 50%");" loading="lazy">
                         <div class="absolute bottom-2 right-2 bg-black text-white px-3 py-1 font-mono text-xs opacity-0 group-hover:opacity-100 transition-opacity rounded-sm shadow pointer-events-none hidden md:block">Click for Interactive Map</div>
                     </a>
                     <div class="w-full md:w-1/2 pl-0 md:pl-12">
