@@ -48,14 +48,6 @@
         />
     </a>
 
-    <div class="coffee-card-metrics">
-        <span class="coffee-card-stock-green">@CoffeeLotStatus.FormatKg(greenKg) green</span>
-        <span class="coffee-card-stock-roast">@CoffeeLotStatus.FormatKg(roastKg) roasted</span>
-        <div class="coffee-card-price">
-            <partial name="_WorkshopPrice" model="new DualPriceModel { Usd = Model.BasePriceUSD, Pen = Model.BasePricePEN, Compact = true, From = false }" />
-        </div>
-    </div>
-
     @if (hasOriginMeta)
     {
         <dl class="coffee-card-origin">
@@ -82,6 +74,14 @@
             }
         </dl>
     }
+
+    <div class="coffee-card-metrics">
+        <span class="coffee-card-stock-green">@CoffeeLotStatus.FormatKg(greenKg) green</span>
+        <span class="coffee-card-stock-roast">@CoffeeLotStatus.FormatKg(roastKg) roasted</span>
+        <div class="coffee-card-price">
+            <partial name="_WorkshopPrice" model="new DualPriceModel { Usd = Model.BasePriceUSD, Pen = Model.BasePricePEN, Compact = true, From = false }" />
+        </div>
+    </div>
 
     <div class="coffee-card-actions">
         <form method="post" asp-page="/Cart" asp-page-handler="AddToCart" class="coffee-card-actions__form">

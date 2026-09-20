@@ -3676,9 +3676,9 @@ html.dark .coffee-card-notes { color: #9a948c; }
     padding: 0.65rem 0.95rem;
 }
 .coffee-product-card .coffee-card-head { order: 1; }
-.coffee-product-card .coffee-card-metrics { order: 2; }
-.coffee-product-card .coffee-card-media { order: 3; }
-.coffee-product-card .coffee-card-origin { order: 4; }
+.coffee-product-card .coffee-card-media { order: 2; }
+.coffee-product-card .coffee-card-origin { order: 3; }
+.coffee-product-card .coffee-card-metrics { order: 4; }
 .coffee-product-card .coffee-card-actions { order: 5; }
 .coffee-card-stock-green,
 .coffee-card-stock-roast {
@@ -3992,14 +3992,7 @@ html.dark .related-coffees__btn:hover {
 }
 .related-coffees__slide .coffee-card-media {
     aspect-ratio: 4 / 3;
-    order: 2;
 }
-.related-coffees__slide .coffee-card-metrics {
-    order: 3;
-    justify-content: space-between;
-}
-.related-coffees__slide .coffee-card-origin { order: 4; }
-.related-coffees__slide .coffee-card-actions { order: 5; }
 
 .back-to-top {
     position: fixed;
@@ -4078,8 +4071,12 @@ html.dark .product-buy__title { color: #D6D0C8; }
 }
 html.dark .product-buy__notes { color: #9a948c; }
 .product-buy > .coffee-card-metrics {
-    padding: 0.4rem 0 0.15rem;
+    padding: 0.45rem 0 0.85rem;
     max-width: none;
+    border-bottom: 1px solid #e5e7eb;
+}
+html.dark .product-buy > .coffee-card-metrics {
+    border-bottom-color: #3A353C;
 }
 @media (min-width: 768px) {
     .product-buy__title {
@@ -4092,8 +4089,8 @@ html.dark .product-buy__notes { color: #9a948c; }
         grid-template-areas:
             "identity identity"
             "visual   info"
-            "metrics  info"
-            "facts    info";
+            "facts    info"
+            "metrics  info";
         gap: 1.25rem 2.25rem;
         align-items: start;
     }
@@ -4181,8 +4178,8 @@ html.dark .product-roast {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0.5rem 0.75rem;
     margin: 0;
-    padding: 0.35rem 0 0.85rem;
-    border-bottom: 1px solid #e5e7eb;
+    padding: 0.35rem 0 0.5rem;
+    border-bottom: none;
     text-align: center;
     align-items: start;
 }
