@@ -3743,15 +3743,14 @@ html.dark .coffee-card-stock-roast { color: #c4a07a; }
     display: block;
     position: relative;
     width: 100%;
-    aspect-ratio: 16 / 10;
+    /* Studio bean shots are square — match them so there is no letterbox frame. */
+    aspect-ratio: 1 / 1;
     overflow: hidden;
-    background: #fff;
-    border-top: 1px solid #e5e7eb;
-    border-bottom: 1px solid #e5e7eb;
+    background: transparent;
+    border: none;
 }
 html.dark .coffee-card-media {
-    border-color: #3A353C;
-    background: #1C191F;
+    background: transparent;
 }
 .coffee-card-media__img {
     width: 100%;
@@ -4032,7 +4031,7 @@ html.dark .related-coffees__btn:hover {
     width: 100%;
 }
 .related-coffees__slide .coffee-card-media {
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 1 / 1;
 }
 .related-coffees__slide .coffee-card-metrics {
     min-width: 0;
@@ -4186,12 +4185,11 @@ html.dark .product-buy > .coffee-card-metrics {
     width: 100%;
     aspect-ratio: 1 / 1;
     overflow: hidden;
-    background: #fff;
-    border: 1px solid #e5e7eb;
+    background: transparent;
+    border: none;
 }
 html.dark .product-hero-frame {
-    background: #0c0a0e;
-    border-color: #3A353C;
+    background: transparent;
 }
 .product-hero-frame__img {
     position: absolute;
