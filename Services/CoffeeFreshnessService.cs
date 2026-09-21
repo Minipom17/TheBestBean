@@ -82,7 +82,7 @@ namespace TheBestBean.Services
                 lots.Add(new CoffeeLotStatus
                 {
                     CoffeeBeanId = bean.Id,
-                    Name = bean.Name,
+                    Name = CoffeeDisplayName.ForLab(bean.Name),
                     GreenKg = green,
                     RoastedKg = roastedKg,
                     Roasts = drops

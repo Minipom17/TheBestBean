@@ -229,6 +229,11 @@ namespace TheBestBean.Services
             return t;
         }
 
+        private static readonly HashSet<string> RegionTokens = new(StringComparer.OrdinalIgnoreCase)
+        {
+            "Cusco", "Cajamarca"
+        };
+
         private static string CleanRawName(string? name)
         {
             if (string.IsNullOrWhiteSpace(name))
@@ -238,6 +243,22 @@ namespace TheBestBean.Services
 
             var cleaned = name.Trim();
             cleaned = FarmerBracket.Replace(cleaned, "");
+
+            // Strip any other trailing [Person / Farm nickname] that is not a region or variety.
+            // Lab list must only show Variety [Cusco|Cajamarca].
+            var bracket = AnyBracket.Match(cleaned);
+            if (bracket.Success)
+            {
+                var inner = bracket.Groups[1].Value.Trim();
+                var keep = RegionTokens.Contains(inner)
+                    || BaseVarieties.Any(v => v.Equals(inner, StringComparison.OrdinalIgnoreCase))
+                    || LotVarietyPrefixes.Any(v => v.Equals(inner, StringComparison.OrdinalIgnoreCase));
+                if (!keep)
+                {
+                    cleaned = cleaned[..bracket.Index].TrimEnd();
+                }
+            }
+
             cleaned = Regex.Replace(cleaned, @"\s{2,}", " ").Trim();
             cleaned = Regex.Replace(cleaned, @"Caturai", "Catuai", RegexOptions.IgnoreCase);
             cleaned = Regex.Replace(cleaned, @"Catuar", "Catuai", RegexOptions.IgnoreCase);

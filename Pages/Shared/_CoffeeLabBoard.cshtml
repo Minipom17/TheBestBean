@@ -6,7 +6,16 @@
 
 <section class="lab-board@(compact ? " lab-board--compact" : "")" aria-label="Coffee freshness">
     <header class="lab-board__head">
-        <p class="lab-board__kicker">@board.Kicker <span class="offerings-cursor" aria-hidden="true"></span></p>
+        <div class="lab-board__kicker-row">
+            <p class="lab-board__kicker">@board.Kicker <span class="offerings-cursor" aria-hidden="true"></span></p>
+            @if (compact)
+            {
+                <div class="lab-stock-legend" aria-label="Stock colors">
+                    <span class="lab-stock-legend__swatch lab-stock-legend__swatch--green">green bean</span>
+                    <span class="lab-stock-legend__swatch lab-stock-legend__swatch--roast">roasted coffee</span>
+                </div>
+            }
+        </div>
         <h2>@board.Title</h2>
         @if (board.ShowLede)
         {
@@ -25,14 +34,16 @@
             {
                 var color = colors[colorIndex % colors.Length];
                 colorIndex++;
+                var title = CoffeeDisplayName.ForLab(lot.Name);
                 <a asp-page="/Product" asp-route-id="@lot.CoffeeBeanId" class="lab-board__row group" role="listitem">
                     @if (compact)
                     {
-                        <span class="lab-board__kg" aria-label="@(lot.HasGreen ? $"{CoffeeLotStatus.FormatKg(lot.GreenKg)} green" : "Roast to order")">
-                            @(lot.HasGreen ? Math.Round(lot.GreenKg, 1, MidpointRounding.AwayFromZero).ToString("0.0") : "—")
+                        <span class="lab-board__stock" aria-label="@CoffeeLotStatus.FormatKg(lot.GreenKg) green, @CoffeeLotStatus.FormatKg(lot.RoastedKg) roasted">
+                            <span class="lab-board__kg lab-board__kg--green">@CoffeeLotStatus.FormatKg(lot.GreenKg)</span>
+                            <span class="lab-board__kg lab-board__kg--roast">@CoffeeLotStatus.FormatKg(lot.RoastedKg)</span>
                         </span>
                         <span class="lab-board__name-wrap">
-                            <span class="lab-board__name-link" style="border-bottom-color: @color;">@CoffeeDisplayName.ForLab(lot.Name)</span>
+                            <span class="lab-board__name-link" style="border-bottom-color: @color;">@title</span>
                         </span>
                     }
                     else
@@ -48,7 +59,7 @@
                             }
                         </span>
                         <span class="lab-board__name-wrap">
-                            <span class="lab-board__name-link" style="border-bottom-color: @color;">@CoffeeDisplayName.ForLab(lot.Name)</span>
+                            <span class="lab-board__name-link" style="border-bottom-color: @color;">@title</span>
                         </span>
                     }
                 </a>
