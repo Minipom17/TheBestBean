@@ -56,7 +56,11 @@ namespace TheBestBean.Services
 
         public static string FormatKg(decimal kg)
         {
-            return $"{Math.Round(kg, 1, MidpointRounding.AwayFromZero):0.0} kg";
+            // Keep 2 decimals under 1 kg so 250 g shows as 0.25 kg, not 0.3 kg.
+            var rounded = Math.Round(kg, kg < 1m ? 2 : 1, MidpointRounding.AwayFromZero);
+            return kg < 1m
+                ? $"{rounded:0.##} kg"
+                : $"{rounded:0.0} kg";
         }
     }
 

@@ -3308,6 +3308,7 @@ html.dark .lab-board__meta-roast {
     flex: 0 1 auto;
 }
 .lab-board__name-link {
+    display: inline-block;
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
     font-weight: 700;
@@ -3318,7 +3319,8 @@ html.dark .lab-board__meta-roast {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    max-width: 14rem;
+    max-width: 100%;
+    width: auto;
 }
 .lab-board__head {
     margin-bottom: 0.25rem;
@@ -4834,7 +4836,9 @@ html.dark .product-sheet__process p:last-child {
 }
 .coffee-intro .lab-board__name-wrap {
     grid-column: 2;
-    display: block !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+    align-items: baseline !important;
     flex: none !important;
     width: auto !important;
     max-width: none !important;
@@ -4843,8 +4847,9 @@ html.dark .product-sheet__process p:last-child {
     text-align: right !important;
 }
 .coffee-intro .lab-board__name-link {
-    display: block !important;
-    width: 100% !important;
+    /* Inline so the colored underline hugs the title, not the empty left gap. */
+    display: inline-block !important;
+    width: auto !important;
     max-width: 100% !important;
     white-space: nowrap !important;
     overflow: hidden !important;

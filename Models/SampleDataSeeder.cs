@@ -393,6 +393,7 @@ namespace TheBestBean.Models
             await ApplyAngelCatarataPhotosAsync();
             await ApplyCoffeeRetailAsync();
             await NormalizeCoffeeLotNamesAndImagesAsync();
+            await ApplySl09StockAndRoastedPhotoAsync();
             await ApplyOriginExpeditionsAsync();
             await ApplyCuscoWorkshopRosterAsync();
 
@@ -434,12 +435,18 @@ namespace TheBestBean.Models
                 ["/brand/beans/porte_bajo_angle-m.jpg"] = "/brand/beans/porte_bajo_angle-m.jpg" + cacheTag,
                 ["/brand/beans/Geisha_mas_o_menos.jpg"] = "/brand/beans/Geisha_mas_o_menos.jpg" + cacheTag,
                 ["/brand/beans/bourbon_miguel.jpg"] = "/brand/beans/bourbon_miguel.jpg" + cacheTag,
+                ["/brand/beans/SL09.jpg"] = "/brand/beans/SL09.jpg" + cacheTag,
+                ["/Media/Shop/sl09_bean.jpg"] = "/brand/beans/SL09.jpg" + cacheTag,
+                ["/images/uploads/7b07c96e-ddf7-4e91-b718-a8ee96381a93.jpg"] = "/brand/beans/SL09.jpg" + cacheTag,
             };
 
             string? BeanPhotoFor(CoffeeBean bean)
             {
                 var title = CoffeeDisplayName.Standard(bean.Name, bean.Variety, bean.CoffeeRegion?.Name);
                 var n = $"{title} {bean.Name} {bean.Variety}";
+                if (n.Contains("SL09", StringComparison.OrdinalIgnoreCase)
+                    || n.Contains("Highland", StringComparison.OrdinalIgnoreCase))
+                    return "/brand/beans/SL09.jpg" + cacheTag;
                 if (n.Contains("SL28", StringComparison.OrdinalIgnoreCase)) return "/brand/beans/SL28.jpg" + cacheTag;
                 if (n.Contains("Marsellesa", StringComparison.OrdinalIgnoreCase)) return "/brand/beans/Meselessa.jpg" + cacheTag;
                 if (n.Contains("Bourbon", StringComparison.OrdinalIgnoreCase) && n.Contains("Cusco", StringComparison.OrdinalIgnoreCase))
@@ -565,6 +572,105 @@ namespace TheBestBean.Models
                         }
                     }
                     _context.CoffeeBean.Remove(drop);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Live lab stock for SL09: 1.8 kg green + 250 g roasted.
+        /// Also forces the roasted-bean photo (not the green measuring-cup shot).
+        /// </summary>
+        private static async Task ApplySl09StockAndRoastedPhotoAsync()
+        {
+            const string roastedPhoto = "/brand/beans/SL09.jpg?v=fullframe";
+            const decimal greenKg = 1.8m;
+            const decimal roastGrams = 250m;
+
+            var beans = await _context.CoffeeBean
+                .Where(b => b.Name != null
+                    && (b.Name.Contains("SL09")
+                        || b.Name.Contains("Highland")
+                        || (b.Variety != null && b.Variety.Contains("SL09"))))
+                .ToListAsync();
+            if (beans.Count == 0)
+            {
+                return;
+            }
+
+            foreach (var bean in beans)
+            {
+                if (!string.Equals(bean.ImageUrl, roastedPhoto, StringComparison.Ordinal))
+                {
+                    bean.ImageUrl = roastedPhoto;
+                }
+            }
+
+            var beanIds = beans.Select(b => b.Id).ToHashSet();
+            var inventories = await _context.BeanInventories
+                .Include(i => i.RoastBatches)
+                .Where(i => i.IsActive
+                    && ((i.CoffeeBeanId != null && beanIds.Contains(i.CoffeeBeanId.Value))
+                        || (i.Name != null && (i.Name.Contains("SL09") || i.Name.Contains("Highland")))))
+                .ToListAsync();
+
+            if (inventories.Count == 0)
+            {
+                var primary = beans.OrderBy(b => b.Id).First();
+                var inv = new BeanInventory
+                {
+                    Name = CoffeeDisplayName.ForLab(primary.Name),
+                    CoffeeBeanId = primary.Id,
+                    Country = "Peru",
+                    Process = primary.ProcessingMethod,
+                    Variety = primary.Variety ?? "SL09",
+                    Farmer = primary.Producer,
+                    TotalKg = greenKg,
+                    IsActive = true,
+                    CreatedDate = DateTime.UtcNow,
+                    LastUpdated = DateTime.UtcNow
+                };
+                _context.BeanInventories.Add(inv);
+                await _context.SaveChangesAsync();
+                _context.RoastBatches.Add(new RoastBatch
+                {
+                    BeanInventoryId = inv.Id,
+                    RoastDate = DateTime.UtcNow.Date.AddDays(-7),
+                    RoastLevel = "Medium",
+                    RoastedWeightGrams = roastGrams,
+                    GreenWeightGrams = Math.Round(roastGrams / 0.86m, 0)
+                });
+                return;
+            }
+
+            foreach (var inv in inventories)
+            {
+                if (inv.TotalKg != greenKg)
+                {
+                    inv.TotalKg = greenKg;
+                    inv.LastUpdated = DateTime.UtcNow;
+                }
+
+                var keep = inv.RoastBatches.OrderByDescending(r => r.RoastDate).FirstOrDefault();
+                if (keep == null)
+                {
+                    _context.RoastBatches.Add(new RoastBatch
+                    {
+                        BeanInventoryId = inv.Id,
+                        RoastDate = DateTime.UtcNow.Date.AddDays(-7),
+                        RoastLevel = "Medium",
+                        RoastedWeightGrams = roastGrams,
+                        GreenWeightGrams = Math.Round(roastGrams / 0.86m, 0)
+                    });
+                }
+                else
+                {
+                    keep.RoastedWeightGrams = roastGrams;
+                    keep.GreenWeightGrams = Math.Round(roastGrams / 0.86m, 0);
+                    keep.RoastLevel ??= "Medium";
+                    foreach (var drop in inv.RoastBatches.Where(r => r.Id != keep.Id).ToList())
+                    {
+                        _context.RoastBatches.Remove(drop);
+                    }
                 }
             }
         }
@@ -1313,7 +1419,7 @@ namespace TheBestBean.Models
             {
                 (Find("Catarata"), 3.2m, new[] { (10, "Light", 820m), (20, "profile", 780m) }),
                 (Find("SL28"), 4.0m, new[] { (5, "Light", 900m) }),
-                (Find("HIGHLAND", "SL09"), 2.8m, new[] { (20, "Medium", 740m) }),
+                (Find("HIGHLAND", "SL09"), 1.8m, new[] { (20, "Medium", 250m) }),
                 (Find("Cusco [Bourbon]"), 2.1m, new[] { (3, "profile", 600m) }),
                 (Find("Geisha Korea"), 3.0m, new[] { (5, "Light", 800m) }),
                 (Find("Geisha R17"), 3.0m, new[] { (6, "Light", 800m) }),
