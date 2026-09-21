@@ -435,10 +435,23 @@ namespace TheBestBean.Models
                 ["/brand/beans/porte_bajo_angle-m.jpg"] = "/brand/beans/porte_bajo_angle-m.jpg" + cacheTag,
                 ["/brand/beans/Geisha_mas_o_menos.jpg"] = "/brand/beans/Geisha_mas_o_menos.jpg" + cacheTag,
                 ["/brand/beans/bourbon_miguel.jpg"] = "/brand/beans/bourbon_miguel.jpg" + cacheTag,
-                ["/brand/beans/SL09.jpg"] = "/brand/beans/SL09.jpg" + cacheTag,
-                ["/Media/Shop/sl09_bean.jpg"] = "/brand/beans/SL09.jpg" + cacheTag,
-                ["/images/uploads/7b07c96e-ddf7-4e91-b718-a8ee96381a93.jpg"] = "/brand/beans/SL09.jpg" + cacheTag,
+                // Green measuring-cup Shop shot → roasted CMS upload (still on disk).
+                // Do NOT remap /images/uploads/* — those are live CMS photos and must stick.
+                ["/Media/Shop/sl09_bean.jpg"] = "/images/uploads/7b07c96e-ddf7-4e91-b718-a8ee96381a93.jpg",
+                ["/Media/Green_bean.svg"] = "/images/uploads/7b07c96e-ddf7-4e91-b718-a8ee96381a93.jpg",
             };
+
+            static bool IsCmsUserPhoto(string? url)
+            {
+                if (string.IsNullOrWhiteSpace(url))
+                {
+                    return false;
+                }
+
+                var path = url.Split('?')[0];
+                return path.StartsWith("/images/uploads/", StringComparison.OrdinalIgnoreCase)
+                    || path.StartsWith("/uploads/", StringComparison.OrdinalIgnoreCase);
+            }
 
             string? BeanPhotoFor(CoffeeBean bean)
             {
@@ -446,7 +459,7 @@ namespace TheBestBean.Models
                 var n = $"{title} {bean.Name} {bean.Variety}";
                 if (n.Contains("SL09", StringComparison.OrdinalIgnoreCase)
                     || n.Contains("Highland", StringComparison.OrdinalIgnoreCase))
-                    return "/brand/beans/SL09.jpg" + cacheTag;
+                    return "/images/uploads/7b07c96e-ddf7-4e91-b718-a8ee96381a93.jpg";
                 if (n.Contains("SL28", StringComparison.OrdinalIgnoreCase)) return "/brand/beans/SL28.jpg" + cacheTag;
                 if (n.Contains("Marsellesa", StringComparison.OrdinalIgnoreCase)) return "/brand/beans/Meselessa.jpg" + cacheTag;
                 if (n.Contains("Bourbon", StringComparison.OrdinalIgnoreCase) && n.Contains("Cusco", StringComparison.OrdinalIgnoreCase))
@@ -516,37 +529,45 @@ namespace TheBestBean.Models
                     }
                 }
 
-                if (!string.IsNullOrWhiteSpace(bean.ImageUrl))
+                if (!IsCmsUserPhoto(bean.ImageUrl))
                 {
-                    var key = bean.ImageUrl.Split('?')[0];
-                    if (imageMap.TryGetValue(key, out var mapped))
+                    if (!string.IsNullOrWhiteSpace(bean.ImageUrl))
                     {
-                        bean.ImageUrl = mapped;
+                        var key = bean.ImageUrl.Split('?')[0];
+                        if (imageMap.TryGetValue(key, out var mapped))
+                        {
+                            bean.ImageUrl = mapped;
+                        }
+                        else if (key.Contains("Green_bean", StringComparison.OrdinalIgnoreCase)
+                                 || key.EndsWith(".svg", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var photo = BeanPhotoFor(bean);
+                            if (photo != null)
+                            {
+                                bean.ImageUrl = photo;
+                            }
+                        }
+                        else
+                        {
+                            var photo = BeanPhotoFor(bean);
+                            // Replace green Shop / wrong brand SL09 fallbacks only.
+                            if (photo != null
+                                && (key.Equals("/brand/beans/SL09.jpg", StringComparison.OrdinalIgnoreCase)
+                                    || key.Equals("/Media/Shop/sl09_bean.jpg", StringComparison.OrdinalIgnoreCase)
+                                    || (key.StartsWith("/brand/beans/Pachamara", StringComparison.OrdinalIgnoreCase)
+                                        && bean.Name?.Contains("SL09", StringComparison.OrdinalIgnoreCase) == true)))
+                            {
+                                bean.ImageUrl = photo;
+                            }
+                        }
                     }
-                    else if (key.Contains("Green_bean", StringComparison.OrdinalIgnoreCase)
-                             || key.EndsWith(".svg", StringComparison.OrdinalIgnoreCase))
+                    else
                     {
                         var photo = BeanPhotoFor(bean);
                         if (photo != null)
                         {
                             bean.ImageUrl = photo;
                         }
-                    }
-                    else
-                    {
-                        var photo = BeanPhotoFor(bean);
-                        if (photo != null && key.StartsWith("/brand/beans/", StringComparison.OrdinalIgnoreCase))
-                        {
-                            bean.ImageUrl = photo;
-                        }
-                    }
-                }
-                else
-                {
-                    var photo = BeanPhotoFor(bean);
-                    if (photo != null)
-                    {
-                        bean.ImageUrl = photo;
                     }
                 }
             }
@@ -578,11 +599,11 @@ namespace TheBestBean.Models
 
         /// <summary>
         /// Live lab stock for SL09: 1.8 kg green + 250 g roasted.
-        /// Also forces the roasted-bean photo (not the green measuring-cup shot).
+        /// Photo: only replace known-bad green/placeholder URLs — never overwrite a CMS upload.
         /// </summary>
         private static async Task ApplySl09StockAndRoastedPhotoAsync()
         {
-            const string roastedPhoto = "/brand/beans/SL09.jpg?v=fullframe";
+            const string roastedCmsPhoto = "/images/uploads/7b07c96e-ddf7-4e91-b718-a8ee96381a93.jpg";
             const decimal greenKg = 1.8m;
             const decimal roastGrams = 250m;
 
@@ -599,9 +620,22 @@ namespace TheBestBean.Models
 
             foreach (var bean in beans)
             {
-                if (!string.Equals(bean.ImageUrl, roastedPhoto, StringComparison.Ordinal))
+                var path = (bean.ImageUrl ?? "").Split('?')[0];
+                var isCmsUpload = path.StartsWith("/images/uploads/", StringComparison.OrdinalIgnoreCase)
+                    || path.StartsWith("/uploads/", StringComparison.OrdinalIgnoreCase);
+                var isBadGreenOrWrong =
+                    string.IsNullOrWhiteSpace(path)
+                    || path.Contains("Green_bean", StringComparison.OrdinalIgnoreCase)
+                    || path.EndsWith(".svg", StringComparison.OrdinalIgnoreCase)
+                    || path.Equals("/Media/Shop/sl09_bean.jpg", StringComparison.OrdinalIgnoreCase)
+                    || path.Equals("/brand/beans/SL09.jpg", StringComparison.OrdinalIgnoreCase)
+                    || (path.Contains("Pachamara", StringComparison.OrdinalIgnoreCase)
+                        && bean.Name?.Contains("SL09", StringComparison.OrdinalIgnoreCase) == true);
+
+                // Keep any CMS upload as-is (including a new one the owner just posted).
+                if (!isCmsUpload && isBadGreenOrWrong)
                 {
-                    bean.ImageUrl = roastedPhoto;
+                    bean.ImageUrl = roastedCmsPhoto;
                 }
             }
 
