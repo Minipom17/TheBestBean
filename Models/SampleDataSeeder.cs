@@ -394,6 +394,7 @@ namespace TheBestBean.Models
             await ApplyCoffeeRetailAsync();
             await NormalizeCoffeeLotNamesAndImagesAsync();
             await ApplySl09StockAndRoastedPhotoAsync();
+            await ApplyBourbonCajamarcaFarmerAsync();
             await ApplyOriginExpeditionsAsync();
             await ApplyCuscoWorkshopRosterAsync();
 
@@ -709,6 +710,43 @@ namespace TheBestBean.Models
             }
         }
 
+        /// <summary>
+        /// Bourbon [Cajamarca] farmer is Miguel Padilla — keep Producer in sync on every boot.
+        /// </summary>
+        private static async Task ApplyBourbonCajamarcaFarmerAsync()
+        {
+            const string farmer = "Miguel Padilla";
+            var beans = await _context.CoffeeBean
+                .Include(b => b.CoffeeRegion)
+                .Where(b => b.Name != null && b.Name.Contains("Bourbon"))
+                .ToListAsync();
+
+            foreach (var bean in beans)
+            {
+                var title = CoffeeDisplayName.Standard(bean.Name, bean.Variety, bean.CoffeeRegion?.Name);
+                var isCajamarca = title.Contains("Cajamarca", StringComparison.OrdinalIgnoreCase)
+                    || (bean.Name?.Contains("Cajamarca", StringComparison.OrdinalIgnoreCase) ?? false)
+                    || (bean.CoffeeRegion?.Name?.Contains("Cajamarca", StringComparison.OrdinalIgnoreCase) ?? false);
+                if (!isCajamarca)
+                {
+                    continue;
+                }
+
+                if (!string.Equals(bean.Producer, farmer, StringComparison.Ordinal))
+                {
+                    bean.Producer = farmer;
+                }
+
+                if (string.IsNullOrWhiteSpace(bean.ProducerDescription)
+                    || bean.ProducerDescription.Contains("Cajamarca producers", StringComparison.OrdinalIgnoreCase)
+                    || !bean.ProducerDescription.Contains("Miguel Padilla", StringComparison.OrdinalIgnoreCase))
+                {
+                    bean.ProducerDescription =
+                        "Miguel Padilla grows Bourbon on Cajamarca’s higher slopes in Jaén and San Ignacio, typically 1,600–2,000 msnm, beside Typica. Smallholders in cooperatives such as Cenfrocafé and APROCASSI deliver cherry to central mills for consistent washed lots.";
+                }
+            }
+        }
+
         private static async Task SeedNewOriginLotsAsync()
         {
             var newLotNames = new[]
@@ -846,12 +884,12 @@ namespace TheBestBean.Models
                     BasePriceUSD = 26.00m,
                     BasePricePEN = 98.00m,
                     ProcessingMethod = "Washed",
-                    Producer = "Cajamarca producers",
+                    Producer = "Miguel Padilla",
                     Variety = "Bourbon",
                     Altitude = "1600–2000 msnm",
                     ImageUrl = "/brand/beans/bourbon-pablino.jpg",
-                    ProducerDescription = "Bourbon sits on Cajamarca’s higher slopes in Jaén and San Ignacio, typically 1,600–2,000 msnm, beside Typica. Smallholders in cooperatives such as Cenfrocafé and APROCASSI deliver cherry to central mills for consistent washed lots.",
-                    ProducerDescriptionES = "El Borbón ocupa las laderas altas de Cajamarca en Jaén y San Ignacio, entre 1.600 y 2.000 msnm, junto al Típica. Pequeños productores de cooperativas como Cenfrocafé y APROCASSI entregan cereza a molinos centrales para lotes lavados consistentes.",
+                    ProducerDescription = "Miguel Padilla grows Bourbon on Cajamarca’s higher slopes in Jaén and San Ignacio, typically 1,600–2,000 msnm, beside Typica. Smallholders in cooperatives such as Cenfrocafé and APROCASSI deliver cherry to central mills for consistent washed lots.",
+                    ProducerDescriptionES = "Miguel Padilla cultiva Borbón en las laderas altas de Cajamarca en Jaén y San Ignacio, entre 1.600 y 2.000 msnm, junto al Típica. Pequeños productores de cooperativas como Cenfrocafé y APROCASSI entregan cereza a molinos centrales para lotes lavados consistentes.",
                     ProcessingDescription = "Fully washed: depulped, fermented 18–36 hours, washed, and dried on patios or raised beds. The process keeps fruit influence off the cup so Bourbon’s brown-sugar sweetness and Cajamarca citric structure can read clearly.",
                     ProcessingDescriptionES = "Totalmente lavado: despulpado, fermentado 18–36 horas, lavado y secado en patios o camas africanas. El proceso deja fuera la fruta de la cereza para que brille el dulzor a azúcar morena del Borbón y la estructura cítrica de Cajamarca.",
                     OriginDescription = "Northern Cajamarca is Peru’s competition highlands. Dual Pacific/Amazon moisture and altitude produce clean, citric washed cups. Bourbon here adds body and brown-sugar sweetness under the region’s citrus and stone-fruit acidity.",

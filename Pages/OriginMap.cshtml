@@ -3,20 +3,21 @@
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Origin Map";
+    ViewData["HideDeliveryFloat"] = true;
 }
 @Html.AntiForgeryToken()
 
-<div class="fixed inset-0 w-full h-full z-[100] overflow-hidden bg-white dark:bg-[#1A2315] py-4" id="map-wrapper">
-    
+<div class="fixed inset-0 w-full h-full z-[100] overflow-hidden bg-white dark:bg-[#1A2315]" id="map-wrapper">
+
     <!-- EXIT BUTTON -->
-    <button onclick="history.back()" class="absolute top-6 right-6 z-50 w-10 h-10 bg-black text-white dark:bg-white dark:text-black border-none flex items-center justify-center hover:bg-red-600 dark:hover:bg-red-600 dark:hover:text-white transition-colors cursor-pointer text-xl font-mono-jb no-underline">
+    <button type="button" onclick="history.back()" class="absolute top-6 right-6 z-50 w-10 h-10 bg-black text-white dark:bg-white dark:text-black border-none flex items-center justify-center hover:bg-red-600 dark:hover:bg-red-600 dark:hover:text-white transition-colors cursor-pointer text-xl font-mono-jb no-underline" aria-label="Close map">
         &times;
     </button>
 
-    <!-- FLOATING LEGEND -->
-    <div class="absolute bottom-24 left-6 md:top-6 md:bottom-auto md:left-6 z-50 bg-white/90 dark:bg-[#111111]/90 text-black dark:text-white backdrop-blur-md shadow-sm p-4 md:p-6 w-[200px] md:w-[240px] rounded-lg border border-gray-200 dark:border-none flex flex-col max-h-[35vh] md:max-h-none">
-        <h3 class="font-mono-jb text-[10px] md:text-[11px] uppercase tracking-widest font-bold mb-3 md:mb-4 border-b border-gray-300 dark:border-gray-600 pb-2">Legend</h3>
-        
+    <!-- FLOATING LEGEND — desktop only (no TOC / legend on mobile) -->
+    <div class="hidden md:flex absolute top-6 left-6 z-50 bg-white/90 dark:bg-[#111111]/90 text-black dark:text-white backdrop-blur-md shadow-sm p-6 w-[240px] rounded-lg border border-gray-200 dark:border-none flex-col max-h-[calc(100vh-3rem)]">
+        <h3 class="font-mono-jb text-[11px] uppercase tracking-widest font-bold mb-4 border-b border-gray-300 dark:border-gray-600 pb-2">Legend</h3>
+
         <ul class="flex flex-col gap-2 font-mono-jb text-[9px] uppercase tracking-wider m-0 p-0 list-none overflow-y-auto pr-2 flex-grow" id="map-legend">
             <li class="flex items-center gap-4 cursor-pointer hover:text-v-red transition-colors" data-target="megantoni">
                 <div class="w-3 h-3 rounded-full bg-[#82C341]"></div>
@@ -59,143 +60,143 @@
                 <span>Ocobamba</span>
             </li>
         </ul>
-        
-        <div class="mt-3 md:mt-6 pt-3 border-t border-gray-300 dark:border-gray-600 shrink-0">
-            <button id="reset-map" class="w-full bg-transparent border-none text-left p-0 font-mono-jb text-[9px] md:text-[10px] uppercase tracking-widest font-bold text-black dark:text-white hover:text-red-600 transition-colors cursor-pointer">
+
+        <div class="mt-6 pt-3 border-t border-gray-300 dark:border-gray-600 shrink-0">
+            <button type="button" id="reset-map" class="w-full bg-transparent border-none text-left p-0 font-mono-jb text-[10px] uppercase tracking-widest font-bold text-black dark:text-white hover:text-red-600 transition-colors cursor-pointer">
                 Reveal All
             </button>
         </div>
     </div>
-    
-    <!-- PANZOOM CONTAINER -->
-    <div class="w-full h-full relative overflow-hidden flex items-center justify-center">
-        <div id="panzoom-element" class="flex items-center justify-center origin-center">
-            <!-- SVG Map Image -->
-            <img src="/Media/LaConvencionMap.svg" class="max-w-none w-[2000px] h-auto object-contain opacity-80 dark:opacity-60 mix-blend-multiply dark:mix-blend-screen pointer-events-none" alt="Map of La Convencion" id="svg-map" />
+
+    <!-- PANZOOM CONTAINER — no mix-blend (it blanks the map under transform on mobile) -->
+    <div id="map-viewport" class="w-full h-full relative overflow-hidden touch-none">
+        <div id="panzoom-element" class="origin-center will-change-transform">
+            <img src="/Media/LaConvencionMap.svg"
+                 class="block max-w-none w-[2000px] h-auto select-none"
+                 alt="Map of La Convención"
+                 id="svg-map"
+                 draggable="false" />
         </div>
     </div>
-    
+
     <!-- MAP CONTROLS -->
     <div class="absolute bottom-6 right-6 z-50 flex flex-col gap-2">
-        <button id="zoom-in" class="w-10 h-10 bg-black text-white dark:bg-white dark:text-black border-none flex items-center justify-center hover:bg-red-600 dark:hover:bg-red-600 dark:hover:text-white transition-colors cursor-pointer text-lg font-mono-jb">+</button>
-        <button id="zoom-out" class="w-10 h-10 bg-black text-white dark:bg-white dark:text-black border-none flex items-center justify-center hover:bg-red-600 dark:hover:bg-red-600 dark:hover:text-white transition-colors cursor-pointer text-lg font-mono-jb">-</button>
+        <button type="button" id="zoom-in" class="w-10 h-10 bg-black text-white dark:bg-white dark:text-black border-none flex items-center justify-center hover:bg-red-600 dark:hover:bg-red-600 dark:hover:text-white transition-colors cursor-pointer text-lg font-mono-jb" aria-label="Zoom in">+</button>
+        <button type="button" id="zoom-out" class="w-10 h-10 bg-black text-white dark:bg-white dark:text-black border-none flex items-center justify-center hover:bg-red-600 dark:hover:bg-red-600 dark:hover:text-white transition-colors cursor-pointer text-lg font-mono-jb" aria-label="Zoom out">−</button>
     </div>
 </div>
 
 @section Styles {
     <style>
-        @@keyframes pulse-ring {
-            0% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(var(--pulse-color), 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(var(--pulse-color), 0); }
-            100% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(var(--pulse-color), 0); }
-        }
-        
-        .pulse-ring {
-            animation: pulse-ring 2s infinite;
-        }
-        
-        #marker-san-blas { --pulse-color: 250, 204, 21; } /* yellow */
-        #marker-quillabamba { --pulse-color: 37, 99, 235; } /* blue */
-        #marker-finca-bella { --pulse-color: 22, 163, 74; } /* green */
-        #marker-peak-espresso { --pulse-color: 220, 38, 38; } /* red */
-        
         .active-legend {
             color: #DC2626 !important;
+        }
+        /* Keep transformed map painting on its own layer (avoids mobile blank frames). */
+        #panzoom-element,
+        #svg-map {
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+        html.dark #svg-map {
+            opacity: 0.85;
+            filter: invert(0.92) hue-rotate(180deg);
         }
     </style>
 }
 
 @section Scripts {
-    <!-- Panzoom JS -->
     <script src="https://cdn.jsdelivr.net/npm/@@panzoom/panzoom/dist/panzoom.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const elem = document.getElementById('panzoom-element');
-            
-            // Calculate optimal fit scale
-            const availableHeight = window.innerHeight - 32; // 1rem (16px) top/bottom padding
-            const availableWidth = window.innerWidth;
+            const viewport = document.getElementById('map-viewport');
+            const img = document.getElementById('svg-map');
+            if (!elem || !viewport || !img || typeof Panzoom !== 'function') return;
+
             const imgWidth = 2000;
-            const imgHeight = 1125; // 2000 * (720/1280)
-            
-            const fitScale = window.innerWidth < 768 
-                ? (availableHeight / imgHeight) 
-                : Math.min(availableWidth / imgWidth, availableHeight / imgHeight);
-            
-            // Initialize Panzoom
+            const imgHeight = 1125;
+            const isMobile = window.innerWidth < 768;
+
+            function fitScale() {
+                const availableHeight = viewport.clientHeight || window.innerHeight;
+                const availableWidth = viewport.clientWidth || window.innerWidth;
+                return Math.min(availableWidth / imgWidth, availableHeight / imgHeight);
+            }
+
+            const base = fitScale();
+            // Mobile: fill more of the screen; desktop: leave room for the legend.
+            const start = isMobile ? Math.min(base * 1.35, 2.2) : Math.min(base * 1.15, 1.8);
+
             const pz = Panzoom(elem, {
-                maxScale: 4,
-                minScale: fitScale * 0.5,
-                startScale: fitScale * 1.2, // Make it 20% larger by default
-                startX: window.innerWidth >= 768 ? 300 : 0 // Shift right visually to clear the legend
+                maxScale: 5,
+                minScale: Math.max(base * 0.55, 0.2),
+                startScale: start,
+                startX: isMobile ? 0 : 180,
+                startY: 0,
+                contain: false,
+                cursor: 'grab',
+                animate: true
             });
-            
-            // Allow mouse wheel zooming
-            elem.parentElement.addEventListener('wheel', pz.zoomWithWheel);
-            
-            // Controls
-            document.getElementById('zoom-in').addEventListener('click', pz.zoomIn);
-            document.getElementById('zoom-out').addEventListener('click', pz.zoomOut);
-            
-            // Coordinates for zooming
+
+            viewport.addEventListener('wheel', pz.zoomWithWheel, { passive: false });
+
+            // Touch pinch / drag — panzoom binds to the element; ensure parent doesn't scroll.
+            viewport.addEventListener('touchmove', (e) => {
+                if (e.cancelable) e.preventDefault();
+            }, { passive: false });
+
+            document.getElementById('zoom-in')?.addEventListener('click', () => pz.zoomIn({ animate: true }));
+            document.getElementById('zoom-out')?.addEventListener('click', () => pz.zoomOut({ animate: true }));
+
             const locations = {
-                'megantoni': { x: 50, y: 30, scale: 2 },
-                'echarati': { x: 45, y: 55, scale: 2 },
-                'quellouno': { x: 65, y: 55, scale: 2 },
-                'pichari': { x: 25, y: 50, scale: 2.5 },
-                'kimbiri': { x: 30, y: 60, scale: 2.5 },
+                'megantoni': { x: 50, y: 30, scale: 2.2 },
+                'echarati': { x: 45, y: 55, scale: 2.2 },
+                'quellouno': { x: 65, y: 55, scale: 2.2 },
+                'pichari': { x: 25, y: 50, scale: 2.6 },
+                'kimbiri': { x: 30, y: 60, scale: 2.6 },
                 'villa-virgen': { x: 35, y: 70, scale: 3 },
-                'vilcabamba': { x: 45, y: 80, scale: 2 },
+                'vilcabamba': { x: 45, y: 80, scale: 2.2 },
                 'santa-ana': { x: 55, y: 75, scale: 3 },
-                'huayopata': { x: 65, y: 85, scale: 2.5 },
-                'ocobamba': { x: 65, y: 75, scale: 2.5 }
+                'huayopata': { x: 65, y: 85, scale: 2.6 },
+                'ocobamba': { x: 65, y: 75, scale: 2.6 }
             };
-            
-            // Legend Click Handlers
+
             const legendItems = document.querySelectorAll('#map-legend li');
-            
             legendItems.forEach(item => {
                 item.addEventListener('click', () => {
-                    // Update active state
                     legendItems.forEach(li => li.classList.remove('active-legend'));
                     item.classList.add('active-legend');
-                    
-                    const targetId = item.getAttribute('data-target');
-                    
-                    // Zoom and pan to target
-                    const loc = locations[targetId];
-                    if (loc) {
-                        // Calculate pixel coordinates based on the 2000px image inside the container
-                        const img = document.getElementById('svg-map');
-                        const imgWidth = 2000;
-                        const imgHeight = img.offsetHeight || 2000; // SVG height might vary, we estimate
-                        
-                        // Wait, Panzoom handles focal point panning differently.
-                        // We can pan to the specific X/Y if we calculate the offset.
-                        // A simpler way: since we know the percentages, let's just zoom to the center of the container and rely on CSS translations if needed.
-                        // Actually, pz.pan(x, y) works with pixel offsets.
-                        // For a clean UX, we'll just center the container.
-                        
-                        // Let's use simple pan to coordinates relative to origin
-                        const containerRect = elem.parentElement.getBoundingClientRect();
-                        
-                        const targetX = (imgWidth * (loc.x / 100));
-                        const targetY = (imgHeight * (loc.y / 100));
-                        
-                        const centerX = containerRect.width / 2;
-                        const centerY = containerRect.height / 2;
-                        
-                        pz.zoom(loc.scale, { animate: true });
-                        setTimeout(() => {
-                            pz.pan(centerX - targetX, centerY - targetY, { animate: true });
-                        }, 100);
-                    }
+
+                    const loc = locations[item.getAttribute('data-target')];
+                    if (!loc) return;
+
+                    const containerRect = viewport.getBoundingClientRect();
+                    const targetX = imgWidth * (loc.x / 100);
+                    const targetY = imgHeight * (loc.y / 100);
+                    const centerX = containerRect.width / 2;
+                    const centerY = containerRect.height / 2;
+
+                    pz.zoom(loc.scale, { animate: true });
+                    setTimeout(() => {
+                        pz.pan(centerX - targetX * loc.scale, centerY - targetY * loc.scale, { animate: true });
+                    }, 120);
                 });
             });
-            
-            document.getElementById('reset-map').addEventListener('click', () => {
+
+            document.getElementById('reset-map')?.addEventListener('click', () => {
                 legendItems.forEach(li => li.classList.remove('active-legend'));
                 pz.reset({ animate: true });
+            });
+
+            // Re-fit on rotate / resize so the map doesn't vanish off-canvas.
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    const next = fitScale();
+                    pz.setOptions({ minScale: Math.max(next * 0.55, 0.2) });
+                }, 150);
             });
         });
     </script>
