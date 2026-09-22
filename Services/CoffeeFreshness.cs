@@ -56,7 +56,15 @@ namespace TheBestBean.Services
 
         public static string FormatKg(decimal kg)
         {
-            return $"{Math.Round(kg, 1, MidpointRounding.AwayFromZero):0.0} kg";
+            // Always keep a decimal for uniformity (0.0 kg). Use hundredths only when needed (0.25 kg).
+            var toTwo = Math.Round(kg, 2, MidpointRounding.AwayFromZero);
+            var toOne = Math.Round(kg, 1, MidpointRounding.AwayFromZero);
+            if (toTwo == toOne)
+            {
+                return $"{toOne:0.0} kg";
+            }
+
+            return $"{toTwo:0.00} kg";
         }
     }
 
