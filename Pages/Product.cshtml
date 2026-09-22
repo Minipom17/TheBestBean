@@ -130,15 +130,15 @@
             <div class="product-buy__info">
                 <dl class="product-lot-facts">
                     <div>
-                        <dt>Region</dt>
+                        <dt><partial name="_CoffeeGlyph" model='"location"' /> Region</dt>
                         <dd data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="Origin">@(string.IsNullOrEmpty(Model.Product.Origin) ? "La Granja" : Model.Product.Origin)</dd>
                     </div>
                     <div>
-                        <dt>Farmer</dt>
+                        <dt><partial name="_CoffeeGlyph" model='"farmer"' /> Farmer</dt>
                         <dd data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="Producer">@(string.IsNullOrEmpty(Model.Product.Producer) ? "Guiliar Pérez Cuéllar" : Model.Product.Producer)</dd>
                     </div>
                     <div>
-                        <dt>Process</dt>
+                        <dt><partial name="_CoffeeGlyph" model='"process"' /> Process</dt>
                         <dd data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="ProcessingMethod">@(string.IsNullOrEmpty(Model.Product.ProcessingMethod) ? "Washed" : Model.Product.ProcessingMethod)</dd>
                     </div>
                 </dl>
@@ -155,8 +155,8 @@
                 @if (Model.Product.Type == "Bean" && Model.Lot != null && (Model.Lot.HasGreen || Model.Lot.RoastedKg >= 0.05m))
                 {
                     <div class="coffee-card-stock product-lot-stock">
-                        <span class="coffee-card-stock__green">@CoffeeLotStatus.FormatKg(Model.Lot.GreenKg) green</span>
-                        <span class="coffee-card-stock__roast">@CoffeeLotStatus.FormatKg(Model.Lot.RoastedKg) roasted</span>
+                        <button type="button" class="lot-sheet-open coffee-card-stock__green" data-lot="@Model.Lot.SheetJson()" data-lot-focus="green">@CoffeeLotStatus.FormatKg(Model.Lot.GreenKg) green</button>
+                        <button type="button" class="lot-sheet-open coffee-card-stock__roast" data-lot="@Model.Lot.SheetJson()" data-lot-focus="roast">@CoffeeLotStatus.FormatKg(Model.Lot.RoastedKg) roasted</button>
                     </div>
                 }
                 

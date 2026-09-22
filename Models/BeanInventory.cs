@@ -104,6 +104,22 @@ namespace TheBestBean.Models
 
         public CoffeeBean? CoffeeBean { get; set; }
 
+        [Display(Name = "Harvested")]
+        [DataType(DataType.Date)]
+        public DateTime? HarvestedOn { get; set; }
+
+        [Display(Name = "Fermented")]
+        [DataType(DataType.Date)]
+        public DateTime? FermentedOn { get; set; }
+
+        [Display(Name = "Dried")]
+        [DataType(DataType.Date)]
+        public DateTime? DriedOn { get; set; }
+
+        [Display(Name = "Arrived Cusco")]
+        [DataType(DataType.Date)]
+        public DateTime? ArrivedCuscoOn { get; set; }
+
         // Navigation properties
         public virtual ICollection<RoastBatch> RoastBatches { get; set; } = new List<RoastBatch>();
     }

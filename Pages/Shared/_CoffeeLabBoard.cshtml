@@ -6,8 +6,23 @@
 
 <section class="lab-board@(compact ? " lab-board--compact" : "")" aria-label="Coffee freshness">
     <header class="lab-board__head">
-        <p class="lab-board__kicker">@board.Kicker <span class="offerings-cursor" aria-hidden="true"></span></p>
-        <h2>@board.Title</h2>
+        <div class="lab-board__kicker-row">
+            <p class="lab-board__kicker">@board.Kicker <span class="offerings-cursor" aria-hidden="true"></span></p>
+            @if (board.ShowLegend)
+            {
+                <div class="lab-stock-legend" aria-label="Stock colors">
+                    <span class="lab-stock-legend__swatch lab-stock-legend__swatch--green">green bean</span>
+                    <span class="lab-stock-legend__swatch lab-stock-legend__swatch--roast">roasted coffee</span>
+                </div>
+            }
+        </div>
+        <div class="lab-board__title-row">
+            <h2>@board.Title</h2>
+            <p class="lab-board__kicker lab-board__warehouse">
+                <partial name="_CoffeeGlyph" model='"warehouse"' />
+                <span>Cusco</span>
+            </p>
+        </div>
         @if (board.ShowLede)
         {
             <p class="lab-board__lede">
@@ -26,27 +41,21 @@
                 var latestRoast = lot.Roasts.FirstOrDefault();
                 var color = colors[colorIndex % colors.Length];
                 colorIndex++;
-                <a asp-page="/Product" asp-route-id="@lot.CoffeeBeanId" class="lab-board__row group" role="listitem">
-                    <span class="lab-board__meta">
-                        <span>
-                            @if (lot.HasGreen)
-                            {
-                                <text>[ @CoffeeLotStatus.FormatKg(lot.GreenKg) GREEN ]</text>
-                            }
-                            else
-                            {
-                                <text>[ ROAST TO ORDER ]</text>
-                            }
-                        </span>
-                        @if (latestRoast != null)
-                        {
+                <div class="lab-board__row group" role="listitem">
+                    <span class="lab-board__stock">
+                        <button type="button" class="lot-sheet-open lab-board__kg lab-board__kg--green" data-lot="@lot.SheetJson()" data-lot-focus="green">@CoffeeLotStatus.FormatKg(lot.GreenKg)</button>
+                        <button type="button" class="lot-sheet-open lab-board__kg lab-board__kg--roast" data-lot="@lot.SheetJson()" data-lot-focus="roast">@CoffeeLotStatus.FormatKg(lot.RoastedKg)</button>
+                    </span>
+                    @if (!compact && latestRoast != null)
+                    {
+                        <span class="lab-board__meta">
                             <span class="lab-board__meta-roast">@latestRoast.DaysAgo D AGO // @latestRoast.PhaseLabel // @latestRoast.Profile</span>
-                        }
-                    </span>
-                    <span class="lab-board__name-wrap">
+                        </span>
+                    }
+                    <a asp-page="/Product" asp-route-id="@lot.CoffeeBeanId" class="lab-board__name-wrap">
                         <span class="lab-board__name-link" style="border-bottom-color: @color;">@lot.Name</span>
-                    </span>
-                </a>
+                    </a>
+                </div>
             }
         </div>
     }

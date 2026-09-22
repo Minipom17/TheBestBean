@@ -1,3 +1,5 @@
+using System.Text.Json;
+
 namespace TheBestBean.Services
 {
     public enum FreshPhase
@@ -25,6 +27,14 @@ namespace TheBestBean.Services
         public string Name { get; init; } = "";
         public decimal GreenKg { get; init; }
         public decimal RoastedKg { get; init; }
+        public string? Farmer { get; init; }
+        public string? Process { get; init; }
+        public string? Variety { get; init; }
+        public string? Region { get; init; }
+        public DateTime? HarvestedOn { get; init; }
+        public DateTime? FermentedOn { get; init; }
+        public DateTime? DriedOn { get; init; }
+        public DateTime? ArrivedCuscoOn { get; init; }
         public IReadOnlyList<RoastedDrop> Roasts { get; init; } = Array.Empty<RoastedDrop>();
 
         public bool HasGreen => GreenKg >= 0.05m;
@@ -58,6 +68,36 @@ namespace TheBestBean.Services
         {
             return $"{Math.Round(kg, 1, MidpointRounding.AwayFromZero):0.0} kg";
         }
+
+        public string SheetJson()
+        {
+            return JsonSerializer.Serialize(new
+            {
+                name = Name,
+                farmer = Farmer,
+                process = Process,
+                variety = Variety,
+                region = Region,
+                warehouse = "Cusco",
+                greenKg = FormatKg(GreenKg),
+                roastedKg = FormatKg(RoastedKg),
+                harvested = Iso(HarvestedOn),
+                fermented = Iso(FermentedOn),
+                dried = Iso(DriedOn),
+                arrived = Iso(ArrivedCuscoOn),
+                roasts = Roasts.Select(r => new
+                {
+                    date = r.RoastDate.ToString("yyyy-MM-dd"),
+                    days = r.DaysAgo,
+                    profile = r.Profile,
+                    phase = r.PhaseLabel,
+                    kg = r.WeightGrams.HasValue ? FormatKg(r.WeightGrams.Value / 1000m) : null
+                })
+            });
+        }
+
+        private static string? Iso(DateTime? value) =>
+            value.HasValue ? value.Value.ToString("yyyy-MM-dd") : null;
     }
 
     public sealed class CoffeeLabBoard
@@ -69,6 +109,8 @@ namespace TheBestBean.Services
         public bool ShowLede { get; init; } = true;
         public string Kicker { get; init; } = "Lab · live";
         public string Title { get; init; } = "What’s in the lab";
+        public bool ShowLegend { get; init; }
+        public bool ShowHowDetails { get; init; }
         public FreshPhase? Highlight { get; init; }
     }
 }

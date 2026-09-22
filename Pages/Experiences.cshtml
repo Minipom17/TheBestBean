@@ -64,7 +64,9 @@
             <div class="exp-section__main flex flex-col gap-16 min-w-0" id="urban-labs-container">
                 @{
                     var hourOrder = new[] { "Peru Tasting Hour", "Brew Your Own", "Introduction to Cupping" };
-                    var urbanLabs = Model.ExperiencesList.Where(e => e.Category == "Urban Workshops").ToList();
+                    var urbanLabs = Model.ExperiencesList
+                        .Where(e => e.Category == "Urban Workshops" && ExperienceGeo.IsWorkshopPlace(e))
+                        .ToList();
                     var hourLabs = hourOrder
                         .Select(title => urbanLabs.FirstOrDefault(e => e.Title == title))
                         .Where(e => e != null)
@@ -368,7 +370,7 @@
 
             <!-- Right Content Column (8 Columns stacked) -->
             <div class="exp-section__main flex flex-col gap-24 md:gap-32 min-w-0" id="expeditions-list">
-                @foreach (var exp in Model.ExperiencesList.Where(e => e.Category == "Expedition"))
+                @foreach (var exp in Model.ExperiencesList.Where(e => e.Category == "Expedition" && ExperienceGeo.IsExpeditionPlace(e)))
                 {
                     var expeditionGeo = ExperienceGeo.Locate(exp);
                     <article class="expedition-item flex flex-col group" data-region="@expeditionGeo.Region" data-place="@expeditionGeo.PlaceKey" data-frequency="@ExperienceGeo.WhenKey(exp.Month)" data-time="@GetTimeCategory(exp.Duration)">

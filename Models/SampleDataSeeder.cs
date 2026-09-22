@@ -391,6 +391,7 @@ namespace TheBestBean.Models
             // Also clean up regions/farms if possible, but beans/countries is the visible part.
             await SeedNewOriginLotsAsync();
             await ApplyAngelCatarataPhotosAsync();
+            await ApplyBeanPhotosAsync();
             await ApplyCoffeeRetailAsync();
             await ApplyOriginExpeditionsAsync();
             await ApplyCuscoWorkshopRosterAsync();
@@ -624,6 +625,49 @@ namespace TheBestBean.Models
                 {
                     bean.MapImageUrl = "/Media/LaConvencionMap.svg";
                 }
+            }
+        }
+
+        private static async Task ApplyBeanPhotosAsync()
+        {
+            var beans = await _context.CoffeeBean.ToListAsync();
+            var changed = false;
+            foreach (var bean in beans)
+            {
+                var name = bean.Name ?? "";
+                string? url = null;
+                if (name.Contains("Pablino", StringComparison.OrdinalIgnoreCase)
+                    || (name.Contains("Bourbon", StringComparison.OrdinalIgnoreCase)
+                        && name.Contains("Cajamarca", StringComparison.OrdinalIgnoreCase)))
+                {
+                    url = "/brand/beans/bourbon-pablino.jpg?v=4";
+                }
+                else if (name.Contains("Marsellesa", StringComparison.OrdinalIgnoreCase)
+                    || name.Contains("Meselessa", StringComparison.OrdinalIgnoreCase)
+                    || name.Contains("Marselessa", StringComparison.OrdinalIgnoreCase))
+                {
+                    url = "/brand/beans/Marselessa.jpg?v=4";
+                }
+                else if (name.Contains("SL09", StringComparison.OrdinalIgnoreCase)
+                    || name.Contains("HIGHLAND", StringComparison.OrdinalIgnoreCase))
+                {
+                    url = "/brand/beans/SL09.jpg?v=4";
+                }
+                else if (name.Contains("Pachamara", StringComparison.OrdinalIgnoreCase))
+                {
+                    url = "/brand/beans/Pachamara.jpg?v=3";
+                }
+
+                if (url != null && bean.ImageUrl != url)
+                {
+                    bean.ImageUrl = url;
+                    changed = true;
+                }
+            }
+
+            if (changed)
+            {
+                await _context.SaveChangesAsync();
             }
         }
 

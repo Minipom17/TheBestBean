@@ -54,6 +54,7 @@ namespace TheBestBean.Pages
                 ShowTimeline = false,
                 ShowGrind = false,
                 ShowLede = false,
+                ShowLegend = true,
                 Kicker = live.Kicker,
                 Title = live.Title,
                 Highlight = live.Highlight

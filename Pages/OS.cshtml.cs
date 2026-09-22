@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using TheBestBean.Data;
 using TheBestBean.Models;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
@@ -48,6 +49,12 @@ namespace TheBestBean.Pages
                     elevationMeters = b.ElevationMeters,
                     flavorProfile = b.FlavorProfile ?? "",
                     scaScore = b.ScaScore,
+                    harvestYear = b.HarvestYear,
+                    harvestedOn = b.HarvestedOn.HasValue ? b.HarvestedOn.Value.ToString("yyyy-MM-dd") : "",
+                    fermentedOn = b.FermentedOn.HasValue ? b.FermentedOn.Value.ToString("yyyy-MM-dd") : "",
+                    driedOn = b.DriedOn.HasValue ? b.DriedOn.Value.ToString("yyyy-MM-dd") : "",
+                    arrivedCuscoOn = b.ArrivedCuscoOn.HasValue ? b.ArrivedCuscoOn.Value.ToString("yyyy-MM-dd") : "",
+                    coffeeBeanId = b.CoffeeBeanId,
                     imageUrl = b.ImageUrl
                 })
                 .ToListAsync();
@@ -117,6 +124,18 @@ namespace TheBestBean.Pages
                 bean.CostPerKg = costPerKg;
             else
                 bean.CostPerKg = null;
+
+            bean.HarvestedOn = ParseDay(form["harvestedOn"].ToString());
+            bean.FermentedOn = ParseDay(form["fermentedOn"].ToString());
+            bean.DriedOn = ParseDay(form["driedOn"].ToString());
+            bean.ArrivedCuscoOn = ParseDay(form["arrivedCuscoOn"].ToString());
+            if (bean.HarvestedOn.HasValue)
+                bean.HarvestYear = bean.HarvestedOn.Value.Year;
+
+            if (int.TryParse(form["coffeeBeanId"].ToString(), out var shopId) && shopId > 0)
+                bean.CoffeeBeanId = shopId;
+            else
+                bean.CoffeeBeanId = null;
 
             bean.HasCertificates = form["hasCertificates"].ToString() == "true";
             
@@ -313,6 +332,30 @@ namespace TheBestBean.Pages
             await _context.SaveChangesAsync();
 
             return new JsonResult(new { id = cupping.Id, success = true });
+        }
+
+        public async Task<IActionResult> OnGetShopCoffeesAsync()
+        {
+            var beans = await _context.CoffeeBean.AsNoTracking()
+                .OrderBy(b => b.Name)
+                .Select(b => new { id = b.Id, name = b.Name })
+                .ToListAsync();
+            return new JsonResult(beans);
+        }
+
+        private static DateTime? ParseDay(string? value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return null;
+            }
+
+            if (DateTime.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out var day))
+            {
+                return day.Date;
+            }
+
+            return null;
         }
     }
 

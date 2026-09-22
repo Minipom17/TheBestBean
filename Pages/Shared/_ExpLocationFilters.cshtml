@@ -1,18 +1,25 @@
 @model string
-
+@{
+    var id = Model ?? "";
+    var urban = id.StartsWith("urban", StringComparison.OrdinalIgnoreCase);
+}
 <div class="exp-filter-row">
     <span class="exp-filter-label exp-filter-label--emoji" title="Location" aria-hidden="true">📍</span>
-    <div class="exp-geo" id="@Model" role="group" aria-label="Filter by location">
+    <div class="exp-geo" id="@id" role="group" aria-label="Filter by location">
         <button type="button" class="exp-geo-all filter-btn active" data-filter="all">All</button>
-        <span class="exp-geo-sep" aria-hidden="true">·</span>
-        <button type="button" class="exp-geo-place filter-btn" data-filter="place:city">Cusco City</button>
-        <span class="exp-geo-sep" aria-hidden="true">·</span>
-        <button type="button" class="exp-geo-place filter-btn" data-filter="place:calca">Calca</button>
-        <span class="exp-geo-sep" aria-hidden="true">·</span>
-        <button type="button" class="exp-geo-place filter-btn" data-filter="place:santa-teresa">Santa Teresa</button>
-        <span class="exp-geo-sep" aria-hidden="true">·</span>
-        <button type="button" class="exp-geo-place filter-btn" data-filter="place:barranco">Lima · Barranco</button>
-        <span class="exp-geo-sep" aria-hidden="true">·</span>
-        <button type="button" class="exp-geo-place filter-btn" data-filter="place:jaen">Cajamarca · Jaén</button>
+        @if (urban)
+        {
+            <span class="exp-geo-sep" aria-hidden="true">·</span>
+            <button type="button" class="exp-geo-place filter-btn" data-filter="region:cusco">Cusco</button>
+            <span class="exp-geo-sep" aria-hidden="true">·</span>
+            <button type="button" class="exp-geo-place filter-btn" data-filter="region:lima">Lima</button>
+        }
+        else
+        {
+            <span class="exp-geo-sep" aria-hidden="true">·</span>
+            <button type="button" class="exp-geo-place filter-btn" data-filter="place:santa-teresa">Santa Teresa, Cusco</button>
+            <span class="exp-geo-sep" aria-hidden="true">·</span>
+            <button type="button" class="exp-geo-place filter-btn" data-filter="place:jaen">Jaén, Cajamarca</button>
+        }
     </div>
 </div>

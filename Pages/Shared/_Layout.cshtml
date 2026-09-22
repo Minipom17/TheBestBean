@@ -761,6 +761,26 @@
 
     <!-- Cropper.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
+    <dialog id="lot-sheet" class="lot-sheet" aria-labelledby="lot-sheet-title">
+        <div class="lot-sheet__card">
+            <button type="button" class="lot-sheet__close" data-lot-close aria-label="Close">&times;</button>
+            <p class="lot-sheet__kicker lab-board__warehouse">
+                <partial name="_CoffeeGlyph" model='"warehouse"' />
+                <span data-lot-warehouse>Cusco</span>
+            </p>
+            <h2 class="lot-sheet__title" id="lot-sheet-title" data-lot-title></h2>
+            <p class="lot-sheet__meta" data-lot-meta></p>
+            <section class="lot-sheet__section" data-lot-green>
+                <h3>Green · farm trail</h3>
+                <dl class="lot-sheet__trail" data-lot-trail></dl>
+            </section>
+            <section class="lot-sheet__section" data-lot-roast>
+                <h3>Roasted</h3>
+                <div class="lot-sheet__roasts" data-lot-roasts></div>
+            </section>
+        </div>
+    </dialog>
     
     @if (User.Identity?.IsAuthenticated == true && User.IsInRole("Admin"))
     {
@@ -771,6 +791,7 @@
 
     <!-- Inline Editor Logic -->
     <script src="~/js/inline-editor.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
     @{
         var ga4Queued = TempData[TheBestBean.Services.Ga4Ecommerce.TempKey] as string;
         var ga4Page = ViewData[TheBestBean.Services.Ga4Ecommerce.ViewKey] as string;

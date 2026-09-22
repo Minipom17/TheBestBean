@@ -33,6 +33,18 @@ namespace TheBestBean.Pages
             return new("cusco", "city", "Cusco", "Cusco City");
         }
 
+        public static bool IsWorkshopPlace(Experience e)
+        {
+            var place = Locate(e);
+            return place.PlaceKey is "city" or "barranco";
+        }
+
+        public static bool IsExpeditionPlace(Experience e)
+        {
+            var place = Locate(e);
+            return place.PlaceKey is "santa-teresa" or "jaen";
+        }
+
         public static bool IsMonWed(string? month)
         {
             var m = (month ?? "").Trim().ToLowerInvariant().Replace(" ", "");

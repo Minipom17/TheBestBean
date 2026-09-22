@@ -85,6 +85,7 @@ namespace TheBestBean.Pages
 
                 RelatedCoffees = (await _context.CoffeeBean
                     .AsNoTracking()
+                    .Include(b => b.CoffeeFarm)
                     .Include(b => b.OriginCountry)
                     .Include(b => b.CoffeeRegion)
                     .Where(b => b.Id != bean.Id)

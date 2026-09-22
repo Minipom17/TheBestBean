@@ -14,11 +14,17 @@
             }
             @if (!string.IsNullOrEmpty(Model.ProcessingMethod))
             {
-                <span>@Model.ProcessingMethod</span>
+                <span class="coffee-card-meta__tag">
+                    <partial name="_CoffeeGlyph" model='"process"' />
+                    @Model.ProcessingMethod
+                </span>
             }
             @if (!string.IsNullOrEmpty(Model.Variety))
             {
-                <span>@Model.Variety</span>
+                <span class="coffee-card-meta__tag">
+                    <partial name="_CoffeeGlyph" model='"bean"' />
+                    @Model.Variety
+                </span>
             }
             @if (string.IsNullOrEmpty(Model.Altitude) && string.IsNullOrEmpty(Model.ProcessingMethod) && string.IsNullOrEmpty(Model.Variety))
             {
@@ -42,12 +48,31 @@
     
     <div class="flex flex-col flex-grow p-4 md:p-6 border-t border-gray-200 dark:border-[#3A353C]">
         <div class="flex flex-col gap-2">
+            @{
+                var title = CoffeeCardTitle.From(Model);
+            }
             <a asp-page="/Product" asp-route-id="@Model.Id" class="text-decoration-none hover:opacity-75 transition-opacity block">
-                <h3 class="text-sm font-bold font-mono-jb uppercase tracking-wider m-0 text-[#111] dark:text-cream" data-entity-id="@Model.Id" data-entity-type="CoffeeBean" data-editable="Name">
-                    @Model.Name
+                <h3 class="coffee-card-title" data-entity-id="@Model.Id" data-entity-type="CoffeeBean" data-editable="Name">
+                    <span class="coffee-card-title__variety">@title.Variety</span>
+                    @if (!string.IsNullOrWhiteSpace(title.Location))
+                    {
+                        <span class="coffee-card-title__place">
+                            <partial name="_CoffeeGlyph" model='"location"' />
+                            <span>[@title.Location]</span>
+                        </span>
+                    }
                 </h3>
             </a>
-            <partial name="_WorkshopPrice" model="new DualPriceModel { Usd = Model.BasePriceUSD, Pen = Model.BasePricePEN, Compact = true, From = true }" />
+            <div class="coffee-card-price-row">
+                <partial name="_WorkshopPrice" model="new DualPriceModel { Usd = Model.BasePriceUSD, Pen = Model.BasePricePEN, Compact = true, From = true }" />
+                @if (!string.IsNullOrWhiteSpace(title.Farmer))
+                {
+                    <span class="coffee-card-farmer">
+                        <partial name="_CoffeeGlyph" model='"farmer"' />
+                        <span>@title.Farmer</span>
+                    </span>
+                }
+            </div>
         </div>
 
         <p class="coffee-card-notes" data-entity-id="@Model.Id" data-entity-type="CoffeeBean" data-editable="FlavorProfile">
@@ -64,8 +89,8 @@
         <div class="coffee-card-stock mt-auto">
             @if (lot != null && (lot.HasGreen || lot.RoastedKg >= 0.05m))
             {
-                <span class="coffee-card-stock__green">@CoffeeLotStatus.FormatKg(lot.GreenKg) green</span>
-                <span class="coffee-card-stock__roast">@CoffeeLotStatus.FormatKg(lot.RoastedKg) roasted</span>
+                <button type="button" class="lot-sheet-open coffee-card-stock__green" data-lot="@lot.SheetJson()" data-lot-focus="green">@CoffeeLotStatus.FormatKg(lot.GreenKg) green</button>
+                <button type="button" class="lot-sheet-open coffee-card-stock__roast" data-lot="@lot.SheetJson()" data-lot-focus="roast">@CoffeeLotStatus.FormatKg(lot.RoastedKg) roasted</button>
             }
         </div>
 

@@ -219,6 +219,9 @@ namespace TheBestBean.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime?>("ArrivedCuscoOn")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("CertificateFilePath")
                         .HasMaxLength(500)
                         .HasColumnType("TEXT");
@@ -239,6 +242,9 @@ namespace TheBestBean.Migrations
                     b.Property<decimal?>("Density")
                         .HasColumnType("decimal(10, 2)");
 
+                    b.Property<DateTime?>("DriedOn")
+                        .HasColumnType("TEXT");
+
                     b.Property<int?>("ElevationMeters")
                         .HasColumnType("INTEGER");
 
@@ -246,8 +252,14 @@ namespace TheBestBean.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime?>("FermentedOn")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("FlavorProfile")
                         .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("HarvestedOn")
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("HarvestYear")

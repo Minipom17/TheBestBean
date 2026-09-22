@@ -49,7 +49,7 @@ namespace TheBestBean.Services
         {
             var filter = coffeeBeanIds?.Where(id => id > 0).Distinct().ToHashSet();
             var shop = await _db.CoffeeBean.AsNoTracking()
-                .Select(b => new { b.Id, b.Name })
+                .Include(b => b.CoffeeRegion)
                 .ToListAsync(ct);
 
             var inventory = await _db.BeanInventories.AsNoTracking()
@@ -78,27 +78,52 @@ namespace TheBestBean.Services
                     .Take(4)
                     .Select(r => ToDrop(r, today))
                     .ToList();
+                var primary = matches
+                    .OrderByDescending(m => m.ArrivedCuscoOn ?? DateTime.MinValue)
+                    .ThenByDescending(m => m.CreatedDate)
+                    .FirstOrDefault();
+                var title = CoffeeCardTitle.From(bean);
+                var display = CoffeeCardTitle.Line(title);
 
                 lots.Add(new CoffeeLotStatus
                 {
                     CoffeeBeanId = bean.Id,
-                    Name = bean.Name,
+                    Name = string.IsNullOrWhiteSpace(display) ? bean.Name : display,
                     GreenKg = green,
                     RoastedKg = roastedKg,
+                    Farmer = primary?.Farmer ?? title.Farmer,
+                    Process = primary?.Process,
+                    Variety = title.Variety,
+                    Region = title.Location,
+                    HarvestedOn = primary?.HarvestedOn,
+                    FermentedOn = primary?.FermentedOn,
+                    DriedOn = primary?.DriedOn,
+                    ArrivedCuscoOn = primary?.ArrivedCuscoOn,
                     Roasts = drops
                 });
             }
 
             if (filter == null)
             {
-                lots = lots
-                    .OrderByDescending(l => l.HasGreen)
-                    .ThenByDescending(l => l.GreenKg)
-                    .ThenBy(l => l.Name)
-                    .ToList();
+                lots = LiveFeed(lots).ToList();
             }
 
             return lots;
+        }
+
+        public static IReadOnlyList<CoffeeLotStatus> LiveFeed(IEnumerable<CoffeeLotStatus> lots)
+        {
+            return lots
+                .Where(l => l.HasGreen || l.RoastedKg >= 0.05m)
+                .GroupBy(l => l.Name, StringComparer.OrdinalIgnoreCase)
+                .Select(g => g
+                    .OrderByDescending(l => l.GreenKg)
+                    .ThenByDescending(l => l.RoastedKg)
+                    .First())
+                .OrderByDescending(l => l.HasGreen)
+                .ThenByDescending(l => l.GreenKg)
+                .ThenBy(l => l.Name)
+                .ToList();
         }
 
         public async Task<CoffeeLotStatus?> GetLotAsync(int coffeeBeanId, CancellationToken ct = default)
