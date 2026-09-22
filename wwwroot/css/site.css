@@ -4294,8 +4294,8 @@ html.dark .product-hero-frame {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    /* Default zoom: La Convención map a bit larger so districts read clearly on mobile. */
-    transform: scale(1.58);
+    /* Default zoom: La Convención map larger so districts fill the frame on mobile. */
+    transform: scale(1.72);
     transform-origin: center 48%;
     transition: transform 0.3s ease;
 }
@@ -4304,7 +4304,7 @@ html.dark .product-hero-frame {
     transform-origin: center center;
 }
 .product-origin-map:hover .product-origin-map__img {
-    transform: scale(1.66);
+    transform: scale(1.8);
     transform-origin: center 48%;
 }
 .product-origin-map:hover .product-origin-map__img[src*="cajamarca"] {
