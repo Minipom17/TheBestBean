@@ -49,7 +49,15 @@ namespace TheBestBean.Services
         {
             var filter = coffeeBeanIds?.Where(id => id > 0).Distinct().ToHashSet();
             var shop = await _db.CoffeeBean.AsNoTracking()
-                .Select(b => new { b.Id, b.Name })
+                .Select(b => new
+                {
+                    b.Id,
+                    b.Name,
+                    b.Producer,
+                    b.ProcessingMethod,
+                    b.Altitude,
+                    b.FlavorProfile
+                })
                 .ToListAsync(ct);
 
             var inventory = await _db.BeanInventories.AsNoTracking()
@@ -85,6 +93,10 @@ namespace TheBestBean.Services
                     Name = CoffeeDisplayName.ForLab(bean.Name),
                     GreenKg = green,
                     RoastedKg = roastedKg,
+                    Producer = bean.Producer ?? "",
+                    ProcessingMethod = bean.ProcessingMethod ?? "",
+                    Altitude = bean.Altitude ?? "",
+                    FlavorProfile = bean.FlavorProfile ?? "",
                     Roasts = drops
                 });
             }

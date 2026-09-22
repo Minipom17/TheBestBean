@@ -1,7 +1,9 @@
 @model TheBestBean.Services.CoffeeLabBoard
+@using System.Text.Json
 @{
     var board = Model ?? new CoffeeLabBoard();
     var compact = board.Compact;
+    var roastJsonOpts = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 }
 
 <section class="lab-board@(compact ? " lab-board--compact" : "")" aria-label="Coffee freshness">
@@ -35,23 +37,57 @@
                 var color = colors[colorIndex % colors.Length];
                 colorIndex++;
                 var title = CoffeeDisplayName.ForLab(lot.Name);
-                <a asp-page="/Product" asp-route-id="@lot.CoffeeBeanId" class="lab-board__row group" role="listitem">
-                    @if (compact)
-                    {
-                        <span class="lab-board__stock" aria-label="@CoffeeLotStatus.FormatKg(lot.GreenKg) green, @CoffeeLotStatus.FormatKg(lot.RoastedKg) roasted">
-                            <span class="lab-board__kg lab-board__kg--green">@CoffeeLotStatus.FormatKg(lot.GreenKg)</span>
-                            <span class="lab-board__kg lab-board__kg--roast">@CoffeeLotStatus.FormatKg(lot.RoastedKg)</span>
+                var greenKg = CoffeeLotStatus.FormatKg(lot.GreenKg);
+                var roastKg = CoffeeLotStatus.FormatKg(lot.RoastedKg);
+                var roastsJson = JsonSerializer.Serialize(lot.Roasts.Select(r => new
+                {
+                    date = r.RoastDate.ToString("dd MMM yyyy"),
+                    daysAgo = r.DaysAgo,
+                    profile = r.Profile,
+                    grams = r.WeightGrams,
+                    phaseLabel = r.PhaseLabel,
+                    phaseHint = r.PhaseHint
+                }), roastJsonOpts);
+
+                if (compact)
+                {
+                    <div class="lab-board__row group" role="listitem">
+                        <span class="lab-board__stock" aria-label="@greenKg green, @roastKg roasted">
+                            <button type="button"
+                                    class="lab-board__kg lab-board__kg--green lab-board__kg-btn"
+                                    data-lab-popup="green"
+                                    data-name="@title"
+                                    data-kg="@greenKg"
+                                    data-producer="@(lot.Producer ?? "")"
+                                    data-process="@(lot.ProcessingMethod ?? "")"
+                                    data-altitude="@(lot.Altitude ?? "")"
+                                    data-flavor="@(lot.FlavorProfile ?? "")"
+                                    data-has-roast="@(lot.HasRoast ? "1" : "0")"
+                                    aria-label="@greenKg green bean details for @title">
+                                @greenKg
+                            </button>
+                            <button type="button"
+                                    class="lab-board__kg lab-board__kg--roast lab-board__kg-btn"
+                                    data-lab-popup="roast"
+                                    data-name="@title"
+                                    data-kg="@roastKg"
+                                    data-roasts="@roastsJson"
+                                    aria-label="@roastKg roasted coffee details for @title">
+                                @roastKg
+                            </button>
                         </span>
                         <span class="lab-board__name-wrap">
-                            <span class="lab-board__name-link" style="border-bottom-color: @color;">@title</span>
+                            <a asp-page="/Product" asp-route-id="@lot.CoffeeBeanId" class="lab-board__name-link" style="border-bottom-color: @color;">@title</a>
                         </span>
-                    }
-                    else
-                    {
+                    </div>
+                }
+                else
+                {
+                    <a asp-page="/Product" asp-route-id="@lot.CoffeeBeanId" class="lab-board__row group" role="listitem">
                         <span class="lab-board__meta">
                             @if (lot.HasGreen)
                             {
-                                <text>[ @CoffeeLotStatus.FormatKg(lot.GreenKg) GREEN ]</text>
+                                <text>[ @greenKg GREEN ]</text>
                             }
                             else
                             {
@@ -61,8 +97,8 @@
                         <span class="lab-board__name-wrap">
                             <span class="lab-board__name-link" style="border-bottom-color: @color;">@title</span>
                         </span>
-                    }
-                </a>
+                    </a>
+                }
             }
         </div>
     }
@@ -90,3 +126,22 @@
         </div>
     }
 </section>
+
+@if (compact)
+{
+    <div id="lab-stock-modal" class="lab-stock-modal" hidden aria-hidden="true">
+        <div class="lab-stock-modal__backdrop" data-lab-modal-close></div>
+        <div class="lab-stock-modal__panel lab-board__lot" role="dialog" aria-modal="true" aria-labelledby="lab-stock-modal-title">
+            <button type="button" class="lab-stock-modal__close" data-lab-modal-close aria-label="Close">×</button>
+            <div class="lab-board__lot-top">
+                <strong id="lab-stock-modal-title" class="lab-board__name"></strong>
+                <span id="lab-stock-modal-pill" class="lab-board__pill"></span>
+            </div>
+            <p id="lab-stock-modal-lede" class="lab-stock-modal__lede"></p>
+            <dl id="lab-stock-modal-facts" class="lab-stock-modal__facts"></dl>
+            <ul id="lab-stock-modal-roasts" class="lab-board__roasts" hidden></ul>
+            <p id="lab-stock-modal-empty" class="lab-board__empty-roast" hidden></p>
+        </div>
+    </div>
+    <script src="~/js/lab-board.js" asp-append-version="true"></script>
+}

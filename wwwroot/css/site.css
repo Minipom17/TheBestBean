@@ -3222,6 +3222,23 @@ html.dark .lab-stock-legend__swatch--green {
     letter-spacing: 0.04em;
     white-space: nowrap;
 }
+.lab-board__kg-btn {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    text-align: left;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+}
+.lab-board__kg-btn:hover,
+.lab-board__kg-btn:focus-visible {
+    opacity: 0.8;
+    outline: none;
+}
 .lab-board__kg--green {
     color: #16A34A;
 }
@@ -3233,6 +3250,81 @@ html.dark .lab-board__kg--green {
 }
 html.dark .lab-board__kg--roast {
     color: #c4a484;
+}
+
+.lab-stock-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 10050;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 1rem;
+}
+.lab-stock-modal[hidden] {
+    display: none !important;
+}
+@media (min-width: 640px) {
+    .lab-stock-modal {
+        align-items: center;
+    }
+}
+.lab-stock-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+}
+.lab-stock-modal__panel {
+    position: relative;
+    z-index: 1;
+    width: min(100%, 26rem);
+    max-height: min(80vh, 32rem);
+    overflow: auto;
+    margin: 0;
+}
+.lab-stock-modal__close {
+    position: absolute;
+    top: 0.35rem;
+    right: 0.5rem;
+    border: 0;
+    background: transparent;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    color: inherit;
+    padding: 0.15rem 0.35rem;
+}
+.lab-stock-modal__lede {
+    margin: 0.65rem 0 0.35rem;
+    font-size: 0.9rem;
+    color: #4b5563;
+}
+html.dark .lab-stock-modal__lede {
+    color: #a8a29a;
+}
+.lab-stock-modal__facts {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.25rem 0.75rem;
+    margin: 0.5rem 0 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+.lab-stock-modal__facts dt {
+    color: #6b7280;
+    font-weight: 700;
+}
+.lab-stock-modal__facts dd {
+    margin: 0;
+    color: inherit;
+}
+html.dark .lab-stock-modal__facts dt {
+    color: #a8a29a;
+}
+html.lab-stock-modal-open {
+    overflow: hidden;
 }
 .lab-board h2 {
     font-size: clamp(1.4rem, 3vw, 2rem);
@@ -4635,9 +4727,12 @@ html.dark .product-sheet__process p:last-child {
 
 .exp-section {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 2.5rem;
     position: relative;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
 }
 @media (min-width: 1024px) {
     .exp-section {
@@ -4657,7 +4752,7 @@ html.dark .product-sheet__process p:last-child {
 }
 .exp-meta-line {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     align-items: baseline;
     gap: 0.6rem;
     margin-bottom: 1rem;
@@ -4666,13 +4761,17 @@ html.dark .product-sheet__process p:last-child {
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    white-space: nowrap;
+    white-space: normal;
     min-width: 0;
+    max-width: 100%;
 }
 .exp-meta-line__venue {
-    flex: 1 1 auto;
+    flex: 1 1 8rem;
     min-width: 0;
+    max-width: 100%;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .exp-dossier {
     display: grid;
@@ -4693,15 +4792,17 @@ html.dark .product-sheet__process p:last-child {
 .hour-lab-card__meta {
     display: flex;
     align-items: center;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     gap: 0.45rem;
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    white-space: nowrap;
+    white-space: normal;
     margin-bottom: 0.5rem;
+    min-width: 0;
+    max-width: 100%;
 }
 .hour-lab-card__title {
     min-height: 2.6em;
@@ -4772,15 +4873,63 @@ html.dark .product-sheet__process p:last-child {
     align-items: center !important;
 }
 
-/* Push the second span of the venue to the right */
+/* Venue line: keep ellipsis, don't force full-width flex children past viewport */
 .exp-meta-line__venue {
-    display: flex;
-    align-items: center;
+    display: block;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 .exp-meta-line__venue > span {
+    display: block;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Experiences mobile: keep cards inside the viewport */
+.experiences-page,
+.experiences-page .lab-item,
+.experiences-page .expedition-item,
+.experiences-page .exp-dossier,
+.experiences-page .exp-section__main {
+    min-width: 0;
+    max-width: 100%;
+}
+.experiences-page .exp-dossier {
+    grid-template-columns: minmax(0, 1fr);
+}
+.experiences-page h3,
+.experiences-page p,
+.experiences-page li {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+.experiences-page .exp-cta-row {
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1rem;
+    min-width: 0;
+    max-width: 100%;
+}
+.experiences-page .exp-carousel {
+    max-width: 100%;
+}
+.experiences-page .exp-carousel .carousel-container {
+    max-width: 100%;
+}
+.experiences-page .exp-carousel .carousel-container > img {
+    flex: 0 0 100%;
     width: 100%;
+    max-width: 100%;
+    height: 100%;
+    position: relative;
+    inset: auto;
 }
 
 /* Sidebar filter tags layout for desktop */
