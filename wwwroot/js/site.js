@@ -44,8 +44,11 @@
     function fillLotSheet(data, focus) {
         var dialog = document.getElementById("lot-sheet");
         if (!dialog || !data) return;
+        var isRoast = focus === "roast";
         dialog.querySelector("[data-lot-title]").textContent = data.name || "Coffee lot";
-        var bits = [data.farmer, data.variety, data.process, data.region].filter(Boolean);
+        var bits = isRoast
+            ? [data.variety, data.region].filter(Boolean)
+            : [data.farmer, data.variety, data.process, data.region].filter(Boolean);
         dialog.querySelector("[data-lot-meta]").textContent = bits.join(" · ");
         dialog.querySelector("[data-lot-warehouse]").textContent = data.warehouse || "Cusco";
         var trail = dialog.querySelector("[data-lot-trail]");
@@ -56,16 +59,31 @@
             "<dt>Arrived Cusco</dt><dd>" + fmtLotDate(data.arrived) + "</dd>";
         var green = dialog.querySelector("[data-lot-green]");
         var roast = dialog.querySelector("[data-lot-roast]");
-        green.classList.toggle("is-focus", focus === "green");
-        roast.classList.toggle("is-focus", focus === "roast");
+        green.hidden = isRoast;
+        roast.hidden = !isRoast;
         var list = dialog.querySelector("[data-lot-roasts]");
         var roasts = data.roasts || [];
         if (roasts.length === 0) {
             list.innerHTML = "<p class=\"lot-sheet__empty\">No roast on the books yet — we roast after you order.</p>";
         } else {
             list.innerHTML = roasts.map(function (r) {
-                var right = [r.kg, r.profile, r.phase].filter(Boolean).join(" · ");
-                return "<div class=\"lot-sheet__roast\"><span>" + fmtLotDate(r.date) + "</span><span>" + right + "</span></div>";
+                var rows = [
+                    ["Roast date", fmtLotDate(r.date)],
+                    ["Profile", r.profile],
+                    ["Duration", r.duration],
+                    ["Maillard", r.maillard],
+                    ["Development", r.development],
+                    ["DTR", r.dtr],
+                    ["First crack", r.firstCrack],
+                    ["Drop", r.drop],
+                    ["Drop temp", r.dropTemp],
+                    ["Charge", r.charge],
+                    ["Dropped", r.kg],
+                    ["Weight loss", r.loss]
+                ].map(function (pair) {
+                    return "<dt>" + pair[0] + "</dt><dd>" + (pair[1] || "—") + "</dd>";
+                }).join("");
+                return "<div class=\"lot-sheet__roast-block\"><dl class=\"lot-sheet__trail\">" + rows + "</dl></div>";
             }).join("");
         }
         if (typeof dialog.showModal === "function") {

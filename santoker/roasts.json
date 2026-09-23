@@ -1,0 +1,182 @@
+[
+  {
+    "file": "SANTOKER-SL09.xlsx",
+    "match": [
+      "SL09",
+      "HIGHLAND"
+    ],
+    "roastDate": "2026-09-21",
+    "chargeGrams": 150,
+    "roastLevel": "Light",
+    "durationSeconds": 343,
+    "dropSeconds": 343,
+    "dropTempC": 194.4,
+    "turnaroundSeconds": 5,
+    "dryEndSeconds": 162,
+    "firstCrackSeconds": null,
+    "dtrPercent": null
+  },
+  {
+    "file": "SANTOKER-SL 28.xlsx",
+    "match": [
+      "SL28"
+    ],
+    "roastDate": "2026-09-21",
+    "chargeGrams": 150,
+    "roastLevel": "Light",
+    "durationSeconds": 317,
+    "dropSeconds": 317,
+    "dropTempC": 194.3,
+    "turnaroundSeconds": 5,
+    "dryEndSeconds": 170,
+    "firstCrackSeconds": null,
+    "dtrPercent": null
+  },
+  {
+    "file": "SANTOKER-Marsellesa .xlsx",
+    "match": [
+      "Marsellesa"
+    ],
+    "roastDate": "2026-09-21",
+    "chargeGrams": 170,
+    "roastLevel": "Light",
+    "durationSeconds": 295,
+    "dropSeconds": 295,
+    "dropTempC": 190.0,
+    "turnaroundSeconds": 5,
+    "dryEndSeconds": 149,
+    "firstCrackSeconds": null,
+    "dtrPercent": null
+  },
+  {
+    "file": "SANTOKER-Geisha Angel M  .xlsx",
+    "match": [
+      "La Catarata",
+      "Catarata"
+    ],
+    "roastDate": "2026-09-21",
+    "chargeGrams": 160,
+    "roastLevel": "Light",
+    "durationSeconds": 378,
+    "dropSeconds": 378,
+    "dropTempC": 195.5,
+    "turnaroundSeconds": 5,
+    "dryEndSeconds": 233,
+    "firstCrackSeconds": null,
+    "dtrPercent": null
+  },
+  {
+    "file": "SANTOKER-Angel Manosalva - Geisha Korea.xlsx",
+    "match": [
+      "Geisha Korea"
+    ],
+    "roastDate": "2026-09-21",
+    "chargeGrams": null,
+    "roastLevel": "Light",
+    "durationSeconds": 381,
+    "dropSeconds": 381,
+    "dropTempC": 193.0,
+    "turnaroundSeconds": 5,
+    "dryEndSeconds": 200,
+    "firstCrackSeconds": null,
+    "dtrPercent": null
+  },
+  {
+    "file": "SANTOKER-Angel M Geisha R17.xlsx",
+    "match": [
+      "Geisha R17",
+      "R17"
+    ],
+    "roastDate": "2026-09-21",
+    "chargeGrams": null,
+    "roastLevel": "Light",
+    "durationSeconds": 360,
+    "dropSeconds": 360,
+    "dropTempC": 191.4,
+    "turnaroundSeconds": 5,
+    "dryEndSeconds": 185,
+    "firstCrackSeconds": null,
+    "dtrPercent": null
+  },
+  {
+    "file": "SANTOKER-Geisha Alto.xlsx",
+    "match": [
+      "Geisha Alto"
+    ],
+    "roastDate": "2026-09-21",
+    "chargeGrams": null,
+    "roastLevel": "Light",
+    "durationSeconds": 367,
+    "dropSeconds": 367,
+    "dropTempC": 191.8,
+    "turnaroundSeconds": 5,
+    "dryEndSeconds": 194,
+    "firstCrackSeconds": null,
+    "dtrPercent": null
+  },
+  {
+    "file": "SANTOKER-Miguel Padilla Chinguel - Geisha .xlsx",
+    "match": [
+      "Geisha - Cajamarca"
+    ],
+    "roastDate": "2026-09-18",
+    "chargeGrams": 160,
+    "roastLevel": "Light",
+    "durationSeconds": 354,
+    "dropSeconds": 354,
+    "dropTempC": 195.9,
+    "turnaroundSeconds": 5,
+    "dryEndSeconds": 180,
+    "firstCrackSeconds": null,
+    "dtrPercent": null
+  },
+  {
+    "file": "SANTOKER-Miguel Padilla Chinguel - Bourbon.xlsx",
+    "match": [
+      "Cajamarca [Bourbon]"
+    ],
+    "roastDate": "2026-09-21",
+    "chargeGrams": 150,
+    "roastLevel": "Light",
+    "durationSeconds": 346,
+    "dropSeconds": 346,
+    "dropTempC": 190.8,
+    "turnaroundSeconds": 5,
+    "dryEndSeconds": 184,
+    "firstCrackSeconds": null,
+    "dtrPercent": null
+  },
+  {
+    "file": "SANTOKER-Miguel Padilla Chinguel - Catuai.xlsx",
+    "match": [
+      "Caturai",
+      "Catuai"
+    ],
+    "roastDate": "2026-09-21",
+    "chargeGrams": null,
+    "roastLevel": "Light",
+    "durationSeconds": 379,
+    "dropSeconds": 379,
+    "dropTempC": 190.8,
+    "turnaroundSeconds": 5,
+    "dryEndSeconds": 200,
+    "firstCrackSeconds": null,
+    "dtrPercent": null
+  },
+  {
+    "file": "SANTOKER-Pachamara - Subasta .xlsx",
+    "match": [
+      "Pachamara"
+    ],
+    "roastDate": "2026-09-21",
+    "chargeGrams": 150,
+    "roastLevel": "Light",
+    "durationSeconds": 315,
+    "dropSeconds": 315,
+    "dropTempC": 190.4,
+    "turnaroundSeconds": 5,
+    "dryEndSeconds": 165,
+    "firstCrackSeconds": null,
+    "dtrPercent": null
+  }
+]

@@ -237,6 +237,8 @@ try
         {
             await SampleDataSeeder.SeedDemoRoastInventoryAsync(context);
         }
+
+        await SantokerRoastClocks.ApplyAsync(context, app.Environment.ContentRootPath);
         
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();

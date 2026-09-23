@@ -170,7 +170,8 @@ namespace TheBestBean.Models
                 ProcessingMethod = "Washed",
                 Producer = "Oscar Vilches y Lisbet Mariño",
                 ProducerDescription = "SL09 is our flagship coffee, grown by the Huadquiña cooperative in La Convención, Cusco. This cooperative consists of 300+ smallholder farmers dedicated to organic practices and preserving traditional Peruvian coffee varieties. Currently in stock and available for both local sale and international export.",
-                ProcessingDescription = "SL09 is fully washed and fermented for 24-36 hours, then carefully dried on raised beds. This processing method results in a clean, bright cup that highlights the chocolate and caramel notes characteristic of La Convención coffees. The beans are then sorted and prepared for export or local roasting.",
+                ProcessingDescription = MillProcess.WashedEn,
+                ProcessingDescriptionES = MillProcess.WashedEs,
                 OriginDescription = "SL09 comes from La Convención province in Cusco, Peru's premier coffee-producing region. This area stretches from the high Andes to the edge of the Amazon rainforest, producing some of the world's finest organic coffee at altitudes between 1000-1600 meters.",
                 Variety = "SL09 / Inca Geisha",
                 Altitude = "2230 msnm",
@@ -190,7 +191,8 @@ namespace TheBestBean.Models
                 ProcessingMethod = "Washed",
                 Producer = "Oscar Vilches",
                 ProducerDescription = "Grown by smallholder farmers in the Cusco region, particularly the Huadquiña cooperative and other local cooperatives. These farmers are dedicated to organic practices, sustainable farming, and preserving traditional Peruvian coffee varieties. Each batch represents the hard work of families who have cultivated coffee in these high-altitude regions for generations.",
-                ProcessingDescription = "This Number 13 [Geisha] is fully washed and fermented for 24 hours. The result is a clean cup that highlights the terroir of the Cusco region.",
+                ProcessingDescription = MillProcess.WashedEn,
+                ProcessingDescriptionES = MillProcess.WashedEs,
                 OriginDescription = "Explore the Cusco region where this coffee is grown. The high-altitude farms, diverse microclimates, and traditional farming methods create exceptional quality coffee with unique flavor profiles.",
                 Variety = "Geisha",
                 Altitude = "2200 msnm",
@@ -210,7 +212,8 @@ namespace TheBestBean.Models
                 ProcessingMethod = "Washed",
                 Producer = "Rodrigo Sanchez",
                 ProducerDescription = "Grown by smallholder farmers in the Cusco region, dedicated to organic practices and preserving traditional Peruvian coffee varieties.",
-                ProcessingDescription = "This Regular Papi [Bourbon] is processed using traditional methods from the Cusco region, carefully selected to bring out the unique characteristics of Peruvian coffee.",
+                ProcessingDescription = MillProcess.WashedEn,
+                ProcessingDescriptionES = MillProcess.WashedEs,
                 OriginDescription = "Explore the Cusco region where this coffee is grown. The high-altitude farms, diverse microclimates, and traditional farming methods create exceptional quality coffee with unique flavor profiles.",
                 Variety = "Bourbon",
                 Altitude = "1700 msnm",
@@ -230,7 +233,8 @@ namespace TheBestBean.Models
                 ProcessingMethod = "Washed",
                 Producer = "Teodocia Alvarez",
                 ProducerDescription = "Grown by smallholder farmers in the Cusco region, particularly the Huadquiña cooperative and other local cooperatives. These farmers are dedicated to organic practices, sustainable farming, and preserving traditional Peruvian coffee varieties. Each batch represents the hard work of families who have cultivated coffee in these high-altitude regions for generations.",
-                ProcessingDescription = "This Punch [Geisha] is fully washed and fermented for 24 hours. The result is a clean cup that highlights the terroir of the Cusco region.",
+                ProcessingDescription = MillProcess.WashedEn,
+                ProcessingDescriptionES = MillProcess.WashedEs,
                 OriginDescription = "Explore the Cusco region where this coffee is grown. The high-altitude farms, diverse microclimates, and traditional farming methods create exceptional quality coffee with unique flavor profiles.",
                 Variety = "Geisha",
                 Altitude = "1850 msnm",
@@ -392,6 +396,7 @@ namespace TheBestBean.Models
             await SeedNewOriginLotsAsync();
             await ApplyAngelCatarataPhotosAsync();
             await ApplyBeanPhotosAsync();
+            await ApplyMillNotesAsync();
             await ApplyCoffeeRetailAsync();
             await ApplyOriginExpeditionsAsync();
             await ApplyCuscoWorkshopRosterAsync();
@@ -408,7 +413,8 @@ namespace TheBestBean.Models
                 "La Catarata [Geisha]",
                 "Cajamarca [Bourbon]",
                 "Cusco [Bourbon]",
-                "Cajamarca [Marsellesa]"
+                "Cajamarca [Marsellesa]",
+                "Cajamarca [Pachamara]"
             };
             var existing = await _context.CoffeeBean
                 .Where(b => newLotNames.Contains(b.Name))
@@ -470,8 +476,8 @@ namespace TheBestBean.Models
                     ImageUrl = "/Media/Green_bean.svg",
                     ProducerDescription = "SL28 is a Kenyan selection now planted in Peru’s northern highlands. This lot comes from Cajamarca, where cool nights and high altitude slow cherry ripening and concentrate the variety’s blackcurrant character.",
                     ProducerDescriptionES = "SL28 es una selección keniana ahora cultivada en la sierra norte del Perú. Este lote proviene de Cajamarca, donde las noches frías y la altura alargan la maduración y concentran el carácter a grosella negra de la variedad.",
-                    ProcessingDescription = "Ripe cherries are sorted, then held for a 72-hour fermentation before drying. The extended fermentation builds tropical fruit and berry intensity on top of SL28’s classic blackcurrant acidity.",
-                    ProcessingDescriptionES = "Las cerezas maduras se seleccionan y fermentan durante 72 horas antes del secado. La fermentación prolongada suma intensidad a fruta tropical y frutos rojos sobre la acidez clásica a grosella negra del SL28.",
+                    ProcessingDescription = MillProcess.Sl28En,
+                    ProcessingDescriptionES = MillProcess.Sl28Es,
                     OriginDescription = "Cajamarca — especially Jaén and San Ignacio — is Peru’s competition corridor: farms from 1,500 to over 2,200 msnm, with washed and experimental fermentations that show clean citric structure and fruit.",
                     OriginDescriptionES = "Cajamarca — sobre todo Jaén y San Ignacio — es el corredor de competencia del Perú: fincas de 1.500 a más de 2.200 msnm, con lavados y fermentaciones experimentales de estructura cítrica y fruta limpia.",
                     CoffeeFarm = cajamarcaHighlands,
@@ -499,8 +505,8 @@ namespace TheBestBean.Models
                     ProducerImageUrl = "/Media/producers/angel-cajamarca/angel-portrait.jpg?v=4",
                     ProducerDescription = "Ángel Antonio Manosalva Palomino farms La Catarata and La Pomarrosa with his wife Luz Marita González Rojas in La Cascarilla, Jaén, Cajamarca. A Cenfrocafé member, he took over a neglected 1.75-hectare plot in 2020, completed ownership in 2023, and replanted nearly 8,000 Geisha trees. In 2025 his washed Geisha won Taza de Excelencia Perú with 90.64 points — first among ~300 samples.",
                     ProducerDescriptionES = "Ángel Antonio Manosalva Palomino cultiva La Catarata y La Pomarrosa junto a su esposa Luz Marita González Rojas en La Cascarilla, Jaén, Cajamarca. Socio de Cenfrocafé, tomó un predio de 1,75 ha en 2020, consolidó la propiedad en 2023 y replantó cerca de 8.000 árboles de Geisha. En 2025 su Geisha lavado ganó la Taza de Excelencia Perú con 90,64 puntos.",
-                    ProcessingDescription = "Fully washed Geisha. Ángel has spent seven years refining fermentations for a floral, clean cup. The winning 2025 lot was harvested around August and processed as a washed microlot from this tiny Jaén plot.",
-                    ProcessingDescriptionES = "Geisha totalmente lavado. Ángel lleva siete años afinando fermentaciones para una taza floral y limpia. El lote ganador de 2025 se cosechó hacia agosto y se procesó como microlote lavado de esta parcela en Jaén.",
+                    ProcessingDescription = MillProcess.WashedEn,
+                    ProcessingDescriptionES = MillProcess.WashedEs,
                     OriginDescription = "La Cascarilla sits in the mountains above Jaén, one of Cajamarca’s coffee hubs. At 1,950 msnm the diurnal swing and Andean soils give washed Geisha citrus, lemongrass, lavender, caramel, and stone fruit.",
                     OriginDescriptionES = "La Cascarilla está en las montañas sobre Jaén, uno de los centros cafetaleros de Cajamarca. A 1.950 msnm, el rango diurno y los suelos andinos dan al Geisha lavado cítricos, lemongrass, lavanda, caramelo y fruta de hueso.",
                     CoffeeFarm = laCatarata,
@@ -527,8 +533,8 @@ namespace TheBestBean.Models
                     ImageUrl = "/Media/Green_bean.svg",
                     ProducerDescription = "Bourbon sits on Cajamarca’s higher slopes in Jaén and San Ignacio, typically 1,600–2,000 msnm, beside Typica. Smallholders in cooperatives such as Cenfrocafé and APROCASSI deliver cherry to central mills for consistent washed lots.",
                     ProducerDescriptionES = "El Borbón ocupa las laderas altas de Cajamarca en Jaén y San Ignacio, entre 1.600 y 2.000 msnm, junto al Típica. Pequeños productores de cooperativas como Cenfrocafé y APROCASSI entregan cereza a molinos centrales para lotes lavados consistentes.",
-                    ProcessingDescription = "Fully washed: depulped, fermented 18–36 hours, washed, and dried on patios or raised beds. The process keeps fruit influence off the cup so Bourbon’s brown-sugar sweetness and Cajamarca citric structure can read clearly.",
-                    ProcessingDescriptionES = "Totalmente lavado: despulpado, fermentado 18–36 horas, lavado y secado en patios o camas africanas. El proceso deja fuera la fruta de la cereza para que brille el dulzor a azúcar morena del Borbón y la estructura cítrica de Cajamarca.",
+                    ProcessingDescription = MillProcess.WashedEn,
+                    ProcessingDescriptionES = MillProcess.WashedEs,
                     OriginDescription = "Northern Cajamarca is Peru’s competition highlands. Dual Pacific/Amazon moisture and altitude produce clean, citric washed cups. Bourbon here adds body and brown-sugar sweetness under the region’s citrus and stone-fruit acidity.",
                     OriginDescriptionES = "El norte de Cajamarca es la sierra de competencia del Perú. La humedad del Pacífico y la Amazonía, más la altura, dan tazas lavadas cítricas y limpias. El Borbón aporta cuerpo y dulzor a azúcar morena bajo la acidez a cítricos y fruta de hueso.",
                     CoffeeFarm = cajamarcaHighlands,
@@ -555,8 +561,8 @@ namespace TheBestBean.Models
                     ImageUrl = "/Media/Green_bean.svg",
                     ProducerDescription = "Bourbon plantings in Cusco are older and less common than in the north. They sit on steep La Convención slopes above about 1,600 msnm, often under native shade, with families processing cherry on-farm.",
                     ProducerDescriptionES = "Las plantaciones de Borbón en Cusco son más antiguas y menos comunes que en el norte. Están en laderas empinadas de La Convención sobre unos 1.600 msnm, a menudo bajo sombra nativa, con familias que procesan en finca.",
-                    ProcessingDescription = "Fully washed after selective picking. Fermentation is typically 16–36 hours, then parchment is dried on raised beds. Some Cusco farms extend fermentation; this lot is a classic washed Bourbon to show the valley’s gentler, floral cup.",
-                    ProcessingDescriptionES = "Totalmente lavado tras cosecha selectiva. La fermentación suele durar 16–36 horas y el pergamino se seca en camas africanas. Algunas fincas alargan la fermentación; este lote es un Borbón lavado clásico para mostrar la taza más floral del valle.",
+                    ProcessingDescription = MillProcess.WashedEn,
+                    ProcessingDescriptionES = MillProcess.WashedEs,
                     OriginDescription = "Cusco’s coffee belt is La Convención — Quillabamba, Echarate, Vilcabamba — from the high Andes toward the Amazon. Cups here are softer and more floral than Cajamarca: slower Andean ripening, less centralized mills, and Bourbon sweetness as caramel and florals.",
                     OriginDescriptionES = "El cinturón cafetero del Cusco es La Convención — Quillabamba, Echarate, Vilcabamba — de los Andes altos hacia la Amazonía. La taza es más suave y floral que en Cajamarca: maduración andina lenta, menos molinos centrales y el dulzor del Borbón como caramelo y florales.",
                     CoffeeFarm = convencion,
@@ -583,10 +589,38 @@ namespace TheBestBean.Models
                     ImageUrl = "/Media/Green_bean.svg",
                     ProducerDescription = "Marsellesa is a Sarchimor (Timor Hybrid 832/2 × Villa Sarchi) released by CIRAD-ECOM in 2009. Cenfrocafé and the Junta Nacional del Café promoted it in Peru for rust resistance without giving up cup quality. In Cajamarca it is planted from about 1,400–1,800 msnm in Jaén, San Ignacio, and Cutervo.",
                     ProducerDescriptionES = "Marsellesa es un Sarchimor (Timor Hybrid 832/2 × Villa Sarchi) liberado por CIRAD-ECOM en 2009. Cenfrocafé y la Junta Nacional del Café la impulsaron en el Perú por resistencia a la roya sin sacrificar taza. En Cajamarca se planta entre unos 1.400 y 1.800 msnm en Jaén, San Ignacio y Cutervo.",
-                    ProcessingDescription = "Washed, in the Cajamarca mill style: depulped, fermented, washed clean, and dried. At altitude Marsellesa shows the chocolate-citrus cup World Coffee Research flags for this variety — cleaner than older Catimors.",
-                    ProcessingDescriptionES = "Lavado, al estilo de los molinos de Cajamarca: despulpado, fermentado, lavado y secado. En altura la Marsellesa muestra la taza cacao-cítrica que World Coffee Research destaca — más limpia que los Catimor antiguos.",
+                    ProcessingDescription = MillProcess.WashedEn,
+                    ProcessingDescriptionES = MillProcess.WashedEs,
                     OriginDescription = "Cajamarca has been renewing rust-hit Caturra and Typica plots with Marsellesa and H1. Tabaconas (San Ignacio) trials above 1,400 msnm showed good yield, rust resistance, and specialty cupping. Expect cacao, citrus, honey, and stone fruit.",
                     OriginDescriptionES = "Cajamarca renueva parcelas de Caturra y Típica afectadas por roya con Marsellesa y H1. Ensayos en Tabaconas (San Ignacio) sobre 1.400 msnm mostraron buen rendimiento, resistencia y taza de especialidad. Cacao, cítricos, miel y fruta de hueso.",
+                    CoffeeFarm = cajamarcaHighlands,
+                    CoffeeRegion = cajamarca,
+                    OriginCountry = peru
+                });
+            }
+
+            if (!existing.Contains("Cajamarca [Pachamara]"))
+            {
+                lots.Add(new CoffeeBean
+                {
+                    Name = "Cajamarca [Pachamara]",
+                    FlavorProfile = "Floral, chocolate, stone fruit",
+                    FlavorProfileES = "Floral, chocolate, fruta de hueso",
+                    Rating = 4.7m,
+                    ScaScore = 87.00m,
+                    BasePriceUSD = 28.00m,
+                    BasePricePEN = 105.00m,
+                    ProcessingMethod = "Washed",
+                    Producer = "Cajamarca producers",
+                    Variety = "Pachamara",
+                    Altitude = "1500–1900 msnm",
+                    ImageUrl = "/brand/beans/Pachamara.jpg?v=3",
+                    ProducerDescription = "Pachamara (Pacamara) is Pacas × Maragogipe: a large-bean plant grown in small plots in Peru’s northern highlands. This is a small auction (subasta) lot.",
+                    ProducerDescriptionES = "Pachamara (Pacamara) es Pacas × Maragogipe: un grano grande cultivado en parcelas chicas de la sierra norte del Perú. Es un lote chico de subasta.",
+                    ProcessingDescription = MillProcess.WashedEn,
+                    ProcessingDescriptionES = MillProcess.WashedEs,
+                    OriginDescription = "Cajamarca’s Jaén and San Ignacio belt is where most of our recent northern lots come from. Pachamara’s long bean and floral-chocolate cup sit beside Marsellesa and Bourbon on those same slopes.",
+                    OriginDescriptionES = "El corredor Jaén–San Ignacio de Cajamarca es de donde salen la mayoría de nuestros lotes del norte. El grano largo y la taza floral-chocolate del Pachamara conviven con Marsellesa y Borbón en esas mismas laderas.",
                     CoffeeFarm = cajamarcaHighlands,
                     CoffeeRegion = cajamarca,
                     OriginCountry = peru
@@ -661,6 +695,34 @@ namespace TheBestBean.Models
                 if (url != null && bean.ImageUrl != url)
                 {
                     bean.ImageUrl = url;
+                    changed = true;
+                }
+            }
+
+            if (changed)
+            {
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        private static async Task ApplyMillNotesAsync()
+        {
+            var beans = await _context.CoffeeBean.ToListAsync();
+            var changed = false;
+            foreach (var bean in beans)
+            {
+                var process = string.IsNullOrWhiteSpace(bean.ProcessingMethod) ? "Washed" : bean.ProcessingMethod;
+                var en = MillProcess.NoteFor(process, bean.Name + " " + bean.Variety);
+                var es = MillProcess.NoteForEs(process, bean.Name + " " + bean.Variety);
+                if (bean.ProcessingDescription != en)
+                {
+                    bean.ProcessingDescription = en;
+                    changed = true;
+                }
+
+                if (bean.ProcessingDescriptionES != es)
+                {
+                    bean.ProcessingDescriptionES = es;
                     changed = true;
                 }
             }
@@ -1182,6 +1244,7 @@ namespace TheBestBean.Models
                 (Find("Geisha R17 - Cajamarca [Angel M]"), 3.0m, new[] { (6, "Light", 800m) }),
                 (Find("Geisha Alto - Cajamarca [Angel M]"), 3.0m, new[] { (7, "Light", 800m) }),
                 (Find("Caturai - Cajamarca [Miguel Cortez]"), 3.0m, new[] { (8, "Light", 800m) }),
+                (Find("Cajamarca [Pachamara]", "Pachamara"), 3.0m, new[] { (2, "Light", 800m) }),
                 (Find("Geisha - Cajamarca [ Miguel Cortez]"), 3.0m, new[] { (9, "Light", 800m) }),
                 (Find("Geisha - Cajamarca [Miguel Cortez]"), 3.0m, new[] { (10, "Light", 800m) }),
             };

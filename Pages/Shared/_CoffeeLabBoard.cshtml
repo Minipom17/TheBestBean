@@ -43,8 +43,8 @@
                 colorIndex++;
                 <div class="lab-board__row group" role="listitem">
                     <span class="lab-board__stock">
-                        <button type="button" class="lot-sheet-open lab-board__kg lab-board__kg--green" data-lot="@lot.SheetJson()" data-lot-focus="green">@CoffeeLotStatus.FormatKg(lot.GreenKg)</button>
-                        <button type="button" class="lot-sheet-open lab-board__kg lab-board__kg--roast" data-lot="@lot.SheetJson()" data-lot-focus="roast">@CoffeeLotStatus.FormatKg(lot.RoastedKg)</button>
+                        <button type="button" class="lot-sheet-open lab-board__kg lab-board__kg--green" style="color:#16A34A" data-lot="@lot.SheetJson()" data-lot-focus="green">@CoffeeLotStatus.FormatKg(lot.GreenKg)</button>
+                        <button type="button" class="lot-sheet-open lab-board__kg lab-board__kg--roast" style="color:#8B5A2B" data-lot="@lot.SheetJson()" data-lot-focus="roast">@CoffeeLotStatus.FormatKg(lot.RoastedKg)</button>
                     </span>
                     @if (!compact && latestRoast != null)
                     {

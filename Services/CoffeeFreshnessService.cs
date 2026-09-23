@@ -84,6 +84,7 @@ namespace TheBestBean.Services
                     .FirstOrDefault();
                 var title = CoffeeCardTitle.From(bean);
                 var display = CoffeeCardTitle.Line(title);
+                var process = FirstText(primary?.Process, bean.ProcessingMethod, "Washed");
 
                 lots.Add(new CoffeeLotStatus
                 {
@@ -92,9 +93,11 @@ namespace TheBestBean.Services
                     GreenKg = green,
                     RoastedKg = roastedKg,
                     Farmer = primary?.Farmer ?? title.Farmer,
-                    Process = primary?.Process,
+                    Process = process,
                     Variety = title.Variety,
                     Region = title.Location,
+                    MillNote = MillProcess.Note(process, bean.Name, "Bean", bean.ProcessingDescription),
+                    Steps = MillProcess.Steps(process, bean.Name),
                     HarvestedOn = primary?.HarvestedOn,
                     FermentedOn = primary?.FermentedOn,
                     DriedOn = primary?.DriedOn,
@@ -171,16 +174,62 @@ namespace TheBestBean.Services
             var roastDay = roast.RoastDate.Date;
             var days = Math.Max(0, (today - roastDay).Days);
             var phase = PhaseFor(days);
+            var duration = roast.RoastTimeSeconds ?? roast.DropTime;
+            var development = Span(roast.FirstCrackTime, roast.DropTime ?? roast.RoastTimeSeconds);
+            var maillard = Span(roast.DryEndTime, roast.FirstCrackTime);
+            var loss = roast.WeightLossPercent;
+            if (!loss.HasValue && roast.GreenWeightGrams is > 0 && roast.RoastedWeightGrams.HasValue)
+            {
+                loss = Math.Round((1 - roast.RoastedWeightGrams.Value / roast.GreenWeightGrams.Value) * 100m, 1);
+            }
+
+            var dtr = roast.DTRPercent;
+            if (!dtr.HasValue && duration is > 0 && development.HasValue)
+            {
+                dtr = Math.Round(development.Value / (decimal)duration.Value * 100m, 1);
+            }
+
+            var dropTemp = roast.GetTemperatureData().LastOrDefault(p => p.Temp.HasValue)?.Temp;
+
             return new RoastedDrop
             {
                 RoastDate = roastDay,
                 DaysAgo = days,
                 Profile = RoastProfiles.Label(roast.RoastLevel),
                 WeightGrams = roast.RoastedWeightGrams,
+                GreenWeightGrams = roast.GreenWeightGrams,
+                WeightLossPercent = loss,
+                Duration = Clock(duration),
+                Maillard = Clock(maillard),
+                Development = Clock(development),
+                Dtr = dtr.HasValue ? $"{dtr.Value:0.#}%" : null,
+                FirstCrack = Clock(roast.FirstCrackTime),
+                Drop = Clock(roast.DropTime),
+                DropTemp = dropTemp.HasValue ? $"{dropTemp.Value:0.#}°C" : null,
                 Phase = phase,
                 PhaseLabel = PhaseLabel(phase),
                 PhaseHint = PhaseHint(phase)
             };
+        }
+
+        private static int? Span(int? start, int? end)
+        {
+            if (start is null || end is null || end.Value < start.Value)
+            {
+                return null;
+            }
+
+            return end.Value - start.Value;
+        }
+
+        private static string? Clock(int? seconds)
+        {
+            if (seconds is null || seconds.Value < 0)
+            {
+                return null;
+            }
+
+            return $"{seconds.Value / 60}:{seconds.Value % 60:00}";
         }
 
         private static bool Matches(BeanInventory inv, int coffeeBeanId, string coffeeName)
@@ -203,6 +252,19 @@ namespace TheBestBean.Services
             }
 
             return left == right || left.Contains(right) || right.Contains(left);
+        }
+
+        private static string FirstText(params string?[] values)
+        {
+            foreach (var value in values)
+            {
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    return value.Trim();
+                }
+            }
+
+            return "";
         }
 
         private static string Norm(string? value)

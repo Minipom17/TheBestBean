@@ -89,8 +89,8 @@
         <div class="coffee-card-stock mt-auto">
             @if (lot != null && (lot.HasGreen || lot.RoastedKg >= 0.05m))
             {
-                <button type="button" class="lot-sheet-open coffee-card-stock__green" data-lot="@lot.SheetJson()" data-lot-focus="green">@CoffeeLotStatus.FormatKg(lot.GreenKg) green</button>
-                <button type="button" class="lot-sheet-open coffee-card-stock__roast" data-lot="@lot.SheetJson()" data-lot-focus="roast">@CoffeeLotStatus.FormatKg(lot.RoastedKg) roasted</button>
+                <button type="button" class="lot-sheet-open coffee-card-stock__green" style="color:#16A34A" data-lot="@lot.SheetJson()" data-lot-focus="green">@CoffeeLotStatus.FormatKg(lot.GreenKg) green</button>
+                <button type="button" class="lot-sheet-open coffee-card-stock__roast" style="color:#8B5A2B" data-lot="@lot.SheetJson()" data-lot-focus="roast">@CoffeeLotStatus.FormatKg(lot.RoastedKg) roasted</button>
             }
         </div>
 

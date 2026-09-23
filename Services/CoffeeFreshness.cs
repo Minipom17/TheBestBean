@@ -16,6 +16,15 @@ namespace TheBestBean.Services
         public int DaysAgo { get; init; }
         public string Profile { get; init; } = "Our roast";
         public decimal? WeightGrams { get; init; }
+        public decimal? GreenWeightGrams { get; init; }
+        public decimal? WeightLossPercent { get; init; }
+        public string? Duration { get; init; }
+        public string? Maillard { get; init; }
+        public string? Development { get; init; }
+        public string? Dtr { get; init; }
+        public string? FirstCrack { get; init; }
+        public string? Drop { get; init; }
+        public string? DropTemp { get; init; }
         public FreshPhase Phase { get; init; }
         public string PhaseLabel { get; init; } = "";
         public string PhaseHint { get; init; } = "";
@@ -31,6 +40,8 @@ namespace TheBestBean.Services
         public string? Process { get; init; }
         public string? Variety { get; init; }
         public string? Region { get; init; }
+        public string? MillNote { get; init; }
+        public IReadOnlyList<string> Steps { get; init; } = Array.Empty<string>();
         public DateTime? HarvestedOn { get; init; }
         public DateTime? FermentedOn { get; init; }
         public DateTime? DriedOn { get; init; }
@@ -79,6 +90,8 @@ namespace TheBestBean.Services
                 variety = Variety,
                 region = Region,
                 warehouse = "Cusco",
+                note = MillNote,
+                steps = Steps,
                 greenKg = FormatKg(GreenKg),
                 roastedKg = FormatKg(RoastedKg),
                 harvested = Iso(HarvestedOn),
@@ -91,7 +104,16 @@ namespace TheBestBean.Services
                     days = r.DaysAgo,
                     profile = r.Profile,
                     phase = r.PhaseLabel,
-                    kg = r.WeightGrams.HasValue ? FormatKg(r.WeightGrams.Value / 1000m) : null
+                    kg = r.WeightGrams.HasValue ? FormatKg(r.WeightGrams.Value / 1000m) : null,
+                    charge = r.GreenWeightGrams.HasValue ? $"{Math.Round(r.GreenWeightGrams.Value, 0)} g" : null,
+                    loss = r.WeightLossPercent.HasValue ? $"{r.WeightLossPercent.Value:0.#}%" : null,
+                    duration = r.Duration,
+                    maillard = r.Maillard,
+                    development = r.Development,
+                    dtr = r.Dtr,
+                    firstCrack = r.FirstCrack,
+                    drop = r.Drop,
+                    dropTemp = r.DropTemp
                 })
             });
         }

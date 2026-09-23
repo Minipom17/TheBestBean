@@ -155,8 +155,8 @@
                 @if (Model.Product.Type == "Bean" && Model.Lot != null && (Model.Lot.HasGreen || Model.Lot.RoastedKg >= 0.05m))
                 {
                     <div class="coffee-card-stock product-lot-stock">
-                        <button type="button" class="lot-sheet-open coffee-card-stock__green" data-lot="@Model.Lot.SheetJson()" data-lot-focus="green">@CoffeeLotStatus.FormatKg(Model.Lot.GreenKg) green</button>
-                        <button type="button" class="lot-sheet-open coffee-card-stock__roast" data-lot="@Model.Lot.SheetJson()" data-lot-focus="roast">@CoffeeLotStatus.FormatKg(Model.Lot.RoastedKg) roasted</button>
+                        <button type="button" class="lot-sheet-open coffee-card-stock__green" style="color:#16A34A" data-lot="@Model.Lot.SheetJson()" data-lot-focus="green">@CoffeeLotStatus.FormatKg(Model.Lot.GreenKg) green</button>
+                        <button type="button" class="lot-sheet-open coffee-card-stock__roast" style="color:#8B5A2B" data-lot="@Model.Lot.SheetJson()" data-lot-focus="roast">@CoffeeLotStatus.FormatKg(Model.Lot.RoastedKg) roasted</button>
                     </div>
                 }
                 
@@ -312,26 +312,9 @@
             var specProfile = string.IsNullOrEmpty(Model.Product.FlavorProfile)
                 ? (Model.Product.Type == "Cacao" ? "Rich & Fruity" : "Complex")
                 : Model.Product.FlavorProfile;
-            var processDescFallback = Model.Product.Type == "Cacao"
-                ? $"This {Model.Product.Name} is carefully fermented and dried using traditional methods passed down through generations. The fermentation process develops the complex flavors characteristic of Cusco cacao, while careful drying preserves the quality and prevents mold."
-                : Model.Product.Name.Contains("Roast") || Model.Product.Name.Contains("Roasted")
-                ? $"This {Model.Product.Name} is roasted in small batches in Cusco using traditional methods. Our roasting process is carefully calibrated to bring out the unique characteristics of the Cusco terroir, whether light, medium, or dark roast."
-                : Model.Product.Name.Contains("SL09")
-                ? $"SL09 is fully washed and fermented for 24-36 hours, then carefully dried on raised beds. This processing method results in a clean, bright cup that highlights the chocolate and caramel notes characteristic of La Convención coffees. The beans are then sorted and prepared for export or local roasting."
-                : Model.Product.ProcessingMethod == "Washed"
-                ? $"This {Model.Product.Name} is fully washed and fermented for 24 hours. The result is a clean cup that highlights the terroir of the Cusco region."
-                : Model.Product.ProcessingMethod == "Natural"
-                ? $"This {Model.Product.Name} is naturally processed, allowing the coffee cherries to dry with the fruit intact. This method enhances sweetness and body, creating a unique flavor profile from Cusco's high-altitude farms."
-                : $"This {Model.Product.Name} is processed using traditional methods from the Cusco region, carefully selected to bring out the unique characteristics of Peruvian coffee.";
-            var processDesc = string.IsNullOrEmpty(Model.Product.ProcessingDescription) ? processDescFallback : Model.Product.ProcessingDescription;
-            var processKey = (specProcess ?? "").ToLowerInvariant();
-            string[] processSteps = Model.Product.Type == "Cacao"
-                ? new[] { "Harvest", "Ferment", "Dry", "Sort" }
-                : processKey.Contains("natural")
-                ? new[] { "Selective pick", "Dry in cherry", "Hull", "Sort" }
-                : processKey.Contains("honey")
-                ? new[] { "Selective pick", "Pulp", "Mucilage dry", "Mill" }
-                : new[] { "Selective pick", "Ferment 16–36h", "Wash", "Raised beds" };
+            var millKey = string.IsNullOrEmpty(Model.Product.Variety) ? Model.Product.Name : Model.Product.Variety + " " + Model.Product.Name;
+            var processDesc = MillProcess.Note(specProcess, millKey, Model.Product.Type, Model.Product.ProcessingDescription);
+            var processSteps = MillProcess.Steps(specProcess, millKey, Model.Product.Type);
         }
         <section class="product-sheet" aria-label="Lot sheet">
             <div class="product-sheet__head">
@@ -387,6 +370,27 @@
                     <p class="product-sheet__kicker">Mill notes</p>
                     <h3>About the processing</h3>
                     <p data-entity-id="@Model.Product.Id" data-entity-type="CoffeeBean" data-editable="ProcessingDescription">@processDesc</p>
+                    @if (Model.Lot != null && (Model.Lot.HarvestedOn.HasValue || Model.Lot.FermentedOn.HasValue || Model.Lot.DriedOn.HasValue || Model.Lot.ArrivedCuscoOn.HasValue))
+                    {
+                        <dl class="product-sheet__trail">
+                            <div>
+                                <dt>Harvested</dt>
+                                <dd>@(Model.Lot.HarvestedOn?.ToString("d MMM yyyy") ?? "—")</dd>
+                            </div>
+                            <div>
+                                <dt>Fermented</dt>
+                                <dd>@(Model.Lot.FermentedOn?.ToString("d MMM yyyy") ?? "—")</dd>
+                            </div>
+                            <div>
+                                <dt>Dried</dt>
+                                <dd>@(Model.Lot.DriedOn?.ToString("d MMM yyyy") ?? "—")</dd>
+                            </div>
+                            <div>
+                                <dt>Arrived Cusco</dt>
+                                <dd>@(Model.Lot.ArrivedCuscoOn?.ToString("d MMM yyyy") ?? "—")</dd>
+                            </div>
+                        </dl>
+                    }
                 </div>
             </div>
         </section>

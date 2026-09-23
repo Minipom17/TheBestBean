@@ -63,8 +63,24 @@ def row_dict(row, dimension_names: list[str], metric_names: list[str]) -> dict:
     return out
 
 
-def run_table(client, property_id: str, start: str, end: str, dimensions: list[str], metrics: list[str], limit: int = 15):
-    from google.analytics.data_v1beta.types import DateRange, Dimension, Metric, RunReportRequest
+def run_table(
+    client,
+    property_id: str,
+    start: str,
+    end: str,
+    dimensions: list[str],
+    metrics: list[str],
+    limit: int = 15,
+    event_name: str | None = None,
+):
+    from google.analytics.data_v1beta.types import (
+        DateRange,
+        Dimension,
+        Filter,
+        FilterExpression,
+        Metric,
+        RunReportRequest,
+    )
 
     request = RunReportRequest(
         property=f"properties/{property_id}",
@@ -73,6 +89,16 @@ def run_table(client, property_id: str, start: str, end: str, dimensions: list[s
         date_ranges=[DateRange(start_date=start, end_date=end)],
         limit=limit,
     )
+    if event_name:
+        request.dimension_filter = FilterExpression(
+            filter=Filter(
+                field_name="eventName",
+                string_filter=Filter.StringFilter(
+                    value=event_name,
+                    match_type=Filter.StringFilter.MatchType.EXACT,
+                ),
+            )
+        )
     response = client.run_report(request)
     rows = [row_dict(row, dimensions, metrics) for row in response.rows]
     totals = {}
@@ -83,10 +109,49 @@ def run_table(client, property_id: str, start: str, end: str, dimensions: list[s
     return {"rows": rows, "totals": totals}
 
 
+def run_realtime(client, property_id: str, dimensions: list[str], metrics: list[str], limit: int = 25, event_name: str | None = None):
+    from google.analytics.data_v1beta.types import (
+        Dimension,
+        Filter,
+        FilterExpression,
+        Metric,
+        RunRealtimeReportRequest,
+    )
+
+    request = RunRealtimeReportRequest(
+        property=f"properties/{property_id}",
+        dimensions=[Dimension(name=name) for name in dimensions],
+        metrics=[Metric(name=name) for name in metrics],
+        limit=limit,
+    )
+    if event_name:
+        request.dimension_filter = FilterExpression(
+            filter=Filter(
+                field_name="eventName",
+                string_filter=Filter.StringFilter(
+                    value=event_name,
+                    match_type=Filter.StringFilter.MatchType.EXACT,
+                ),
+            )
+        )
+    response = client.run_realtime_report(request)
+    return [row_dict(row, dimensions, metrics) for row in response.rows]
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Fetch Purple Bean GA4 traffic as JSON.")
-    parser.add_argument("--days", type=int, default=7, help="Lookback window ending yesterday.")
+    parser.add_argument("--days", type=int, default=7, help="Lookback window ending yesterday (or today).")
+    parser.add_argument(
+        "--include-today",
+        action="store_true",
+        help="End the window at today so same-day WhatsApp clicks are included.",
+    )
     parser.add_argument("--pretty", action="store_true", help="Indent JSON for reading.")
+    parser.add_argument(
+        "--realtime",
+        action="store_true",
+        help="Last ~30 minutes only (device fingerprint for a live click test).",
+    )
     args = parser.parse_args()
 
     load_env_file(ROOT / "scripts" / "ga4.env")
@@ -111,8 +176,40 @@ def main() -> int:
         return 2
 
     start = f"{args.days}daysAgo"
-    end = "yesterday"
+    end = "today" if args.include_today else "yesterday"
     client = BetaAnalyticsDataClient()
+
+    if args.realtime:
+        report = {
+            "site": "https://purplebean.coffee",
+            "window": "last_30_minutes",
+            "active": run_realtime(
+                client,
+                property_id,
+                ["minutesAgo", "deviceCategory", "platform", "city"],
+                ["activeUsers"],
+                40,
+            ),
+            "pages": run_realtime(
+                client,
+                property_id,
+                ["unifiedScreenName", "deviceCategory", "city"],
+                ["eventCount"],
+                20,
+            ),
+            "events": run_realtime(client, property_id, ["eventName"], ["eventCount"], 25),
+            "whatsapp": run_realtime(
+                client,
+                property_id,
+                ["deviceCategory", "platform", "city"],
+                ["eventCount"],
+                20,
+                event_name="whatsapp_click",
+            ),
+        }
+        json.dump(report, sys.stdout, indent=2 if args.pretty else None)
+        sys.stdout.write("\n")
+        return 0
 
     totals = run_table(
         client,
@@ -123,7 +220,7 @@ def main() -> int:
         metrics=["activeUsers", "sessions", "screenPageViews", "engagementRate", "ecommercePurchases"],
         limit=1,
     )["totals"]
-    events = run_table(client, property_id, start, end, ["eventName"], ["eventCount", "activeUsers"], 25)
+    events = run_table(client, property_id, start, end, ["eventName"], ["eventCount", "activeUsers"], 40)
     report = {
         "site": "https://purplebean.coffee",
         "measurementId": "G-TR8742RMGE",
@@ -137,6 +234,52 @@ def main() -> int:
         "leadEvents": [
             row for row in events["rows"] if row.get("eventName") in {"whatsapp_click", "generate_lead", "purchase"}
         ],
+        "whatsappByDate": run_table(
+            client, property_id, start, end, ["date"], ["eventCount", "activeUsers"], 40, event_name="whatsapp_click"
+        )["rows"],
+        "whatsappByPage": run_table(
+            client, property_id, start, end, ["pagePath"], ["eventCount", "activeUsers"], 15, event_name="whatsapp_click"
+        )["rows"],
+        "whatsappByCity": run_table(
+            client,
+            property_id,
+            start,
+            end,
+            ["city", "country"],
+            ["eventCount", "activeUsers"],
+            15,
+            event_name="whatsapp_click",
+        )["rows"],
+        "whatsappByChannel": run_table(
+            client,
+            property_id,
+            start,
+            end,
+            ["sessionDefaultChannelGroup"],
+            ["eventCount", "activeUsers"],
+            12,
+            event_name="whatsapp_click",
+        )["rows"],
+        "whatsappByDevice": run_table(
+            client,
+            property_id,
+            start,
+            end,
+            ["deviceCategory"],
+            ["eventCount", "activeUsers"],
+            8,
+            event_name="whatsapp_click",
+        )["rows"],
+        "whatsappClicks": run_table(
+            client,
+            property_id,
+            start,
+            end,
+            ["date", "deviceCategory", "operatingSystem", "browser", "city", "pagePath"],
+            ["eventCount", "activeUsers"],
+            40,
+            event_name="whatsapp_click",
+        )["rows"],
     }
 
     json.dump(report, sys.stdout, indent=2 if args.pretty else None)

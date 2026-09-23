@@ -1,0 +1,41 @@
+@page
+@model TheBestBean.Pages.IgnoreAnalyticsModel
+@{
+    ViewData["Title"] = "Ignore this device";
+    ViewData["Robots"] = "noindex, nofollow";
+}
+
+<section class="max-w-xl mx-auto px-6 py-16">
+    <p class="font-mono text-[10px] uppercase tracking-widest text-gray-500 mb-3">Staff · this browser only</p>
+    <h1 class="font-grotesk text-3xl font-bold mb-4">Ignore analytics on this device</h1>
+    <p class="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
+        Stay logged in. This does not sign you out. It only stops Google Analytics and WhatsApp-lead events from <em>this</em> phone or laptop for two years.
+    </p>
+    <p id="pb-ga-status" class="font-mono text-sm font-bold uppercase tracking-widest mb-6"></p>
+    <div class="flex flex-wrap gap-3">
+        <button type="button" id="pb-ga-ignore-on" class="btn-lab px-6 py-3">Ignore this device</button>
+        <button type="button" id="pb-ga-ignore-off" class="px-6 py-3 border border-black dark:border-cream bg-transparent font-mono text-[11px] uppercase tracking-widest">Count me again</button>
+    </div>
+</section>
+
+@section Scripts {
+<script>
+    (function () {
+        var status = document.getElementById('pb-ga-status');
+        function paint() {
+            var off = typeof pbGaIsOff === 'function' ? pbGaIsOff() : false;
+            status.textContent = off ? 'Ignored — this device is not counted' : 'Counting — this device is in GA';
+            status.style.color = off ? '#16A34A' : '#CA8A04';
+        }
+        document.getElementById('pb-ga-ignore-on').addEventListener('click', function () {
+            if (typeof pbSetGaOff === 'function') pbSetGaOff(true);
+            paint();
+        });
+        document.getElementById('pb-ga-ignore-off').addEventListener('click', function () {
+            if (typeof pbSetGaOff === 'function') pbSetGaOff(false);
+            paint();
+        });
+        paint();
+    })();
+</script>
+}

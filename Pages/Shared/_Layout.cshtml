@@ -47,6 +47,51 @@
     <meta property="twitter:description" content="@(ViewData["MetaDescription"] ?? "Sourcing and roasting the finest coffees from the high altitudes of Cusco, Peru.")">
     <meta property="twitter:image" content="@(ViewData["MetaImage"] ?? "https://purplebean.coffee/images/og-logo.png")">
 
+    <script>
+      (function () {
+        function readOff() {
+          try { if (localStorage.getItem('pb_ga_off') === '1') return true; } catch (e) {}
+          return document.cookie.split(';').some(function (c) {
+            return c.trim().indexOf('pb_ga_off=1') === 0;
+          });
+        }
+        function writeOff(on) {
+          if (on) {
+            document.cookie = 'pb_ga_off=1;path=/;max-age=63072000;SameSite=Lax';
+            try { localStorage.setItem('pb_ga_off', '1'); } catch (e) {}
+          } else {
+            document.cookie = 'pb_ga_off=;path=/;max-age=0';
+            try { localStorage.removeItem('pb_ga_off'); } catch (e) {}
+          }
+        }
+        try {
+          var params = new URLSearchParams(location.search);
+          if (params.get('pb_internal') === '1') writeOff(true);
+          if (params.get('pb_internal') === '0') writeOff(false);
+          var ua = navigator.userAgent || '';
+          var isAgent = navigator.webdriver === true
+            || /HeadlessChrome|Playwright|Puppeteer/i.test(ua);
+          window.__pbGaOff = isAgent || readOff();
+          window.pbGaIsOff = function () { return isAgent || readOff(); };
+          window.pbSetGaOff = function (on) {
+            writeOff(!!on);
+            window.__pbGaOff = isAgent || !!on;
+            if (on) {
+              window.gtag = function () {};
+              window.pbEmitGaEvents = function () {};
+            } else {
+              location.reload();
+              return window.__pbGaOff;
+            }
+            return window.__pbGaOff;
+          };
+        } catch (err) {
+          window.__pbGaOff = false;
+          window.pbGaIsOff = function () { return false; };
+          window.pbSetGaOff = function () { return false; };
+        }
+      })();
+    </script>
     @{
         var gaId = Configuration["GoogleAnalytics:MeasurementId"];
         var gaHost = Context.Request.Host.Host;
@@ -57,32 +102,7 @@
     }
     @if (!string.IsNullOrEmpty(gaId) && !skipGaServer)
     {
-        <!-- Google tag (gtag.js). Opt out on this browser: /?pb_internal=1 -->
-        <script>
-          (function () {
-            try {
-              var params = new URLSearchParams(location.search);
-              if (params.get('pb_internal') === '1') {
-                document.cookie = 'pb_ga_off=1;path=/;max-age=63072000;SameSite=Lax';
-                try { localStorage.setItem('pb_ga_off', '1'); } catch (e) {}
-              }
-              if (params.get('pb_internal') === '0') {
-                document.cookie = 'pb_ga_off=;path=/;max-age=0';
-                try { localStorage.removeItem('pb_ga_off'); } catch (e) {}
-              }
-              var ua = navigator.userAgent || '';
-              var isAgent = navigator.webdriver === true
-                || /HeadlessChrome|Playwright|Puppeteer/i.test(ua);
-              var optedOut = false;
-              try { optedOut = localStorage.getItem('pb_ga_off') === '1'; } catch (e) {}
-              window.__pbGaOff = isAgent || optedOut || document.cookie.split(';').some(function (c) {
-                return c.trim().indexOf('pb_ga_off=1') === 0;
-              });
-            } catch (err) {
-              window.__pbGaOff = false;
-            }
-          })();
-        </script>
+        <!-- Google tag (gtag.js). Ignore this browser: /IgnoreAnalytics or /?pb_internal=1 -->
         <script>
           window.pbEmitGaEvents = function () {};
           if (!window.__pbGaOff) {
@@ -629,7 +649,7 @@
 
     <!-- Unified Delivery & WhatsApp Float Button -->
     <a href="@PurpleBeanContact.WhatsAppUrl" target="_blank" class="delivery-float" title="Delivery & WhatsApp Dispatch"
-       onclick="if (typeof gtag === 'function') { gtag('event', 'whatsapp_click', { event_category: 'engagement', event_label: location.pathname, page_path: location.pathname, transport_type: 'beacon' }); gtag('event', 'generate_lead', { event_category: 'engagement', method: 'whatsapp', page_path: location.pathname, transport_type: 'beacon' }); }">
+       onclick="if (typeof gtag === 'function' && !window.__pbGaOff) { gtag('event', 'whatsapp_click', { event_category: 'engagement', event_label: location.pathname, page_path: location.pathname, transport_type: 'beacon' }); gtag('event', 'generate_lead', { event_category: 'engagement', method: 'whatsapp', page_path: location.pathname, transport_type: 'beacon' }); }">
         <i class="bi bi-truck text-xl"></i>
         <span>//</span>
         <i class="bi bi-whatsapp text-xl"></i>
@@ -775,8 +795,8 @@
                 <h3>Green · farm trail</h3>
                 <dl class="lot-sheet__trail" data-lot-trail></dl>
             </section>
-            <section class="lot-sheet__section" data-lot-roast>
-                <h3>Roasted</h3>
+            <section class="lot-sheet__section" data-lot-roast hidden>
+                <h3>Roast lab</h3>
                 <div class="lot-sheet__roasts" data-lot-roasts></div>
             </section>
         </div>
@@ -784,9 +804,29 @@
     
     @if (User.Identity?.IsAuthenticated == true && User.IsInRole("Admin"))
     {
+        <button type="button" id="pb-ga-ignore-toggle" aria-label="Ignore analytics on this device" class="fixed top-0 right-8 z-[100000] bg-v-yellow text-v-black border-0 p-0 m-0 w-8 h-8 flex items-center justify-center cursor-pointer text-base" title="Ignore analytics on this device">
+            <i class="bi bi-eye-slash-fill"></i>
+        </button>
         <button id="inline-edit-toggle" aria-label="Toggle Edit Mode" class="fixed top-0 right-0 z-[100000] bg-v-yellow text-v-black border-0 p-0 m-0 w-8 h-8 flex items-center justify-center cursor-pointer text-base" title="Toggle Edit Mode">
             <i class="bi bi-pencil-fill"></i>
         </button>
+        <script>
+            (function () {
+                var btn = document.getElementById('pb-ga-ignore-toggle');
+                if (!btn) return;
+                function paint() {
+                    var off = typeof pbGaIsOff === 'function' && pbGaIsOff();
+                    btn.style.opacity = off ? '1' : '0.45';
+                    btn.title = off ? 'Analytics ignored on this device' : 'Ignore analytics on this device';
+                }
+                btn.addEventListener('click', function () {
+                    var off = typeof pbGaIsOff === 'function' && pbGaIsOff();
+                    if (typeof pbSetGaOff === 'function') pbSetGaOff(!off);
+                    paint();
+                });
+                paint();
+            })();
+        </script>
     }
 
     <!-- Inline Editor Logic -->
