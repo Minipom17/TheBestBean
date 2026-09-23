@@ -4,7 +4,7 @@
     Layout = "_Layout";
     ViewData["Title"] = "Coffee Experiences in Cusco";
     ViewData["MetaDescription"] = "Book coffee experiences in Peru: Cusco workshops, a Santa Teresa cloud-forest farm on the Machu Picchu corridor, and a Cup of Excellence farm visit in Jaén, Cajamarca.";
-    ViewData["MetaImage"] = "https://purplebean.coffee/images/og-logo.png";
+    ViewData["MetaImage"] = "https://purplebean.coffee/brand/og-share.jpg?v=2";
 }
 @Html.AntiForgeryToken()
 
@@ -213,7 +213,7 @@
                                             </button>
                                         }
                                     </div>
-                                    <a href="@ExperienceUrls.PublicPath(exp)" class="text-decoration-none text-slate-900 dark:text-[#D6D0C8] flex flex-col h-full group">
+                                    <a href="@ExperienceUrls.PublicPath(exp)" class="hour-lab-card__body text-decoration-none text-slate-900 dark:text-[#D6D0C8] flex flex-col group">
                                         <div class="hour-lab-card__meta">
                                             <div class="w-1.5 h-1.5 bg-v-yellow shrink-0"></div>
                                             <span class="text-v-black dark:text-[#D6D0C8]">@ShortDuration(exp.Duration)</span>
@@ -234,8 +234,8 @@
                                         }
                                     </h3>
                                         <p class="hour-lab-card__venue"><partial name="_VenueLine" model="exp" /></p>
-                                        <p class="hour-lab-card__copy text-v-gray text-sm leading-relaxed mb-5 pb-5 border-b border-v-black/10 dark:border-[#2A262C] font-normal">@exp.Description</p>
-                                        <div class="flex items-center justify-between mt-auto font-mono-jb">
+                                        <p class="hour-lab-card__copy text-v-gray text-sm leading-relaxed font-normal">@exp.Description</p>
+                                        <div class="hour-lab-card__price flex items-center justify-between font-mono-jb">
                                             <partial name="_WorkshopPrice" model="new DualPriceModel { Usd = exp.Price, Compact = true }" />
                                             <span class="text-sm font-bold">Reserve <span class="ml-1">&rarr;</span></span>
                                         </div>

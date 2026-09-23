@@ -349,7 +349,7 @@ namespace TheBestBean.Pages
         {
             if (string.IsNullOrWhiteSpace(path))
             {
-                return "https://purplebean.coffee/images/og-logo.png";
+                return "https://purplebean.coffee/brand/og-share.jpg?v=2";
             }
 
             if (path.StartsWith("http", StringComparison.OrdinalIgnoreCase))

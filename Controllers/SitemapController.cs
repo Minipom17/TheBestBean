@@ -41,6 +41,7 @@ namespace TheBestBean.Controllers
                 ("/Blog", "0.8", "weekly"),
                 ("/About", "0.7", "monthly"),
                 ("/Resources", "0.7", "monthly"),
+                ("/Resources/CoffeeInPeru", "0.6", "monthly"),
                 ("/Subscriptions", "0.7", "monthly"),
                 ("/SocialCoffee", "0.7", "monthly"),
                 ("/OriginMap", "0.7", "monthly"),

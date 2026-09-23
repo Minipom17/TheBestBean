@@ -1,0 +1,178 @@
+@page "/Resources/CoffeeInPeru"
+@model TheBestBean.Pages.Talks.PeruCoffeeModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] | Purple Bean Coffee</title>
+    <meta name="description" content="@ViewData["MetaDescription"]" />
+    <link rel="canonical" href="https://purplebean.coffee/Resources/CoffeeInPeru" />
+    <meta property="og:title" content="Coffee in Peru — 10 minutes" />
+    <meta property="og:description" content="@ViewData["MetaDescription"]" />
+    <meta property="og:image" content="https://purplebean.coffee/brand/og-share.jpg?v=2" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="talk-body">
+    <header class="talk-hud">
+        <a class="talk-hud__brand" href="/Resources">Purple Bean</a>
+        <p class="talk-hud__kicker">Lab talk · ~10 min</p>
+        <p class="talk-hud__count" data-talk-num>1 / 11</p>
+        <button type="button" class="talk-hud__btn" data-talk-prev aria-label="Previous">‹</button>
+        <button type="button" class="talk-hud__btn" data-talk-next aria-label="Next">›</button>
+        <button type="button" class="talk-hud__btn" data-talk-fs title="Fullscreen (F)">Fullscreen</button>
+    </header>
+
+    <main class="talk-stage" id="talk-stage" tabindex="0">
+        <section class="talk-slide" data-on>
+            <p class="talk-kicker">Purple Bean Coffee · Cusco lab</p>
+            <h1 class="talk-title">Coffee in Peru</h1>
+            <p class="talk-lede">Ten minutes on where the beans grow, why altitude matters, and why a dense seed tastes different in the cup.</p>
+            <ul class="talk-beats">
+                <li>The Andes coffee belt</li>
+                <li>North · Center · South</li>
+                <li>Altitude, density, flavor</li>
+            </ul>
+            <p class="talk-hint">Arrows or space to move · F for fullscreen</p>
+        </section>
+
+        <section class="talk-slide">
+            <div class="talk-split">
+                <div>
+                    <p class="talk-kicker">01 · The belt</p>
+                    <h2 class="talk-h">Coffee only grows in a thin band</h2>
+                    <p class="talk-copy">Between the Tropics of Cancer and Capricorn — the bean belt. Peru sits on the eastern slope of the Andes, where mountain meets Amazon. That is why we get high farms and dense Arabica, not lowland Robusta.</p>
+                    <p class="talk-copy talk-copy--quiet">Peru is not one coffee. Coast, sierra, and jungle sit in the same country. The cup follows the mountain.</p>
+                </div>
+                <div class="talk-map" data-talk-map="belt" aria-label="World map with Peru in the coffee belt"></div>
+            </div>
+        </section>
+
+        <section class="talk-slide">
+            <div class="talk-split">
+                <div>
+                    <p class="talk-kicker">02 · Regions</p>
+                    <h2 class="talk-h">Peru’s coffee map</h2>
+                    <p class="talk-copy">Specialty lots come from a handful of departments. We buy in two of them: <strong>Cusco</strong> (La Convención) and <strong>Cajamarca</strong> (Jaén). Junín is the famous central valley most people have heard of — Chanchamayo.</p>
+                    <ul class="talk-legend">
+                        <li><i style="background:#722EA8"></i> Cusco — us, south</li>
+                        <li><i style="background:#16A34A"></i> Cajamarca — us, north</li>
+                        <li><i style="background:#F05A28"></i> Junín — central volume</li>
+                        <li><i style="background:#00B4D8"></i> San Martín · Amazonas · Pasco · Puno</li>
+                    </ul>
+                </div>
+                <div class="talk-map" data-talk-map="regions" aria-label="Peru coffee-growing departments"></div>
+            </div>
+        </section>
+
+        <section class="talk-slide">
+            <div class="talk-split">
+                <div>
+                    <p class="talk-kicker">03 · North</p>
+                    <h2 class="talk-h">Cajamarca · Jaén</h2>
+                    <p class="talk-copy">Not a Cusco day trip — fly Lima–Jaén. Farms sit from about 1,400 m to over 2,000 m. Citric, high-grown cups. This is Peru’s competition belt: Cup of Excellence lots from La Catarata live here.</p>
+                    <p class="talk-stat">Jaén · San Ignacio</p>
+                    <p class="talk-copy talk-copy--quiet">When a bag says Cajamarca, think north, think altitude, think brightness — not the Sacred Valley.</p>
+                </div>
+                <div class="talk-map" data-talk-map="north" aria-label="Cajamarca with Jaén and San Ignacio"></div>
+            </div>
+        </section>
+
+        <section class="talk-slide">
+            <div class="talk-split">
+                <div>
+                    <p class="talk-kicker">04 · Center</p>
+                    <h2 class="talk-h">Junín · Chanchamayo</h2>
+                    <p class="talk-copy">The valley most Peruvians mean when they say “selva coffee.” Chanchamayo and Satipo send a lot of the country’s volume. Classic profile: chocolate, nuts, round body — the cup people grew up with.</p>
+                    <p class="talk-copy talk-copy--quiet">Useful contrast in a tasting: Junín as the familiar center, then Cajamarca or Cusco as the high, bright South or North.</p>
+                </div>
+                <div class="talk-map" data-talk-map="center" aria-label="Junín with Chanchamayo"></div>
+            </div>
+        </section>
+
+        <section class="talk-slide">
+            <div class="talk-split">
+                <div>
+                    <p class="talk-kicker">05 · South</p>
+                    <h2 class="talk-h">Cusco · La Convención</h2>
+                    <p class="talk-copy">Our home map. The province drops from high Andes toward the Amazon: Santa Teresa, Echarati, Inkawasi, Quillabamba. Same department as Machu Picchu. Lots here are washed, honey, natural — process actually shows in the cup.</p>
+                    <p class="talk-stat">La Convención</p>
+                    <p class="talk-copy talk-copy--quiet">This is the SVG you see on a Cusco bag — the shapefile underneath is the same geography, drawn as real borders.</p>
+                </div>
+                <div class="talk-map" data-talk-map="south" aria-label="Cusco with La Convención highlighted"></div>
+            </div>
+        </section>
+
+        <section class="talk-slide">
+            <p class="talk-kicker">06 · Altitude</p>
+            <h2 class="talk-h">Higher = slower = denser</h2>
+            <div class="talk-grid3">
+                <article>
+                    <h3>Cool nights</h3>
+                    <p>1,500 m+ means cold nights. The tree grows slower. Cherries take longer to turn red.</p>
+                </article>
+                <article>
+                    <h3>More sugar in the fruit</h3>
+                    <p>That extra time packs sugars and acids into the seed. The plant is not in a hurry.</p>
+                </article>
+                <article>
+                    <h3>A hard, tight bean</h3>
+                    <p>Less oxygen, slower fill — the seed is physically denser. Roasters feel it on the table and in the drum.</p>
+                </article>
+            </div>
+            <p class="talk-copy talk-copy--wide">We do not invent mill dates. We do talk about meters, because meters change the cup you are about to taste.</p>
+        </section>
+
+        <section class="talk-slide">
+            <p class="talk-kicker">07 · Density</p>
+            <h2 class="talk-h">What “dense” means in the cup</h2>
+            <div class="talk-two">
+                <div>
+                    <h3>Low / faster lots</h3>
+                    <p>Softer seed, quicker development on the tree. Often rounder, simpler sweetness. Easier to roast dark and still drink.</p>
+                </div>
+                <div>
+                    <h3>High / dense lots</h3>
+                    <p>Hard seed, more heat needed in the roast. In the cup: sparkle, florals, fruit, a longer finish. This is what Cajamarca and the high Cusco slopes are for.</p>
+                </div>
+            </div>
+            <p class="talk-copy">If you hear us say a lot is “dense,” we mean the seed is tight — not that the coffee is heavy or muddy.</p>
+        </section>
+
+        <section class="talk-slide">
+            <p class="talk-kicker">08 · Three Peru cups</p>
+            <h2 class="talk-h">How to taste the map</h2>
+            <ol class="talk-steps">
+                <li><strong>Cajamarca</strong> — citric, high, competition-shaped. North.</li>
+                <li><strong>Junín</strong> — chocolate, familiar, the center of the country’s volume.</li>
+                <li><strong>Cusco / La Convención</strong> — our corridor. Process and variety show; you can walk to some of these farms.</li>
+            </ol>
+            <p class="talk-copy">Same country. Three climates. That is the whole talk.</p>
+        </section>
+
+        <section class="talk-slide">
+            <p class="talk-kicker">09 · In this room</p>
+            <h2 class="talk-h">What we do with that</h2>
+            <p class="talk-lede">We roast after you order. The clocks on the shop cards are real Santoker curves, not invented mill dates. The map on a product page is La Convención or Cajamarca — the same places on the shapefile.</p>
+            <p class="talk-copy">Next: smell, then slurp. Ask which mountain the cup came from.</p>
+        </section>
+
+        <section class="talk-slide">
+            <p class="talk-kicker">Close</p>
+            <h1 class="talk-title">Peru is not one coffee</h1>
+            <p class="talk-lede">North, center, south. Altitude packs the seed. Density is why the high lots sparkle.</p>
+            <p class="talk-copy">Questions — then we brew.</p>
+            <p class="talk-hint"><a href="/Resources">Back to Resources</a> · <a href="/Experiences">Experiences</a></p>
+        </section>
+    </main>
+
+    <p class="talk-notes" data-talk-notes hidden></p>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="~/js/peru-talk.js" asp-append-version="true"></script>
+</body>
+</html>
