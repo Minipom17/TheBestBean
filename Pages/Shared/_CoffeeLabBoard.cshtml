@@ -132,10 +132,12 @@
     <div id="lab-stock-modal" class="lab-stock-modal" hidden aria-hidden="true">
         <div class="lab-stock-modal__backdrop" data-lab-modal-close></div>
         <div class="lab-stock-modal__panel lab-board__lot" role="dialog" aria-modal="true" aria-labelledby="lab-stock-modal-title">
-            <button type="button" class="lab-stock-modal__close" data-lab-modal-close aria-label="Close">×</button>
-            <div class="lab-board__lot-top">
+            <div class="lab-stock-modal__head">
                 <strong id="lab-stock-modal-title" class="lab-board__name"></strong>
-                <span id="lab-stock-modal-pill" class="lab-board__pill"></span>
+                <div class="lab-stock-modal__head-end">
+                    <span id="lab-stock-modal-pill" class="lab-board__pill"></span>
+                    <button type="button" class="lab-stock-modal__close" data-lab-modal-close aria-label="Close">×</button>
+                </div>
             </div>
             <p id="lab-stock-modal-lede" class="lab-stock-modal__lede"></p>
             <dl id="lab-stock-modal-facts" class="lab-stock-modal__facts"></dl>
