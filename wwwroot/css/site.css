@@ -4915,6 +4915,11 @@ html.dark .product-sheet__process p:last-child {
     min-width: 0;
     max-width: 100%;
 }
+.experiences-page {
+    overflow-x: hidden;
+    width: 100%;
+    box-sizing: border-box;
+}
 .experiences-page .exp-dossier {
     grid-template-columns: minmax(0, 1fr);
 }
@@ -4923,6 +4928,7 @@ html.dark .product-sheet__process p:last-child {
 .experiences-page li {
     overflow-wrap: anywhere;
     word-break: break-word;
+    max-width: 100%;
 }
 .experiences-page .exp-cta-row {
     display: flex;
@@ -4945,6 +4951,19 @@ html.dark .product-sheet__process p:last-child {
     height: 100%;
     position: relative;
     inset: auto;
+}
+/* iOS Safari: shrink-0 meta chips + long titles must not widen the page */
+.experiences-page .exp-meta-line > span,
+.experiences-page .exp-meta-line > div {
+    min-width: 0;
+}
+.experiences-page .exp-meta-line .shrink-0 {
+    flex-shrink: 1 !important;
+}
+.experiences-page a.text-decoration-none {
+    min-width: 0;
+    max-width: 100%;
+    display: block;
 }
 
 /* Sidebar filter tags layout for desktop */
