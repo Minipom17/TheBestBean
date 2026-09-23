@@ -932,8 +932,21 @@ html.dark .tour-venue-map__caption p {
     letter-spacing: 0.15em;
     text-transform: uppercase;
     color: #8B8490;
-    margin-right: 0.5rem;
+    margin-right: 0;
     flex-shrink: 0;
+}
+.syllabus-label-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.45rem 0.55rem;
+    width: 100%;
+    min-width: 0;
+    margin-bottom: 0.25rem;
+}
+.syllabus-label-row .tour-syllabus-label {
+    margin-bottom: 0;
 }
 .syllabus-module-title {
     display: inline-flex;
