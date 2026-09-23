@@ -25,6 +25,10 @@ namespace TheBestBean.Services
         public string Name { get; init; } = "";
         public decimal GreenKg { get; init; }
         public decimal RoastedKg { get; init; }
+        public string Producer { get; init; } = "";
+        public string ProcessingMethod { get; init; } = "";
+        public string Altitude { get; init; } = "";
+        public string FlavorProfile { get; init; } = "";
         public IReadOnlyList<RoastedDrop> Roasts { get; init; } = Array.Empty<RoastedDrop>();
 
         public bool HasGreen => GreenKg >= 0.05m;

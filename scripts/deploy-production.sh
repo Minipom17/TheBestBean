@@ -56,10 +56,16 @@ PUBLISH="$(mktemp -d)"
 trap 'rm -rf "$PUBLISH"; [[ "$CLEANUP_KEY" == 1 ]] && rm -f "$KEY_FILE"' EXIT
 (
   cd "$ROOT"
+  # Clean so Razor/CSS changes are never skipped by an incremental cache.
+  dotnet clean -c Release --nologo --verbosity quiet >/dev/null
+  rm -rf "$ROOT/bin/Release" "$ROOT/obj/Release"
   dotnet publish -c Release -o "$PUBLISH" --nologo --verbosity quiet
 )
 rm -f "$PUBLISH/coffee.db" "$PUBLISH/coffee.db-shm" "$PUBLISH/coffee.db-wal"
 rm -rf "$PUBLISH/wwwroot/Media"
+# Drop precompressed siblings — stale .gz/.br on the server beat fresh CSS
+# (Kestrel serves them with Cache-Control max-age=1y; Safari keeps them longest).
+find "$PUBLISH/wwwroot" \( -name '*.gz' -o -name '*.br' \) -type f -delete
 
 TAR="$(mktemp --suffix=.tar.gz)"
 trap 'rm -rf "$PUBLISH" "$TAR"; [[ "$CLEANUP_KEY" == 1 ]] && rm -f "$KEY_FILE"' EXIT
@@ -74,12 +80,30 @@ REMOTE_DIR=/srv/coffee_app
 systemctl stop coffee-app.service
 cp -a "$REMOTE_DIR/coffee.db" "/root/coffee.db.bak-agent-$(date +%Y%m%d%H%M)"
 cd "$REMOTE_DIR"
+# Remove stale compressed static assets before extract so they cannot win.
+find wwwroot \( -name '*.gz' -o -name '*.br' \) -type f -delete 2>/dev/null || true
 tar -xzf /root/deploy_temp.tar.gz --exclude=coffee.db
 rm -f /root/deploy_temp.tar.gz
 chown -R www-data:www-data "$REMOTE_DIR"
 systemctl start coffee-app.service
 systemctl is-active coffee-app.service
 test -f "$REMOTE_DIR/coffee.db"
+# Prove the new build landed (utf-16 Razor strings + CSS size).
+python3 - <<'PY'
+from pathlib import Path
+dll = Path("/srv/coffee_app/TheBestBean.dll").read_bytes()
+css = Path("/srv/coffee_app/wwwroot/css/site.css")
+need = ["2-days", "exp-cta-row", "lab-stock-modal"]
+missing = [s for s in need if s.encode("utf-16le") not in dll]
+if missing:
+    raise SystemExit(f"deploy verify failed: DLL missing {missing}")
+if css.stat().st_size < 114000:
+    raise SystemExit(f"deploy verify failed: site.css too small ({css.stat().st_size})")
+gz = list(Path("/srv/coffee_app/wwwroot/css").glob("site.css.gz"))
+if gz:
+    raise SystemExit(f"deploy verify failed: stale {gz[0]} still present")
+print(f"verify ok dll={len(dll)} css={css.stat().st_size}")
+PY
 echo "deploy ok"
 REMOTE
 
