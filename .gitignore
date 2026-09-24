@@ -61,6 +61,7 @@ wwwroot/uploads/
 wwwroot/presentations/
 wwwroot/Media/
 wwwroot/data/*.geojson
+data/boundaries/
 wwwroot/lib/
 wwwroot/images/
 

@@ -75,7 +75,7 @@ namespace TheBestBean.Services
                 var drops = matches
                     .SelectMany(m => m.RoastBatches)
                     .OrderByDescending(r => r.RoastDate)
-                    .Take(4)
+                    .Take(1)
                     .Select(r => ToDrop(r, today))
                     .ToList();
                 var primary = matches

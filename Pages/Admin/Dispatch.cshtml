@@ -1,0 +1,67 @@
+@page
+@model TheBestBean.Pages.Admin.DispatchModel
+@{
+    ViewData["Title"] = "Dispatch Operations";
+}
+
+<div class="container mx-auto px-4 py-8 max-w-6xl mt-24">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-gray-800 dark:text-cream">Dispatch Dashboard</h1>
+        <a href="/OS" class="bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded transition-colors">Back to OS</a>
+    </div>
+
+    <div class="bg-white dark:bg-night-2 shadow-md rounded my-6 overflow-x-auto">
+        <table class="text-left w-full border-collapse">
+            <thead>
+                <tr>
+                    <th class="py-4 px-6 bg-gray-100 dark:bg-night-3 font-bold uppercase text-sm text-gray-600 dark:text-cream border-b border-gray-200 dark:border-[rgba(214,208,200,0.12)]">Order #</th>
+                    <th class="py-4 px-6 bg-gray-100 dark:bg-night-3 font-bold uppercase text-sm text-gray-600 dark:text-cream border-b border-gray-200 dark:border-[rgba(214,208,200,0.12)]">Customer</th>
+                    <th class="py-4 px-6 bg-gray-100 dark:bg-night-3 font-bold uppercase text-sm text-gray-600 dark:text-cream border-b border-gray-200 dark:border-[rgba(214,208,200,0.12)]">Items</th>
+                    <th class="py-4 px-6 bg-gray-100 dark:bg-night-3 font-bold uppercase text-sm text-gray-600 dark:text-cream border-b border-gray-200 dark:border-[rgba(214,208,200,0.12)]">Status</th>
+                    <th class="py-4 px-6 bg-gray-100 dark:bg-night-3 font-bold uppercase text-sm text-gray-600 dark:text-cream border-b border-gray-200 dark:border-[rgba(214,208,200,0.12)]">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var order in Model.Orders)
+                {
+                    <tr class="hover:bg-gray-50 dark:hover:bg-night-3 transition-colors">
+                        <td class="py-4 px-6 border-b border-gray-200 dark:border-[rgba(214,208,200,0.12)] dark:text-cream">@order.OrderNumber</td>
+                        <td class="py-4 px-6 border-b border-gray-200 dark:border-[rgba(214,208,200,0.12)] dark:text-cream">
+                            <strong>@order.FullName</strong><br/>
+                            <span class="text-xs text-gray-500 dark:text-gray-400">@order.City, @order.DeliveryMethod</span>
+                        </td>
+                        <td class="py-4 px-6 border-b border-gray-200 dark:border-[rgba(214,208,200,0.12)] dark:text-cream">
+                            <ul class="list-disc pl-4 text-sm">
+                            @foreach(var item in order.Items)
+                            {
+                                <li>@item.Quantity x @item.ProductName</li>
+                            }
+                            </ul>
+                        </td>
+                        <td class="py-4 px-6 border-b border-gray-200 dark:border-[rgba(214,208,200,0.12)]">
+                            <form method="post" asp-page-handler="UpdateStatus" class="flex flex-col gap-2">
+                                <input type="hidden" name="orderId" value="@order.Id" />
+                                <select name="newStatus" class="border border-gray-300 dark:border-gray-600 rounded p-2 text-sm dark:bg-night-3 dark:text-cream focus:outline-none focus:border-v-green">
+                                    <option value="Pending" selected="@(order.OrderStatus == "Pending")">Pending</option>
+                                    <option value="Roasted" selected="@(order.OrderStatus == "Roasted")">Roasted</option>
+                                    <option value="Packed" selected="@(order.OrderStatus == "Packed")">Packed</option>
+                                    <option value="Dispatched" selected="@(order.OrderStatus == "Dispatched")">Dispatched</option>
+                                    <option value="Delivered" selected="@(order.OrderStatus == "Delivered")">Delivered</option>
+                                </select>
+                                <input type="text" name="trackingNumber" value="@order.TrackingNumber" placeholder="Tracking #" class="border border-gray-300 dark:border-gray-600 rounded p-2 text-sm dark:bg-night-3 dark:text-cream focus:outline-none focus:border-v-green" />
+                                <button type="submit" class="bg-green-600 text-white px-3 py-1.5 rounded text-sm hover:bg-green-700 transition-colors font-semibold shadow-sm">Update</button>
+                            </form>
+                        </td>
+                        <td class="py-4 px-6 border-b border-gray-200 dark:border-[rgba(214,208,200,0.12)]">
+                            @if(order.OrderStatus == "Dispatched" || order.OrderStatus == "Delivered") {
+                                <span class="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-1 rounded dark:bg-green-900 dark:text-green-300">Shipped</span>
+                            } else {
+                                <span class="bg-yellow-100 text-yellow-800 text-xs font-semibold px-2.5 py-1 rounded dark:bg-yellow-900 dark:text-yellow-300">Action Req</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

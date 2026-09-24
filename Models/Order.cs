@@ -22,6 +22,8 @@ namespace TheBestBean.Models
         public string MercadoPagoPaymentId { get; set; } = string.Empty;
         public string PayPalOrderId { get; set; } = string.Empty;
         public string CulqiChargeId { get; set; } = string.Empty;
+        public string OrderStatus { get; set; } = "Pending"; // Pending, Roasted, Packed, Dispatched, Delivered
+        public string TrackingNumber { get; set; } = string.Empty;
         public decimal TotalAmount { get; set; }
         /// <summary>Card surcharge in the charged currency. Zero for Yape. PEN 5%, CAD/USD 2.4% (Canadian PayPal cap).</summary>
         public decimal CardSurcharge { get; set; }

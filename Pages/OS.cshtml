@@ -40,9 +40,11 @@
             --border-color: #555;
             --nav-bg: #000000;
             --input-bg: #2d2d2d;
+            --logo-invert: 1;
         }
 
         body {
+            --logo-invert: 0;
             font-family: var(--font-main);
             background-color: var(--bg-color);
             color: var(--text-color);
@@ -112,30 +114,34 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 40px;
-            background: var(--nav-bg);
+            height: 60px;
+            background: var(--bg-color);
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
             align-items: center;
             padding: 0 20px;
             z-index: 1999;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-bottom: 1px solid var(--border-color);
         }
         
         .theme-toggle-btn {
             background: none;
             border: none;
-            color: rgba(255,255,255,0.8);
+            color: var(--text-color);
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 0.8rem;
             padding: 5px 10px;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
+            font-family: var(--font-tech);
+            font-weight: bold;
+            text-transform: uppercase;
         }
         
         .theme-toggle-btn:hover {
-            color: white;
+            color: var(--accent-orange);
         }
         
         body {
@@ -388,6 +394,10 @@
 </div>
 
 <div class="top-control-bar no-print">
+    <a href="/" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
+        <img src="/brand/logo-bean-nav.png" alt="Purple Bean" style="height: 24px; filter: invert(var(--logo-invert));" class="logo-light" />
+        <span style="font-family: 'Space Grotesk', sans-serif; font-size: 1.25rem; font-weight: 700; color: var(--text-color); letter-spacing: -0.025em;">purplebean</span>
+    </a>
     <button class="theme-toggle-btn" onclick="toggleTheme()">
         <span>🌗</span>
         <span data-i18n="nav_mode">Mode</span>
@@ -400,16 +410,12 @@
     <div class="nav-item" onclick="switchTab('qc')"><div class="nav-icon">📄</div><div data-i18n="nav_sca">SCA</div></div>
     <div class="nav-item" onclick="switchTab('history')"><div class="nav-icon">📋</div><div>History</div></div>
     <div class="nav-item" onclick="switchTab('farm')"><div class="nav-icon">🏡</div><div>Farm</div></div>
+    <div class="nav-item" onclick="window.location.href='/Admin/Dispatch'"><div class="nav-icon">🚚</div><div>Dispatch</div></div>
 </nav>
 
 <div id="appContainer" class="container">
     <section id="view-herbert" class="view-section">
-        <div class="lang-bar" id="lang-center">
-            <button class="lang-btn" onclick="setLang('en')">EN</button> / 
-            <button class="lang-btn" onclick="setLang('es')">ES</button> / 
-            <button class="lang-btn" onclick="setLang('cn')">CN</button>
-            <a href="/" class="lang-btn home-icon-right" style="text-decoration: none; display: inline-flex; align-items: center; margin-left: auto;"><img src="/Media/home_icon.svg" alt="Home" style="width: 14px; height: 14px;"></a>
-        </div>
+
         
         <div class="exchange-container">
             <div class="editable-save-indicator" id="saveIndicator">💾 Saved</div>
@@ -773,12 +779,7 @@
     </section>
 
     <section id="view-inventory" class="view-section active">
-        <div class="lang-bar" id="lang-inventory">
-            <button class="lang-btn" onclick="setLang('en')">EN</button> / 
-            <button class="lang-btn" onclick="setLang('es')">ES</button> / 
-            <button class="lang-btn" onclick="setLang('cn')">CN</button>
-            <a href="/" class="lang-btn home-icon-right" style="text-decoration: none; display: inline-flex; align-items: center; margin-left: auto;"><img src="/Media/home_icon.svg" alt="Home" style="width: 14px; height: 14px;"></a>
-        </div>
+
 
         <div class="inventory-header">
             <h2><span class="text-[#A3C8FF]">P</span>urple Bean Coffee</h2>
@@ -791,7 +792,7 @@
         <div id="beanForm" class="max-w-4xl mx-auto bg-[#f8f6f2] p-8 shadow-2xl rounded-sm text-black dark:text-[#D6D0C8] mb-12" style="display:none;">
             <div class="bg-[#fcfbf9] border-[3px] border-black p-6 relative">
                 <div class="flex justify-between items-end mb-6">
-                    <h2 id="formTitle" class="text-3xl font-black text-red-500 uppercase tracking-widest m-0">NEW SHIPMENT</h2>
+                    <h2 id="formTitle" class="text-3xl font-black text-red-500 uppercase tracking-widest m-0">NEW STOCK</h2>
                     <button class="text-xs font-mono font-bold border-2 border-black px-4 py-1 hover:bg-black hover:text-white transition-colors bg-white dark:bg-[#121014] text-black dark:text-[#D6D0C8] cursor-pointer" onclick="toggleBeanForm()">CLOSE</button>
                 </div>
                 
@@ -843,21 +844,25 @@
 
                     <div class="bg-gray-100 dark:bg-[#1C191F] p-1 border-b-[3px] border-black text-[10px] text-center tracking-widest font-black uppercase">Lot trail · farm → Cusco</div>
                     <div class="flex flex-col md:flex-row border-b-[3px] border-black bg-stone-50">
-                        <div class="flex-1 border-b-[3px] md:border-b-0 md:border-r-[3px] border-black p-2">
-                            <span class="text-[9px] text-gray-400 mb-1 block">HARVESTED</span>
-                            <input type="date" id="invHarvested" class="w-full bg-transparent outline-none font-black uppercase border-none focus:ring-0 p-0 m-0" />
+                        <div class="flex-[0.5] border-b-[3px] md:border-b-0 md:border-r-[3px] border-black p-2">
+                            <span class="text-[9px] text-gray-400 mb-1 block">HARVEST YEAR</span>
+                            <input type="number" id="invYear" placeholder="2026" class="w-full bg-transparent outline-none font-black uppercase border-none focus:ring-0 p-0 m-0" />
                         </div>
                         <div class="flex-1 border-b-[3px] md:border-b-0 md:border-r-[3px] border-black p-2">
-                            <span class="text-[9px] text-gray-400 mb-1 block">FERMENTED</span>
-                            <input type="date" id="invFermented" class="w-full bg-transparent outline-none font-black uppercase border-none focus:ring-0 p-0 m-0" />
+                            <span class="text-[9px] text-gray-400 mb-1 block">HARVESTED (MM-DD)</span>
+                            <input type="text" id="invHarvested" placeholder="07-15" class="w-full bg-transparent outline-none font-black uppercase border-none focus:ring-0 p-0 m-0" />
                         </div>
                         <div class="flex-1 border-b-[3px] md:border-b-0 md:border-r-[3px] border-black p-2">
-                            <span class="text-[9px] text-gray-400 mb-1 block">DRIED</span>
-                            <input type="date" id="invDried" class="w-full bg-transparent outline-none font-black uppercase border-none focus:ring-0 p-0 m-0" />
+                            <span class="text-[9px] text-gray-400 mb-1 block">FERMENTED (MM-DD)</span>
+                            <input type="text" id="invFermented" placeholder="07-16" class="w-full bg-transparent outline-none font-black uppercase border-none focus:ring-0 p-0 m-0" />
+                        </div>
+                        <div class="flex-1 border-b-[3px] md:border-b-0 md:border-r-[3px] border-black p-2">
+                            <span class="text-[9px] text-gray-400 mb-1 block">DRIED (MM-DD)</span>
+                            <input type="text" id="invDried" placeholder="08-01" class="w-full bg-transparent outline-none font-black uppercase border-none focus:ring-0 p-0 m-0" />
                         </div>
                         <div class="flex-1 p-2">
-                            <span class="text-[9px] text-gray-400 mb-1 block">ARRIVED CUSCO</span>
-                            <input type="date" id="invArrived" class="w-full bg-transparent outline-none font-black uppercase border-none focus:ring-0 p-0 m-0" />
+                            <span class="text-[9px] text-gray-400 mb-1 block">ARRIVED CUSCO (MM-DD)</span>
+                            <input type="text" id="invArrived" placeholder="09-02" class="w-full bg-transparent outline-none font-black uppercase border-none focus:ring-0 p-0 m-0" />
                         </div>
                     </div>
                     <p class="text-[9px] font-mono font-bold uppercase tracking-widest text-gray-500 p-2 border-b-[3px] border-black m-0">Shows on shop cards when you tap green / roasted kg. After Santoker, save the roast in the Roast tab.</p>
@@ -882,13 +887,51 @@
                     </div>
                     
                     <div class="flex flex-col md:flex-row border-b-[3px] border-black bg-stone-50">
-                        <div class="flex-[2] border-b-[3px] md:border-b-0 md:border-r-[3px] border-black p-2">
+                        <div class="flex-[1] border-b-[3px] md:border-b-0 md:border-r-[3px] border-black p-2">
                             <span class="text-[9px] text-gray-400 mb-1 block">FLAVOR PROFILE</span>
                             <input type="text" id="invProfile" class="w-full bg-transparent outline-none font-black uppercase border-none focus:ring-0 p-0 m-0" />
                         </div>
-                        <div class="flex-1 p-2">
+                        <div class="flex-[1.5] border-b-[3px] md:border-b-0 md:border-r-[3px] border-black p-2">
+                            <span class="text-[9px] text-gray-400 mb-1 block">STOCK NOTES</span>
+                            <input type="text" id="invNotes" class="w-full bg-transparent outline-none font-black uppercase border-none focus:ring-0 p-0 m-0" />
+                        </div>
+                        <div class="flex-[0.5] p-2">
                             <span class="text-[9px] text-gray-400 mb-1 block">SCA SCORE</span>
                             <input type="number" step="0.25" id="invSca" class="w-full bg-transparent outline-none font-black uppercase border-none focus:ring-0 p-0 m-0" />
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-100 dark:bg-[#1C191F] p-1 border-b-[3px] border-black text-[10px] text-center tracking-widest font-black uppercase mt-4">Manual Roast Lab Data (Overrides Santoker)</div>
+                    <div class="flex flex-col md:flex-row border-b-[3px] border-black bg-stone-50">
+                        <div class="flex-[1.5] border-b-[3px] md:border-b-0 md:border-r-[3px] border-black p-2">
+                            <span class="text-[9px] text-gray-400 mb-1 block">ROAST PROFILE (E.G. MEDIUM LIGHT)</span>
+                            <input type="text" id="roastProfile" class="w-full bg-transparent outline-none font-black uppercase border-none focus:ring-0 p-0 m-0" />
+                        </div>
+                        <div class="flex-1 border-b-[3px] md:border-b-0 md:border-r-[3px] border-black p-2">
+                            <span class="text-[9px] text-gray-400 mb-1 block">CHARGE (G)</span>
+                            <input type="number" id="roastCharge" class="w-full bg-transparent outline-none font-black uppercase border-none focus:ring-0 p-0 m-0" />
+                        </div>
+                        <div class="flex-1 p-2">
+                            <span class="text-[9px] text-gray-400 mb-1 block">DROPPED (KG)</span>
+                            <input type="number" step="0.01" id="roastDropped" class="w-full bg-transparent outline-none font-black uppercase border-none focus:ring-0 p-0 m-0" />
+                        </div>
+                    </div>
+                    <div class="flex flex-col md:flex-row border-b-[3px] border-black bg-stone-50">
+                        <div class="flex-1 border-b-[3px] md:border-b-0 md:border-r-[3px] border-black p-2">
+                            <span class="text-[9px] text-gray-400 mb-1 block">DURATION (MM:SS)</span>
+                            <input type="text" id="roastDuration" class="w-full bg-transparent outline-none font-black uppercase border-none focus:ring-0 p-0 m-0" />
+                        </div>
+                        <div class="flex-1 border-b-[3px] md:border-b-0 md:border-r-[3px] border-black p-2">
+                            <span class="text-[9px] text-gray-400 mb-1 block">DRY END (MM:SS)</span>
+                            <input type="text" id="roastDry" class="w-full bg-transparent outline-none font-black uppercase border-none focus:ring-0 p-0 m-0" />
+                        </div>
+                        <div class="flex-1 border-b-[3px] md:border-b-0 md:border-r-[3px] border-black p-2">
+                            <span class="text-[9px] text-gray-400 mb-1 block">FIRST CRACK (MM:SS)</span>
+                            <input type="text" id="roastFc" class="w-full bg-transparent outline-none font-black uppercase border-none focus:ring-0 p-0 m-0" />
+                        </div>
+                        <div class="flex-1 p-2">
+                            <span class="text-[9px] text-gray-400 mb-1 block">DROP TEMP (°C)</span>
+                            <input type="number" step="0.1" id="roastTemp" class="w-full bg-transparent outline-none font-black uppercase border-none focus:ring-0 p-0 m-0" />
                         </div>
                     </div>
 
@@ -913,9 +956,12 @@
                     </div>
                 </div>
                 
-                <div class="mt-6 flex justify-end gap-4">
-                    <button class="text-xs font-mono font-bold px-6 py-2 bg-transparent text-black dark:text-[#D6D0C8] border-none cursor-pointer hover:underline" onclick="toggleBeanForm()">CANCEL</button>
-                    <button class="text-xs font-mono font-bold border-2 border-black px-8 py-2 bg-black text-white hover:bg-transparent hover:text-black dark:text-[#D6D0C8] transition-colors cursor-pointer" onclick="saveBean()">SAVE GREEN STOCK</button>
+                <div class="mt-6 flex justify-between gap-4">
+                    <button type="button" id="btnDeleteBean" class="text-xs font-mono font-bold border-2 border-red-500 px-6 py-2 text-red-500 hover:bg-red-500 hover:text-white transition-colors cursor-pointer" onclick="deleteBean()" style="display:none;">DELETE</button>
+                    <div class="flex gap-4">
+                        <button class="text-xs font-mono font-bold px-6 py-2 bg-transparent text-black dark:text-[#D6D0C8] border-none cursor-pointer hover:underline" onclick="toggleBeanForm()">CANCEL</button>
+                        <button class="text-xs font-mono font-bold border-2 border-black px-8 py-2 bg-black text-white hover:bg-transparent hover:text-black dark:text-[#D6D0C8] transition-colors cursor-pointer" onclick="saveBean()">SAVE STOCK</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -923,12 +969,7 @@
     </section>
 
     <section id="view-roast" class="view-section">
-        <div class="lang-bar" id="lang-center">
-            <button class="lang-btn" onclick="setLang('en')">EN</button> / 
-            <button class="lang-btn" onclick="setLang('es')">ES</button> / 
-            <button class="lang-btn" onclick="setLang('cn')">CN</button>
-            <a href="/" class="lang-btn home-icon-right" style="text-decoration: none; display: inline-flex; align-items: center; margin-left: auto;"><img src="/Media/home_icon.svg" alt="Home" style="width: 14px; height: 14px;"></a>
-        </div>
+
 
         <div class="max-w-5xl mx-auto bg-[#f8f6f2] p-4 md:p-8 shadow-2xl rounded-sm mb-8 text-black dark:text-[#D6D0C8]" id="roastPlannerCard">
             <div class="bg-[#fcfbf9] border-[3px] border-black p-4 md:p-6 relative">
@@ -1084,12 +1125,7 @@
     </section>
 
     <section id="view-history" class="view-section">
-        <div class="lang-bar" id="lang-center">
-            <button class="lang-btn" onclick="setLang('en')">EN</button> / 
-            <button class="lang-btn" onclick="setLang('es')">ES</button> / 
-            <button class="lang-btn" onclick="setLang('cn')">CN</button>
-            <a href="/" class="lang-btn home-icon-right" style="text-decoration: none; display: inline-flex; align-items: center; margin-left: auto;"><img src="/Media/home_icon.svg" alt="Home" style="width: 14px; height: 14px;"></a>
-        </div>
+
         
         <div style="display: flex; gap: 20px; margin-bottom: 20px; padding: 0 10px;">
             <button class="btn" onclick="loadHistory('roasts')" style="width:auto;">📊 Roast History</button>
@@ -1382,14 +1418,25 @@
         document.getElementById('invHumidity').value = '';
         document.getElementById('invDensity').value = '';
         document.getElementById('invProfile').value = '';
+        document.getElementById('invNotes').value = '';
         document.getElementById('invSca').value = '';
         document.getElementById('invImage').value = '';
+        document.getElementById('invYear').value = new Date().getFullYear();
         document.getElementById('invHarvested').value = '';
         document.getElementById('invFermented').value = '';
         document.getElementById('invDried').value = '';
         document.getElementById('invArrived').value = '';
+        
+        document.getElementById('roastProfile').value = '';
+        document.getElementById('roastCharge').value = '';
+        document.getElementById('roastDropped').value = '';
+        document.getElementById('roastDuration').value = '';
+        document.getElementById('roastDry').value = '';
+        document.getElementById('roastFc').value = '';
+        document.getElementById('roastTemp').value = '';
         fillShopCoffeeSelect('');
-        document.getElementById('formTitle').innerText = 'New Shipment';
+        document.getElementById('btnDeleteBean').style.display = 'none';
+        document.getElementById('formTitle').innerText = 'New Stock';
         document.getElementById('beanForm').style.display = 'block'; 
         window.scrollTo(0, 0);
     }
@@ -1408,16 +1455,52 @@
         document.getElementById('invHumidity').value = bean.humidity || '';
         document.getElementById('invDensity').value = bean.density || '';
         document.getElementById('invProfile').value = bean.flavorProfile || '';
+        document.getElementById('invNotes').value = bean.notes || '';
         document.getElementById('invSca').value = bean.scaScore || '';
-        document.getElementById('invHarvested').value = bean.harvestedOn || '';
-        document.getElementById('invFermented').value = bean.fermentedOn || '';
-        document.getElementById('invDried').value = bean.driedOn || '';
-        document.getElementById('invArrived').value = bean.arrivedCuscoOn || '';
+        
+        document.getElementById('invYear').value = bean.harvestYear || '';
+        document.getElementById('invHarvested').value = bean.harvestedOn ? bean.harvestedOn.substring(5) : '';
+        document.getElementById('invFermented').value = bean.fermentedOn ? bean.fermentedOn.substring(5) : '';
+        document.getElementById('invDried').value = bean.driedOn ? bean.driedOn.substring(5) : '';
+        document.getElementById('invArrived').value = bean.arrivedCuscoOn ? bean.arrivedCuscoOn.substring(5) : '';
+        
+        document.getElementById('roastProfile').value = bean.roastProfile || '';
+        document.getElementById('roastCharge').value = bean.roastCharge || '';
+        document.getElementById('roastDropped').value = bean.roastDropped || '';
+        document.getElementById('roastDuration').value = bean.roastDuration || '';
+        document.getElementById('roastDry').value = bean.roastDry || '';
+        document.getElementById('roastFc').value = bean.roastFc || '';
+        document.getElementById('roastTemp').value = bean.roastTemp || '';
         fillShopCoffeeSelect(bean.coffeeBeanId || '');
-        document.getElementById('formTitle').innerText = 'Edit Shipment';
+        document.getElementById('btnDeleteBean').style.display = 'block';
+        document.getElementById('formTitle').innerText = 'Edit Stock';
         document.getElementById('beanForm').style.display = 'block';
         window.scrollTo(0, 0);
     }
+    async function deleteBean() {
+        const beanId = parseInt(document.getElementById('invId').value);
+        if(!beanId) return;
+        if(!confirm('Are you sure you want to delete this green stock? This cannot be undone.')) return;
+        
+        try {
+            const formData = new FormData();
+            formData.append('id', beanId);
+            const response = await fetch('OS?handler=DeleteInventory', {
+                method: 'POST',
+                body: formData
+            });
+            if (response.ok) {
+                await loadInventory();
+                renderInventory();
+                toggleBeanForm();
+            } else {
+                alert('Error deleting bean');
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     function toggleCertificateUpload() {
         const hasCert = document.getElementById('invHasCertificates').value === 'true';
         document.getElementById('certificateUploadRow').style.display = hasCert ? 'block' : 'none';
@@ -1441,11 +1524,21 @@
         formData.append('density', document.getElementById('invDensity').value || '');
         formData.append('flavorProfile', document.getElementById('invProfile').value || '');
         formData.append('scaScore', document.getElementById('invSca').value || '');
+        formData.append('harvestYear', document.getElementById('invYear').value || '');
+        formData.append('notes', document.getElementById('invNotes').value || '');
         formData.append('harvestedOn', document.getElementById('invHarvested').value || '');
         formData.append('fermentedOn', document.getElementById('invFermented').value || '');
         formData.append('driedOn', document.getElementById('invDried').value || '');
         formData.append('arrivedCuscoOn', document.getElementById('invArrived').value || '');
         formData.append('coffeeBeanId', document.getElementById('invShopCoffee').value || '');
+        
+        formData.append('roastProfile', document.getElementById('roastProfile').value || '');
+        formData.append('roastCharge', document.getElementById('roastCharge').value || '');
+        formData.append('roastDropped', document.getElementById('roastDropped').value || '');
+        formData.append('roastDuration', document.getElementById('roastDuration').value || '');
+        formData.append('roastDry', document.getElementById('roastDry').value || '');
+        formData.append('roastFc', document.getElementById('roastFc').value || '');
+        formData.append('roastTemp', document.getElementById('roastTemp').value || '');
         formData.append('hasCertificates', document.getElementById('invHasCertificates').value === 'true');
         
         const imgFile = document.getElementById('invImage').files[0];
@@ -2316,37 +2409,6 @@
     }
 
 </script>
-<!-- WhatsApp Floating Button -->
-<a href="https://wa.me/15550199" target="_blank" class="whatsapp-float" title="Chat with us on WhatsApp">
-    <i class="bi bi-whatsapp"></i>
-</a>
-<style>
-    .whatsapp-float {
-        position: fixed;
-        width: 60px;
-        height: 60px;
-        bottom: 20px;
-        left: 20px;
-        background-color: #25d366;
-        color: #FFF;
-        border-radius: 50px;
-        text-align: center;
-        font-size: 30px;
-        box-shadow: 2px 2px 3px #999;
-        z-index: 10000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.3s ease;
-        text-decoration: none;
-    }
-
-    .whatsapp-float:hover {
-        background-color: #128C7E;
-        color: #FFF;
-        transform: scale(1.1);
-    }
-</style>
 </body>
 </html>
 

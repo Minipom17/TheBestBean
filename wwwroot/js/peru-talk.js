@@ -6,19 +6,64 @@
     const numEl = document.querySelector('[data-talk-num]');
     const maps = new Map();
     let index = 0;
-    let geo = { world: null, adm1: null, adm2: null };
+    let geo = { world: null, departments: null, provinces: null, districts: null };
+
+    const ink = '#271825';
+    const paper = '#F3EEE6';
+    const stone = '#E4DCD0';
+    const purple = '#722EA8';
+    const plum = '#3B1464';
+    const south = '#8E56B8';
+    const soft = '#CDB6E0';
 
     const coffeeFill = {
+        piura: '#E6B325',
+        cajamarca: '#E07A3D',
+        amazonas: '#2F6B4F',
+        'san martin': '#7CB342',
+        huanuco: '#1AA6A6',
+        pasco: '#3D8BFF',
+        junin: '#5B4BDB',
+        ayacucho: '#C45C26',
         cusco: '#722EA8',
-        cajamarca: '#16A34A',
-        junin: '#F05A28',
-        'san martin': '#00B4D8',
-        amazonas: '#82C341',
-        pasco: '#E76F51',
-        puno: '#4EA8DE',
-        huanuco: '#C2F970',
-        piura: '#8B8490',
-        ayacucho: '#B5E48C'
+        puno: '#C23B6E'
+    };
+
+    const labelSide = {
+        piura: 'left',
+        cajamarca: 'left',
+        'san martin': 'left',
+        pasco: 'left',
+        ayacucho: 'left',
+        amazonas: 'right',
+        huanuco: 'right',
+        junin: 'right',
+        cusco: 'right',
+        puno: 'right'
+    };
+    const labelLat = {
+        piura: -4.5,
+        cajamarca: -6.15,
+        'san martin': -7.75,
+        pasco: -10.55,
+        ayacucho: -14.25,
+        amazonas: -4.35,
+        huanuco: -9.15,
+        junin: -11.4,
+        cusco: -13.3,
+        puno: -15.6
+    };
+    const labelName = {
+        piura: 'Piura',
+        cajamarca: 'Cajamarca',
+        'san martin': 'San Martín',
+        pasco: 'Pasco',
+        ayacucho: 'Ayacucho',
+        amazonas: 'Amazonas',
+        huanuco: 'Huánuco',
+        junin: 'Junín',
+        cusco: 'Cusco',
+        puno: 'Puno'
     };
 
     function fold(s) {
@@ -30,11 +75,11 @@
         for (const key of Object.keys(coffeeFill)) {
             if (n === key || n.replace('í', 'i') === key) return coffeeFill[key];
         }
-        return '#e8e2d8';
+        return stone;
     }
 
     function isCoffeeRegion(name) {
-        return regionColor(name) !== '#e8e2d8';
+        return regionColor(name) !== stone;
     }
 
     function go(n) {
@@ -49,13 +94,14 @@
     }
 
     async function loadGeo() {
-        if (geo.adm1) return geo;
-        const [world, adm1, adm2] = await Promise.all([
+        if (geo.departments) return geo;
+        const [world, departments, provinces, districts] = await Promise.all([
             fetch('/data/world_countries.geojson').then(function (r) { return r.json(); }),
-            fetch('/data/peru_adm1.geojson').then(function (r) { return r.json(); }),
-            fetch('/data/peru_adm2.geojson').then(function (r) { return r.json(); })
+            fetch('/data/talk/peru-departments.geojson').then(function (r) { return r.json(); }),
+            fetch('/data/talk/peru-provinces.geojson').then(function (r) { return r.json(); }),
+            fetch('/data/talk/peru-districts.geojson').then(function (r) { return r.json(); })
         ]);
-        geo = { world: world, adm1: adm1, adm2: adm2 };
+        geo = { world: world, departments: departments, provinces: provinces, districts: districts };
         return geo;
     }
 
@@ -64,14 +110,33 @@
             zoomControl: false,
             attributionControl: false,
             scrollWheelZoom: false,
-            dragging: true
+            dragging: true,
+            zoomSnap: 0,
+            zoomDelta: 0.5,
+            renderer: L.svg()
         });
+        map.setView([0, 0], 2, { animate: false });
         return map;
     }
 
     function featureName(feature) {
         const p = feature.properties || {};
-        return p.shapeName || p.NAME_1 || p.NAME_2 || p.name || '';
+        return p.name || p.shapeName || p.NAME_1 || p.NAME_2 || '';
+    }
+
+    function armFit(map, el, bounds, padding) {
+        let tries = 0;
+        el._talkFit = function () {
+            map.invalidateSize({ animate: false, pan: false });
+            const size = map.getSize();
+            if ((!size || size.x < 80 || size.y < 80) && tries < 15) {
+                tries += 1;
+                requestAnimationFrame(el._talkFit);
+                return;
+            }
+            map.fitBounds(bounds, { animate: false, padding: padding || [20, 20] });
+        };
+        el._talkFit();
     }
 
     async function ensureMap(el) {
@@ -83,96 +148,270 @@
             maps.set(el, map);
             paint(map, mode, el);
         }
-        setTimeout(function () {
-            map.invalidateSize();
-            if (typeof el._talkFit === 'function') el._talkFit();
-        }, 120);
+        map.invalidateSize({ animate: false, pan: false });
+        if (typeof el._talkFit === 'function') el._talkFit();
     }
+
+    const beltColor = {
+        MEX: '#E24B4B', GTM: '#F08A3C', SLV: '#E6B325', HND: '#7CB342',
+        NIC: '#2E9B6A', CRI: '#1AA6A6', PAN: '#3D8BFF', COL: '#5B4BDB',
+        VEN: '#8E56B8', ECU: '#C45C26', PER: '#722EA8', BRA: '#D4A017',
+        BOL: '#C23B6E', ETH: '#2F6B4F', KEN: '#E07A3D', RWA: '#3E7CB1',
+        UGA: '#C9A227', TZA: '#6B4C9A', YEM: '#B85C38', IND: '#E25B5B',
+        VNM: '#3AA76D', IDN: '#2A6FDB', PNG: '#7A4E2D'
+    };
+    const zoomColor = {
+        central: '#5B4BDB',
+        huanuco: '#1AA6A6',
+        north: '#E07A3D',
+        convencion: '#722EA8',
+        sandia: '#C23B6E'
+    };
+    const zoomPale = {
+        central: '#DDD8F6',
+        huanuco: '#D2EFEF',
+        north: '#F8DCCB',
+        convencion: '#E7D6F4',
+        sandia: '#F6D5E2'
+    };
+
+    const provinceSets = {
+        central: ['chanchamayo', 'satipo', 'oxapampa'],
+        huanuco: ['leoncio prado'],
+        north: ['jaen', 'san ignacio', 'rodriguez de mendoza', 'chachapoyas', 'utcubamba'],
+        convencion: ['la convencion'],
+        sandia: ['sandia']
+    };
+
+    const parentDepartments = {
+        central: ['junin', 'pasco'],
+        huanuco: ['huanuco'],
+        north: ['cajamarca', 'amazonas'],
+        convencion: ['cusco'],
+        sandia: ['puno']
+    };
 
     function paint(map, mode, el) {
         if (mode === 'belt') {
-            const layer = L.geoJSON(geo.world, {
+            const tropic = 23.436;
+            L.geoJSON(geo.world, {
+                smoothFactor: 0.35,
                 style: function (f) {
-                    const iso = (f.properties && f.properties['ISO3166-1-Alpha-3']) || '';
-                    const peru = iso === 'PER';
+                    const iso = (f.properties && (f.properties['ISO3166-1-Alpha-3'] || f.properties.ISO_A3)) || '';
+                    const fill = beltColor[iso];
+                    if (fill) {
+                        return { color: '#ffffff', weight: 0.4, fillColor: fill, fillOpacity: 1 };
+                    }
+                    return { color: '#e6e6e6', weight: 0.35, fillColor: '#ffffff', fillOpacity: 1 };
+                }
+            }).addTo(map);
+            const tropicLine = { color: ink, weight: 0.6, opacity: 0.55, interactive: false };
+            L.polyline([[tropic, -175], [tropic, 175]], tropicLine).addTo(map);
+            L.polyline([[-tropic, -175], [-tropic, 175]], tropicLine).addTo(map);
+            const beltTag = function (latlng, text) {
+                L.marker(latlng, {
+                    interactive: false,
+                    keyboard: false,
+                    icon: L.divIcon({
+                        className: 'talk-belt-tag',
+                        html: text,
+                        iconSize: [240, 14],
+                        iconAnchor: [0, 7]
+                    })
+                }).addTo(map);
+            };
+            beltTag([tropic, -120], 'Tropic of Cancer · 23.5°N');
+            beltTag([-tropic, -120], 'Tropic of Capricorn · 23.5°S');
+            L.marker([-9.4, -74.2], {
+                interactive: false,
+                keyboard: false,
+                icon: L.divIcon({
+                    className: 'talk-belt-tag talk-belt-tag--peru',
+                    html: 'Peru',
+                    iconSize: [48, 14],
+                    iconAnchor: [24, 18]
+                })
+            }).addTo(map);
+            armFit(map, el, [[-38, -130], [38, 160]], [28, 8]);
+            return;
+        }
+
+        if (mode === 'country' || mode === 'regions') {
+            L.geoJSON(geo.departments, {
+                smoothFactor: 0,
+                style: function (f) {
+                    const name = featureName(f);
+                    const active = isCoffeeRegion(name);
                     return {
-                        color: peru ? '#722EA8' : '#c4bbb0',
-                        weight: peru ? 2 : 0.5,
-                        fillColor: peru ? '#722EA8' : '#ddd4c8',
+                        color: '#271825',
+                        weight: 0.4,
+                        opacity: 0.45,
+                        fillColor: active ? regionColor(name) : '#ffffff',
                         fillOpacity: 1
                     };
-                }
-            }).addTo(map);
-            const peru = layer.getLayers().find(function (l) {
-                return (l.feature.properties['ISO3166-1-Alpha-3'] === 'PER');
-            });
-            if (peru) {
-                el._talkFit = function () { map.fitBounds(peru.getBounds().pad(1.35), { maxZoom: 5 }); };
-            } else {
-                el._talkFit = function () { map.setView([-10, -75], 4); };
-            }
-            el._talkFit();
-            return;
-        }
-
-        const adm1 = L.geoJSON(geo.adm1, {
-            style: function (f) {
-                const name = featureName(f);
-                const active = isCoffeeRegion(name);
-                const color = regionColor(name);
-                return {
-                    color: '#271825',
-                    weight: active ? 1.1 : 0.4,
-                    fillColor: color,
-                    fillOpacity: active ? 0.78 : 0.12
-                };
-            },
-            onEachFeature: function (f, layer) {
-                layer.bindTooltip(featureName(f), { sticky: true, opacity: 0.95 });
-            }
-        }).addTo(map);
-
-        if (mode === 'regions') {
-            el._talkFit = function () { map.fitBounds(adm1.getBounds().pad(0.08), { maxZoom: 6 }); };
-            el._talkFit();
-            return;
-        }
-
-        const focus = {
-            north: ['cajamarca'],
-            center: ['junin'],
-            south: ['cusco']
-        }[mode];
-
-        if (focus) {
-            const hit = adm1.getLayers().find(function (l) {
-                return focus.indexOf(fold(featureName(l.feature))) !== -1;
-            });
-            if (hit) {
-                el._talkFit = function () { map.fitBounds(hit.getBounds().pad(0.25), { maxZoom: 8 }); };
-                el._talkFit();
-            }
-        }
-
-        const towns = {
-            north: ['jaen', 'san ignacio'],
-            center: ['chanchamayo', 'satipo'],
-            south: ['la convencion']
-        }[mode] || [];
-
-        if (towns.length) {
-            L.geoJSON(geo.adm2, {
-                filter: function (f) {
-                    return towns.indexOf(fold(featureName(f))) !== -1;
-                },
-                style: function () {
-                    return { color: '#111', weight: 1.6, fillColor: '#F5C518', fillOpacity: 0.55 };
                 },
                 onEachFeature: function (f, layer) {
-                    layer.bindTooltip(featureName(f), { sticky: true });
+                    const key = fold(featureName(f));
+                    if (!labelSide[key]) return;
+                    const side = labelSide[key];
+                    const bounds = layer.getBounds();
+                    const mid = bounds.getCenter();
+                    const label = L.latLng(labelLat[key] || mid.lat, side === 'left' ? -82.55 : -67.15);
+                    const edge = L.latLng(mid.lat, side === 'left' ? bounds.getWest() : bounds.getEast());
+                    L.polyline([label, edge], {
+                        color: ink,
+                        weight: 0.6,
+                        opacity: 0.55,
+                        interactive: false
+                    }).addTo(map);
+                    L.marker(label, {
+                        interactive: false,
+                        keyboard: false,
+                        icon: L.divIcon({
+                            className: 'talk-callout talk-callout--' + side,
+                            html: labelName[key] || featureName(f),
+                            iconSize: [120, 16],
+                            iconAnchor: side === 'left' ? [124, 8] : [-8, 8]
+                        })
+                    }).addTo(map);
                 }
             }).addTo(map);
+            armFit(map, el, [[-18.36, -81.33], [-0.02, -68.65]], [24, 148]);
+            return;
         }
+
+        const names = provinceSets[mode] || [];
+        const parents = parentDepartments[mode] || [];
+        const country = L.geoJSON(geo.departments, {
+            smoothFactor: 0,
+            interactive: false,
+            style: function (f) {
+                const here = parents.indexOf(fold(featureName(f))) !== -1;
+                return {
+                    color: here ? '#271825' : '#d0d0d0',
+                    weight: here ? 1.15 : 0.45,
+                    fillColor: here ? '#f7f7f7' : '#ffffff',
+                    fillOpacity: 1
+                };
+            }
+        }).addTo(map);
+        const provinces = L.geoJSON(geo.provinces, {
+            smoothFactor: 0,
+            interactive: false,
+            filter: function (f) {
+                return names.indexOf(fold(featureName(f))) !== -1;
+            },
+            style: function () {
+                return {
+                    color: '#271825',
+                    weight: 1.35,
+                    fillColor: zoomPale[mode] || '#f3f3f3',
+                    fillOpacity: 1
+                };
+            }
+        }).addTo(map);
+        L.geoJSON(geo.districts, {
+            smoothFactor: 0,
+            filter: function (f) {
+                if (names.indexOf(fold(f.properties && f.properties.province)) === -1) return false;
+                const role = (f.properties && f.properties.role) || 'district';
+                return role === 'gem' || role === 'hub';
+            },
+            style: function () {
+                return {
+                    color: '#ffffff',
+                    weight: 0.7,
+                    fillColor: zoomColor[mode] || purple,
+                    fillOpacity: 1
+                };
+            },
+            interactive: false
+        }).addTo(map);
+
+        const home = country.getLayers().filter(function (layer) {
+            return parents.indexOf(fold(featureName(layer.feature))) !== -1;
+        });
+        const frame = home.length ? L.featureGroup(home).getBounds() : (provinces.getLayers().length ? provinces.getBounds() : null);
+        if (frame) {
+            armFit(map, el, frame.pad(0.18), [32, 32]);
+        }
+        addLocator(el, mode);
+    }
+
+    function addLocator(el, mode) {
+        let box = el.querySelector('.talk-locator');
+        if (!box) {
+            box = document.createElement('div');
+            box.className = 'talk-locator';
+            box.setAttribute('aria-hidden', 'true');
+            el.appendChild(box);
+        }
+        if (box._mini) {
+            box._mini.invalidateSize();
+            return;
+        }
+        const mini = L.map(box, {
+            zoomControl: false,
+            attributionControl: false,
+            dragging: false,
+            scrollWheelZoom: false,
+            doubleClickZoom: false,
+            boxZoom: false,
+            keyboard: false,
+            zoomSnap: 0,
+            renderer: L.svg()
+        });
+        mini.setView([-9.2, -75], 4, { animate: false });
+        box._mini = mini;
+        const parents = parentDepartments[mode] || [];
+        const names = provinceSets[mode] || [];
+        L.geoJSON(geo.departments, {
+            smoothFactor: 0.8,
+            interactive: false,
+            style: function (f) {
+                const here = parents.indexOf(fold(featureName(f))) !== -1;
+                return {
+                    color: here ? '#271825' : '#bdbdbd',
+                    weight: here ? 1.15 : 0.4,
+                    fillColor: '#f3f3f3',
+                    fillOpacity: 1
+                };
+            }
+        }).addTo(mini);
+        L.geoJSON(geo.provinces, {
+            smoothFactor: 0.6,
+            interactive: false,
+            filter: function (f) {
+                return names.indexOf(fold(featureName(f))) !== -1;
+            },
+            style: function () {
+                return {
+                    color: '#271825',
+                    weight: 0.6,
+                    fillColor: zoomColor[mode] || purple,
+                    fillOpacity: 1
+                };
+            }
+        }).addTo(mini);
+        if (!box.querySelector('.talk-locator__cap')) {
+            const cap = document.createElement('div');
+            cap.className = 'talk-locator__cap';
+            cap.textContent = 'Peru';
+            box.appendChild(cap);
+        }
+        let miniTries = 0;
+        const fitMini = function () {
+            mini.invalidateSize({ animate: false, pan: false });
+            const size = mini.getSize();
+            if ((!size || size.x < 40 || size.y < 40) && miniTries < 20) {
+                miniTries += 1;
+                requestAnimationFrame(fitMini);
+                return;
+            }
+            mini.fitBounds([[-18.36, -81.33], [-0.02, -68.65]], { animate: false, padding: [6, 6] });
+        };
+        fitMini();
+        setTimeout(fitMini, 250);
     }
 
     document.querySelector('[data-talk-prev]')?.addEventListener('click', function () { go(index - 1); });

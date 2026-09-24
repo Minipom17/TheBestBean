@@ -30,10 +30,16 @@ namespace TheBestBean.Pages
 
         public async Task<IActionResult> OnGetInventoryAsync()
         {
-            var inventory = await _context.BeanInventories
+            var inventoryRaw = await _context.BeanInventories
+                .Include(b => b.RoastBatches)
                 .Where(b => b.IsActive)
                 .OrderByDescending(b => b.CreatedDate)
-                .Select(b => new
+                .ToListAsync();
+
+            var inventory = inventoryRaw.Select(b => 
+            {
+                var latestRoast = b.RoastBatches.OrderByDescending(r => r.RoastDate).FirstOrDefault();
+                return new
                 {
                     id = b.Id,
                     name = b.Name,
@@ -55,9 +61,17 @@ namespace TheBestBean.Pages
                     driedOn = b.DriedOn.HasValue ? b.DriedOn.Value.ToString("yyyy-MM-dd") : "",
                     arrivedCuscoOn = b.ArrivedCuscoOn.HasValue ? b.ArrivedCuscoOn.Value.ToString("yyyy-MM-dd") : "",
                     coffeeBeanId = b.CoffeeBeanId,
-                    imageUrl = b.ImageUrl
-                })
-                .ToListAsync();
+                    imageUrl = b.ImageUrl,
+                    notes = b.Notes ?? "",
+                    roastProfile = latestRoast?.RoastLevel,
+                    roastCharge = latestRoast?.GreenWeightGrams,
+                    roastDropped = latestRoast?.RoastedWeightGrams != null ? latestRoast.RoastedWeightGrams / 1000m : null,
+                    roastDuration = FormatTimeSeconds(latestRoast?.RoastTimeSeconds),
+                    roastDry = FormatTimeSeconds(latestRoast?.DryEndTime),
+                    roastFc = FormatTimeSeconds(latestRoast?.FirstCrackTime),
+                    roastTemp = latestRoast != null ? latestRoast.GetTemperatureData().LastOrDefault(p => p.Temp.HasValue)?.Temp : null
+                };
+            }).ToList();
 
             return new JsonResult(inventory);
         }
@@ -125,12 +139,15 @@ namespace TheBestBean.Pages
             else
                 bean.CostPerKg = null;
 
-            bean.HarvestedOn = ParseDay(form["harvestedOn"].ToString());
-            bean.FermentedOn = ParseDay(form["fermentedOn"].ToString());
-            bean.DriedOn = ParseDay(form["driedOn"].ToString());
-            bean.ArrivedCuscoOn = ParseDay(form["arrivedCuscoOn"].ToString());
-            if (bean.HarvestedOn.HasValue)
-                bean.HarvestYear = bean.HarvestedOn.Value.Year;
+            int year = DateTime.Now.Year;
+            if (int.TryParse(form["harvestYear"].ToString(), out var y) && y > 0) year = y;
+
+            bean.HarvestYear = year;
+            bean.HarvestedOn = ParseMonthDay(year, form["harvestedOn"].ToString());
+            bean.FermentedOn = ParseMonthDay(year, form["fermentedOn"].ToString());
+            bean.DriedOn = ParseMonthDay(year, form["driedOn"].ToString());
+            bean.ArrivedCuscoOn = ParseMonthDay(year, form["arrivedCuscoOn"].ToString());
+            bean.Notes = form["notes"].ToString();
 
             if (int.TryParse(form["coffeeBeanId"].ToString(), out var shopId) && shopId > 0)
                 bean.CoffeeBeanId = shopId;
@@ -187,7 +204,51 @@ namespace TheBestBean.Pages
 
             await _context.SaveChangesAsync();
 
+            if (!string.IsNullOrWhiteSpace(form["roastProfile"].ToString()) || !string.IsNullOrWhiteSpace(form["roastDuration"].ToString()))
+            {
+                var roast = await _context.RoastBatches.Where(r => r.BeanInventoryId == bean.Id).OrderByDescending(r => r.RoastDate).FirstOrDefaultAsync();
+                if (roast == null)
+                {
+                    roast = new RoastBatch { BeanInventoryId = bean.Id, RoastDate = DateTime.Now };
+                    _context.RoastBatches.Add(roast);
+                }
+                
+                roast.RoastLevel = form["roastProfile"].ToString();
+                
+                if (decimal.TryParse(form["roastCharge"].ToString(), out var gCharge)) roast.GreenWeightGrams = gCharge;
+                if (decimal.TryParse(form["roastDropped"].ToString(), out var kgDrop)) roast.RoastedWeightGrams = kgDrop * 1000m;
+                
+                roast.RoastTimeSeconds = ParseTimeSeconds(form["roastDuration"].ToString());
+                roast.DropTime = roast.RoastTimeSeconds; // typically drop time is duration
+                roast.DryEndTime = ParseTimeSeconds(form["roastDry"].ToString());
+                roast.FirstCrackTime = ParseTimeSeconds(form["roastFc"].ToString());
+                
+                if (double.TryParse(form["roastTemp"].ToString(), out var temp))
+                {
+                    roast.SetTemperatureData(new List<TemperaturePoint> { new TemperaturePoint { Temp = temp } });
+                }
+                
+                await _context.SaveChangesAsync();
+            }
+
             return new JsonResult(new { id = bean.Id, success = true });
+        }
+
+        public async Task<IActionResult> OnPostDeleteInventoryAsync()
+        {
+            if (!Request.HasFormContentType) return BadRequest();
+            var form = await Request.ReadFormAsync();
+            var idStr = form["id"].ToString() ?? "";
+            if (int.TryParse(idStr, out var id) && id > 0)
+            {
+                var bean = await _context.BeanInventories.FindAsync(id);
+                if (bean != null)
+                {
+                    bean.IsActive = false;
+                    await _context.SaveChangesAsync();
+                }
+            }
+            return new JsonResult(new { success = true });
         }
 
         // ========== ROAST BATCH API HANDLERS ==========
@@ -356,6 +417,34 @@ namespace TheBestBean.Pages
             }
 
             return null;
+        }
+
+        private static DateTime? ParseMonthDay(int year, string? mmdd)
+        {
+            if (string.IsNullOrWhiteSpace(mmdd)) return null;
+            var parts = mmdd.Split(new[] { '-', '/' });
+            if (parts.Length == 2 && int.TryParse(parts[0], out var m) && int.TryParse(parts[1], out var d))
+            {
+                try { return new DateTime(year, m, d); } catch { return null; }
+            }
+            if (DateTime.TryParse(mmdd, out var fullDate)) return fullDate;
+            return null;
+        }
+
+        private static int? ParseTimeSeconds(string? mmss)
+        {
+            if (string.IsNullOrWhiteSpace(mmss)) return null;
+            if (int.TryParse(mmss, out var s)) return s;
+            var parts = mmss.Split(':');
+            if (parts.Length == 2 && int.TryParse(parts[0], out var m) && int.TryParse(parts[1], out var sec))
+                return m * 60 + sec;
+            return null;
+        }
+
+        private static string? FormatTimeSeconds(int? seconds)
+        {
+            if (seconds == null) return null;
+            return $"{seconds.Value / 60}:{seconds.Value % 60:00}";
         }
     }
 

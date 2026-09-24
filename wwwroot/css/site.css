@@ -4862,7 +4862,7 @@ html.dark .lab-board__kicker .offerings-cursor {
 .talk-body {
     margin: 0;
     min-height: 100vh;
-    background: #F3EEE6;
+    background: #ffffff;
     color: #271825;
     font-family: Inter, system-ui, sans-serif;
 }
@@ -4881,7 +4881,7 @@ html.dark .lab-board__kicker .offerings-cursor {
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    background: rgba(243, 238, 230, 0.92);
+    background: rgba(255, 255, 255, 0.94);
     backdrop-filter: blur(8px);
 }
 .talk-hud__brand {
@@ -4901,18 +4901,27 @@ html.dark .lab-board__kicker .offerings-cursor {
     cursor: pointer;
 }
 .talk-stage {
-    min-height: 100vh;
-    padding: 4.5rem 6vw 3rem;
+    height: 100vh;
+    overflow: hidden;
+    padding: 3.4rem 4vw 1rem;
     outline: none;
+    box-sizing: border-box;
 }
 .talk-slide {
     display: none;
-    max-width: 1180px;
+    max-width: 1280px;
     margin: 0 auto;
-    min-height: calc(100vh - 7rem);
+    height: 100%;
+    min-height: 0;
     flex-direction: column;
     justify-content: center;
+    overflow: hidden;
 }
+.talk-slide:has(.talk-map),
+.talk-slide:has(.talk-cut),
+.talk-slide:has(.talk-relief),
+.talk-origin,
+.talk-slide:has(.talk-elev) { max-width: none; }
 .talk-slide[data-on] { display: flex; }
 .talk-kicker {
     font-family: 'JetBrains Mono', monospace;
@@ -4920,8 +4929,30 @@ html.dark .lab-board__kicker .offerings-cursor {
     font-weight: 700;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: #722EA8;
+    color: #271825;
     margin: 0 0 1rem;
+}
+.is-north { --area: #3B1464; }
+.is-center { --area: #722EA8; }
+.is-south { --area: #8E56B8; }
+.is-coast { --area: #8B8490; }
+.talk-h.is-north,
+.talk-h.is-center,
+.talk-h.is-south {
+    color: #271825;
+}
+.talk-stat.is-north,
+.talk-stat.is-center,
+.talk-stat.is-south {
+    color: var(--area);
+}
+.talk-steps .is-north strong,
+.talk-steps .is-center strong,
+.talk-steps .is-south strong,
+.talk-climb b {
+    color: #271825;
+    border-bottom: 2px solid var(--area, #271825);
+    padding-bottom: 1px;
 }
 .talk-title {
     font-size: clamp(2.6rem, 7vw, 5.4rem);
@@ -4974,21 +5005,396 @@ html.dark .lab-board__kicker .offerings-cursor {
 .talk-hint a { color: inherit; }
 .talk-split {
     display: grid;
-    grid-template-columns: minmax(0, 0.95fr) minmax(18rem, 1.15fr);
+    grid-template-columns: minmax(15rem, 22rem) minmax(0, 1fr);
+    gap: 1.75rem;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+}
+.talk-split--open {
+    grid-template-columns: minmax(18rem, 32rem) minmax(0, 1fr);
     gap: 2.5rem;
-    align-items: stretch;
+}
+.talk-split--open .talk-title {
+    font-size: clamp(2.8rem, 5vw, 4.6rem);
+    margin-bottom: 0.8rem;
+}
+.talk-split--open .talk-lede { margin-bottom: 1rem; }
+.talk-split--chart {
+    grid-template-columns: minmax(17rem, 24rem) minmax(0, 1fr);
+    gap: 2.75rem;
+}
+.talk-split--chart .talk-h { margin-bottom: 0.35rem; }
+.talk-split--chart .talk-copy { margin-bottom: 0.65rem; }
+.talk-origin { background: #ffffff; }
+.talk-origin__grid {
+    display: grid;
+    grid-template-columns: minmax(16rem, 0.85fr) 1.15fr;
+    gap: 1.5rem;
+    height: 100%;
+    align-items: center;
+}
+.talk-origin__peru {
+    font-family: Syne, Inter, sans-serif;
+    font-weight: 500;
+    font-size: clamp(3.2rem, 7vw, 5.4rem);
+    letter-spacing: 0.28em;
+    line-height: 0.9;
+    text-transform: uppercase;
+    margin: 0 0 0.35rem;
+}
+.talk-origin__coffees {
+    font-family: Syne, Inter, sans-serif;
+    font-weight: 500;
+    font-size: clamp(1.8rem, 3vw, 2.4rem);
+    letter-spacing: 0.02em;
+    text-transform: none;
+    margin: 0 0 0.8rem;
+}
+.talk-origin .talk-lede strong { color: #1A1917; font-weight: 700; }
+.talk-origin__mark {
+    margin: 1.2rem 0 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+.talk-origin__mark b {
+    display: inline-block;
+    margin-right: 0.7rem;
+    padding: 0.28rem 0.45rem;
+    background: #D4FF00;
+    font-weight: 700;
+}
+.talk-origin__map { position: relative; height: 100%; min-height: 0; }
+.talk-origin__map img {
+    width: 100%;
+    height: 100%;
+    max-height: 78vh;
+    object-fit: contain;
+    display: block;
+}
+.talk-anno {
+    position: absolute;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #1A1917;
+    white-space: nowrap;
+}
+.talk-anno::before {
+    content: "";
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    margin-right: 0.4rem;
+    border-radius: 50%;
+    background: #FF6464;
+    vertical-align: middle;
+}
+.talk-kicker span { color: #FF6464; margin: 0 0.35rem; }
+.talk-steps {
+    list-style: none;
+    margin: 0.8rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.7rem;
+}
+.talk-steps li {
+    display: grid;
+    grid-template-columns: 2.2rem 1fr;
+    gap: 0.65rem;
+    align-items: start;
+}
+.talk-steps span {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: #FF6464;
+}
+.talk-steps strong {
+    display: block;
+    font-size: 0.92rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+.talk-steps p { margin: 0.15rem 0 0; color: #4a4450; font-size: 0.92rem; line-height: 1.35; }
+.talk-steps--tight { gap: 0.4rem; }
+.talk-steps--tight p { font-size: 0.84rem; }
+.talk-zones__title { margin-bottom: 1.85rem; }
+.talk-zones__fig {
+    position: relative;
+    width: min(100%, calc((100vh - 7rem) * 662 / 820));
+    aspect-ratio: 662 / 820;
+    margin-left: auto;
+    max-height: 78vh;
+}
+.talk-zones__fig .talk-relief {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    object-fit: fill;
+}
+.talk-zones__pins {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+.talk-belt {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+}
+.talk-belt .talk-map { flex: 1 1 auto; }
+.talk-belt__cap {
+    margin: 0.45rem 0 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    line-height: 1.45;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #6E6A64;
+}
+.leaflet-div-icon.talk-belt-tag {
+    background: transparent;
+    border: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #6E6A64;
+    white-space: nowrap;
+}
+.talk-belt-tag--peru { color: #722EA8; font-weight: 700; }
+.talk-h--serif { font-family: Georgia, "Times New Roman", serif; text-transform: none; letter-spacing: 0; font-weight: 500; }
+.talk-mech { width: 100%; border-collapse: collapse; margin-top: 0.6rem; font-size: 0.86rem; }
+.talk-mech th {
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #6E6A64;
+    font-weight: 500;
+    padding: 0.35rem 0.6rem 0.35rem 0;
+    border-bottom: 1px solid rgba(26,25,23,0.18);
+}
+.talk-mech td {
+    padding: 0.4rem 0.6rem 0.4rem 0;
+    border-bottom: 1px solid rgba(26,25,23,0.12);
+    color: #4a4450;
+    vertical-align: top;
+}
+.talk-mech td:first-child { color: #1A1917; font-weight: 650; white-space: nowrap; }
+.talk-mech .is-caveat td:first-child { color: #FF6464; }
+.talk-line {
+    margin: 0.8rem 0 0;
+    padding-left: 0.7rem;
+    border-left: 3px solid #D4FF00;
+    color: #4a4450;
+    font-size: 0.92rem;
+}
+.talk-line b {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #1A1917;
+    margin-bottom: 0.2rem;
+}
+.talk-elev { display: flex; align-items: center; min-height: 0; }
+.talk-elev__svg { width: 100%; height: auto; max-height: 70vh; }
+.talk-prose {
+    width: min(44rem, 100%);
+    margin: 0 auto;
+}
+.talk-wide {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+}
+.talk-wide__copy { max-width: 52rem; }
+.talk-wide .talk-h { margin-bottom: 0.4rem; }
+.talk-wide .talk-copy { margin-top: 0.35rem; }
+.talk-map {
+    position: relative;
+    height: 100%;
+    min-height: 0;
+    background: #ffffff;
+    border: 0;
+}
+.talk-cut,
+.talk-relief {
+    width: 100%;
+    height: auto;
+    max-height: 78vh;
+    object-fit: contain;
+    display: block;
+}
+.talk-profile__axis,
+.talk-profile__place,
+.talk-profile__coffee {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    fill: #271825;
+    letter-spacing: 0.04em;
+}
+.talk-profile__note {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    fill: #8B8490;
+}
+.talk-profile__coffee { fill: #722EA8; }
+.talk-map > .leaflet-container {
+    width: 100%;
+    height: 100%;
+}
+.talk-locator,
+.talk-locator.leaflet-container {
+    position: absolute;
+    z-index: 800;
+    top: 18px;
+    right: 18px;
+    left: auto;
+    bottom: auto;
+    width: 228px !important;
+    height: 340px !important;
+    background: #f3f3f3;
+    border: 1.5px solid #271825;
+    box-shadow: 0 0 0 5px #ffffff;
+    pointer-events: none;
+}
+.talk-locator__cap {
+    position: absolute;
+    z-index: 900;
+    left: 8px;
+    bottom: 8px;
+    padding: 2px 5px;
+    background: #ffffff;
+    color: #271825;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    line-height: 1.2;
+}
+.leaflet-div-icon.talk-callout {
+    background: transparent;
+    border: 0;
+}
+.talk-callout {
+    background: transparent;
+    border: 0;
+    color: #271825;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    white-space: nowrap;
+}
+.talk-callout--left { text-align: right; }
+.talk-callout--right { text-align: left; }
+.talk-wheel {
+    width: 100%;
+    height: 100%;
+    max-height: 74vh;
+    object-fit: contain;
+    justify-self: center;
+    background: #ffffff;
+}
+.talk-spine {
+    list-style: none;
+    margin: 0.4rem 0 0;
+    padding: 0.2rem 0 0.2rem 0;
+    max-width: 46rem;
+    display: grid;
+    gap: 0.85rem;
+    background: linear-gradient(#271825, #271825) 6.55rem 0.55rem / 1px calc(100% - 1.1rem) no-repeat;
+}
+.talk-spine li {
+    display: grid;
+    grid-template-columns: 5.6rem 14px 1fr;
+    gap: 0.85rem;
+    align-items: start;
+}
+.talk-spine--fit {
+    gap: 0.55rem;
+    margin-top: 0.2rem;
+}
+.talk-spine--fit span {
+    font-size: 0.98rem;
+    line-height: 1.35;
+}
+.talk-spine em {
+    grid-column: 1;
+    font-family: 'JetBrains Mono', monospace;
+    font-style: normal;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-align: right;
+    padding-top: 0.15rem;
+}
+.talk-spine li::before {
+    content: "";
+    grid-column: 2;
+    width: 7px;
+    height: 7px;
+    margin-top: 0.28rem;
+    border: 1.5px solid #271825;
+    border-radius: 50%;
+    background: #ffffff;
+    justify-self: center;
+}
+.talk-spine span { grid-column: 3; }
+.talk-spine b {
+    font-weight: 650;
+    margin-right: 0.45rem;
+}
+.talk-spine span {
+    color: #4a4450;
+}
+.leaflet-tooltip.talk-tip {
+    background: #271825;
+    color: #F3EEE6;
+    border: 0;
+    border-radius: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    box-shadow: none;
+}
+.leaflet-tooltip.talk-tip:before { display: none; }
+.talk-map .leaflet-container {
+    background: inherit;
+    font-family: Inter, system-ui, sans-serif;
+    height: 100%;
     width: 100%;
 }
-.talk-map {
-    min-height: 58vh;
-    background: #eae4da;
-    border: 1px solid rgba(39, 24, 37, 0.12);
+.talk-legend {
+    margin-top: 1.2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.15rem 1rem;
 }
-.talk-map .leaflet-container {
-    background: #eae4da;
-    font-family: Inter, system-ui, sans-serif;
-}
-.talk-legend { margin-top: 1.2rem; }
 .talk-legend li {
     display: flex;
     align-items: center;
@@ -5018,7 +5424,7 @@ html.dark .lab-board__kicker .offerings-cursor {
 .talk-grid3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .talk-two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .talk-grid3 article, .talk-two > div {
-    border-top: 3px solid #722EA8;
+    border-top: 1px solid rgba(39, 24, 37, 0.16);
     padding-top: 1rem;
 }
 .talk-grid3 h3, .talk-two h3 {
