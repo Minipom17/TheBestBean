@@ -1500,7 +1500,6 @@ html.dark .price-pair--compact .price-pair__soles {
     overflow: hidden;
 }
 .exp-carousel__slide img,
-.carousel-container > img,
 .tour-media-frame img {
     position: absolute;
     inset: 0;

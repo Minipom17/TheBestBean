@@ -8,7 +8,8 @@
         const container = document.getElementById('carousel-' + id);
         if (!container) return;
 
-        const images = container.querySelectorAll('img');
+        const slides = container.querySelectorAll('.exp-carousel__slide');
+        const images = slides.length ? slides : container.querySelectorAll('img');
         const total = images.length;
         if (total <= 1) return;
 
@@ -24,7 +25,8 @@
         const container = document.getElementById('carousel-' + id);
         if (!container) return;
 
-        const images = container.querySelectorAll('img');
+        const slides = container.querySelectorAll('.exp-carousel__slide');
+        const images = slides.length ? slides : container.querySelectorAll('img');
         if (images.length <= 1) return;
 
         let startX = 0;
