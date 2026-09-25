@@ -95,6 +95,43 @@ builder.Services.AddScoped<FarmProfileService>();
 builder.Services.AddScoped<TheBestBean.Services.CartService>();
 builder.Services.AddScoped<CoffeeFreshnessService>();
 builder.Services.AddScoped<BookingCalendarService>();
+builder.Services.AddScoped<BookingOpsNotifyService>();
+builder.Services.AddSingleton(sp =>
+{
+    var env = sp.GetRequiredService<IHostEnvironment>();
+    var opt = new WhatsAppOptions();
+    var secretPath = Path.Combine(env.ContentRootPath, "secrets", "whatsapp.json");
+    if (File.Exists(secretPath))
+    {
+        var file = System.Text.Json.JsonSerializer.Deserialize<WhatsAppOptions>(
+            File.ReadAllText(secretPath),
+            new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        if (file != null)
+        {
+            if (!string.IsNullOrWhiteSpace(file.Provider)) opt.Provider = file.Provider;
+            if (!string.IsNullOrWhiteSpace(file.NotifyDigits)) opt.NotifyDigits = file.NotifyDigits;
+            if (!string.IsNullOrWhiteSpace(file.ApiKey)) opt.ApiKey = file.ApiKey;
+            if (!string.IsNullOrWhiteSpace(file.AccessToken)) opt.AccessToken = file.AccessToken;
+            if (!string.IsNullOrWhiteSpace(file.PhoneNumberId)) opt.PhoneNumberId = file.PhoneNumberId;
+            if (!string.IsNullOrWhiteSpace(file.NotifyEmail)) opt.NotifyEmail = file.NotifyEmail;
+        }
+    }
+    var envProvider = Environment.GetEnvironmentVariable("WHATSAPP_PROVIDER");
+    var envKey = Environment.GetEnvironmentVariable("WHATSAPP_API_KEY");
+    var envDigits = Environment.GetEnvironmentVariable("WHATSAPP_NOTIFY_DIGITS");
+    var envToken = Environment.GetEnvironmentVariable("WHATSAPP_ACCESS_TOKEN");
+    var envPhoneId = Environment.GetEnvironmentVariable("WHATSAPP_PHONE_NUMBER_ID");
+    var envEmail = Environment.GetEnvironmentVariable("WHATSAPP_NOTIFY_EMAIL");
+    if (!string.IsNullOrWhiteSpace(envProvider)) opt.Provider = envProvider;
+    if (!string.IsNullOrWhiteSpace(envKey)) opt.ApiKey = envKey;
+    if (!string.IsNullOrWhiteSpace(envDigits)) opt.NotifyDigits = envDigits;
+    if (!string.IsNullOrWhiteSpace(envToken)) opt.AccessToken = envToken;
+    if (!string.IsNullOrWhiteSpace(envPhoneId)) opt.PhoneNumberId = envPhoneId;
+    if (!string.IsNullOrWhiteSpace(envEmail)) opt.NotifyEmail = envEmail;
+    return opt;
+});
+builder.Services.AddHttpClient<WhatsAppNotifyService>();
+builder.Services.AddHostedService<BookingReminderHostedService>();
 builder.Services.AddSingleton(sp =>
 {
     var env = sp.GetRequiredService<IHostEnvironment>();

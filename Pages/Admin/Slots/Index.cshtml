@@ -1,0 +1,119 @@
+@page
+@model TheBestBean.Pages.Admin.Slots.IndexModel
+@{
+    ViewData["Title"] = "Booking slots";
+}
+
+<div class="pt-32 pb-20 bg-white dark:bg-[#121014] min-h-[70vh]">
+    <div class="container mx-auto px-4 md:px-8 max-w-5xl">
+        <p class="text-[10px] font-mono-jb uppercase tracking-widest text-v-gray mb-2">
+            <a asp-page="/Admin/Index" class="text-decoration-none hover:text-v-red">Admin</a> · Slots
+        </p>
+        <h1 class="text-3xl md:text-5xl font-grotesk font-bold tracking-tighter mb-4 uppercase">Booking slots</h1>
+        <p class="text-sm text-gray-500 dark:text-gray-300 mb-8 max-w-2xl">
+            Mornings (before noon Lima) close the day before. Afternoon / evening need a 4-hour lead.
+            If someone is already booked, the slot stays open to fill seats.
+            Tap <strong>Open now</strong> to bypass the cutoff when you’re free (e.g. 9am, open a noon tour).
+        </p>
+
+        @if (!string.IsNullOrWhiteSpace(Model.StatusMessage))
+        {
+            <p class="mb-6 text-sm font-mono-jb text-[#722EA8]">@Model.StatusMessage</p>
+        }
+
+        <form method="get" class="flex flex-wrap gap-3 items-end mb-10">
+            <div class="flex flex-col gap-1 min-w-[16rem]">
+                <label class="text-[10px] font-mono-jb uppercase tracking-widest text-gray-500">Experience</label>
+                <select asp-for="ExperienceId" asp-items="Model.ExperienceOptions" class="px-3 py-2 border border-gray-300 dark:border-[#2A262C] bg-white dark:bg-[#1C191F] text-sm">
+                    <option value="">All upcoming</option>
+                </select>
+            </div>
+            <button type="submit" class="bg-black text-white dark:bg-[#D6D0C8] dark:text-black px-5 py-2 font-mono-jb text-[10px] uppercase tracking-widest border-0 cursor-pointer">Filter</button>
+        </form>
+
+        <div class="overflow-x-auto border border-gray-100 dark:border-[#2A262C]">
+            <table class="w-full text-left text-sm">
+                <thead class="bg-gray-50 dark:bg-[#1C191F] text-[10px] font-mono-jb uppercase tracking-widest text-gray-500">
+                    <tr>
+                        <th class="px-4 py-3">When (Lima)</th>
+                        <th class="px-4 py-3">Experience</th>
+                        <th class="px-4 py-3">Seats</th>
+                        <th class="px-4 py-3">Status</th>
+                        <th class="px-4 py-3">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var row in Model.Slots)
+                {
+                    var s = row.Slot;
+                    <tr class="border-t border-gray-100 dark:border-[#2A262C] align-top">
+                        <td class="px-4 py-3 font-mono-jb text-xs whitespace-nowrap">@row.LimaLabel</td>
+                        <td class="px-4 py-3">@row.ExperienceTitle</td>
+                        <td class="px-4 py-3 font-mono-jb text-xs">@s.BookedCount / @s.Capacity</td>
+                        <td class="px-4 py-3 text-xs">
+                            @if (s.IsCancelled)
+                            {
+                                <span class="text-red-600">Cancelled</span>
+                            }
+                            else if (row.OnlineOpen)
+                            {
+                                <span class="text-green-700 dark:text-green-400">Online</span>
+                                @if (s.BypassCutoff)
+                                {
+                                    <span class="block text-[10px] uppercase tracking-widest text-[#722EA8] mt-1">Override on</span>
+                                }
+                            }
+                            else
+                            {
+                                <span class="text-amber-700 dark:text-amber-400">Past cutoff</span>
+                            }
+                        </td>
+                        <td class="px-4 py-3">
+                            <div class="flex flex-wrap gap-2">
+                                @if (!s.IsCancelled && !row.OnlineOpen)
+                                {
+                                    <form method="post" asp-page-handler="Open">
+                                        <input type="hidden" name="slotId" value="@s.Id" />
+                                        <input type="hidden" name="ExperienceId" value="@Model.ExperienceId" />
+                                        <button type="submit" class="px-3 py-1.5 bg-[#722EA8] text-white text-[10px] font-mono-jb uppercase tracking-widest border-0 cursor-pointer">Open now</button>
+                                    </form>
+                                }
+                                @if (s.BypassCutoff)
+                                {
+                                    <form method="post" asp-page-handler="ClearBypass">
+                                        <input type="hidden" name="slotId" value="@s.Id" />
+                                        <input type="hidden" name="ExperienceId" value="@Model.ExperienceId" />
+                                        <button type="submit" class="px-3 py-1.5 bg-gray-200 dark:bg-[#2A262C] text-[10px] font-mono-jb uppercase tracking-widest border-0 cursor-pointer">Clear override</button>
+                                    </form>
+                                }
+                                @if (!s.IsCancelled)
+                                {
+                                    <form method="post" asp-page-handler="Cancel">
+                                        <input type="hidden" name="slotId" value="@s.Id" />
+                                        <input type="hidden" name="ExperienceId" value="@Model.ExperienceId" />
+                                        <button type="submit" class="px-3 py-1.5 bg-white dark:bg-[#121014] border border-gray-300 dark:border-[#2A262C] text-[10px] font-mono-jb uppercase tracking-widest cursor-pointer">Cancel</button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <form method="post" asp-page-handler="Restore">
+                                        <input type="hidden" name="slotId" value="@s.Id" />
+                                        <input type="hidden" name="ExperienceId" value="@Model.ExperienceId" />
+                                        <button type="submit" class="px-3 py-1.5 bg-white dark:bg-[#121014] border border-gray-300 dark:border-[#2A262C] text-[10px] font-mono-jb uppercase tracking-widest cursor-pointer">Restore</button>
+                                    </form>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+                @if (Model.Slots.Count == 0)
+                {
+                    <tr>
+                        <td colspan="5" class="px-4 py-8 text-gray-500 text-sm">No upcoming slots. Pick an experience to generate the calendar.</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -17,6 +17,8 @@ namespace TheBestBean.Models
         public int Quantity { get; set; }
         public decimal UnitPrice { get; set; }
         public int SlotId { get; set; }
+        public bool DayBeforeAlertSent { get; set; }
+        public bool MorningOfAlertSent { get; set; }
         public decimal TotalPrice => Quantity * UnitPrice;
     }
 }
