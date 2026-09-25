@@ -14,8 +14,9 @@ namespace TheBestBean.Pages
         private readonly CulqiService _culqi;
         private readonly BookingCalendarService _calendar;
         private readonly CoffeeFreshnessService _freshness;
+        private readonly BookingOpsNotifyService _opsNotify;
 
-        public CheckoutModel(CartService cartService, Data.TheBestBeanContext context, PayPalService payPal, CulqiService culqi, BookingCalendarService calendar, CoffeeFreshnessService freshness)
+        public CheckoutModel(CartService cartService, Data.TheBestBeanContext context, PayPalService payPal, CulqiService culqi, BookingCalendarService calendar, CoffeeFreshnessService freshness, BookingOpsNotifyService opsNotify)
         {
             _cartService = cartService;
             _context = context;
@@ -23,6 +24,7 @@ namespace TheBestBean.Pages
             _culqi = culqi;
             _calendar = calendar;
             _freshness = freshness;
+            _opsNotify = opsNotify;
         }
 
         public List<CartItem> CartItems { get; set; } = new List<CartItem>();
@@ -112,6 +114,7 @@ namespace TheBestBean.Pages
             }
 
             Ga4Ecommerce.SetPageEvent(ViewData, "begin_checkout", Ga4Ecommerce.Payload(CartItems, CartTotal));
+            await MaybeNotifyCheckoutVisitAsync();
             return Page();
         }
 
@@ -247,6 +250,7 @@ namespace TheBestBean.Pages
                 _context.Orders.Add(order);
                 await _context.SaveChangesAsync();
                 await ReserveSlotsAsync();
+                await _opsNotify.NotifyOrderPlacedAsync(order);
                 return FinishLocalOrder(order);
             }
 
@@ -271,13 +275,31 @@ namespace TheBestBean.Pages
                 _context.Orders.Add(order);
                 await _context.SaveChangesAsync();
                 await ReserveSlotsAsync();
+                await _opsNotify.NotifyOrderPlacedAsync(order);
                 return Redirect(checkoutUrl);
             }
 
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
             await ReserveSlotsAsync();
+            await _opsNotify.NotifyOrderPlacedAsync(order);
             return FinishLocalOrder(order);
+        }
+
+        private async Task MaybeNotifyCheckoutVisitAsync()
+        {
+            if (!HasExperienceItems) return;
+            if (string.Equals(HttpContext.Session.GetString("CheckoutVisitAlerted"), "1", StringComparison.Ordinal))
+            {
+                return;
+            }
+
+            HttpContext.Session.SetString("CheckoutVisitAlerted", "1");
+            await _opsNotify.NotifyCheckoutVisitAsync(
+                FullName,
+                Phone,
+                Email,
+                CartItems);
         }
 
         private async Task ReserveSlotsAsync()

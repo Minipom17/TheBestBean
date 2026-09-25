@@ -11,12 +11,14 @@ namespace TheBestBean.Pages
         private readonly TheBestBeanContext _db;
         private readonly PayPalService _paypal;
         private readonly CartService _cart;
+        private readonly BookingOpsNotifyService _opsNotify;
 
-        public PayPalCompleteModel(TheBestBeanContext db, PayPalService paypal, CartService cart)
+        public PayPalCompleteModel(TheBestBeanContext db, PayPalService paypal, CartService cart, BookingOpsNotifyService opsNotify)
         {
             _db = db;
             _paypal = paypal;
             _cart = cart;
+            _opsNotify = opsNotify;
         }
 
         public async Task<IActionResult> OnGetAsync(string? order, string? token)
@@ -26,7 +28,9 @@ namespace TheBestBean.Pages
                 return RedirectToPage("/Checkout");
             }
 
-            var saved = await _db.Orders.FirstOrDefaultAsync(o => o.OrderNumber == order);
+            var saved = await _db.Orders
+                .Include(o => o.Items)
+                .FirstOrDefaultAsync(o => o.OrderNumber == order);
             if (saved == null)
             {
                 TempData["MpError"] = "PayPal came back without a matching order.";
@@ -43,6 +47,7 @@ namespace TheBestBean.Pages
                     saved.PayPalOrderId = payPalId;
                 }
                 await _db.SaveChangesAsync();
+                await _opsNotify.NotifyOrderPlacedAsync(saved);
                 _cart.ClearCart(HttpContext.Session);
                 return RedirectToPage("/OrderConfirmation", new { order = saved.OrderNumber });
             }

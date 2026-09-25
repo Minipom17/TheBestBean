@@ -711,6 +711,9 @@ namespace TheBestBean.Migrations
                     b.Property<int>("BookedCount")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("BypassCutoff")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("Capacity")
                         .HasColumnType("INTEGER");
 
@@ -1186,6 +1189,12 @@ namespace TheBestBean.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("DayBeforeAlertSent")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("MorningOfAlertSent")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("OrderId")

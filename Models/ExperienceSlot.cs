@@ -13,6 +13,8 @@ namespace TheBestBean.Models
         public int Capacity { get; set; } = 6;
         public int BookedCount { get; set; }
         public bool IsCancelled { get; set; }
+        /// <summary>Admin reopen: ignore the normal booking cutoff (morning day-before / 4h lead).</summary>
+        public bool BypassCutoff { get; set; }
 
         [NotMapped]
         public int Remaining => Math.Max(0, Capacity - BookedCount);
