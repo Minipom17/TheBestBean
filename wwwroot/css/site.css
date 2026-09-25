@@ -5173,15 +5173,20 @@ html.dark .lab-board__kicker .offerings-cursor {
 .leaflet-div-icon.talk-belt-tag {
     background: transparent;
     border: 0;
+    overflow: visible;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 600;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     color: #6E6A64;
     white-space: nowrap;
 }
-.talk-belt-tag--peru { color: #722EA8; font-weight: 700; }
+.talk-belt-tag--peru { color: #722EA8; font-weight: 700; font-size: 13px; letter-spacing: 0.16em; }
+.talk-map svg path { shape-rendering: geometricPrecision; }
+.talk-slide:has([data-talk-map="country"]) .talk-split {
+    grid-template-columns: minmax(14rem, 18rem) minmax(0, 1fr);
+}
 .talk-h--serif { font-family: Georgia, "Times New Roman", serif; text-transform: none; letter-spacing: 0; font-weight: 500; }
 .talk-mech { width: 100%; border-collapse: collapse; margin-top: 0.6rem; font-size: 0.86rem; }
 .talk-mech th {

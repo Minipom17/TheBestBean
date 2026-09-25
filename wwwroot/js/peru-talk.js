@@ -96,7 +96,7 @@
     async function loadGeo() {
         if (geo.departments) return geo;
         const [world, departments, provinces, districts] = await Promise.all([
-            fetch('/data/world_countries.geojson').then(function (r) { return r.json(); }),
+            fetch('/data/talk/world-belt.geojson').then(function (r) { return r.json(); }),
             fetch('/data/talk/peru-departments.geojson').then(function (r) { return r.json(); }),
             fetch('/data/talk/peru-provinces.geojson').then(function (r) { return r.json(); }),
             fetch('/data/talk/peru-districts.geojson').then(function (r) { return r.json(); })
@@ -222,14 +222,14 @@
             };
             beltTag([tropic, -120], 'Tropic of Cancer · 23.5°N');
             beltTag([-tropic, -120], 'Tropic of Capricorn · 23.5°S');
-            L.marker([-9.4, -74.2], {
+            L.marker([-19.6, -75.2], {
                 interactive: false,
                 keyboard: false,
                 icon: L.divIcon({
                     className: 'talk-belt-tag talk-belt-tag--peru',
                     html: 'Peru',
-                    iconSize: [48, 14],
-                    iconAnchor: [24, 18]
+                    iconSize: [72, 16],
+                    iconAnchor: [36, 0]
                 })
             }).addTo(map);
             armFit(map, el, [[-38, -130], [38, 160]], [28, 8]);
@@ -276,7 +276,7 @@
                     }).addTo(map);
                 }
             }).addTo(map);
-            armFit(map, el, [[-18.36, -81.33], [-0.02, -68.65]], [24, 148]);
+            armFit(map, el, [[-18.36, -81.33], [-0.02, -68.65]], [12, 88]);
             return;
         }
 
@@ -448,6 +448,7 @@
         if (dx > 50) go(index - 1);
     }, { passive: true });
 
+    loadGeo();
     go(0);
     stage.focus();
 })();
