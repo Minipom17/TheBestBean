@@ -88,7 +88,7 @@
                             <div class="carousel-container absolute inset-0 w-full h-full flex transition-transform duration-500 ease-in-out" id="carousel-@featuredLab.Id" data-current="0">
                                 @foreach (var img in featuredPhotos)
                                 {
-                                    <img src="@img" alt="@featuredLab.Title" class="img-stark w-full h-full object-cover flex-shrink-0" draggable="false" loading="lazy" />
+                                    <partial name="_CarouselSlide" model="(img, featuredLab.Title)" />
                                 }
                             </div>
                             <div class="absolute top-3 right-3 bg-v-yellow text-v-black rounded-full px-3 py-1 text-[9px] font-mono-jb font-bold uppercase tracking-widest shadow-sm z-10 pointer-events-none">FEATURED</div>
@@ -192,7 +192,7 @@
                                             <div class="carousel-container absolute inset-0 w-full h-full flex transition-transform duration-500 ease-in-out" id="carousel-@exp.Id" data-current="0">
                                                 @foreach (var img in hourPhotos)
                                                 {
-                                                    <img src="@img" alt="@exp.Title" class="img-stark w-full h-full object-cover flex-shrink-0" draggable="false" loading="lazy" />
+                                                    <partial name="_CarouselSlide" model="(img, exp.Title)" />
                                                 }
                                             </div>
                                         }
@@ -260,7 +260,7 @@
                                     <div class="carousel-container absolute inset-0 w-full h-full flex transition-transform duration-500 ease-in-out" id="carousel-@exp.Id" data-current="0">
                                         @foreach (var img in expPhotos)
                                         {
-                                            <img src="@img" alt="@exp.Title" class="img-stark w-full h-full object-cover flex-shrink-0" draggable="false" loading="lazy" />
+                                            <partial name="_CarouselSlide" model="(img, exp.Title)" />
                                         }
                                     </div>
                                     @if (exp.Tag != null)
@@ -379,7 +379,7 @@
                             <div class="carousel-container absolute inset-0 w-full h-full flex transition-transform duration-500 ease-in-out" id="carousel-@exp.Id" data-current="0">
                                 @foreach (var img in expeditionPhotos)
                                 {
-                                    <img src="@img" alt="@exp.Title" class="img-stark w-full h-full object-cover flex-shrink-0" draggable="false" loading="lazy" />
+                                    <partial name="_CarouselSlide" model="(img, exp.Title)" />
                                 }
                             </div>
                             @if (exp.Tag != null)
