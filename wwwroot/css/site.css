@@ -937,8 +937,15 @@ html.dark .tour-venue-map__caption p {
     letter-spacing: 0.15em;
     text-transform: uppercase;
     color: #8B8490;
-    margin-right: 0.5rem;
+    margin-right: 0;
     flex-shrink: 0;
+}
+.syllabus-heading-line {
+    display: inline-flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.55rem;
+    min-width: 0;
 }
 .syllabus-module-title {
     display: inline-flex;
@@ -965,11 +972,12 @@ html.dark .tour-venue-map__caption p {
     align-items: flex-start;
     flex-wrap: nowrap;
     justify-content: flex-start;
-    flex-direction: column;
+    flex-direction: row;
     gap: 0.1rem;
     width: 100%;
     min-width: 0;
     white-space: normal;
+    margin-top: 0.15rem;
 }
 .syllabus-summary-line .syllabus-module-title {
     flex: 1 1 auto;
@@ -978,10 +986,10 @@ html.dark .tour-venue-map__caption p {
 .syllabus-row .flex.justify-end {
     display: flex;
     justify-content: space-between !important;
-    align-items: center;
+    align-items: baseline;
     gap: 0.75rem;
     width: 100%;
-    margin: 0 0 0.35rem;
+    margin: 0;
     min-height: 0;
 }
 .syllabus-details-cta {
@@ -4713,7 +4721,7 @@ html.dark .hour-lab-card__price {
 }
 .syllabus-summary-line {
     display: flex !important;
-    flex-direction: column;
+    flex-direction: row;
     align-items: flex-start;
     justify-content: flex-start;
     gap: 0.1rem;
