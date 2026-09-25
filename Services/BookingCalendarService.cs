@@ -72,7 +72,7 @@ namespace TheBestBean.Services
                     .Where(s => s.ExperienceId == exp.Id)
                     .Select(s => s.StartAt)
                     .ToListAsync(ct);
-                var have = existing.SelectMany(ExistingKeys).ToHashSet();
+                var have = existing.Select(UtcMinuteKey).ToHashSet();
 
                 foreach (var start in ProposeStarts(exp, now, horizon))
                 {
@@ -85,6 +85,16 @@ namespace TheBestBean.Services
                         Capacity = DefaultCapacity(exp),
                         BookedCount = 0
                     });
+                }
+
+                if (!UsesLabWeek(exp)) continue;
+                var future = await _db.ExperienceSlots
+                    .Where(s => s.ExperienceId == exp.Id && s.StartAt > now)
+                    .ToListAsync(ct);
+                foreach (var slot in future)
+                {
+                    if (slot.BookedCount > 0) continue;
+                    slot.IsCancelled = !IsOnLabWeek(slot.StartAt);
                 }
             }
 
@@ -161,15 +171,6 @@ namespace TheBestBean.Services
             return new DateTime(utc.Year, utc.Month, utc.Day, utc.Hour, utc.Minute, 0, DateTimeKind.Utc).ToString("yyyy-MM-dd HH:mm");
         }
 
-        private static IEnumerable<string> ExistingKeys(DateTime stored)
-        {
-            yield return UtcMinuteKey(stored);
-            var limaWall = DateTime.SpecifyKind(
-                new DateTime(stored.Year, stored.Month, stored.Day, stored.Hour, stored.Minute, 0),
-                DateTimeKind.Unspecified);
-            yield return UtcMinuteKey(TimeZoneInfo.ConvertTimeToUtc(limaWall, LimaZone));
-        }
-
         private static int DefaultCapacity(Experience exp)
         {
             var d = (exp.Duration ?? "").ToLowerInvariant();
@@ -183,13 +184,12 @@ namespace TheBestBean.Services
             var lima = LimaZone;
             var fromLima = TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(fromUtc, DateTimeKind.Utc), lima).Date;
             var toLima = TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(toUtc, DateTimeKind.Utc), lima).Date;
-            var times = SessionTimes(exp);
             var days = SessionDays(exp);
 
             for (var day = fromLima; day <= toLima; day = day.AddDays(1))
             {
                 if (!days.Contains(day.DayOfWeek)) continue;
-                foreach (var time in times)
+                foreach (var time in TimesFor(exp, day.DayOfWeek))
                 {
                     var local = DateTime.SpecifyKind(day.Add(time), DateTimeKind.Unspecified);
                     yield return TimeZoneInfo.ConvertTimeToUtc(local, lima);
@@ -197,8 +197,49 @@ namespace TheBestBean.Services
             }
         }
 
+        private static readonly Dictionary<DayOfWeek, TimeSpan[]> LabWeek = new()
+        {
+            [DayOfWeek.Monday] = [new TimeSpan(9, 15, 0), new TimeSpan(12, 0, 0), new TimeSpan(14, 30, 0)],
+            [DayOfWeek.Tuesday] = [new TimeSpan(9, 15, 0), new TimeSpan(12, 0, 0), new TimeSpan(14, 35, 0)],
+            [DayOfWeek.Wednesday] = [new TimeSpan(9, 15, 0), new TimeSpan(14, 0, 0)],
+            [DayOfWeek.Thursday] = [new TimeSpan(9, 15, 0), new TimeSpan(12, 0, 0), new TimeSpan(14, 30, 0)],
+            [DayOfWeek.Friday] = [new TimeSpan(10, 30, 0), new TimeSpan(14, 0, 0)],
+            [DayOfWeek.Saturday] = [new TimeSpan(10, 0, 0), new TimeSpan(12, 30, 0), new TimeSpan(15, 5, 0)]
+        };
+
+        private static bool UsesLabWeek(Experience exp)
+        {
+            var d = (exp.Duration ?? "").ToLowerInvariant();
+            var category = (exp.Category ?? "").ToLowerInvariant();
+            if (category.Contains("expedition")) return false;
+            if (d.Contains("day") && !d.Contains("hour")) return false;
+            return d.Contains("hour") || category.Contains("workshop");
+        }
+
+        private static bool IsOnLabWeek(DateTime startUtc)
+        {
+            var lima = ToLima(startUtc);
+            return LabWeek.TryGetValue(lima.DayOfWeek, out var times)
+                && times.Any(t => t.Hours == lima.Hour && t.Minutes == lima.Minute);
+        }
+
+        private static TimeSpan[] TimesFor(Experience exp, DayOfWeek day)
+        {
+            if (UsesLabWeek(exp))
+            {
+                return LabWeek.TryGetValue(day, out var times) ? times : [];
+            }
+
+            return SessionTimes(exp);
+        }
+
         private static HashSet<DayOfWeek> SessionDays(Experience exp)
         {
+            if (UsesLabWeek(exp))
+            {
+                return [.. LabWeek.Keys];
+            }
+
             var d = (exp.Duration ?? "").ToLowerInvariant();
             var category = (exp.Category ?? "").ToLowerInvariant();
             if (d.Contains("2 day") || d.Contains("2 days") || d.Contains("multi"))

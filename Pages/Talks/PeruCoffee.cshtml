@@ -36,14 +36,41 @@
                     <p class="talk-kicker">01 <span>//</span> Origin talk · ~10 min</p>
                     <h1 class="talk-origin__peru">Peru</h1>
                     <h2 class="talk-origin__coffees">Coffees</h2>
-                    <p class="talk-lede">A topographic reading of the belt, the highlands, <strong>seven growing zones</strong>, and the varieties that actually show up in the cup — with honest caveats.</p>
+                    <p class="talk-lede">A topographic reading of the belt, the highlands, and the varieties that actually show up in the cup — with honest caveats.</p>
                     <p class="talk-origin__mark"><b>Purple Bean</b> Cusco · La Convención</p>
                 </div>
-                <div class="talk-origin__map">
-                    <img src="~/brand/peru-origin-relief.png" asp-append-version="true" alt="Relief of Peru. Cajamarca in the north, Cusco and Inkawasi in the south." />
-                    <span class="talk-anno talk-anno--left" style="top:22%;left:14%">Cajamarca</span>
-                    <span class="talk-anno talk-anno--left" style="top:58%;left:10%">Cusco</span>
-                    <span class="talk-anno talk-anno--right" style="top:52%;right:4%">Inkawasi</span>
+                <div class="talk-zones__fig">
+                    <img class="talk-relief" src="~/brand/peru-zones-relief.png" asp-append-version="true" alt="Relief of Peru with the coffee zones marked." />
+                    <svg class="talk-zones__pins" viewBox="-150 0 980 820" preserveAspectRatio="none" aria-hidden="true">
+                        <g fill="none" stroke="#1A1917" stroke-width="0.8" opacity="0.7">
+                            <line x1="66" y1="219" x2="-8" y2="200"/>
+                            <line x1="138" y1="281" x2="-8" y2="290"/>
+                            <line x1="173" y1="232" x2="690" y2="175"/>
+                            <line x1="239" y1="313" x2="690" y2="310"/>
+                            <line x1="310" y1="488" x2="-8" y2="490"/>
+                            <line x1="434" y1="554" x2="690" y2="520"/>
+                            <line x1="612" y1="601" x2="690" y2="680"/>
+                        </g>
+                        <g fill="#FF6464">
+                            <circle cx="66" cy="219" r="3.2"/>
+                            <circle cx="138" cy="281" r="3.2"/>
+                            <circle cx="173" cy="232" r="3.2"/>
+                            <circle cx="239" cy="313" r="3.2"/>
+                            <circle cx="310" cy="488" r="3.2"/>
+                            <circle cx="434" cy="554" r="3.2"/>
+                            <circle cx="612" cy="601" r="3.2"/>
+                        </g>
+                        <g font-family="JetBrains Mono, monospace" font-size="15" font-weight="700" letter-spacing="1.2" fill="#1A1917">
+                            <text x="-145" y="196">PIURA</text>
+                            <text x="-145" y="294">CAJAMARCA</text>
+                            <text x="700" y="170">AMAZONAS</text>
+                            <text x="700" y="306">SAN MARTÍN</text>
+                            <text x="-145" y="494">CENTRAL</text>
+                            <text x="700" y="512">CUSCO</text>
+                            <text x="700" y="530" font-size="12" font-weight="600" fill="#6E6A64">INKAWASI</text>
+                            <text x="700" y="684">PUNO / SANDIA</text>
+                        </g>
+                    </svg>
                 </div>
             </div>
         </section>
@@ -70,9 +97,9 @@
         <section class="talk-slide">
             <div class="talk-split">
                 <div>
-                    <p class="talk-kicker">02 · The country</p>
-                    <h2 class="talk-h">The whole shape, then the valleys</h2>
-                    <p class="talk-copy">These are the official 2023 department limits, drawn as vectors. Coffee is not on the coast and not on the high plateau. It is on the eastern slope, where the Andes drop into the Amazon. The next maps open the district file.</p>
+                    <p class="talk-kicker">03 · The country</p>
+                    <h2 class="talk-h">Peru, and its valleys</h2>
+                    <p class="talk-copy">These are the official 2023 department limits, drawn as vectors. Coffee is not on the coast and not on the high plateau. It is on the eastern slope, where the Andes drop into the Amazon. The next maps open those valleys.</p>
                     <ul class="talk-legend">
                         <li><i style="background:#E07A3D"></i> Cajamarca</li>
                         <li><i style="background:#2F6B4F"></i> Amazonas</li>
@@ -93,7 +120,7 @@
         <section class="talk-slide">
             <div class="talk-split talk-split--chart">
                 <div>
-                    <p class="talk-kicker">03 · The climb</p>
+                    <p class="talk-kicker">04 · The climb</p>
                     <h2 class="talk-h">From the sea upward</h2>
                     <p class="talk-copy">Four real cuts, west to east. Cusco is the front ridge. Coffee is the drop after the crest, not the summit.</p>
                     <ol class="talk-steps">
@@ -161,22 +188,22 @@
                         <li><span>02</span><div><strong>North highlands — Cajamarca</strong><p>San Ignacio, Jaén. ~22% of national production.</p></div></li>
                         <li><span>03</span><div><strong>Amazonas</strong><p>Rodríguez de Mendoza. ~15% of national production.</p></div></li>
                         <li><span>04</span><div><strong>San Martín</strong><p>Moyobamba / Alto Mayo. ~20%. Often the lower belt.</p></div></li>
-                        <li><span>05</span><div><strong>Central jungle</strong><p>Chanchamayo, Villa Rica DO, Leoncio Prado. Junín ~19%.</p></div></li>
+                        <li><span>05</span><div><strong>Central jungle</strong><p>Chanchamayo and Villa Rica DO. Junín ~19%. Leoncio Prado is Huánuco.</p></div></li>
                         <li><span>06</span><div><strong>Cusco / La Convención</strong><p>Inkawasi, Santa Teresa, Santa Ana. DO Machu Picchu–Huadquiña.</p></div></li>
                         <li><span>07</span><div><strong>Puno / Sandia</strong><p>Southern high belt. Remote.</p></div></li>
                     </ol>
                 </div>
                 <div class="talk-zones__fig">
                     <img class="talk-relief" src="~/brand/peru-zones-relief.png" asp-append-version="true" alt="Peru in relief with the seven coffee zones marked." />
-                    <svg class="talk-zones__pins" viewBox="0 0 662 820" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+                    <svg class="talk-zones__pins" viewBox="-150 0 980 820" preserveAspectRatio="none" aria-hidden="true">
                         <g fill="none" stroke="#1A1917" stroke-width="0.8" opacity="0.7">
-                            <line x1="66" y1="219" x2="18" y2="150"/>
-                            <line x1="138" y1="281" x2="18" y2="250"/>
-                            <line x1="173" y1="232" x2="300" y2="160"/>
-                            <line x1="239" y1="313" x2="340" y2="250"/>
-                            <line x1="310" y1="488" x2="18" y2="470"/>
-                            <line x1="434" y1="554" x2="470" y2="500"/>
-                            <line x1="612" y1="601" x2="470" y2="680"/>
+                            <line x1="66" y1="219" x2="-8" y2="200"/>
+                            <line x1="138" y1="281" x2="-8" y2="290"/>
+                            <line x1="173" y1="232" x2="690" y2="175"/>
+                            <line x1="239" y1="313" x2="690" y2="310"/>
+                            <line x1="310" y1="488" x2="-8" y2="490"/>
+                            <line x1="434" y1="554" x2="690" y2="520"/>
+                            <line x1="612" y1="601" x2="690" y2="680"/>
                         </g>
                         <g fill="#FF6464">
                             <circle cx="66" cy="219" r="3.2"/>
@@ -187,15 +214,15 @@
                             <circle cx="434" cy="554" r="3.2"/>
                             <circle cx="612" cy="601" r="3.2"/>
                         </g>
-                        <g font-family="JetBrains Mono, monospace" font-size="13" font-weight="700" letter-spacing="1.2" fill="#1A1917">
-                            <text x="8" y="146">PIURA</text>
-                            <text x="8" y="246">CAJAMARCA</text>
-                            <text x="308" y="156">AMAZONAS</text>
-                            <text x="348" y="246">SAN MARTÍN</text>
-                            <text x="8" y="466">CENTRAL</text>
-                            <text x="478" y="492">CUSCO</text>
-                            <text x="478" y="510" font-size="11" font-weight="600" fill="#6E6A64">INKAWASI</text>
-                            <text x="360" y="700">PUNO / SANDIA</text>
+                        <g font-family="JetBrains Mono, monospace" font-size="15" font-weight="700" letter-spacing="1.2" fill="#1A1917">
+                            <text x="-145" y="196">PIURA</text>
+                            <text x="-145" y="294">CAJAMARCA</text>
+                            <text x="700" y="170">AMAZONAS</text>
+                            <text x="700" y="306">SAN MARTÍN</text>
+                            <text x="-145" y="494">CENTRAL</text>
+                            <text x="700" y="512">CUSCO</text>
+                            <text x="700" y="530" font-size="12" font-weight="600" fill="#6E6A64">INKAWASI</text>
+                            <text x="700" y="684">PUNO / SANDIA</text>
                         </g>
                     </svg>
                 </div>
@@ -209,7 +236,7 @@
                     <h2 class="talk-h">North</h2>
                     <ol class="talk-steps talk-steps--tight">
                         <li><span>01</span><div><strong>Piura — Huancabamba</strong><p>Small volume. Semi-arid valleys. Typica, Caturra, Catimor in the trade notes. ~900–2,000 m.</p></div></li>
-                        <li><span>02</span><div><strong>Cajamarca — San Ignacio, Jaén</strong><p>Largest share of Peru’s green coffee. Nearly all of it is Jaén and San Ignacio. Heavy Cup of Excellence history. ~900–1,950 m. About 22%.</p></div></li>
+                        <li><span>02</span><div><strong>Cajamarca — San Ignacio, Jaén</strong><p>Largest share of Peru’s green coffee, about 22%. Nearly all of Cajamarca’s coffee is Jaén and San Ignacio. Heavy Cup of Excellence history. ~900–1,950 m.</p></div></li>
                         <li><span>03</span><div><strong>Amazonas — Rodríguez de Mendoza</strong><p>The specialty story is here. Bagua and Utcubamba are the volume neighbors. About 15%.</p></div></li>
                     </ol>
                     <p class="talk-stat is-north">La Catarata, outside Jaén, is a Cup of Excellence farm we visit</p>
@@ -221,7 +248,7 @@
         <section class="talk-slide">
             <div class="talk-split">
                 <div>
-                    <p class="talk-kicker">04 · Nearer Lima</p>
+                    <p class="talk-kicker">08 · Nearer Lima</p>
                     <h2 class="talk-h is-center">Chanchamayo, Satipo, Villa Rica</h2>
                     <p class="talk-copy">This is the coffee most of the country grew up drinking. Junín’s Chanchamayo and Satipo, and Pasco’s Oxapampa — Villa Rica is a district inside Oxapampa. Published band: <strong>900–1,800 m</strong>. Junín is about <strong>19%</strong> of Peru’s green coffee.</p>
                     <p class="talk-copy">Lower and warmer than the high Cusco slopes. Chocolate, caramel, yellow and black fruit. <strong>Café Villa Rica</strong> is a protected denomination (Indecopi, 2010).</p>
@@ -234,7 +261,7 @@
         <section class="talk-slide">
             <div class="talk-split">
                 <div>
-                    <p class="talk-kicker">05 · Huánuco</p>
+                    <p class="talk-kicker">09 · Huánuco</p>
                     <h2 class="talk-h is-center">Tingo María</h2>
                     <p class="talk-copy">Almost all of Huánuco’s coffee is in <strong>Leoncio Prado</strong>, the province around Tingo María. Published band: <strong>900–2,000 m</strong>. The town itself is low jungle. If someone quotes the town’s elevation, they are not quoting the farm.</p>
                     <p class="talk-copy talk-copy--quiet">Useful teaching point: ask where on the slope the cherry was picked. The valley floor and the ridge are different coffees.</p>
@@ -246,7 +273,7 @@
         <section class="talk-slide">
             <div class="talk-split">
                 <div>
-                    <p class="talk-kicker">07 · Cusco</p>
+                    <p class="talk-kicker">10 · Cusco</p>
                     <h2 class="talk-h is-south">La Convención</h2>
                     <p class="talk-copy">Nearly all of Cusco’s coffee is this one province, the pale shape in the north of the department. Published band: <strong>900–2,000 m</strong>. Quillabamba (Santa Ana) is the valley town. Darker districts: <strong>Inkawasi</strong>, <strong>Santa Teresa</strong>, <strong>Echarate</strong>.</p>
                     <p class="talk-copy">This corridor has its own denomination: <strong>Café Machu Picchu–Huadquiña</strong> (Indecopi, 2011). Washed, honey, natural — the farms are close enough to taste side by side. This is our home map.</p>
@@ -259,7 +286,7 @@
         <section class="talk-slide">
             <div class="talk-split">
                 <div>
-                    <p class="talk-kicker">08 · Puno</p>
+                    <p class="talk-kicker">11 · Puno</p>
                     <h2 class="talk-h is-south">Sandia, not the lake</h2>
                     <p class="talk-copy">Puno is famous for Lake Titicaca, about 3,800 m — too high and too cold for coffee. The cherry is in <strong>Sandia</strong>, the tropical valley that falls off the Andes toward Bolivia. Published band: <strong>900–1,800 m</strong>.</p>
                     <p class="talk-copy">Districts people name: San Juan del Oro, San Pedro de Putina Punco, Alto Inambari, Yanahuaya. CECOVASA, the Sandia co-op, zoned their own cups and found the <strong>1,500–1,800 m</strong> floor scored highest. Remote. When a Puno lot is good, it is because of that slope, not the altiplano.</p>
@@ -271,7 +298,7 @@
         <section class="talk-slide">
             <div class="talk-split">
                 <div>
-                    <p class="talk-kicker">10 · The country, in height</p>
+                    <p class="talk-kicker">12 · The country, in height</p>
                     <h2 class="talk-h">Read the slope, not the pin</h2>
                     <p class="talk-copy">This picture is real elevation. Pale is low: the coast, and the Amazon. Violet is the Andes. The darkest violet is the crest.</p>
                     <p class="talk-copy">Coffee is the eastern face of that spine — the drop toward the jungle. Not the dry coast. Not the frozen top. The same drop the cuts earlier in the talk were measuring.</p>
@@ -282,46 +309,85 @@
         </section>
 
         <section class="talk-slide">
-            <div class="talk-prose">
-                <p class="talk-kicker">Volume, not the specialty map</p>
-                <h2 class="talk-h">Piura and San Martín</h2>
-                <p class="talk-copy">Two zones sit beside the valleys we just opened. They move a lot of coffee. They are not the high-cup story.</p>
-                <ol class="talk-spine talk-spine--fit">
-                    <li><em>Piura</em><span><b>Huancabamba.</b> Far north. Small volume. Semi-arid valleys, about 900–2,000 m.</span></li>
-                    <li><em>~20%</em><span><b>San Martín.</b> Moyobamba, Rioja, Alto Mayo. Often the lower belt, about 900–1,200 m.</span></li>
-                    <li><em>Shares</em><span>Cajamarca ~22% · San Martín ~20% · Junín ~19% · Amazonas ~15%. National green coffee, USDA. Not quality scores.</span></li>
-                </ol>
+            <p class="talk-kicker">13 · Volume, not the specialty map</p>
+            <h2 class="talk-h">Piura and San Martín</h2>
+            <p class="talk-copy">Two zones sit beside the valleys we just opened. They move a lot of coffee. They are not the high-cup story.</p>
+            <div class="talk-board">
+                <article>
+                    <p>01</p>
+                    <h3>Piura — Huancabamba</h3>
+                    <span>Far north. Small volume. Semi-arid valleys, about 900–2,000 m. Typica, Caturra, and Catimor show up in the trade notes.</span>
+                </article>
+                <article>
+                    <p>02</p>
+                    <h3>San Martín — ~20%</h3>
+                    <span>Moyobamba, Rioja, Alto Mayo. Often the lower belt, about 900–1,200 m. Volume, not the cup that wins a table.</span>
+                </article>
+                <article>
+                    <p>03</p>
+                    <h3>National shares</h3>
+                    <span>Cajamarca ~22% · San Martín ~20% · Junín ~19% · Amazonas ~15%. USDA green coffee. These are volume shares, not quality scores.</span>
+                </article>
             </div>
         </section>
 
         <section class="talk-slide">
-            <div class="talk-prose">
-                <p class="talk-kicker">Varieties</p>
-                <h2 class="talk-h">What the lot is actually called</h2>
-                <ol class="talk-spine talk-spine--fit">
-                    <li><em>Typica</em><span><b>Heritage.</b> Still prized when the cup pays. Volume plots moved to Caturra and Catimor for yield and rust.</span></li>
-                    <li><em>Bourbon</em><span><b>Red is the default.</b> Yellow is a mutation. Orange and pink need the lot checked. Pink is often not Bourbon.</span></li>
-                    <li><em>Geisha</em><span><b>Real plantings exist,</b> and so does mislabeling. A Geisha name on a bag is not proof.</span></li>
-                </ol>
+            <p class="talk-kicker">14 · Varieties</p>
+            <h2 class="talk-h">What the lot is actually called</h2>
+            <p class="talk-copy">The name on the bag is a claim. Ask what was planted, and what was picked.</p>
+            <div class="talk-board">
+                <article>
+                    <p>Typica</p>
+                    <h3>Heritage</h3>
+                    <span>Still prized when the cup pays. Most volume plots moved to Caturra and Catimor for yield and rust resistance.</span>
+                </article>
+                <article>
+                    <p>Bourbon</p>
+                    <h3>Red is the default</h3>
+                    <span>Yellow is a mutation of red. Orange and pink need the lot checked. Pink is often not Bourbon at all.</span>
+                </article>
+                <article>
+                    <p>Geisha</p>
+                    <h3>Real, and also mislabeled</h3>
+                    <span>Real plantings exist in Peru. A Geisha name on a bag is not proof of the variety in the cup.</span>
+                </article>
             </div>
         </section>
 
         <section class="talk-slide">
-            <div class="talk-prose">
-                <p class="talk-kicker">Names on the bag</p>
-                <h2 class="talk-h">Check the lot</h2>
-                <ol class="talk-spine talk-spine--fit">
-                    <li><em>01</em><span><b>Marsellesa.</b> A Sarchimor. Rust resistance and yield. Good at altitude, not exceptional. Not Catimor CR-95.</span></li>
-                    <li><em>02</em><span><b>SL-09, sold as Inca Geisha.</b> Inkawasi samples have tested closer to SL-09 than to Geisha. Floral is possible. Don’t tell it as settled history.</span></li>
-                    <li><em>03</em><span><b>Orange Bourbon, Santa Teresa.</b> Bourbon is grown there. The color name travels loosely. Verify the lot.</span></li>
-                </ol>
+            <div class="talk-split talk-split--names">
+                <div>
+                    <p class="talk-kicker">15 · Names on the bag</p>
+                    <h2 class="talk-h">Special names</h2>
+                    <ol class="talk-steps talk-steps--tight">
+                        <li><span>01</span><div><strong>Marsellesa</strong><p>A Sarchimor. Rust resistance and yield. Good at altitude, not exceptional. It is not Catimor CR-95.</p></div></li>
+                        <li><span>02</span><div><strong>SL-09 / “Inca Geisha”</strong><p>Inkawasi samples have tested closer to SL-09 than to Geisha. The cup can be floral. Don’t tell it as settled history.</p></div></li>
+                        <li><span>03</span><div><strong>Orange Bourbon · Santa Teresa</strong><p>Bourbon is grown there. The color name travels loosely. Verify the lot before you say it.</p></div></li>
+                    </ol>
+                </div>
+                <div class="talk-names">
+                    <img class="talk-names__map" src="~/brand/ethiopia-peru.svg" asp-append-version="true" alt="Ethiopia, home of Geisha, and Peru, where the Inkawasi lot is grown." />
+                    <div class="talk-names__pair">
+                        <div class="talk-names__card">
+                            <b>Geisha</b>
+                            <span>Core Ethiopia</span>
+                        </div>
+                        <i>≠ DNA</i>
+                        <div class="talk-names__card is-legacy">
+                            <b>SL-09</b>
+                            <span>Ethiopian legacy</span>
+                        </div>
+                    </div>
+                    <p class="talk-names__note"><b>Inkawasi “Inca Geisha”</b> Cup can be Geisha-like. Genetics discussed for these samples: SL-09, not Geisha.</p>
+                    <p class="talk-names__warn">Marsellesa ≠ Catimor CR-95. Rust-resistant names are not interchangeable.</p>
+                </div>
             </div>
         </section>
 
         <section class="talk-slide">
             <div class="talk-split talk-split--wheel">
                 <div>
-                    <p class="talk-kicker">11 · Flavor</p>
+                    <p class="talk-kicker">16 · Flavor</p>
                     <h2 class="talk-h">Read the cup from the center out</h2>
                     <p class="talk-copy">Start at the center and move out. Washed is still most Peruvian specialty. Naturals and honeys are the accent. Two denominations: Café Villa Rica, and Café Machu Picchu–Huadquiña.</p>
                     <ol class="talk-steps">
@@ -335,7 +401,7 @@
         </section>
 
         <section class="talk-slide">
-            <p class="talk-kicker">Close</p>
+            <p class="talk-kicker">17 · Close</p>
             <h1 class="talk-title">Climb, then brew</h1>
             <p class="talk-lede">Coast, then the lower selva, then Jaén and San Ignacio, then La Convención and Sandia. Height slows the cherry. The seed gets denser. That is the talk.</p>
             <p class="talk-copy">Questions — then we taste which mountain is in the cup.</p>

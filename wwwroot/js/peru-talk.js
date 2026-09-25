@@ -42,16 +42,16 @@
         puno: 'right'
     };
     const labelLat = {
-        piura: -4.5,
-        cajamarca: -6.15,
-        'san martin': -7.75,
-        pasco: -10.55,
-        ayacucho: -14.25,
-        amazonas: -4.35,
-        huanuco: -9.15,
-        junin: -11.4,
-        cusco: -13.3,
-        puno: -15.6
+        piura: -5.23,
+        cajamarca: -6.19,
+        'san martin': -7.10,
+        pasco: -10.30,
+        ayacucho: -13.90,
+        amazonas: -4.99,
+        huanuco: -9.40,
+        junin: -11.67,
+        cusco: -13.33,
+        puno: -15.15
     };
     const labelName = {
         piura: 'Piura',
@@ -65,6 +65,26 @@
         cusco: 'Cusco',
         puno: 'Puno'
     };
+
+    function outerLng(layer, lat, side) {
+        const rings = [];
+        (function collect(node) {
+            if (!node || !node.length) return;
+            if (typeof node[0].lat === 'number') { rings.push(node); return; }
+            node.forEach(collect);
+        })(layer.getLatLngs());
+        let best = null;
+        rings.forEach(function (ring) {
+            for (let i = 0; i < ring.length - 1; i++) {
+                const a = ring[i];
+                const b = ring[i + 1];
+                if ((lat - a.lat) * (lat - b.lat) > 0 || a.lat === b.lat) continue;
+                const lng = a.lng + ((lat - a.lat) / (b.lat - a.lat)) * (b.lng - a.lng);
+                if (best === null || (side === 'left' ? lng < best : lng > best)) best = lng;
+            }
+        });
+        return best;
+    }
 
     function fold(s) {
         return (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
@@ -91,6 +111,8 @@
         if (numEl) numEl.textContent = (index + 1) + ' / ' + slides.length;
         const mapEl = slides[index].querySelector('[data-talk-map]');
         if (mapEl) ensureMap(mapEl);
+        const mini = mapEl && mapEl.querySelector('.talk-locator');
+        if (mini && mini._fitMini) mini._fitMini();
     }
 
     async function loadGeo() {
@@ -254,10 +276,10 @@
                     const key = fold(featureName(f));
                     if (!labelSide[key]) return;
                     const side = labelSide[key];
-                    const bounds = layer.getBounds();
-                    const mid = bounds.getCenter();
-                    const label = L.latLng(labelLat[key] || mid.lat, side === 'left' ? -82.55 : -67.15);
-                    const edge = L.latLng(mid.lat, side === 'left' ? bounds.getWest() : bounds.getEast());
+                    const lat = labelLat[key] || layer.getBounds().getCenter().lat;
+                    const label = L.latLng(lat, side === 'left' ? -82.55 : -67.15);
+                    const edgeLng = outerLng(layer, lat, side);
+                    const edge = L.latLng(lat, edgeLng == null ? (side === 'left' ? layer.getBounds().getWest() : layer.getBounds().getEast()) : edgeLng);
                     L.polyline([label, edge], {
                         color: ink,
                         weight: 0.6,
@@ -393,25 +415,35 @@
                 };
             }
         }).addTo(mini);
-        if (!box.querySelector('.talk-locator__cap')) {
-            const cap = document.createElement('div');
+        const locatorName = {
+            north: 'Jaén',
+            central: 'Chanchamayo',
+            huanuco: 'Leoncio Prado',
+            convencion: 'La Convención',
+            sandia: 'Sandia'
+        };
+        let cap = box.querySelector('.talk-locator__cap');
+        if (!cap) {
+            cap = document.createElement('div');
             cap.className = 'talk-locator__cap';
-            cap.textContent = 'Peru';
             box.appendChild(cap);
         }
+        cap.textContent = locatorName[mode] || 'Peru';
         let miniTries = 0;
         const fitMini = function () {
             mini.invalidateSize({ animate: false, pan: false });
             const size = mini.getSize();
-            if ((!size || size.x < 40 || size.y < 40) && miniTries < 20) {
+            if ((!size || size.x < 40 || size.y < 40) && miniTries < 40) {
                 miniTries += 1;
                 requestAnimationFrame(fitMini);
                 return;
             }
+            miniTries = 0;
             mini.fitBounds([[-18.36, -81.33], [-0.02, -68.65]], { animate: false, padding: [6, 6] });
         };
+        box._fitMini = fitMini;
         fitMini();
-        setTimeout(fitMini, 250);
+        setTimeout(fitMini, 300);
     }
 
     document.querySelector('[data-talk-prev]')?.addEventListener('click', function () { go(index - 1); });
